@@ -13,7 +13,7 @@ env:
   path: app/build/outputs/apk/release # Output Path
   output: app-release-unsigned.apk # Output File Name
   name: zipline.apk # Final APK Name
-  key_name: my-key
+  key_name: zipline-release
   key_file: release.keystore
   tools_path: /usr/local/lib/android/sdk/build-tools/35.0.0
   cmdline_tools: /usr/local/lib/android/sdk/cmdline-tools/latest/bin
