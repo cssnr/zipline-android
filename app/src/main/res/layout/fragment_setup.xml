@@ -1,0 +1,81 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp">
+
+        <ImageView
+            android:id="@+id/app_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="36dp"
+            android:contentDescription="@string/app_name"
+            android:src="@mipmap/ic_launcher" />
+
+        <EditText
+            android:id="@+id/login_hostname"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints="url"
+            android:hint="@string/hostname"
+            android:inputType="textUri" />
+
+        <EditText
+            android:id="@+id/login_username"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:autofillHints="username"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:padding="10dp"
+            android:drawableEnd="@drawable/baseline_person_24"
+            android:drawableTint="?android:attr/textColorTertiary" />
+
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints="password"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:drawableEnd="@drawable/baseline_key_24"
+            android:drawableTint="?android:attr/textColorTertiary" />
+
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="36dp"
+            android:paddingEnd="36dp"
+            android:paddingStart="36dp"
+            android:text="@string/login"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:icon="@drawable/baseline_login_24"
+            app:iconGravity="end"
+            app:iconPadding="-36dp"
+            app:iconSize="24dp" />
+
+        <TextView
+            android:id="@+id/github_link"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:text="@string/github_link"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColorLink="@android:color/holo_blue_bright"
+            android:drawablePadding="12dp"
+            app:drawableStartCompat="@drawable/fa_github" />
+
+    </LinearLayout>
+</ScrollView>

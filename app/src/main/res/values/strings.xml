@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Zipline</string>
+    <string name="hostname">Hostname</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="github_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android">github.com/cssnr/zipline-android</a>]]></string>
+</resources>

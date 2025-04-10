@@ -1,0 +1,185 @@
+name: "Release"
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  path: app/build/outputs/apk/release # Output Path
+  output: app-release-unsigned.apk # Output File Name
+  name: zipline.apk # Final APK Name
+  key_name: my-key
+  key_file: release.keystore
+  tools_path: /usr/local/lib/android/sdk/build-tools/35.0.0
+  cmdline_tools: /usr/local/lib/android/sdk/cmdline-tools/latest/bin
+
+jobs:
+  release:
+    name: "Release"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Debug Event"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        run: |
+          echo "ref: ${{ github.ref }}"
+          echo "event_name: ${{ github.event_name }}"
+          echo "github.event.repository.name: ${{ github.event.repository.name }}"
+
+          echo "::group::cat event.json"
+          cat "${GITHUB_EVENT_PATH}"
+          echo "::endgroup::"
+
+      - name: "Set Tools Path"
+        if: ${{ !github.event.act }}
+        run: |
+          echo "${{ env.tools_path }}" >> "$GITHUB_PATH"
+          echo "${{ env.cmdline_tools }}" >> "$GITHUB_PATH"
+
+      - name: "Verify Tools"
+        if: ${{ !github.event.act }}
+        run: |
+          which keytool
+          which zipalign
+          which apksigner
+          which apkanalyzer
+
+          echo "::group::PATH"
+          echo "${PATH}"
+          echo "::endgroup::"
+          echo "::group::ls tools_path"
+          ls -lAh "${{ env.tools_path }}"
+          echo "::endgroup::"
+
+      - name: "Update Version"
+        uses: chkfung/android-version-actions@v1.2.2
+        with:
+          gradlePath: app/build.gradle.kts
+          versionCode: ${{ github.run_number }}
+          versionName: ${{ github.ref_name }}
+
+      - name: "Debug Version"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        run: |
+          echo "versionCode: ${{ github.run_number }}"
+          echo "versionName: ${{ github.ref_name }}"
+
+          echo "::group::cat app/build.gradle.kts"
+          cat app/build.gradle.kts
+          echo "::endgroup::"
+
+      - name: "Setup Java"
+        uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+          #cache: "gradle"
+
+      - name: "Set Gradle Executable"
+        run: chmod +x ./gradlew
+
+      - name: "Gradle Assemble"
+        run: ./gradlew assembleRelease
+
+      - name: "Verify Build"
+        run: |
+          apkanalyzer -h apk summary "${{ env.path }}/${{ env.output }}"
+
+          echo "::group::ls env.path"
+          ls -lAh ${{ env.path }}
+          echo "::endgroup::"
+
+      - name: "Align APK"
+        run: |
+          zipalign -P 16 -f -v 4 "${{ env.path }}/${{ env.output }}" "${{ env.path }}/${{ env.name }}"
+
+      - name: "Verify Alignment"
+        run: |
+          zipalign -c -P 16 -v 4 "${{ env.path }}/${{ env.name }}"
+
+      - name: "Decode Keystore"
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > ${{ env.key_file }}
+
+      - name: "Debug Keystore"
+        continue-on-error: true
+        run: |
+          echo ${{ secrets.ANDROID_KEYSTORE_PASS }} | keytool -list -keystore ${{ env.key_file }}
+
+      - name: "Sign APK"
+        run: |
+          apksigner sign --ks ${{ env.key_file }} \
+            --ks-pass pass:${{ secrets.ANDROID_KEYSTORE_PASS }} \
+            --ks-key-alias ${{ env.key_name }} \
+            "${{ env.path }}/${{ env.name }}"
+
+      - name: "Verify Signature"
+        run: |
+          apksigner verify --verbose "${{ env.path }}/${{ env.name }}"
+
+      - name: "Upload Artifacts"
+        if: ${{ !github.event.act }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ github.event.repository.name }}-release
+          path: ${{ env.path }}
+
+      - name: "Upload to Release"
+        if: ${{ github.event_name == 'release' }}
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: ${{ env.path }}/${{ env.name }}
+          tag: ${{ github.ref }}
+          overwrite: true
+          file_glob: true
+
+      - name: "VirusTotal"
+        if: ${{ github.event_name == 'release' }}
+        uses: cssnr/virustotal-action@v1
+        continue-on-error: true
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+
+      - name: "Update Release Notes Action"
+        if: ${{ github.event_name == 'release' }}
+        uses: smashedr/update-release-notes-action@master
+        continue-on-error: true
+
+      - name: "Write Job Summary"
+        if: ${{ !github.event.act }}
+        continue-on-error: true
+        run: |
+          echo -e "## Android Release\n\n" >> $GITHUB_STEP_SUMMARY
+
+          echo -e "Final APK: \`${{ env.name }}\`\n\n" >> $GITHUB_STEP_SUMMARY
+
+          echo -e "<details><summary>Build Artifacts</summary>\n\n" >> $GITHUB_STEP_SUMMARY
+          echo -e "\`\`\`text\n$(ls -lAh ${{ env.path }})\n\`\`\`\n\n" >> $GITHUB_STEP_SUMMARY
+          echo -e "</details>\n\n" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "${{ env.path }}/output-metadata.json" ];then
+            echo -e "<details><summary>File: output-metadata.json</summary>\n\n" >> $GITHUB_STEP_SUMMARY
+            echo -e "\`\`\`json\n$(cat ${{ env.path }}/output-metadata.json)\n\`\`\`\n\n" >> $GITHUB_STEP_SUMMARY
+            echo -e "</details>\n\n" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo -e "\n\n---" >> $GITHUB_STEP_SUMMARY
+
+      - name: "Send Failure Notification"
+        if: ${{ failure() && github.event_name == 'release' }}
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
