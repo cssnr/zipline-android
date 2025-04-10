@@ -16,6 +16,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -107,7 +108,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             Log.d("handleIntent", "File URI: $fileUri")
-            processUpload(fileUri, ziplineUrl, ziplineToken)
+            showPreview(fileUri)
         } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
             Log.d("handleIntent", "ACTION_SEND_MULTIPLE")
 
@@ -133,12 +134,21 @@ class MainActivity : AppCompatActivity() {
             Log.d("handleIntent", "ACTION_VIEW")
 
             Log.d("handleIntent", "File URI: ${intent.data}")
-            processUpload(intent.data, ziplineUrl, ziplineToken)
+            showPreview(intent.data)
 
         } else {
             Toast.makeText(this, "That's a Bug!", Toast.LENGTH_SHORT).show()
             Log.w("handleIntent", "BUG: UNKNOWN intent.action: ${intent.action}")
         }
+    }
+
+    private fun showPreview(uri: Uri?){
+        Log.d("processUpload", "File URI: $uri")
+        val fragment = PreviewFragment()
+        fragment.arguments = bundleOf("uri" to uri.toString())
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.main, fragment)
+            .commit()
     }
 
     private fun processUpload(uri: Uri?, ziplineUrl: String, ziplineToken: String) {
