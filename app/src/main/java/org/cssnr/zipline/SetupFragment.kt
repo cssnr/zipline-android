@@ -18,16 +18,22 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.databinding.FragmentSetupBinding
 
-class SetupFragment : Fragment(R.layout.fragment_setup) {
+class SetupFragment : Fragment() {
 
-    private lateinit var binding: FragmentSetupBinding
+    private var _binding: FragmentSetupBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
         Log.d("onCreateView", "savedInstanceState: $savedInstanceState")
-        binding = FragmentSetupBinding.inflate(inflater, container, false)
+        _binding = FragmentSetupBinding.inflate(inflater, container, false)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             binding.root.setOnApplyWindowInsetsListener { _, insets ->
@@ -102,8 +108,6 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
             //activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
             Log.d("setOnClickListener", "DONE")
         }
-
-        return binding.root
     }
 
     private fun parseHost(urlString: String): String {
