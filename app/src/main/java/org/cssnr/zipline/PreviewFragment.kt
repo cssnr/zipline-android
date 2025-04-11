@@ -66,12 +66,17 @@ class PreviewFragment : Fragment() {
         if (type?.startsWith("image/") == true) {
             binding.imagePreview.setImageURI(uri)
         } else {
-            binding.imagePreview.setImageResource(R.drawable.baseline_preview_24)
             val typedValue = TypedValue()
             val theme = binding.imagePreview.context.theme
             theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
             val tint = ContextCompat.getColor(binding.imagePreview.context, typedValue.resourceId)
             binding.imagePreview.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
+
+            if (type?.startsWith("text/") == true) {
+                binding.imagePreview.setImageResource(R.drawable.baseline_text_snippet_24)
+            } else {
+                binding.imagePreview.setImageResource(R.drawable.baseline_preview_24)
+            }
         }
 
         val radius = resources.getDimension(R.dimen.image_radius)
