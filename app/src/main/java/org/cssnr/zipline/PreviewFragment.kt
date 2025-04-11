@@ -15,10 +15,12 @@ import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.databinding.FragmentPreviewBinding
+
 
 class PreviewFragment : Fragment() {
 
@@ -48,6 +50,14 @@ class PreviewFragment : Fragment() {
         Log.d("onViewCreated", "type: $type")
 
         binding.imagePreview.setImageURI(uri)
+
+        val radius = resources.getDimension(R.dimen.image_radius)
+        binding.imagePreview.setShapeAppearanceModel(
+            binding.imagePreview.shapeAppearanceModel
+                .toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED, radius)
+                .build()
+        )
 
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
         val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
