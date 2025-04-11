@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:contentDescription="@string/preview"
-            android:scaleType="centerInside" />
+            android:scaleType="fitCenter"/>
 
         <Button
             android:id="@+id/upload_button"
@@ -35,8 +35,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="64dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
             android:orientation="horizontal">
 
             <Space
