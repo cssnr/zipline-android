@@ -1,8 +1,6 @@
 package org.cssnr.zipline
 
 import android.annotation.SuppressLint
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Intent
 import android.net.Uri
 import android.os.Build
@@ -19,10 +17,6 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.cssnr.zipline.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -142,49 +136,13 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPreview(uri: Uri?){
+    private fun showPreview(uri: Uri?) {
         Log.d("processUpload", "File URI: $uri")
         val fragment = PreviewFragment()
         fragment.arguments = bundleOf("uri" to uri.toString())
         supportFragmentManager.beginTransaction()
             .replace(R.id.main, fragment)
             .commit()
-    }
-
-    private fun processUpload(uri: Uri?, ziplineUrl: String, ziplineToken: String) {
-        // TODO: Cleanup to work with multiple files and previews...
-        Log.d("processUpload", "File URI: $uri")
-        if (uri == null) {
-            Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_SHORT).show()
-            Log.w("handleIntent", "URI is null")
-            return
-        }
-        val api = ZiplineApi(this)
-        lifecycleScope.launch {
-            val response = api.upload(uri, ziplineUrl, ziplineToken)
-            Log.d("handleIntent", "response: $response")
-            val result = response?.files?.firstOrNull()
-            Log.d("handleIntent", "result: $result")
-            if (result != null) {
-                Log.d("handleIntent", "result.url: ${result.url}")
-                copyToClipboard(result.url)
-                binding.webView.loadUrl(result.url)
-            } else {
-                Log.w("handleIntent", "uploadedFile is null")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(this@MainActivity, "File Upload Failed!", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }
-    }
-
-    private fun copyToClipboard(url: String) {
-        Log.d("copyToClipboard", "url: $url")
-        val clipboard = this.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("URL", url)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
     }
 
     fun loadUrl(url: String) {
