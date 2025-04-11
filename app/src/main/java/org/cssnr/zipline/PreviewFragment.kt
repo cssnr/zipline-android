@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -62,6 +63,15 @@ class PreviewFragment : Fragment() {
                 .replace(R.id.main, SetupFragment())
                 .commit()
             return
+        }
+
+        binding.shareButton.setOnClickListener {
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                this.type = type
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(shareIntent, null))
         }
 
         binding.uploadButton.setOnClickListener {
