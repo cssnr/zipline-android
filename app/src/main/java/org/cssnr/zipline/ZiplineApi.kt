@@ -31,7 +31,6 @@ import retrofit2.http.Part
 import java.io.InputStream
 import java.net.URLConnection
 
-
 class ZiplineApi(private val context: Context) {
 
     private lateinit var cookieJar: SimpleCookieJar
@@ -69,7 +68,7 @@ class ZiplineApi(private val context: Context) {
 
     suspend fun upload(uri: Uri, ziplineUrl: String, ziplineToken: String): FileResponse? {
         Log.e("upload", "uri: $uri")
-        val fileName = getFileNameFromUri(uri)
+        val fileName = getFileNameFromUri(context, uri)
         Log.e("upload", "fileName: $fileName")
         val inputStream = context.contentResolver.openInputStream(uri)
         if (fileName == null || inputStream == null) {
@@ -121,19 +120,6 @@ class ZiplineApi(private val context: Context) {
             Log.e("reAuthenticate", "Exception: ${e.message}")
             null
         }
-    }
-
-    private fun getFileNameFromUri(uri: Uri): String? {
-        var fileName: String? = null
-        context.contentResolver.query(uri, null, null, null, null).use { cursor ->
-            if (cursor != null && cursor.moveToFirst()) {
-                val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-                if (nameIndex != -1) {
-                    fileName = cursor.getString(nameIndex)
-                }
-            }
-        }
-        return fileName
     }
 
     private suspend fun inputStreamToMultipart(
@@ -234,3 +220,17 @@ class ZiplineApi(private val context: Context) {
 //    val username: String,
 //    val token: String,
 //)
+
+
+fun getFileNameFromUri(context: Context, uri: Uri): String? {
+    var fileName: String? = null
+    context.contentResolver.query(uri, null, null, null, null).use { cursor ->
+        if (cursor != null && cursor.moveToFirst()) {
+            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+            if (nameIndex != -1) {
+                fileName = cursor.getString(nameIndex)
+            }
+        }
+    }
+    return fileName
+}

@@ -1,0 +1,110 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="224dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/image_preview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/preview"
+                android:scaleType="fitCenter"
+                app:contentPadding="8dp"
+                app:strokeColor="?android:attr/textColorPrimary"
+                app:strokeWidth="2dp" />
+
+            <TextView
+                android:id="@+id/image_overlay_text"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:visibility="gone"
+                android:background="@android:color/transparent" />
+
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/upload_button"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="36dp"
+            android:paddingStart="36dp"
+            android:text="@string/upload"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:icon="@drawable/baseline_file_upload_24"
+            app:iconGravity="end"
+            app:iconPadding="-36dp"
+            app:iconSize="24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/share_button"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:text="@string/share"
+                app:icon="@drawable/baseline_share_24"
+                app:iconGravity="textEnd"
+                app:iconSize="24dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/open_button"
+                android:layout_width="140dp"
+                android:layout_height="match_parent"
+                android:text="@string/open"
+                app:icon="@drawable/baseline_open_in_new_24"
+                app:iconGravity="textEnd"
+                app:iconSize="24dp" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

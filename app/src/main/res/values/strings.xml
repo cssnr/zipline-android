@@ -5,4 +5,8 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="github_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android">github.com/cssnr/zipline-android</a>]]></string>
+    <string name="upload">Upload</string>
+    <string name="preview">Preview</string>
+    <string name="share">Share</string>
+    <string name="open">Open</string>
 </resources>
