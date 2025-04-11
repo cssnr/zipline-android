@@ -45,7 +45,7 @@
 
         <Button
             android:id="@+id/share_button"
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent"
             android:text="@string/share"
             app:icon="@drawable/baseline_share_24"
@@ -59,7 +59,7 @@
 
         <Button
             android:id="@+id/open_button"
-            android:layout_width="120dp"
+            android:layout_width="140dp"
             android:layout_height="match_parent"
             android:text="@string/open"
             app:icon="@drawable/baseline_file_open_24"
