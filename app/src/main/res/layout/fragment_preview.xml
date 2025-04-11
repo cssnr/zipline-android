@@ -6,17 +6,16 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp">
+        android:padding="24dp"
+        app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
             android:id="@+id/image_preview"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:contentDescription="@string/preview"
-            android:scaleType="fitCenter" />
+            android:scaleType="centerInside" />
 
         <Button
             android:id="@+id/upload_button"
