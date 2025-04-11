@@ -15,6 +15,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -64,14 +65,21 @@ class PreviewFragment : Fragment() {
         binding.fileName.text = fileName
 
         if (type?.startsWith("image/") == true) {
+            // Show Image Preview
             binding.imagePreview.setImageURI(uri)
         } else {
+            // Set Tint of Icon
             val typedValue = TypedValue()
             val theme = binding.imagePreview.context.theme
             theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
             val tint = ContextCompat.getColor(binding.imagePreview.context, typedValue.resourceId)
-            binding.imagePreview.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
-
+            val dimmedTint = ColorUtils.setAlphaComponent(tint, (0.5f * 255).toInt())
+            binding.imagePreview.setColorFilter(dimmedTint, PorterDuff.Mode.SRC_IN)
+            // Set Mime Type Text
+            binding.imageOverlayText.text = type
+            binding.imageOverlayText.visibility = View.VISIBLE
+            // Set Icon Based on Type
+            // TODO: Create Mapping...
             if (type?.startsWith("text/") == true) {
                 binding.imagePreview.setImageResource(R.drawable.baseline_text_snippet_24)
             } else if (type?.startsWith("video/") == true) {
