@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="256dp"
             android:contentDescription="@string/preview"
-            android:scaleType="fitCenter"/>
+            android:scaleType="fitCenter" />
 
         <Button
             android:id="@+id/upload_button"
