@@ -45,6 +45,20 @@
             app:iconPadding="-36dp"
             app:iconSize="24dp" />
 
+        <Button
+            android:id="@+id/open_button"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"
+            android:layout_marginTop="36dp"
+            android:paddingEnd="36dp"
+            android:paddingStart="36dp"
+            android:text="@string/open_with"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:icon="@drawable/baseline_file_open_24"
+            app:iconGravity="end"
+            app:iconPadding="-36dp"
+            app:iconSize="24dp" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

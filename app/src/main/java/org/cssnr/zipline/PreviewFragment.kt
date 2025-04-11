@@ -74,6 +74,15 @@ class PreviewFragment : Fragment() {
             startActivity(Intent.createChooser(shareIntent, null))
         }
 
+        binding.openButton.setOnClickListener {
+            val openIntent = Intent(Intent.ACTION_VIEW).apply {
+                setDataAndType(uri, type)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(openIntent, null))
+        }
+
+
         binding.uploadButton.setOnClickListener {
             processUpload(uri, ziplineUrl, ziplineToken)
         }
