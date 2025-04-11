@@ -31,7 +31,6 @@ import retrofit2.http.Part
 import java.io.InputStream
 import java.net.URLConnection
 
-
 class ZiplineApi(private val context: Context) {
 
     private lateinit var cookieJar: SimpleCookieJar
