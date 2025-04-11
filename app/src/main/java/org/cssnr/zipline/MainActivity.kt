@@ -102,7 +102,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             Log.d("handleIntent", "File URI: $fileUri")
-            showPreview(fileUri)
+            showPreview(fileUri, intent.type)
         } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
             Log.d("handleIntent", "ACTION_SEND_MULTIPLE")
 
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("handleIntent", "ACTION_VIEW")
 
             Log.d("handleIntent", "File URI: ${intent.data}")
-            showPreview(intent.data)
+            showPreview(intent.data, intent.type)
 
         } else {
             Toast.makeText(this, "That's a Bug!", Toast.LENGTH_SHORT).show()
@@ -136,10 +136,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPreview(uri: Uri?) {
+    private fun showPreview(uri: Uri?, type: String?) {
         Log.d("processUpload", "File URI: $uri")
         val fragment = PreviewFragment()
-        fragment.arguments = bundleOf("uri" to uri.toString())
+        val bundle = Bundle().apply {
+            putString("uri", uri.toString())
+            putString("type", type)
+        }
+        fragment.arguments = bundle
         supportFragmentManager.beginTransaction()
             .replace(R.id.main, fragment)
             .commit()

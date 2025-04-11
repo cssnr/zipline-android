@@ -41,8 +41,11 @@ class PreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
 
-        val uri = requireArguments().getString("uri")?.toUri()
+        val uri = arguments?.getString("uri")?.toUri()
         Log.d("onViewCreated", "uri: $uri")
+        val type = arguments?.getString("type")
+        Log.d("onViewCreated", "type: $type")
+
         binding.imagePreview.setImageURI(uri)
 
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
