@@ -15,10 +15,10 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/image_preview"
             android:layout_width="match_parent"
-            android:layout_height="240dp"
+            android:layout_height="224dp"
             android:contentDescription="@string/preview"
             android:scaleType="fitCenter"
-            app:contentPadding="12dp"
+            app:contentPadding="8dp"
             app:strokeColor="?android:attr/textColorPrimary"
             app:strokeWidth="2dp" />
 
@@ -39,7 +39,7 @@
             android:id="@+id/upload_button"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:paddingEnd="36dp"
             android:paddingStart="36dp"
             android:text="@string/upload"

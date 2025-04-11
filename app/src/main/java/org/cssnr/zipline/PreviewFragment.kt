@@ -74,8 +74,12 @@ class PreviewFragment : Fragment() {
 
             if (type?.startsWith("text/") == true) {
                 binding.imagePreview.setImageResource(R.drawable.baseline_text_snippet_24)
+            } else if (type?.startsWith("video/") == true) {
+                binding.imagePreview.setImageResource(R.drawable.baseline_video_file_24)
+            } else if (type?.startsWith("audio/") == true) {
+                binding.imagePreview.setImageResource(R.drawable.baseline_audio_file_24)
             } else {
-                binding.imagePreview.setImageResource(R.drawable.baseline_preview_24)
+                binding.imagePreview.setImageResource(R.drawable.baseline_insert_drive_file_24)
             }
         }
 
