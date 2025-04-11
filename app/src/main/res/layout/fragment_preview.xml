@@ -22,6 +22,19 @@
             app:strokeColor="?android:attr/textColorPrimary"
             app:strokeWidth="2dp" />
 
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAlignment="center"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:maxLines="1"
+            android:textColor="?android:attr/textColorPrimary"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:layout_marginTop="8dp" />
+
         <Button
             android:id="@+id/upload_button"
             android:layout_width="match_parent"

@@ -5,13 +5,16 @@ import android.content.ClipboardManager
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.graphics.PorterDuff
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -49,7 +52,27 @@ class PreviewFragment : Fragment() {
         val type = arguments?.getString("type")
         Log.d("onViewCreated", "type: $type")
 
-        binding.imagePreview.setImageURI(uri)
+        if (uri == null) {
+            // TODO: Better Handle this Error
+            Log.e("onViewCreated", "URI is null")
+            Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        val fileName = getFileNameFromUri(requireContext(), uri)
+        Log.d("onViewCreated", "fileName: $fileName")
+        binding.fileName.text = fileName
+
+        if (type?.startsWith("image/") == true) {
+            binding.imagePreview.setImageURI(uri)
+        } else {
+            binding.imagePreview.setImageResource(R.drawable.baseline_preview_24)
+            val typedValue = TypedValue()
+            val theme = binding.imagePreview.context.theme
+            theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true)
+            val tint = ContextCompat.getColor(binding.imagePreview.context, typedValue.resourceId)
+            binding.imagePreview.setColorFilter(tint, PorterDuff.Mode.SRC_IN)
+        }
 
         val radius = resources.getDimension(R.dimen.image_radius)
         binding.imagePreview.setShapeAppearanceModel(
@@ -62,11 +85,11 @@ class PreviewFragment : Fragment() {
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
         val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
         val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
-        Log.d("handleIntent", "ziplineUrl: $ziplineUrl")
-        Log.d("handleIntent", "ziplineToken: $ziplineToken")
+        Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
+        Log.d("onViewCreated", "ziplineToken: $ziplineToken")
 
         if (ziplineUrl == null || ziplineToken == null) {
-            Log.e("handleIntent", "ziplineUrl || ziplineToken is null")
+            Log.e("onViewCreated", "ziplineUrl || ziplineToken is null")
             Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_SHORT)
                 .show()
             parentFragmentManager.beginTransaction()
@@ -98,14 +121,14 @@ class PreviewFragment : Fragment() {
         }
     }
 
-    private fun processUpload(uri: Uri?, ziplineUrl: String, ziplineToken: String) {
+    private fun processUpload(uri: Uri, ziplineUrl: String, ziplineToken: String) {
         // TODO: Cleanup to work with multiple files and previews...
         Log.d("processUpload", "File URI: $uri")
-        if (uri == null) {
-            Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_SHORT).show()
-            Log.w("processUpload", "URI is null")
-            return
-        }
+        //if (uri == null) {
+        //    Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_SHORT).show()
+        //    Log.w("processUpload", "URI is null")
+        //    return
+        //}
         val api = ZiplineApi(requireContext())
         lifecycleScope.launch {
             val response = api.upload(uri, ziplineUrl, ziplineToken)
