@@ -134,11 +134,11 @@ class PreviewFragment : Fragment() {
 
 
         binding.uploadButton.setOnClickListener {
-            processUpload(uri, ziplineUrl, ziplineToken)
+            processUpload(uri, ziplineUrl)
         }
     }
 
-    private fun processUpload(uri: Uri, ziplineUrl: String, ziplineToken: String) {
+    private fun processUpload(uri: Uri, ziplineUrl: String) {
         // TODO: Cleanup to work with multiple files and previews...
         Log.d("processUpload", "File URI: $uri")
         //if (uri == null) {
@@ -148,7 +148,7 @@ class PreviewFragment : Fragment() {
         //}
         val api = ZiplineApi(requireContext())
         lifecycleScope.launch {
-            val response = api.upload(uri, ziplineUrl, ziplineToken)
+            val response = api.upload(uri, ziplineUrl)
             Log.d("processUpload", "response: $response")
             val result = response?.files?.firstOrNull()
             Log.d("processUpload", "result: $result")

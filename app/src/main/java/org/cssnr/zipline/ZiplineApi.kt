@@ -2,6 +2,7 @@ package org.cssnr.zipline
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
@@ -33,6 +34,8 @@ import java.net.URLConnection
 
 class ZiplineApi(private val context: Context) {
 
+    private val preferences: SharedPreferences =
+        context.getSharedPreferences("default_preferences", MODE_PRIVATE)
     private lateinit var cookieJar: SimpleCookieJar
     private lateinit var client: OkHttpClient
 
@@ -66,13 +69,15 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
-    suspend fun upload(uri: Uri, ziplineUrl: String, ziplineToken: String): FileResponse? {
-        Log.e("upload", "uri: $uri")
+    suspend fun upload(uri: Uri, ziplineUrl: String): FileResponse? {
+        Log.d("upload", "uri: $uri")
         val fileName = getFileNameFromUri(context, uri)
-        Log.e("upload", "fileName: $fileName")
+        Log.d("upload", "fileName: $fileName")
+        val ziplineToken = preferences.getString("ziplineToken", null)
+        Log.d("upload", "ziplineToken: $ziplineToken")
         val inputStream = context.contentResolver.openInputStream(uri)
-        if (fileName == null || inputStream == null) {
-            Log.e("upload", "inputStream or fileName is null")
+        if (fileName == null || ziplineToken == null || inputStream == null) {
+            Log.e("upload", "fileName/inputStream/ziplineToken is null")
             return null
         }
         val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
