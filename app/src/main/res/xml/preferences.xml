@@ -19,9 +19,9 @@
     <PreferenceCategory android:title="Upload Settings">
 
         <ListPreference
-            android:key="dropdown_option"
+            android:key="file_name_format"
             android:title="File Name Option"
-            android:defaultValue="name"
+            android:defaultValue="random"
             android:entries="@array/dropdown_entries"
             android:entryValues="@array/dropdown_values"
             android:icon="@drawable/baseline_menu_24"
