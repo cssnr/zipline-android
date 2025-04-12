@@ -10,6 +10,7 @@
     <string name="share">Share</string>
     <string name="open">Open</string>
     <string name="options">Options</string>
+    <string name="file_name">File Name</string>
 
     <string-array name="dropdown_entries">
         <item>Random</item>

@@ -69,9 +69,9 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
-    suspend fun upload(uri: Uri, ziplineUrl: String): FileResponse? {
+    suspend fun upload(uri: Uri, fileName: String, ziplineUrl: String): FileResponse? {
         Log.d("upload", "uri: $uri")
-        val fileName = getFileNameFromUri(context, uri)
+//        val fileName = getFileNameFromUri(context, uri)
         Log.d("upload", "fileName: $fileName")
         val ziplineToken = preferences.getString("ziplineToken", null)
         Log.d("upload", "ziplineToken: $ziplineToken")
