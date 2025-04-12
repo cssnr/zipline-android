@@ -25,8 +25,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity", "onCreate")
-
+        Log.d("onCreate", "savedInstanceState: $savedInstanceState")
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -49,6 +48,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         handleIntent(intent)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.d("onSaveInstanceState", "outState: $outState")
+        super.onSaveInstanceState(outState)
+        binding.webView.saveState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        Log.d("onRestoreInstanceState", "savedInstanceState: $savedInstanceState")
+        super.onRestoreInstanceState(savedInstanceState)
+        binding.webView.restoreState(savedInstanceState)
+    }
+
+    override fun onPause() {
+        Log.d("onPause", "ON PAUSE")
+        super.onPause()
+        binding.webView.onPause()
+        binding.webView.pauseTimers()
+    }
+
+    override fun onResume() {
+        Log.d("onResume", "ON RESUME")
+        super.onResume()
+        binding.webView.onResume()
+        binding.webView.resumeTimers()
     }
 
     override fun onNewIntent(intent: Intent) {
