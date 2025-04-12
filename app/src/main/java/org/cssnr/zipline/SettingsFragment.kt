@@ -11,7 +11,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         Log.d("SettingsFragment", "onCreatePreferences rootKey: $rootKey")
 
         preferenceManager.sharedPreferencesName = "default_preferences"
-        setPreferencesFromResource(R.xml.preferences, rootKey)
+        setPreferencesFromResource(R.xml.preferences_settings, rootKey)
 
         val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
         Log.d("SettingsFragment", "showPreviewPref: $showPreviewPref")
