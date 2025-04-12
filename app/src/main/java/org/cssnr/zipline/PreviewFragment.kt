@@ -116,6 +116,7 @@ class PreviewFragment : Fragment() {
         }
 
         binding.shareButton.setOnClickListener {
+            Log.d("shareButton", "setOnClickListener")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 this.type = type
                 putExtra(Intent.EXTRA_STREAM, uri)
@@ -124,7 +125,16 @@ class PreviewFragment : Fragment() {
             startActivity(Intent.createChooser(shareIntent, null))
         }
 
+        binding.optionsButton.setOnClickListener {
+            Log.d("optionsButton", "setOnClickListener")
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, SettingsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.openButton.setOnClickListener {
+            Log.d("openButton", "setOnClickListener")
             val openIntent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, type)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

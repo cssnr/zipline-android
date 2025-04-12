@@ -65,6 +65,20 @@
             app:iconPadding="-36dp"
             app:iconSize="24dp" />
 
+        <Button
+            android:id="@+id/options_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="36dp"
+            android:paddingStart="36dp"
+            android:text="@string/options"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:icon="@drawable/baseline_settings_24"
+            app:iconGravity="end"
+            app:iconPadding="-36dp"
+            app:iconSize="24dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="48dp"
