@@ -6,13 +6,15 @@
             android:defaultValue="false"
             android:icon="@drawable/baseline_preview_24"
             android:key="show_preview"
-            android:title="Show Preview Screen" />
+            android:title="Show Preview Screen"
+            android:enabled="false" />
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
             android:icon="@drawable/baseline_fingerprint_24"
             android:key="enable_biometrics"
-            android:title="Enable Biometrics" />
+            android:title="Enable Biometrics"
+            android:enabled="false" />
 
     </PreferenceCategory>
 
