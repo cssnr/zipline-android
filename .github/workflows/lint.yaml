@@ -1,0 +1,76 @@
+name: "Lint"
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+  pull_request:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: "Lint"
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Debug event.json"
+        if: ${{ !cancelled() }}
+        continue-on-error: true
+        run: |
+          cat "${GITHUB_EVENT_PATH}"
+
+      - name: "Kotlin Lint"
+        if: ${{ !cancelled() }}
+        continue-on-error: true # TODO: Resolve KTLint Issues
+        env:
+          klint: ${RUNNER_TEMP}/ktlint
+        run: |
+          echo "Output File: ${{ env.klint }}"
+          wget -q https://github.com/pinterest/ktlint/releases/latest/download/ktlint -O ${{ env.klint }}
+          file ${{ env.klint }}
+          chmod +x ${{ env.klint }}
+          ${{ env.klint }} --version
+          ${{ env.klint }} --color 'app/src/main/java/**'
+
+      - name: "Prettier"
+        if: ${{ !cancelled() }}
+        run: |
+          echo "::group::Install"
+          npm install prettier
+          echo "::endgroup::"
+          npx prettier --check .
+
+      - name: "Yamllint"
+        if: ${{ !cancelled() }}
+        env:
+          CONFIG: "{extends: relaxed, ignore: [node_modules/,.github/disabled/], rules: {line-length: {max: 119}}}"
+        run: |
+          echo "::group::List Files"
+          yamllint -d '${{ env.CONFIG }}' --list-files .
+          echo "::endgroup::"
+          yamllint -d '${{ env.CONFIG }}' .
+
+      - name: "Actionlint"
+        if: ${{ !cancelled() }}
+        run: |
+          echo "::group::Download"
+          loc=$(curl -sI https://github.com/rhysd/actionlint/releases/latest | grep -i '^location:')
+          echo "loc: ${loc}"
+          tag=$(echo "${loc}" | sed -E 's|.*/tag/v?(.*)|\1|' | tr -d '\t\r\n')
+          echo "tag: ${tag}"
+          url="https://github.com/rhysd/actionlint/releases/latest/download/actionlint_${tag}_linux_amd64.tar.gz"
+          echo "url: ${url}"
+          curl -sL "${url}" | tar xz -C "${RUNNER_TEMP}" actionlint
+          file "${RUNNER_TEMP}/actionlint"
+          "${RUNNER_TEMP}/actionlint" --version
+          echo "::endgroup::"
+          "${RUNNER_TEMP}/actionlint" -color -verbose -shellcheck= -pyflakes=
