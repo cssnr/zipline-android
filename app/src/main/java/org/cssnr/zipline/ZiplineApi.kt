@@ -71,15 +71,14 @@ class ZiplineApi(private val context: Context) {
 
     suspend fun upload(uri: Uri, fileName: String, ziplineUrl: String): FileResponse? {
         Log.d("upload", "uri: $uri")
-//        val fileName = getFileNameFromUri(context, uri)
         Log.d("upload", "fileName: $fileName")
         val ziplineToken = preferences.getString("ziplineToken", null)
         Log.d("upload", "ziplineToken: $ziplineToken")
         val fileNameFormat = preferences.getString("file_name_format", "random")
         Log.d("upload", "fileNameFormat: $fileNameFormat")
         val inputStream = context.contentResolver.openInputStream(uri)
-        if (fileName == null || ziplineToken == null || inputStream == null) {
-            Log.e("upload", "fileName/inputStream/ziplineToken is null")
+        if (ziplineToken == null || inputStream == null) {
+            Log.e("upload", "inputStream/ziplineToken is null")
             return null
         }
         val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
