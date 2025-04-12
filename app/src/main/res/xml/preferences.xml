@@ -4,15 +4,28 @@
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
-            android:icon="@drawable/baseline_text_snippet_24"
+            android:icon="@drawable/baseline_preview_24"
             android:key="show_preview"
             android:title="Show Preview Screen" />
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
-            android:icon="@drawable/baseline_key_24"
+            android:icon="@drawable/baseline_fingerprint_24"
             android:key="enable_biometrics"
             android:title="Enable Biometrics" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Upload Settings">
+
+        <ListPreference
+            android:key="dropdown_option"
+            android:title="File Name Option"
+            android:defaultValue="name"
+            android:entries="@array/dropdown_entries"
+            android:entryValues="@array/dropdown_values"
+            android:icon="@drawable/baseline_menu_24"
+            android:summary="%s" />
 
     </PreferenceCategory>
 
