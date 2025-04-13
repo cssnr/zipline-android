@@ -21,6 +21,8 @@ class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
+    private var webViewState: Bundle = Bundle()
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +37,21 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
+
+        Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
+        // TODO: Not sure when this method is triggered...
+        if (savedInstanceState != null) {
+            Log.i("onViewCreated", "SETTING webViewState FROM savedInstanceState")
+            webViewState = savedInstanceState.getBundle("webViewState") ?: Bundle()  // Ensure non-null
+        }
+        Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
+
+        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
+        val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
+        val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
+        Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
+        Log.d("onViewCreated", "ziplineToken: $ziplineToken")
 
         binding.webView.apply {
             webViewClient = MyWebViewClient()
@@ -44,26 +61,26 @@ class HomeFragment : Fragment() {
             settings.allowContentAccess = true
             settings.loadWithOverviewMode = true // prevent loading images zoomed in
             settings.useWideViewPort = true // prevent loading images zoomed in
+
+            if (webViewState.size() > 0) {
+                Log.d("webView.apply", "RESTORE STATE")
+                restoreState(webViewState)
+            } else {
+                Log.d("webView.apply", "LOAD URL RETARD")
+                loadUrl(ziplineUrl.toString())
+            }
         }
 
-        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
-        val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
-        Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
-        Log.d("onViewCreated", "ziplineToken: $ziplineToken")
-
-        //val webView = view.findViewById<WebView>(R.id.web_view)
-        //webView.loadUrl(ziplineUrl.toString())
-        binding.webView.loadUrl(ziplineUrl.toString())
-
-        // Restore WebView state if available
-        if (savedInstanceState != null) {
-            Log.d("onViewCreated", "restoreState: $savedInstanceState")
-            binding.webView.restoreState(savedInstanceState)
-        } else {
-            Log.d("onViewCreated", "webView.loadUrl: $ziplineUrl")
-            binding.webView.loadUrl(ziplineUrl.toString())
-        }
+//        //val webView = view.findViewById<WebView>(R.id.web_view)
+//        //webView.loadUrl(ziplineUrl.toString())
+//        //binding.webView.loadUrl(ziplineUrl.toString())
+//        if (savedInstanceState != null) {
+//            Log.d("onViewCreated", "restoreState: $savedInstanceState")
+//            binding.webView.restoreState(savedInstanceState)
+//        } else {
+//            Log.d("onViewCreated", "webView.loadUrl: $ziplineUrl")
+//            binding.webView.loadUrl(ziplineUrl.toString())
+//        }
     }
 
     fun loadUrl(url: String) {
@@ -75,19 +92,22 @@ class HomeFragment : Fragment() {
         Log.d("onSaveInstanceState", "outState: $outState")
         super.onSaveInstanceState(outState)
         binding.webView.saveState(outState)
-    }
 
-//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-//        Log.d("onRestoreInstanceState", "savedInstanceState: $savedInstanceState")
-//        super.onRestoreInstanceState(savedInstanceState)
-//        binding.webView.restoreState(savedInstanceState)
-//    }
+        // TODO: Not sure when this method is triggered...
+        webViewState.let {
+            outState.putBundle("webViewState", it)
+        }
+    }
 
     override fun onPause() {
         Log.d("onPause", "ON PAUSE")
         super.onPause()
         binding.webView.onPause()
         binding.webView.pauseTimers()
+
+        Log.d("onPause", "webViewState.size: ${webViewState.size()}")
+        binding.webView.saveState(webViewState)
+        Log.d("onPause", "webViewState.size: ${webViewState.size()}")
     }
 
     override fun onResume() {
