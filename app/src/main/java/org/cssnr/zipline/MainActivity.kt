@@ -15,6 +15,8 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import org.cssnr.zipline.databinding.ActivityMainBinding
+import androidx.core.view.size
+import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
 
@@ -103,15 +105,24 @@ class MainActivity : AppCompatActivity() {
         // Navigation - Back Button
         supportFragmentManager.addOnBackStackChangedListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
+            Log.d("addOnBackStackChangedListener", "currentFragment: $currentFragment")
             val itemId = when (currentFragment) {
                 is SettingsFragment -> R.id.nav_item_settings
                 is HomeFragment -> R.id.nav_item_home
+                is PreviewFragment -> View.NO_ID
                 else -> View.NO_ID
             }
+            Log.d("addOnBackStackChangedListener", "itemId: $itemId")
             if (itemId != View.NO_ID) {
+                Log.d("addOnBackStackChangedListener", "SET isChecked")
                 binding.navigationView.menu.findItem(itemId)?.isChecked = true
             } else {
-                binding.navigationView.menu.setGroupCheckable(0, false, true)
+                Log.d("addOnBackStackChangedListener", "NOT Checkable")
+                //binding.navigationView.menu.setGroupCheckable(0, false, true)
+                binding.navigationView.menu.setGroupCheckable(0, true, true)
+                for (i in 0 until binding.navigationView.menu.size) {
+                    binding.navigationView.menu[i].isChecked = false
+                }
             }
         }
 

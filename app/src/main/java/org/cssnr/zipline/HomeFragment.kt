@@ -96,15 +96,30 @@ class HomeFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("HomeFragment", "onSaveInstanceState: $outState")
+        Log.d("HomeFragment", "onSaveInstanceState1: $outState")
         super.onSaveInstanceState(outState)
-        binding.webView.saveState(outState)
+        Log.d("HomeFragment", "onSaveInstanceState2: $outState")
 
-        // TODO: Not sure when this method is triggered...
-        webViewState.let {
-            outState.putBundle("webViewState", it)
-        }
+        _binding?.webView?.saveState(outState)
+        Log.d("HomeFragment", "onSaveInstanceState3: $outState")
+
+        outState.putBundle("webViewState", webViewState)
+        Log.d("HomeFragment", "DONE")
     }
+
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        Log.d("HomeFragment", "onSaveInstanceState1: $outState")
+//        super.onSaveInstanceState(outState)
+//        Log.d("HomeFragment", "onSaveInstanceState2: $outState")
+//        binding.webView?.saveState(outState)
+//        Log.d("HomeFragment", "onSaveInstanceState3: $outState")
+//
+//        webViewState.let {
+//            Log.d("HomeFragment", "outState.putBundle: $it")
+//            outState.putBundle("webViewState", it)
+//        }
+//        Log.d("HomeFragment", "DONE")
+//    }
 
     override fun onPause() {
         Log.d("HomeFragment", "ON PAUSE")
