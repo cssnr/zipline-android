@@ -6,6 +6,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -17,6 +18,7 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.FragmentManager
 import org.cssnr.zipline.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -56,13 +58,21 @@ class MainActivity : AppCompatActivity() {
             settings.useWideViewPort = true // prevent loading images zoomed in
         }
 
-        // Handle Navigation Item Clicks
+        // Navigation - On Click
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             Log.d("Drawer", "menuItem: $menuItem")
             Log.d("Drawer", "itemId: ${menuItem.itemId}")
             if (menuItem.itemId == R.id.nav_item_home) {
                 Log.d("Drawer", "GO HOME")
-                Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_LONG).show()
+                val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
+                if (currentFragment != null) {
+                    supportFragmentManager.popBackStack(
+                        null,
+                        FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
+                }
+                binding.drawerLayout.closeDrawers()
+                true
             } else if (menuItem.itemId == R.id.nav_item_upload) {
                 Log.d("Drawer", "UP LOAD")
                 Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_LONG).show()
@@ -77,6 +87,21 @@ class MainActivity : AppCompatActivity() {
             }
             false
         }
+
+        // Navigation - Back Button
+        supportFragmentManager.addOnBackStackChangedListener {
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
+            val itemId = when (currentFragment) {
+                is SettingsFragment -> R.id.nav_item_settings
+                else -> R.id.nav_item_home
+            }
+            if (itemId != View.NO_ID) {
+                binding.navigationView.menu.findItem(itemId)?.isChecked = true
+            } else {
+                binding.navigationView.menu.setGroupCheckable(0, false, true)
+            }
+        }
+
         handleIntent(intent)
     }
 
@@ -143,6 +168,7 @@ class MainActivity : AppCompatActivity() {
         } else if (Intent.ACTION_MAIN == intent.action) {
             Log.d("handleIntent", "ACTION_MAIN")
 
+            binding.navigationView.menu.findItem(R.id.nav_item_home)?.isChecked = true
             binding.webView.loadUrl(ziplineUrl)
 
         } else if (Intent.ACTION_SEND == intent.action) {

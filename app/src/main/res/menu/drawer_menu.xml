@@ -5,18 +5,21 @@
         <item
             android:id="@+id/nav_item_home"
             android:icon="@drawable/baseline_audio_file_24"
-            android:title="Home" />
+            android:title="Home"
+            android:checkable="true" />
         <item
             android:id="@+id/nav_item_upload"
             android:icon="@drawable/baseline_file_upload_24"
-            android:title="Upload" />
+            android:title="Upload"
+            android:checkable="true" />
     </group>
 
     <group android:id="@+id/nav_app">
         <item
             android:id="@+id/nav_item_settings"
             android:icon="@drawable/baseline_settings_24"
-            android:title="Settings" />
+            android:title="Settings"
+            android:checkable="true" />
     </group>
 
 </menu>
