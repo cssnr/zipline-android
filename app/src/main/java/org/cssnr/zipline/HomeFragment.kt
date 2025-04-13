@@ -39,6 +39,14 @@ class HomeFragment : Fragment() {
 
     override fun onDestroyView() {
         Log.d("HomeFragment", "onDestroyView")
+        // Destroy WebView
+        binding.webView.apply {
+            loadUrl("about:blank")
+            stopLoading()
+            clearHistory()
+            removeAllViews()
+            destroy()
+        }
         super.onDestroyView()
         _binding = null
     }
