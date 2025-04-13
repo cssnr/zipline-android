@@ -5,6 +5,8 @@ import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
+import android.content.Intent
+import androidx.core.net.toUri
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceError
@@ -22,6 +24,7 @@ class HomeFragment : Fragment() {
     private val binding get() = _binding!!
 
     private var webViewState: Bundle = Bundle()
+    private lateinit var ziplineUrl: String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,7 +58,7 @@ class HomeFragment : Fragment() {
         Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
 
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
+        ziplineUrl = sharedPreferences?.getString("ziplineUrl", "").toString()
         val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
         Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
         Log.d("onViewCreated", "ziplineToken: $ziplineToken")
@@ -74,7 +77,7 @@ class HomeFragment : Fragment() {
                 restoreState(webViewState)
             } else {
                 Log.d("webView.apply", "LOAD URL RETARD")
-                loadUrl(ziplineUrl.toString())
+                loadUrl(ziplineUrl)
             }
         }
 
@@ -138,31 +141,17 @@ class HomeFragment : Fragment() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
             Log.d("shouldOverrideUrlLoading", "url: $url")
+            Log.d("shouldOverrideUrlLoading", "ziplineUrl: $ziplineUrl")
 
-            //val preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-            //val savedUrl = sharedPreferences.getString(URL_KEY, null)
-            //Log.d("shouldOverrideUrlLoading", "savedUrl: $savedUrl")
+            if (ziplineUrl.isNotEmpty() && url.startsWith(ziplineUrl) ) {
+                Log.d("shouldOverrideUrlLoading", "FALSE - in app")
+                return false
+            }
 
-            //if ((savedUrl != null &&
-            //            url.startsWith(savedUrl) && !url.startsWith("$savedUrl/r/") && !url.startsWith(
-            //        "$savedUrl/raw/"
-            //    )) ||
-            //    url.startsWith("https://discord.com/oauth2") ||
-            //    url.startsWith("https://github.com/sessions/two-factor/") ||
-            //    url.startsWith("https://github.com/login") ||
-            //    url.startsWith("https://accounts.google.com/v3/signin") ||
-            //    url.startsWith("https://accounts.google.com/o/oauth2/v2/auth")
-            //) {
-            //    Log.d("shouldOverrideUrlLoading", "FALSE - in app")
-            //    return false
-            //}
-
-            //val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            //view.context.startActivity(intent)
-            //Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
-            //return true
-
-            return false
+            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+            view.context.startActivity(intent)
+            Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
+            return true
         }
 
         override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
