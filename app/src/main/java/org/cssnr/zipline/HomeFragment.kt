@@ -98,13 +98,8 @@ class HomeFragment : Fragment() {
     override fun onSaveInstanceState(outState: Bundle) {
         Log.d("HomeFragment", "onSaveInstanceState1: $outState")
         super.onSaveInstanceState(outState)
-        Log.d("HomeFragment", "onSaveInstanceState2: $outState")
-
         _binding?.webView?.saveState(outState)
-        Log.d("HomeFragment", "onSaveInstanceState3: $outState")
-
         outState.putBundle("webViewState", webViewState)
-        Log.d("HomeFragment", "DONE")
     }
 
 //    override fun onSaveInstanceState(outState: Bundle) {
