@@ -9,6 +9,7 @@ import android.util.Log
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -16,13 +17,18 @@ import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.navigation.NavController
+import androidx.navigation.ui.AppBarConfiguration
 import org.cssnr.zipline.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    @SuppressLint("SetJavaScriptEnabled")
+    private lateinit var navController: NavController
+    private lateinit var appBarConfiguration: AppBarConfiguration
+
+    @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("onCreate", "savedInstanceState: $savedInstanceState")
@@ -30,6 +36,14 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
+        val versionName = packageInfo.versionName
+        Log.d("onCreate", "versionName: $versionName")
+
+        val headerView = binding.navigationView.getHeaderView(0)
+        val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
+        versionTextView.text = "v${versionName}"
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -47,6 +61,27 @@ class MainActivity : AppCompatActivity() {
             settings.useWideViewPort = true // prevent loading images zoomed in
         }
 
+        // Handle Navigation Item Clicks
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            Log.d("Drawer", "menuItem: $menuItem")
+            Log.d("Drawer", "itemId: ${menuItem.itemId}")
+            if (menuItem.itemId == R.id.nav_item_home) {
+                Log.d("Drawer", "GO HOME")
+                Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_LONG).show()
+            } else if (menuItem.itemId == R.id.nav_item_upload) {
+                Log.d("Drawer", "UP LOAD")
+                Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_LONG).show()
+            } else if (menuItem.itemId == R.id.nav_item_settings) {
+                Log.d("Drawer", "SETTINGS")
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.main, SettingsFragment())
+                    .addToBackStack(null)
+                    .commit()
+                binding.drawerLayout.closeDrawers()
+                true
+            }
+            false
+        }
         handleIntent(intent)
     }
 
