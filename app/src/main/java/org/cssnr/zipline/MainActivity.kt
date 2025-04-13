@@ -56,13 +56,24 @@ class MainActivity : AppCompatActivity() {
                     Log.d("setNavigationItemSelectedListener", "currentFragment: $currentFragment")
                     if (currentFragment !is HomeFragment) {
                         Log.d("setNavigationItemSelectedListener", "NOT HomeFragment")
-                        supportFragmentManager.popBackStack(
-                            null,
-                            FragmentManager.POP_BACK_STACK_INCLUSIVE
-                        )
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.main, HomeFragment())
-                            .commit()
+
+                        if (supportFragmentManager.backStackEntryCount > 0) {
+                            Log.i("MainActivity", "popping backstack")
+                            supportFragmentManager.popBackStack()
+                        } else {
+                            Log.i("MainActivity", "nothing on backstack, calling super")
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.main, HomeFragment())
+                                .commitNow()
+                        }
+
+                        //supportFragmentManager.popBackStack(
+                        //    null,
+                        //    FragmentManager.POP_BACK_STACK_INCLUSIVE
+                        //)
+                        //supportFragmentManager.beginTransaction()
+                        //    .replace(R.id.main, HomeFragment())
+                        //    .commit()
                     }
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                     binding.drawerLayout.closeDrawers()
