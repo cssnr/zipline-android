@@ -99,9 +99,18 @@ class SetupFragment : Fragment() {
                     Log.d("getSharedPreferences", "ziplineUrl: $host")
                     sharedPreferences?.edit { putString("ziplineToken", token) }
                     Log.d("getSharedPreferences", "ziplineToken: $token")
-                    val mainActivity = activity as MainActivity
-                    Log.d("lifecycleScope.launch", "mainActivity.loadUrl: $host")
-                    mainActivity.loadUrl(host)
+
+//                    val mainActivity = activity as MainActivity
+//                    Log.d("lifecycleScope.launch", "mainActivity.loadUrl: $host")
+//                    mainActivity.loadUrl(host)
+
+                    val fragment = requireActivity()
+                        .supportFragmentManager
+                        .findFragmentById(R.id.main)
+                    if (fragment is HomeFragment) {
+                        fragment.loadUrl(host)
+                    }
+
                     activity?.supportFragmentManager?.beginTransaction()
                         ?.remove(this@SetupFragment)
                         ?.commit()

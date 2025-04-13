@@ -48,52 +48,54 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        binding.webView.apply {
-            webViewClient = MyWebViewClient()
-            settings.domStorageEnabled = true
-            settings.javaScriptEnabled = true
-            settings.allowFileAccess = true
-            settings.allowContentAccess = true
-            settings.loadWithOverviewMode = true // prevent loading images zoomed in
-            settings.useWideViewPort = true // prevent loading images zoomed in
-        }
+//        binding.webView.apply {
+//            webViewClient = MyWebViewClient()
+//            settings.domStorageEnabled = true
+//            settings.javaScriptEnabled = true
+//            settings.allowFileAccess = true
+//            settings.allowContentAccess = true
+//            settings.loadWithOverviewMode = true // prevent loading images zoomed in
+//            settings.useWideViewPort = true // prevent loading images zoomed in
+//        }
 
         // Navigation - On Click
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            Log.d("Drawer", "menuItem: $menuItem")
-            Log.d("Drawer", "itemId: ${menuItem.itemId}")
-            if (menuItem.itemId == R.id.nav_item_home) {
-                Log.d("Drawer", "GO HOME")
-                val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-                if (currentFragment != null) {
-                    supportFragmentManager.popBackStack(
-                        null,
-                        FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
+            when (menuItem.itemId) {
+                R.id.nav_item_home -> {
+                    val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
+                    if (currentFragment !is HomeFragment) {
+                        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                        supportFragmentManager.beginTransaction()
+                            .replace(R.id.main, HomeFragment())
+                            .commit()
+                    }
+                    binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                    binding.drawerLayout.closeDrawers()
+                    true
                 }
-                binding.drawerLayout.closeDrawers()
-                true
-            } else if (menuItem.itemId == R.id.nav_item_upload) {
-                Log.d("Drawer", "UP LOAD")
-                Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_LONG).show()
-            } else if (menuItem.itemId == R.id.nav_item_settings) {
-                Log.d("Drawer", "SETTINGS")
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.main, SettingsFragment())
-                    .addToBackStack(null)
-                    .commit()
-                binding.drawerLayout.closeDrawers()
-                true
+
+                R.id.nav_item_settings -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main, SettingsFragment())
+                        .addToBackStack(null)
+                        .commit()
+                    binding.navigationView.setCheckedItem(R.id.nav_item_settings)
+                    binding.drawerLayout.closeDrawers()
+                    true
+                }
+
+                else -> false
             }
-            false
         }
+
 
         // Navigation - Back Button
         supportFragmentManager.addOnBackStackChangedListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
             val itemId = when (currentFragment) {
                 is SettingsFragment -> R.id.nav_item_settings
-                else -> R.id.nav_item_home
+                is HomeFragment -> R.id.nav_item_home
+                else -> View.NO_ID
             }
             if (itemId != View.NO_ID) {
                 binding.navigationView.menu.findItem(itemId)?.isChecked = true
@@ -105,31 +107,31 @@ class MainActivity : AppCompatActivity() {
         handleIntent(intent)
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("onSaveInstanceState", "outState: $outState")
-        super.onSaveInstanceState(outState)
-        binding.webView.saveState(outState)
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
-        Log.d("onRestoreInstanceState", "savedInstanceState: $savedInstanceState")
-        super.onRestoreInstanceState(savedInstanceState)
-        binding.webView.restoreState(savedInstanceState)
-    }
-
-    override fun onPause() {
-        Log.d("onPause", "ON PAUSE")
-        super.onPause()
-        binding.webView.onPause()
-        binding.webView.pauseTimers()
-    }
-
-    override fun onResume() {
-        Log.d("onResume", "ON RESUME")
-        super.onResume()
-        binding.webView.onResume()
-        binding.webView.resumeTimers()
-    }
+//    override fun onSaveInstanceState(outState: Bundle) {
+//        Log.d("onSaveInstanceState", "outState: $outState")
+//        super.onSaveInstanceState(outState)
+//        binding.webView.saveState(outState)
+//    }
+//
+//    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+//        Log.d("onRestoreInstanceState", "savedInstanceState: $savedInstanceState")
+//        super.onRestoreInstanceState(savedInstanceState)
+//        binding.webView.restoreState(savedInstanceState)
+//    }
+//
+//    override fun onPause() {
+//        Log.d("onPause", "ON PAUSE")
+//        super.onPause()
+//        binding.webView.onPause()
+//        binding.webView.pauseTimers()
+//    }
+//
+//    override fun onResume() {
+//        Log.d("onResume", "ON RESUME")
+//        super.onResume()
+//        binding.webView.onResume()
+//        binding.webView.resumeTimers()
+//    }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
@@ -168,8 +170,13 @@ class MainActivity : AppCompatActivity() {
         } else if (Intent.ACTION_MAIN == intent.action) {
             Log.d("handleIntent", "ACTION_MAIN")
 
-            binding.navigationView.menu.findItem(R.id.nav_item_home)?.isChecked = true
-            binding.webView.loadUrl(ziplineUrl)
+//            binding.navigationView.menu.findItem(R.id.nav_item_home)?.isChecked = true
+//            binding.webView.loadUrl(ziplineUrl)
+
+            supportFragmentManager.beginTransaction()
+                .replace(R.id.main, HomeFragment())
+                .commit()
+            binding.navigationView.setCheckedItem(R.id.nav_item_home)
 
         } else if (Intent.ACTION_SEND == intent.action) {
             Log.d("handleIntent", "ACTION_SEND")
@@ -229,73 +236,73 @@ class MainActivity : AppCompatActivity() {
             .commit()
     }
 
-    fun loadUrl(url: String) {
-        Log.d("loadUrl", "binding.webView.loadUrl: $url")
-        binding.webView.loadUrl(url)
-    }
+//    fun loadUrl(url: String) {
+//        Log.d("loadUrl", "binding.webView.loadUrl: $url")
+//        binding.webView.loadUrl(url)
+//    }
 
-    inner class MyWebViewClient : WebViewClient() {
-        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
-            val url = request.url.toString()
-            Log.d("shouldOverrideUrlLoading", "url: $url")
-
-            val preferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
-            val ziplineUrl = preferences.getString("ziplineUrl", null)
-            Log.d("shouldOverrideUrlLoading", "ziplineUrl: $ziplineUrl")
-
-            if (ziplineUrl.isNullOrEmpty()) {
-                Log.w("shouldOverrideUrlLoading", "ziplineUrl.isNullOrEmpty()")
-                Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
-                return true
-            }
-
-            if (url.startsWith(ziplineUrl)) {
-                Log.d("shouldOverrideUrlLoading", "FALSE - in app")
-                return false
-            }
-
-            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
-            view.context.startActivity(intent)
-            Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
-            return true
-        }
-
-        override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
-            Log.d("doUpdateVisitedHistory", "url: $url")
-            if (url.endsWith("/auth/login") == true) {
-                Log.d("doUpdateVisitedHistory", "LOGOUT: url: $url")
-
-                val sharedPreferences =
-                    view.context.getSharedPreferences("default_preferences", MODE_PRIVATE)
-                //sharedPreferences.edit { putString("ziplineToken", "") }
-                sharedPreferences.edit { remove("ziplineToken") }
-                Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
-
-                //view.destroy()
-                view.loadUrl("about:blank")
-
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.main, SetupFragment())
-                    .commit()
-            }
-        }
-
-        //override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
-        //    Log.d("onPageStarted", "url: $url")
-        //}
-
-        //override fun onLoadResource(view: WebView?, url: String?) {
-        //    //Log.d("onLoadResource", "url: $url")
-        //    if (url?.endsWith("/api/auth/logout") == true) {
-        //        Log.d("onLoadResource", "LOGOUT: url: $url")
-        //    }
-        //}
-
-        //override fun onPageFinished(view: WebView?, url: String?) {
-        //    Log.d("onPageFinished", "url: $url")
-        //    Log.d("onPageFinished", "view?.url: ${view?.url}")
-        //    //view?.loadUrl("")
-        //}
-
-    }
+//    inner class MyWebViewClient : WebViewClient() {
+//        override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
+//            val url = request.url.toString()
+//            Log.d("shouldOverrideUrlLoading", "url: $url")
+//
+//            val preferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
+//            val ziplineUrl = preferences.getString("ziplineUrl", null)
+//            Log.d("shouldOverrideUrlLoading", "ziplineUrl: $ziplineUrl")
+//
+//            if (ziplineUrl.isNullOrEmpty()) {
+//                Log.w("shouldOverrideUrlLoading", "ziplineUrl.isNullOrEmpty()")
+//                Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
+//                return true
+//            }
+//
+//            if (url.startsWith(ziplineUrl)) {
+//                Log.d("shouldOverrideUrlLoading", "FALSE - in app")
+//                return false
+//            }
+//
+//            val intent = Intent(Intent.ACTION_VIEW, url.toUri())
+//            view.context.startActivity(intent)
+//            Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
+//            return true
+//        }
+//
+//        override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
+//            Log.d("doUpdateVisitedHistory", "url: $url")
+//            if (url.endsWith("/auth/login") == true) {
+//                Log.d("doUpdateVisitedHistory", "LOGOUT: url: $url")
+//
+//                val sharedPreferences =
+//                    view.context.getSharedPreferences("default_preferences", MODE_PRIVATE)
+//                //sharedPreferences.edit { putString("ziplineToken", "") }
+//                sharedPreferences.edit { remove("ziplineToken") }
+//                Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
+//
+//                //view.destroy()
+//                view.loadUrl("about:blank")
+//
+//                supportFragmentManager.beginTransaction()
+//                    .replace(R.id.main, SetupFragment())
+//                    .commit()
+//            }
+//        }
+//
+//        //override fun onPageStarted(view: WebView, url: String, favicon: Bitmap?) {
+//        //    Log.d("onPageStarted", "url: $url")
+//        //}
+//
+//        //override fun onLoadResource(view: WebView?, url: String?) {
+//        //    //Log.d("onLoadResource", "url: $url")
+//        //    if (url?.endsWith("/api/auth/logout") == true) {
+//        //        Log.d("onLoadResource", "LOGOUT: url: $url")
+//        //    }
+//        //}
+//
+//        //override fun onPageFinished(view: WebView?, url: String?) {
+//        //    Log.d("onPageFinished", "url: $url")
+//        //    Log.d("onPageFinished", "view?.url: ${view?.url}")
+//        //    //view?.loadUrl("")
+//        //}
+//
+//    }
 }

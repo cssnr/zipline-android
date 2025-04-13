@@ -168,8 +168,17 @@ class PreviewFragment : Fragment() {
             if (result != null) {
                 Log.d("processUpload", "result.url: ${result.url}")
                 copyToClipboard(result.url)
-                val main = activity as MainActivity
-                main.loadUrl(result.url)
+
+//                val main = activity as MainActivity
+//                main.loadUrl(result.url)
+
+                val fragment = requireActivity()
+                    .supportFragmentManager
+                    .findFragmentById(R.id.main)
+                if (fragment is HomeFragment) {
+                    fragment.loadUrl(result.url)
+                }
+
                 Log.d("processUpload", "parentFragmentManager.popBackStack()")
                 parentFragmentManager.beginTransaction()
                     .remove(this@PreviewFragment)
