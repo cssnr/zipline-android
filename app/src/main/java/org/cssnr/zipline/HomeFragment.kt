@@ -28,16 +28,22 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        Log.d("HomeFragment", "onCreateView: $savedInstanceState")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
-
         return root
+    }
+
+    override fun onDestroyView() {
+        Log.d("HomeFragment", "onDestroyView")
+        super.onDestroyView()
+        _binding = null
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
+        Log.d("HomeFragment", "onViewCreated: $savedInstanceState")
 
         Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
         // TODO: Not sure when this method is triggered...
@@ -85,12 +91,12 @@ class HomeFragment : Fragment() {
     }
 
     fun loadUrl(url: String) {
-        Log.d("loadUrl", "binding.webView.loadUrl: $url")
+        Log.d("HomeFragment", "binding.webView.loadUrl: $url")
         binding.webView.loadUrl(url)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("onSaveInstanceState", "outState: $outState")
+        Log.d("HomeFragment", "onSaveInstanceState: $outState")
         super.onSaveInstanceState(outState)
         binding.webView.saveState(outState)
 
@@ -101,7 +107,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onPause() {
-        Log.d("onPause", "ON PAUSE")
+        Log.d("HomeFragment", "ON PAUSE")
         super.onPause()
         binding.webView.onPause()
         binding.webView.pauseTimers()
@@ -112,15 +118,10 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
-        Log.d("onResume", "ON RESUME")
+        Log.d("HomeFragment", "ON RESUME")
         super.onResume()
         binding.webView.onResume()
         binding.webView.resumeTimers()
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
     }
 
     inner class MyWebViewClient : WebViewClient() {

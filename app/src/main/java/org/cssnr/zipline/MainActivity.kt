@@ -45,6 +45,10 @@ class MainActivity : AppCompatActivity() {
 
         // Navigation - On Click
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
+            val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
+            Log.d("setNavigationItemSelectedListener", "currentFragment: $currentFragment")
+
             when (menuItem.itemId) {
                 R.id.nav_item_home -> {
                     Log.d("setNavigationItemSelectedListener", "nav_item_home")

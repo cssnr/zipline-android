@@ -31,15 +31,18 @@ class PreviewFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("onCreateView", "savedInstanceState: $savedInstanceState")
+        Log.d("PreviewFragment", "onCreateView: $savedInstanceState")
         _binding = FragmentPreviewBinding.inflate(inflater, container, false)
-        return binding.root
+        val root: View = binding.root
+        return root
     }
 
     override fun onDestroyView() {
+        Log.d("PreviewFragment", "onDestroyView")
         super.onDestroyView()
         _binding = null
     }
