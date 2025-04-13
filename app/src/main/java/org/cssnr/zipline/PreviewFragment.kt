@@ -56,13 +56,14 @@ class PreviewFragment : Fragment() {
         if (uri == null) {
             // TODO: Better Handle this Error
             Log.e("onViewCreated", "URI is null")
-            Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_LONG).show()
             return
         }
 
         val fileName = getFileNameFromUri(requireContext(), uri)
         Log.d("onViewCreated", "fileName: $fileName")
-        binding.fileName.text = fileName
+        //binding.fileName.text = fileName
+        binding.fileName.setText(fileName)
 
         if (type?.startsWith("image/") == true) {
             // Show Image Preview
@@ -107,7 +108,7 @@ class PreviewFragment : Fragment() {
 
         if (ziplineUrl == null || ziplineToken == null) {
             Log.e("onViewCreated", "ziplineUrl || ziplineToken is null")
-            Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_SHORT)
+            Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
                 .show()
             parentFragmentManager.beginTransaction()
                 .replace(R.id.main, SetupFragment())
@@ -116,6 +117,7 @@ class PreviewFragment : Fragment() {
         }
 
         binding.shareButton.setOnClickListener {
+            Log.d("shareButton", "setOnClickListener")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 this.type = type
                 putExtra(Intent.EXTRA_STREAM, uri)
@@ -124,7 +126,16 @@ class PreviewFragment : Fragment() {
             startActivity(Intent.createChooser(shareIntent, null))
         }
 
+        binding.optionsButton.setOnClickListener {
+            Log.d("optionsButton", "setOnClickListener")
+            parentFragmentManager.beginTransaction()
+                .replace(R.id.main, SettingsFragment())
+                .addToBackStack(null)
+                .commit()
+        }
+
         binding.openButton.setOnClickListener {
+            Log.d("openButton", "setOnClickListener")
             val openIntent = Intent(Intent.ACTION_VIEW).apply {
                 setDataAndType(uri, type)
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
@@ -134,11 +145,13 @@ class PreviewFragment : Fragment() {
 
 
         binding.uploadButton.setOnClickListener {
-            processUpload(uri, ziplineUrl, ziplineToken)
+            val fileName = binding.fileName.text.toString().trim()
+            Log.d("uploadButton", "fileName: $fileName")
+            processUpload(uri, fileName, ziplineUrl)
         }
     }
 
-    private fun processUpload(uri: Uri, ziplineUrl: String, ziplineToken: String) {
+    private fun processUpload(uri: Uri, fileName: String, ziplineUrl: String) {
         // TODO: Cleanup to work with multiple files and previews...
         Log.d("processUpload", "File URI: $uri")
         //if (uri == null) {
@@ -148,7 +161,7 @@ class PreviewFragment : Fragment() {
         //}
         val api = ZiplineApi(requireContext())
         lifecycleScope.launch {
-            val response = api.upload(uri, ziplineUrl, ziplineToken)
+            val response = api.upload(uri, fileName, ziplineUrl)
             Log.d("processUpload", "response: $response")
             val result = response?.files?.firstOrNull()
             Log.d("processUpload", "result: $result")
@@ -164,7 +177,7 @@ class PreviewFragment : Fragment() {
             } else {
                 Log.w("processUpload", "uploadedFile is null")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_SHORT)
+                    Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_LONG)
                         .show()
                 }
             }

@@ -2,6 +2,7 @@ package org.cssnr.zipline
 
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
+import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
@@ -33,6 +34,8 @@ import java.net.URLConnection
 
 class ZiplineApi(private val context: Context) {
 
+    private val preferences: SharedPreferences =
+        context.getSharedPreferences("default_preferences", MODE_PRIVATE)
     private lateinit var cookieJar: SimpleCookieJar
     private lateinit var client: OkHttpClient
 
@@ -66,19 +69,22 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
-    suspend fun upload(uri: Uri, ziplineUrl: String, ziplineToken: String): FileResponse? {
-        Log.e("upload", "uri: $uri")
-        val fileName = getFileNameFromUri(context, uri)
-        Log.e("upload", "fileName: $fileName")
+    suspend fun upload(uri: Uri, fileName: String, ziplineUrl: String): FileResponse? {
+        Log.d("upload", "uri: $uri")
+        Log.d("upload", "fileName: $fileName")
+        val ziplineToken = preferences.getString("ziplineToken", null)
+        Log.d("upload", "ziplineToken: $ziplineToken")
+        val fileNameFormat = preferences.getString("file_name_format", "random")
+        Log.d("upload", "fileNameFormat: $fileNameFormat")
         val inputStream = context.contentResolver.openInputStream(uri)
-        if (fileName == null || inputStream == null) {
-            Log.e("upload", "inputStream or fileName is null")
+        if (ziplineToken == null || inputStream == null) {
+            Log.e("upload", "inputStream/ziplineToken is null")
             return null
         }
         val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
         val multiPart: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
         return try {
-            api.postUpload(ziplineToken, multiPart)
+            api.postUpload(ziplineToken, fileNameFormat.toString(), multiPart)
         } catch (e: HttpException) {
             Log.e("upload", "HttpException: ${e.message}")
             val response = e.response()?.errorBody()?.string()
@@ -87,7 +93,7 @@ class ZiplineApi(private val context: Context) {
                 try {
                     val token = reAuthenticate(api, ziplineUrl)
                     if (!token.isNullOrEmpty()) {
-                        return api.postUpload(token, multiPart)
+                        return api.postUpload(token, fileNameFormat.toString(), multiPart)
                     }
                 } catch (e: Exception) {
                     Log.w("upload", "Exception: ${e.message}")
@@ -165,6 +171,7 @@ class ZiplineApi(private val context: Context) {
         @POST("upload")
         suspend fun postUpload(
             @Header("authorization") token: String,
+            @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
         ): FileResponse
     }

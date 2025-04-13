@@ -9,4 +9,22 @@
     <string name="preview">Preview</string>
     <string name="share">Share</string>
     <string name="open">Open</string>
+    <string name="options">Options</string>
+    <string name="file_name">File Name</string>
+
+    <string-array name="dropdown_entries">
+        <item>Random</item>
+        <item>Date</item>
+        <item>UUID</item>
+        <item>Name</item>
+        <item>Gfycat</item>
+    </string-array>
+
+    <string-array name="dropdown_values">
+        <item>random</item>
+        <item>date</item>
+        <item>uuid</item>
+        <item>name</item>
+        <item>gfycat</item>
+    </string-array>
 </resources>

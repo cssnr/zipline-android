@@ -1,5 +1,6 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
@@ -38,18 +39,35 @@
 
         </FrameLayout>
 
-        <TextView
+        <EditText
             android:id="@+id/file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:textAlignment="center"
+            android:layout_marginTop="8dp"
+            android:autofillHints="File Name"
             android:ellipsize="end"
-            android:singleLine="true"
+            android:gravity="center"
+            android:hint="@string/file_name"
+            android:inputType="textNoSuggestions"
             android:maxLines="1"
-            android:textColor="?android:attr/textColorPrimary"
+            android:singleLine="true"
+            android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:layout_marginTop="8dp" />
+            android:textColor="?android:attr/textColorPrimary"
+            tools:text="test_file.jpg" />
+
+<!--        <TextView-->
+<!--            android:id="@+id/file_name"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:gravity="center"-->
+<!--            android:textAlignment="center"-->
+<!--            android:ellipsize="end"-->
+<!--            android:singleLine="true"-->
+<!--            android:maxLines="1"-->
+<!--            android:textColor="?android:attr/textColorPrimary"-->
+<!--            android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
+<!--            android:layout_marginTop="8dp" />-->
 
         <Button
             android:id="@+id/upload_button"
@@ -61,6 +79,20 @@
             android:text="@string/upload"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:icon="@drawable/baseline_file_upload_24"
+            app:iconGravity="end"
+            app:iconPadding="-36dp"
+            app:iconSize="24dp" />
+
+        <Button
+            android:id="@+id/options_button"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="8dp"
+            android:paddingEnd="36dp"
+            android:paddingStart="36dp"
+            android:text="@string/options"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            app:icon="@drawable/baseline_settings_24"
             app:iconGravity="end"
             app:iconPadding="-36dp"
             app:iconSize="24dp" />

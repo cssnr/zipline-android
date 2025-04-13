@@ -1,0 +1,34 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory android:title="App Settings">
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/baseline_preview_24"
+            android:key="show_preview"
+            android:title="Show Preview Screen"
+            android:enabled="false" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/baseline_fingerprint_24"
+            android:key="enable_biometrics"
+            android:title="Enable Biometrics"
+            android:enabled="false" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Upload Settings">
+
+        <ListPreference
+            android:key="file_name_format"
+            android:title="File Name Option"
+            android:defaultValue="random"
+            android:entries="@array/dropdown_entries"
+            android:entryValues="@array/dropdown_values"
+            android:icon="@drawable/baseline_menu_24"
+            android:summary="%s" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
