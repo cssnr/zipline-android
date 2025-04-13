@@ -38,10 +38,15 @@ class SetupFragment : Fragment() {
         Log.d("SetupFragment", "onDestroyView")
         super.onDestroyView()
         _binding = null
+        // Unlock Navigation Drawer
+        (requireActivity() as MainActivity).setDrawerLockMode(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
+
+        // Lock Navigation Drawer
+        (requireActivity() as MainActivity).setDrawerLockMode(false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             binding.root.setOnApplyWindowInsetsListener { _, insets ->

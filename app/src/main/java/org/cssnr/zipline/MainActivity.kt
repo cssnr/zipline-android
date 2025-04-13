@@ -13,7 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.fragment.app.FragmentManager
+import androidx.drawerlayout.widget.DrawerLayout
 import org.cssnr.zipline.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -91,6 +91,11 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
+//                R.id.nav_item_settings -> {
+//                    Log.d("setNavigationItemSelectedListener", "nav_item_settings")
+//                    false
+//                }
+
                 else -> false
             }
         }
@@ -111,6 +116,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         handleIntent(intent)
+    }
+
+    fun setDrawerLockMode(enabled: Boolean) {
+        val lockMode =
+            if (enabled) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+        binding.drawerLayout.setDrawerLockMode(lockMode)
     }
 
     override fun onNewIntent(intent: Intent) {
