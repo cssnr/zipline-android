@@ -1,6 +1,5 @@
 package org.cssnr.zipline
 
-
 import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.os.Bundle
@@ -13,6 +12,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
@@ -43,7 +43,8 @@ class HomeFragment : Fragment() {
         // TODO: Not sure when this method is triggered...
         if (savedInstanceState != null) {
             Log.i("onViewCreated", "SETTING webViewState FROM savedInstanceState")
-            webViewState = savedInstanceState.getBundle("webViewState") ?: Bundle()  // Ensure non-null
+            webViewState =
+                savedInstanceState.getBundle("webViewState") ?: Bundle()  // Ensure non-null
         }
         Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
 
@@ -151,6 +152,26 @@ class HomeFragment : Fragment() {
             //return true
 
             return false
+        }
+
+        override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
+            Log.d("doUpdateVisitedHistory", "url: $url")
+            if (url.endsWith("/auth/login") == true) {
+                Log.d("doUpdateVisitedHistory", "LOGOUT: url: $url")
+
+                val sharedPreferences =
+                    view.context.getSharedPreferences("default_preferences", MODE_PRIVATE)
+                //sharedPreferences.edit { putString("ziplineToken", "") }
+                sharedPreferences.edit { remove("ziplineToken") }
+                Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
+
+                //view.destroy()
+                view.loadUrl("about:blank")
+
+                parentFragmentManager.beginTransaction()
+                    .replace(R.id.main, SetupFragment())
+                    .commit()
+            }
         }
 
         override fun onReceivedError(

@@ -25,7 +25,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.databinding.FragmentPreviewBinding
 
-
 class PreviewFragment : Fragment() {
 
     private var _binding: FragmentPreviewBinding? = null

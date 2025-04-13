@@ -100,14 +100,22 @@ class SetupFragment : Fragment() {
                     sharedPreferences?.edit { putString("ziplineToken", token) }
                     Log.d("getSharedPreferences", "ziplineToken: $token")
 
-                    Log.d("fragment", "START")
                     //activity?.supportFragmentManager?.beginTransaction()
                     //    ?.replace(R.id.main, HomeFragment())
                     //    ?.commit()
-                    parentFragmentManager.beginTransaction()
-                        .replace(R.id.main, HomeFragment())
-                        //.addToBackStack(null)
-                        .commit()
+
+                    Log.d("fragment", "START")
+                    //parentFragmentManager.beginTransaction()
+                    //    .replace(R.id.main, HomeFragment())
+                    //    //.addToBackStack(null)
+                    //    .commitNow()
+                    //(requireActivity() as MainActivity).binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                    (activity as? MainActivity)?.let { main ->
+                        main.supportFragmentManager.beginTransaction()
+                            .replace(R.id.main, HomeFragment())
+                            .commit()
+                        main.binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                    }
                     Log.d("fragment", "DONE")
                 }
             }

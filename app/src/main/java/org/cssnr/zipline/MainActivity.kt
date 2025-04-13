@@ -18,7 +18,7 @@ import org.cssnr.zipline.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityMainBinding
+    internal lateinit var binding: ActivityMainBinding
 
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,8 +47,11 @@ class MainActivity : AppCompatActivity() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.nav_item_home -> {
+                    Log.d("setNavigationItemSelectedListener", "nav_item_home")
                     val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
+                    Log.d("setNavigationItemSelectedListener", "currentFragment: $currentFragment")
                     if (currentFragment !is HomeFragment) {
+                        Log.d("setNavigationItemSelectedListener", "NOT HomeFragment")
                         supportFragmentManager.popBackStack(
                             null,
                             FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -63,6 +66,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_item_settings -> {
+                    Log.d("setNavigationItemSelectedListener", "nav_item_settings")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main, SettingsFragment())
                         .addToBackStack(null)
