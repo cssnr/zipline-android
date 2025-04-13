@@ -4,21 +4,22 @@
     <group android:id="@+id/nav_site">
         <item
             android:id="@+id/nav_item_home"
-            android:icon="@drawable/baseline_audio_file_24"
-            android:title="Home"
+            android:icon="@drawable/ic_launcher_foreground"
+            android:title="@string/app_name"
             android:checkable="true" />
         <item
             android:id="@+id/nav_item_upload"
             android:icon="@drawable/baseline_file_upload_24"
-            android:title="Upload"
-            android:checkable="true" />
+            android:title="@string/upload"
+            android:checkable="true"
+            android:enabled="false"/>
     </group>
 
     <group android:id="@+id/nav_app">
         <item
             android:id="@+id/nav_item_settings"
             android:icon="@drawable/baseline_settings_24"
-            android:title="Settings"
+            android:title="@string/settings"
             android:checkable="true" />
     </group>
 

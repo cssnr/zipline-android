@@ -3,7 +3,7 @@
     <PreferenceCategory android:title="App Settings">
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:icon="@drawable/baseline_preview_24"
             android:key="show_preview"
             android:title="Show Preview Screen"
