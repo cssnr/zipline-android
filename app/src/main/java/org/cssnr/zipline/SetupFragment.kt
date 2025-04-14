@@ -24,21 +24,29 @@ class SetupFragment : Fragment() {
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        Log.d("onCreateView", "savedInstanceState: $savedInstanceState")
+        Log.d("SetupFragment", "onCreateView: $savedInstanceState")
         _binding = FragmentSetupBinding.inflate(inflater, container, false)
-        return binding.root
+        val root: View = binding.root
+        return root
     }
 
     override fun onDestroyView() {
+        Log.d("SetupFragment", "onDestroyView")
         super.onDestroyView()
         _binding = null
+        // Unlock Navigation Drawer
+        (requireActivity() as MainActivity).setDrawerLockMode(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
+
+        // Lock Navigation Drawer
+        (requireActivity() as MainActivity).setDrawerLockMode(false)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             binding.root.setOnApplyWindowInsetsListener { _, insets ->
@@ -99,12 +107,24 @@ class SetupFragment : Fragment() {
                     Log.d("getSharedPreferences", "ziplineUrl: $host")
                     sharedPreferences?.edit { putString("ziplineToken", token) }
                     Log.d("getSharedPreferences", "ziplineToken: $token")
-                    val mainActivity = activity as MainActivity
-                    Log.d("lifecycleScope.launch", "mainActivity.loadUrl: $host")
-                    mainActivity.loadUrl(host)
-                    activity?.supportFragmentManager?.beginTransaction()
-                        ?.remove(this@SetupFragment)
-                        ?.commit()
+
+                    //activity?.supportFragmentManager?.beginTransaction()
+                    //    ?.replace(R.id.main, HomeFragment())
+                    //    ?.commit()
+
+                    Log.d("fragment", "START")
+                    //parentFragmentManager.beginTransaction()
+                    //    .replace(R.id.main, HomeFragment())
+                    //    //.addToBackStack(null)
+                    //    .commitNow()
+                    //(requireActivity() as MainActivity).binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                    (activity as? MainActivity)?.let { main ->
+                        main.supportFragmentManager.beginTransaction()
+                            .replace(R.id.main, HomeFragment())
+                            .commit()
+                        main.binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                    }
+                    Log.d("fragment", "DONE")
                 }
             }
 

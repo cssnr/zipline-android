@@ -9,14 +9,14 @@ import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
 
-
 class SettingsFragment : PreferenceFragmentCompat() {
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        val view = super.onCreateView(inflater, container, savedInstanceState)
+        Log.d("SettingsFragment", "onCreateView: $savedInstanceState")
+        val view: View = super.onCreateView(inflater, container, savedInstanceState)
         val color = MaterialColors.getColor(view, android.R.attr.colorBackground)
         view.setBackgroundColor(color)
         return view

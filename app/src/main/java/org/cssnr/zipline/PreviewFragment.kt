@@ -25,22 +25,24 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.databinding.FragmentPreviewBinding
 
-
 class PreviewFragment : Fragment() {
 
     private var _binding: FragmentPreviewBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("onCreateView", "savedInstanceState: $savedInstanceState")
+        Log.d("PreviewFragment", "onCreateView: $savedInstanceState")
         _binding = FragmentPreviewBinding.inflate(inflater, container, false)
-        return binding.root
+        val root: View = binding.root
+        return root
     }
 
     override fun onDestroyView() {
+        Log.d("PreviewFragment", "onDestroyView")
         super.onDestroyView()
         _binding = null
     }
@@ -168,8 +170,14 @@ class PreviewFragment : Fragment() {
             if (result != null) {
                 Log.d("processUpload", "result.url: ${result.url}")
                 copyToClipboard(result.url)
-                val main = activity as MainActivity
-                main.loadUrl(result.url)
+
+                val fragment = requireActivity()
+                    .supportFragmentManager
+                    .findFragmentById(R.id.main)
+                if (fragment is HomeFragment) {
+                    fragment.loadUrl(result.url)
+                }
+
                 Log.d("processUpload", "parentFragmentManager.popBackStack()")
                 parentFragmentManager.beginTransaction()
                     .remove(this@PreviewFragment)
