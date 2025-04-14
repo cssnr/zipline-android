@@ -2,11 +2,10 @@ package org.cssnr.zipline
 
 import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.content.Intent
-import androidx.core.net.toUri
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebResourceError
@@ -15,6 +14,7 @@ import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
@@ -151,7 +151,7 @@ class HomeFragment : Fragment() {
             Log.d("shouldOverrideUrlLoading", "url: $url")
             Log.d("shouldOverrideUrlLoading", "ziplineUrl: $ziplineUrl")
 
-            if (ziplineUrl.isNotEmpty() && url.startsWith(ziplineUrl) ) {
+            if (ziplineUrl.isNotEmpty() && url.startsWith(ziplineUrl)) {
                 Log.d("shouldOverrideUrlLoading", "FALSE - in app")
                 return false
             }

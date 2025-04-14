@@ -186,7 +186,6 @@ class ZiplineApi(private val context: Context) {
         val url: String,
     )
 
-
     data class LoginRequest(
         val username: String,
         val password: String,

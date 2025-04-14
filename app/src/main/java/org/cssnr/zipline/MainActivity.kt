@@ -13,10 +13,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import org.cssnr.zipline.databinding.ActivityMainBinding
-import androidx.core.view.size
-import androidx.core.view.get
 
 class MainActivity : AppCompatActivity() {
 
@@ -92,11 +92,6 @@ class MainActivity : AppCompatActivity() {
                     binding.drawerLayout.closeDrawers()
                     true
                 }
-
-//                R.id.nav_item_settings -> {
-//                    Log.d("setNavigationItemSelectedListener", "nav_item_settings")
-//                    false
-//                }
 
                 else -> false
             }
