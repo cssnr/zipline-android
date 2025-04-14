@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        handleIntent(intent)
+        handleIntent(intent, savedInstanceState)
     }
 
     fun setDrawerLockMode(enabled: Boolean) {
@@ -138,10 +138,10 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.d("onNewIntent", "intent: $intent")
-        handleIntent(intent)
+        handleIntent(intent, null)
     }
 
-    private fun handleIntent(intent: Intent) {
+    private fun handleIntent(intent: Intent, savedInstanceState: Bundle?) {
         Log.d("handleIntent", "intent: $intent")
 
         Log.d("handleIntent", "intent.data: ${intent.data}")
@@ -162,12 +162,15 @@ class MainActivity : AppCompatActivity() {
                 .commit()
 
         } else if (Intent.ACTION_MAIN == intent.action) {
-            Log.d("handleIntent", "ACTION_MAIN")
+            Log.d("handleIntent", "ACTION_MAIN: $savedInstanceState")
 
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.main, HomeFragment())
-                .commit()
-            binding.navigationView.setCheckedItem(R.id.nav_item_home)
+            // TODO: Verify this does not cause any issues
+            if (savedInstanceState == null) {
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.main, HomeFragment())
+                    .commit()
+                binding.navigationView.setCheckedItem(R.id.nav_item_home)
+            }
 
         } else if (Intent.ACTION_SEND == intent.action) {
             Log.d("handleIntent", "ACTION_SEND")
