@@ -84,7 +84,7 @@ class HomeFragment : Fragment() {
                 Log.d("webView.apply", "RESTORE STATE")
                 restoreState(webViewState)
             } else {
-                Log.d("webView.apply", "LOAD URL RETARD")
+                Log.d("webView.apply", "LOAD URL: $ziplineUrl")
                 loadUrl(ziplineUrl)
             }
         }
