@@ -38,8 +38,7 @@ class HomeFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        Log.d("HomeFragment", "onDestroyView")
-        // Destroy WebView
+        Log.d("HomeFragment", "onDestroyView: webView.destroy()")
         binding.webView.apply {
             loadUrl("about:blank")
             stopLoading()
@@ -93,22 +92,6 @@ class HomeFragment : Fragment() {
                 loadUrl(ziplineUrl)
             }
         }
-
-//        //val webView = view.findViewById<WebView>(R.id.web_view)
-//        //webView.loadUrl(ziplineUrl.toString())
-//        //binding.webView.loadUrl(ziplineUrl.toString())
-//        if (savedInstanceState != null) {
-//            Log.d("onViewCreated", "restoreState: $savedInstanceState")
-//            binding.webView.restoreState(savedInstanceState)
-//        } else {
-//            Log.d("onViewCreated", "webView.loadUrl: $ziplineUrl")
-//            binding.webView.loadUrl(ziplineUrl.toString())
-//        }
-    }
-
-    fun loadUrl(url: String) {
-        Log.d("HomeFragment", "binding.webView.loadUrl: $url")
-        binding.webView.loadUrl(url)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -117,20 +100,6 @@ class HomeFragment : Fragment() {
         _binding?.webView?.saveState(outState)
         outState.putBundle("webViewState", webViewState)
     }
-
-//    override fun onSaveInstanceState(outState: Bundle) {
-//        Log.d("HomeFragment", "onSaveInstanceState1: $outState")
-//        super.onSaveInstanceState(outState)
-//        Log.d("HomeFragment", "onSaveInstanceState2: $outState")
-//        binding.webView?.saveState(outState)
-//        Log.d("HomeFragment", "onSaveInstanceState3: $outState")
-//
-//        webViewState.let {
-//            Log.d("HomeFragment", "outState.putBundle: $it")
-//            outState.putBundle("webViewState", it)
-//        }
-//        Log.d("HomeFragment", "DONE")
-//    }
 
     override fun onPause() {
         Log.d("HomeFragment", "ON PAUSE")

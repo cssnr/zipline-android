@@ -155,13 +155,8 @@ class PreviewFragment : Fragment() {
     }
 
     private fun processUpload(uri: Uri, fileName: String, ziplineUrl: String) {
-        // TODO: Cleanup to work with multiple files and previews...
+        // TODO: Cleanup to work with multiple files...
         Log.d("processUpload", "File URI: $uri")
-        //if (uri == null) {
-        //    Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_SHORT).show()
-        //    Log.w("processUpload", "URI is null")
-        //    return
-        //}
         val api = ZiplineApi(requireContext())
         lifecycleScope.launch {
             val response = api.upload(uri, fileName, ziplineUrl)
@@ -172,13 +167,11 @@ class PreviewFragment : Fragment() {
                 Log.d("processUpload", "result.url: ${result.url}")
                 copyToClipboard(result.url)
 
-
                 val activity = requireActivity()
                 Log.d("processUpload", "activity: $activity")
                 parentFragmentManager.beginTransaction()
                     .remove(this@PreviewFragment)
                     .commit()
-
                 activity.window.decorView.post {
                     val home = HomeFragment()
                     Log.d("processUpload", "home: $home")
@@ -188,64 +181,9 @@ class PreviewFragment : Fragment() {
                         .replace(R.id.main, home)
                         .commit()
                 }
-
-
-//                val activity = requireActivity()
-//                Log.d("processUpload", "activity: $activity")
-//
-//                parentFragmentManager.beginTransaction()
-//                    .remove(this@PreviewFragment)
-//                    .commit()
-//                Log.d("processUpload", "ONE")
-//
-//                activity.window.decorView.post {
-//                    val fragment = activity
-//                        .supportFragmentManager
-//                        .findFragmentById(R.id.main)
-//                    Log.d("processUpload", "fragment after pop: $fragment")
-//                    if (fragment is HomeFragment) {
-//                        Log.d("processUpload", "fragment.loadUrl: ${result.url}")
-//                        fragment.loadUrl(result.url)
-//                    }
-//                }
-//                Log.d("processUpload", "TWO")
-
-
-//                parentFragmentManager.beginTransaction()
-//                    .remove(this@PreviewFragment)
-//                    .commit()
-//
-//                requireActivity().window.decorView.post {
-//                    val fragment = requireActivity()
-//                        .supportFragmentManager
-//                        .findFragmentById(R.id.main)
-//                    Log.d("processUpload", "fragment after pop: $fragment")
-//                    if (fragment is HomeFragment) {
-//                        Log.d("processUpload", "fragment.loadUrl: ${result.url}")
-//                        fragment.loadUrl(result.url)
-//                    }
-//                }
-
-
-//                val fragment = requireActivity()
-//                    .supportFragmentManager
-//                    .findFragmentById(R.id.main)
-//                Log.d("processUpload", "fragment: $fragment")
-//                if (fragment is HomeFragment) {
-//                    Log.d("processUpload", "fragment.loadUrl: ${result.url}")
-//                    fragment.loadUrl(result.url)
-//                }
-//
-//                Log.d("processUpload", "parentFragmentManager.popBackStack()")
-//                parentFragmentManager.beginTransaction()
-//                    .remove(this@PreviewFragment)
-//                    .commit()
-
-
                 Log.d("processUpload", "DONE")
-
             } else {
-                Log.w("processUpload", "uploadedFile is null")
+                Log.e("processUpload", "uploadedFile is null")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_LONG)
                         .show()
