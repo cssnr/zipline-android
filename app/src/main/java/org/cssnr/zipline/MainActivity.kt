@@ -1,5 +1,6 @@
 package org.cssnr.zipline
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
@@ -10,6 +11,8 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -22,12 +25,15 @@ class MainActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityMainBinding
 
+    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
+    private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
+
+
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("Main[onCreate]", "savedInstanceState: ${savedInstanceState?.size()}")
         enableEdgeToEdge()
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -45,6 +51,31 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
+        permissionLauncher =
+            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+                val allGranted = permissions.all { it.value }
+                Log.d("permissionLauncher", "allGranted: $allGranted")
+                if (allGranted) {
+                    filePickerLauncher.launch(arrayOf("*/*"))
+                } else {
+                    Log.w("permissionLauncher", "Permission Denied!")
+                    Toast.makeText(this, "Permission Denied!", Toast.LENGTH_LONG).show()
+                }
+            }
+
+        filePickerLauncher =
+            registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+                Log.d("filePickerLauncher", "uri: $uri")
+                if (uri != null) {
+                    val mimeType = contentResolver.getType(uri)
+                    Log.d("filePickerLauncher", "mimeType: $mimeType")
+                    showPreview(uri, mimeType)
+                } else {
+                    Log.w("filePickerLauncher", "No File Selected!")
+                    Toast.makeText(this, "No File Selected!", Toast.LENGTH_LONG).show()
+                }
+            }
+
         // Navigation - On Click
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
@@ -52,6 +83,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("setNavigationItemSelectedListener", "currentFragment: $currentFragment")
 
             when (menuItem.itemId) {
+
                 R.id.nav_item_home -> {
                     Log.d("setNavigationItemSelectedListener", "nav_item_home")
                     val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
@@ -80,6 +112,23 @@ class MainActivity : AppCompatActivity() {
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                     binding.drawerLayout.closeDrawers()
                     true
+                }
+
+                R.id.nav_item_upload -> {
+                    Log.d("setNavigationItemSelectedListener", "nav_item_upload")
+                    val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        arrayOf(
+                            Manifest.permission.READ_MEDIA_IMAGES,
+                            Manifest.permission.READ_MEDIA_VIDEO,
+                            Manifest.permission.READ_MEDIA_AUDIO
+                        )
+                    } else {
+                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
+                    }
+                    Log.d("setNavigationItemSelectedListener", "permissions: $permissions")
+                    permissionLauncher.launch(permissions)
+                    binding.drawerLayout.closeDrawers()
+                    false
                 }
 
                 R.id.nav_item_settings -> {
@@ -171,7 +220,6 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-
         } else if (Intent.ACTION_SEND == intent.action) {
             Log.d("handleIntent", "ACTION_SEND")
 
@@ -181,9 +229,9 @@ class MainActivity : AppCompatActivity() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
-
             Log.d("handleIntent", "File URI: $fileUri")
             showPreview(fileUri, intent.type)
+
         } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
             Log.d("handleIntent", "ACTION_SEND_MULTIPLE")
 

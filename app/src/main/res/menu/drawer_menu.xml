@@ -10,9 +10,7 @@
         <item
             android:id="@+id/nav_item_upload"
             android:icon="@drawable/baseline_file_upload_24"
-            android:title="@string/upload"
-            android:checkable="true"
-            android:enabled="false"/>
+            android:title="@string/upload" />
     </group>
 
     <group android:id="@+id/nav_app">
