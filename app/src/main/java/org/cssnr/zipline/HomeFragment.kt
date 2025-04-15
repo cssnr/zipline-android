@@ -31,14 +31,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("HomeFragment[onCreateView]", "savedInstanceState: ${savedInstanceState?.size()}")
+        Log.d("Home[onCreateView]", "savedInstanceState: ${savedInstanceState?.size()}")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
     }
 
     override fun onDestroyView() {
-        Log.d("HomeFragment[onDestroyView]", "webView.destroy()")
+        Log.d("Home[onDestroyView]", "webView.destroy()")
         binding.webView.apply {
             loadUrl("about:blank")
             stopLoading()
@@ -53,24 +53,24 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("HomeFragment[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
-        Log.d("HomeFragment[onViewCreated]", "webViewState: ${webViewState.size()}")
+        Log.d("Home[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
+        Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
         // TODO: Not sure when this method is triggered...
         if (savedInstanceState != null) {
-            Log.i("HomeFragment[onViewCreated]", "SETTING webViewState FROM savedInstanceState")
+            Log.i("Home[onViewCreated]", "SETTING webViewState FROM savedInstanceState")
             webViewState =
                 savedInstanceState.getBundle("webViewState") ?: Bundle()  // Ensure non-null
-            Log.d("HomeFragment[onViewCreated]", "webViewState: ${webViewState.size()}")
+            Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
         }
 
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
         ziplineUrl = sharedPreferences?.getString("ziplineUrl", "").toString()
-        Log.d("HomeFragment[onViewCreated]", "ziplineUrl: $ziplineUrl")
+        Log.d("Home[onViewCreated]", "ziplineUrl: $ziplineUrl")
         //val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
-        //Log.d("HomeFragment[onViewCreated]", "ziplineToken: $ziplineToken")
+        //Log.d("Home[onViewCreated]", "ziplineToken: $ziplineToken")
 
         val url = arguments?.getString("url")
-        Log.d("HomeFragment[onViewCreated]", "arguments: url: $url")
+        Log.d("Home[onViewCreated]", "arguments: url: $url")
 
         binding.webView.apply {
             webViewClient = MyWebViewClient()
@@ -82,43 +82,43 @@ class HomeFragment : Fragment() {
             settings.useWideViewPort = true // prevent loading images zoomed in
 
             if (url != null) {
-                Log.d("webView.apply", "ARGUMENT URL: $url")
+                Log.d("Home[onViewCreated]", "ARGUMENT URL: $url")
                 loadUrl(url)
             } else if (webViewState.size() > 0) {
-                Log.d("webView.apply", "RESTORE STATE")
+                Log.d("Home[onViewCreated]", "RESTORE STATE")
                 restoreState(webViewState)
             } else {
-                Log.d("webView.apply", "LOAD URL: $ziplineUrl")
+                Log.d("Home[onViewCreated]", "LOAD URL: $ziplineUrl")
                 loadUrl(ziplineUrl)
             }
         }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("HomeFragment[onSaveInstanceState]", "outState: ${outState.size()}")
+        Log.d("Home[onSave]", "outState: ${outState.size()}")
         super.onSaveInstanceState(outState)
-        Log.d("HomeFragment[onSaveInstanceState]", "webViewState: ${webViewState.size()}")
+        Log.d("Home[onSave]", "webViewState: ${webViewState.size()}")
         _binding?.webView?.saveState(outState)
         outState.putBundle("webViewState", webViewState)
-        Log.d("HomeFragment[onSaveInstanceState]", "outState: ${outState.size()}")
+        Log.d("Home[onSave]", "outState: ${outState.size()}")
     }
 
     override fun onPause() {
-        Log.d("HomeFragment[onPause]", "ON PAUSE")
+        Log.d("Home[onPause]", "ON PAUSE")
         super.onPause()
-        Log.d("HomeFragment[onPause]", "webView. onPause() / pauseTimers()")
+        Log.d("Home[onPause]", "webView. onPause() / pauseTimers()")
         binding.webView.onPause()
         binding.webView.pauseTimers()
 
-        Log.d("HomeFragment[onPause]", "webViewState: ${webViewState.size()}")
+        Log.d("Home[onPause]", "webViewState: ${webViewState.size()}")
         binding.webView.saveState(webViewState)
-        Log.d("HomeFragment[onPause]", "webViewState: ${webViewState.size()}")
+        Log.d("Home[onPause]", "webViewState: ${webViewState.size()}")
     }
 
     override fun onResume() {
-        Log.d("HomeFragment[onResume]", "ON RESUME")
+        Log.d("Home[onResume]", "ON RESUME")
         super.onResume()
-        Log.d("HomeFragment[onPause]", "webView. onResume() / resumeTimers()")
+        Log.d("Home[onPause]", "webView. onResume() / resumeTimers()")
         binding.webView.onResume()
         binding.webView.resumeTimers()
     }
@@ -126,17 +126,17 @@ class HomeFragment : Fragment() {
     inner class MyWebViewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
-            Log.d("shouldOverrideUrlLoading", "url: $url")
-            Log.d("shouldOverrideUrlLoading", "ziplineUrl: $ziplineUrl")
+            Log.d("shouldOverrideUrl", "url: $url")
+            Log.d("shouldOverrideUrl", "ziplineUrl: $ziplineUrl")
 
             if (ziplineUrl.isNotEmpty() && url.startsWith(ziplineUrl)) {
-                Log.d("shouldOverrideUrlLoading", "FALSE - in app")
+                Log.d("shouldOverrideUrl", "FALSE - in app")
                 return false
             }
 
             val intent = Intent(Intent.ACTION_VIEW, url.toUri())
             view.context.startActivity(intent)
-            Log.d("shouldOverrideUrlLoading", "TRUE - in browser")
+            Log.d("shouldOverrideUrl", "TRUE - in browser")
             return true
         }
 

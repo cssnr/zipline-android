@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("MainActivity[onCreate]", "savedInstanceState: ${savedInstanceState?.size()}")
+        Log.d("Main[onCreate]", "savedInstanceState: ${savedInstanceState?.size()}")
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
-        Log.d("MainActivity[onCreate]", "versionName: $versionName")
+        Log.d("Main[onCreate]", "versionName: $versionName")
 
         val headerView = binding.navigationView.getHeaderView(0)
         val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
@@ -60,10 +60,10 @@ class MainActivity : AppCompatActivity() {
                         Log.d("setNavigationItemSelectedListener", "NOT HomeFragment")
 
                         if (supportFragmentManager.backStackEntryCount > 0) {
-                            Log.i("MainActivity", "popping backstack")
+                            Log.i("setNavigationItemSelectedListener", "popBackStack()")
                             supportFragmentManager.popBackStack()
                         } else {
-                            Log.i("MainActivity", "nothing on backstack, calling super")
+                            Log.i("setNavigationItemSelectedListener", "beginTransaction()")
                             supportFragmentManager.beginTransaction()
                                 .replace(R.id.main, HomeFragment())
                                 .commitNow()
@@ -218,7 +218,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showPreview(uri: Uri?, type: String?) {
-        Log.d("MainActivity[showPreview]", "File URI: $uri")
+        Log.d("Main[showPreview]", "File URI: $uri")
         val fragment = PreviewFragment()
         val bundle = Bundle().apply {
             putString("uri", uri.toString())
