@@ -10,18 +10,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="vertical"
-        android:padding="24dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:paddingHorizontal="24dp">
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="224dp">
+            android:layout_height="220dp">
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/image_preview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginTop="8dp"
                 android:contentDescription="@string/preview"
                 android:scaleType="fitCenter"
                 app:contentPadding="8dp"
