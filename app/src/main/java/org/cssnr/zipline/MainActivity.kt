@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("onCreate", "savedInstanceState: $savedInstanceState")
+        Log.d("MainActivity[onCreate]", "savedInstanceState: ${savedInstanceState?.size()}")
         enableEdgeToEdge()
 
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -33,7 +33,7 @@ class MainActivity : AppCompatActivity() {
 
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
-        Log.d("onCreate", "versionName: $versionName")
+        Log.d("MainActivity[onCreate]", "versionName: $versionName")
 
         val headerView = binding.navigationView.getHeaderView(0)
         val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
@@ -157,15 +157,20 @@ class MainActivity : AppCompatActivity() {
                 .commit()
 
         } else if (Intent.ACTION_MAIN == intent.action) {
-            Log.d("handleIntent", "ACTION_MAIN: $savedInstanceState")
+            Log.d("handleIntent", "ACTION_MAIN: ${savedInstanceState?.size()}")
 
             // TODO: Verify this does not cause any issues
             if (savedInstanceState == null) {
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.main, HomeFragment())
-                    .commit()
-                binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                val existingFragment = supportFragmentManager.findFragmentById(R.id.main)
+                Log.d("handleIntent", "existingFragment: $existingFragment")
+                if (existingFragment == null) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main, HomeFragment())
+                        .commit()
+                    binding.navigationView.setCheckedItem(R.id.nav_item_home)
+                }
             }
+
 
         } else if (Intent.ACTION_SEND == intent.action) {
             Log.d("handleIntent", "ACTION_SEND")
@@ -213,7 +218,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showPreview(uri: Uri?, type: String?) {
-        Log.d("processUpload", "File URI: $uri")
+        Log.d("MainActivity[showPreview]", "File URI: $uri")
         val fragment = PreviewFragment()
         val bundle = Bundle().apply {
             putString("uri", uri.toString())

@@ -31,14 +31,14 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        Log.d("HomeFragment", "onCreateView: $savedInstanceState")
+        Log.d("HomeFragment[onCreateView]", "savedInstanceState: ${savedInstanceState?.size()}")
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
     }
 
     override fun onDestroyView() {
-        Log.d("HomeFragment", "onDestroyView: webView.destroy()")
+        Log.d("HomeFragment[onDestroyView]", "webView.destroy()")
         binding.webView.apply {
             loadUrl("about:blank")
             stopLoading()
@@ -53,24 +53,24 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("HomeFragment", "onViewCreated: savedInstanceState: ${savedInstanceState?.size()}")
-        Log.d("onViewCreated", "webViewState: ${webViewState.size()}")
+        Log.d("HomeFragment[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
+        Log.d("HomeFragment[onViewCreated]", "webViewState: ${webViewState.size()}")
         // TODO: Not sure when this method is triggered...
         if (savedInstanceState != null) {
-            Log.i("onViewCreated", "SETTING webViewState FROM savedInstanceState")
+            Log.i("HomeFragment[onViewCreated]", "SETTING webViewState FROM savedInstanceState")
             webViewState =
                 savedInstanceState.getBundle("webViewState") ?: Bundle()  // Ensure non-null
+            Log.d("HomeFragment[onViewCreated]", "webViewState: ${webViewState.size()}")
         }
-        Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
 
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
         ziplineUrl = sharedPreferences?.getString("ziplineUrl", "").toString()
-        Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
+        Log.d("HomeFragment[onViewCreated]", "ziplineUrl: $ziplineUrl")
         //val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
-        //Log.d("onViewCreated", "ziplineToken: $ziplineToken")
+        //Log.d("HomeFragment[onViewCreated]", "ziplineToken: $ziplineToken")
 
         val url = arguments?.getString("url")
-        Log.d("onViewCreated", "arguments: url: $url")
+        Log.d("HomeFragment[onViewCreated]", "arguments: url: $url")
 
         binding.webView.apply {
             webViewClient = MyWebViewClient()
@@ -95,26 +95,30 @@ class HomeFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("HomeFragment", "onSaveInstanceState1: $outState")
+        Log.d("HomeFragment[onSaveInstanceState]", "outState: ${outState.size()}")
         super.onSaveInstanceState(outState)
+        Log.d("HomeFragment[onSaveInstanceState]", "webViewState: ${webViewState.size()}")
         _binding?.webView?.saveState(outState)
         outState.putBundle("webViewState", webViewState)
+        Log.d("HomeFragment[onSaveInstanceState]", "outState: ${outState.size()}")
     }
 
     override fun onPause() {
-        Log.d("HomeFragment", "ON PAUSE")
+        Log.d("HomeFragment[onPause]", "ON PAUSE")
         super.onPause()
+        Log.d("HomeFragment[onPause]", "webView. onPause() / pauseTimers()")
         binding.webView.onPause()
         binding.webView.pauseTimers()
 
-        Log.d("onPause", "webViewState.size: ${webViewState.size()}")
+        Log.d("HomeFragment[onPause]", "webViewState: ${webViewState.size()}")
         binding.webView.saveState(webViewState)
-        Log.d("onPause", "webViewState.size: ${webViewState.size()}")
+        Log.d("HomeFragment[onPause]", "webViewState: ${webViewState.size()}")
     }
 
     override fun onResume() {
-        Log.d("HomeFragment", "ON RESUME")
+        Log.d("HomeFragment[onResume]", "ON RESUME")
         super.onResume()
+        Log.d("HomeFragment[onPause]", "webView. onResume() / resumeTimers()")
         binding.webView.onResume()
         binding.webView.resumeTimers()
     }
@@ -139,14 +143,15 @@ class HomeFragment : Fragment() {
         override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
             Log.d("doUpdateVisitedHistory", "url: $url")
             if (url.endsWith("/auth/login") == true) {
-                Log.d("doUpdateVisitedHistory", "LOGOUT: url: $url")
+                Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 
                 val sharedPreferences =
                     view.context.getSharedPreferences("default_preferences", MODE_PRIVATE)
+                Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
                 //sharedPreferences.edit { putString("ziplineToken", "") }
                 sharedPreferences.edit { remove("ziplineToken") }
-                Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
 
+                Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
                 //view.destroy()
                 view.loadUrl("about:blank")
 
