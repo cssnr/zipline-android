@@ -54,9 +54,8 @@ class HomeFragment : Fragment() {
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.d("HomeFragment", "onViewCreated: $savedInstanceState")
-
-        Log.d("onViewCreated", "webViewState.size: ${webViewState.size()}")
+        Log.d("HomeFragment", "onViewCreated: savedInstanceState: ${savedInstanceState?.size()}")
+        Log.d("onViewCreated", "webViewState: ${webViewState.size()}")
         // TODO: Not sure when this method is triggered...
         if (savedInstanceState != null) {
             Log.i("onViewCreated", "SETTING webViewState FROM savedInstanceState")
@@ -67,9 +66,12 @@ class HomeFragment : Fragment() {
 
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
         ziplineUrl = sharedPreferences?.getString("ziplineUrl", "").toString()
-        val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
         Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
-        Log.d("onViewCreated", "ziplineToken: $ziplineToken")
+        //val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
+        //Log.d("onViewCreated", "ziplineToken: $ziplineToken")
+
+        val url = arguments?.getString("url")
+        Log.d("onViewCreated", "arguments: url: $url")
 
         binding.webView.apply {
             webViewClient = MyWebViewClient()
@@ -80,7 +82,10 @@ class HomeFragment : Fragment() {
             settings.loadWithOverviewMode = true // prevent loading images zoomed in
             settings.useWideViewPort = true // prevent loading images zoomed in
 
-            if (webViewState.size() > 0) {
+            if (url != null) {
+                Log.d("webView.apply", "ARGUMENT URL: $url")
+                loadUrl(url)
+            } else if (webViewState.size() > 0) {
                 Log.d("webView.apply", "RESTORE STATE")
                 restoreState(webViewState)
             } else {

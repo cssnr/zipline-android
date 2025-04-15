@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.google.android.material.shape.CornerFamily
@@ -171,17 +172,78 @@ class PreviewFragment : Fragment() {
                 Log.d("processUpload", "result.url: ${result.url}")
                 copyToClipboard(result.url)
 
-                val fragment = requireActivity()
-                    .supportFragmentManager
-                    .findFragmentById(R.id.main)
-                if (fragment is HomeFragment) {
-                    fragment.loadUrl(result.url)
-                }
 
-                Log.d("processUpload", "parentFragmentManager.popBackStack()")
+                val activity = requireActivity()
+                Log.d("processUpload", "activity: $activity")
                 parentFragmentManager.beginTransaction()
                     .remove(this@PreviewFragment)
                     .commit()
+
+                activity.window.decorView.post {
+                    val home = HomeFragment()
+                    Log.d("processUpload", "home: $home")
+                    home.arguments = bundleOf("url" to result.url)
+                    Log.d("processUpload", "arguments.url: ${result.url}")
+                    activity.supportFragmentManager.beginTransaction()
+                        .replace(R.id.main, home)
+                        .commit()
+                }
+
+
+//                val activity = requireActivity()
+//                Log.d("processUpload", "activity: $activity")
+//
+//                parentFragmentManager.beginTransaction()
+//                    .remove(this@PreviewFragment)
+//                    .commit()
+//                Log.d("processUpload", "ONE")
+//
+//                activity.window.decorView.post {
+//                    val fragment = activity
+//                        .supportFragmentManager
+//                        .findFragmentById(R.id.main)
+//                    Log.d("processUpload", "fragment after pop: $fragment")
+//                    if (fragment is HomeFragment) {
+//                        Log.d("processUpload", "fragment.loadUrl: ${result.url}")
+//                        fragment.loadUrl(result.url)
+//                    }
+//                }
+//                Log.d("processUpload", "TWO")
+
+
+//                parentFragmentManager.beginTransaction()
+//                    .remove(this@PreviewFragment)
+//                    .commit()
+//
+//                requireActivity().window.decorView.post {
+//                    val fragment = requireActivity()
+//                        .supportFragmentManager
+//                        .findFragmentById(R.id.main)
+//                    Log.d("processUpload", "fragment after pop: $fragment")
+//                    if (fragment is HomeFragment) {
+//                        Log.d("processUpload", "fragment.loadUrl: ${result.url}")
+//                        fragment.loadUrl(result.url)
+//                    }
+//                }
+
+
+//                val fragment = requireActivity()
+//                    .supportFragmentManager
+//                    .findFragmentById(R.id.main)
+//                Log.d("processUpload", "fragment: $fragment")
+//                if (fragment is HomeFragment) {
+//                    Log.d("processUpload", "fragment.loadUrl: ${result.url}")
+//                    fragment.loadUrl(result.url)
+//                }
+//
+//                Log.d("processUpload", "parentFragmentManager.popBackStack()")
+//                parentFragmentManager.beginTransaction()
+//                    .remove(this@PreviewFragment)
+//                    .commit()
+
+
+                Log.d("processUpload", "DONE")
+
             } else {
                 Log.w("processUpload", "uploadedFile is null")
                 withContext(Dispatchers.Main) {

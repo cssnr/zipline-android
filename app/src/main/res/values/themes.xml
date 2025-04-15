@@ -2,7 +2,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Zipline" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+         <item name="colorPrimary">@color/primary</item>
     </style>
 
     <style name="Theme.Zipline" parent="Base.Theme.Zipline" />
