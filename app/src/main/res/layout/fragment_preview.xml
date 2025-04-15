@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -72,16 +73,18 @@
         <Button
             android:id="@+id/upload_button"
             android:layout_width="match_parent"
-            android:layout_height="64dp"
+            android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:paddingEnd="36dp"
             android:paddingStart="36dp"
             android:text="@string/upload"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="?attr/colorControlNormal"
             app:icon="@drawable/baseline_file_upload_24"
             app:iconGravity="end"
             app:iconPadding="-36dp"
-            app:iconSize="24dp" />
+            app:iconSize="24dp"
+            app:iconTint="?attr/colorControlNormal" />
 
         <Button
             android:id="@+id/options_button"
@@ -92,10 +95,12 @@
             android:paddingStart="36dp"
             android:text="@string/options"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textColor="?attr/colorControlNormal"
             app:icon="@drawable/baseline_settings_24"
             app:iconGravity="end"
             app:iconPadding="-36dp"
-            app:iconSize="24dp" />
+            app:iconSize="24dp"
+            app:iconTint="?attr/colorControlNormal" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -113,9 +118,11 @@
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:text="@string/share"
+                android:textColor="?attr/colorControlNormal"
                 app:icon="@drawable/baseline_share_24"
                 app:iconGravity="textEnd"
-                app:iconSize="24dp" />
+                app:iconSize="24dp"
+                app:iconTint="?attr/colorControlNormal" />
 
             <Space
                 android:layout_width="0dp"
@@ -127,9 +134,11 @@
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
                 android:text="@string/open"
+                android:textColor="?attr/colorControlNormal"
                 app:icon="@drawable/baseline_open_in_new_24"
                 app:iconGravity="textEnd"
-                app:iconSize="24dp" />
+                app:iconSize="24dp"
+                app:iconTint="?attr/colorControlNormal" />
 
             <Space
                 android:layout_width="0dp"

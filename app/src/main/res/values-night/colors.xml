@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="header_start">#3E478E</color>
-    <color name="header_end">#03061F</color>
     <color name="primary">#4C5BD4</color>
+    <color name="primary_accent">#0E123C</color>
 </resources>
