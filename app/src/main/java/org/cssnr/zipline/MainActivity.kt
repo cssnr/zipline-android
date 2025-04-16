@@ -192,6 +192,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("handleIntent", "intent.type: ${intent.type}")
         Log.d("handleIntent", "intent.action: ${intent.action}")
 
+        val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        Log.d("handleIntent", "extraText: $extraText")
+
         val sharedPreferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
         val ziplineUrl = sharedPreferences.getString("ziplineUrl", null)
         val ziplineToken = sharedPreferences.getString("ziplineToken", null)

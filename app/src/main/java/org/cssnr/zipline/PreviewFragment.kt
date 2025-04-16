@@ -50,16 +50,22 @@ class PreviewFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
+        Log.d("onViewCreated", "arguments: $arguments")
 
-        val uri = arguments?.getString("uri")?.toUri()
+        //val uri = arguments?.getString("uri")?.toUri()
+        val uri = requireArguments().getString("uri")?.toUri()
         Log.d("onViewCreated", "uri: $uri")
+
         val type = arguments?.getString("type")
         Log.d("onViewCreated", "type: $type")
+
+        //val text = arguments?.getString("text")
+        //Log.d("onViewCreated", "text: $text")
 
         if (uri == null) {
             // TODO: Better Handle this Error
             Log.e("onViewCreated", "URI is null")
-            Toast.makeText(requireContext(), "Error Parsing URI!", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "No URI to Process!", Toast.LENGTH_LONG).show()
             return
         }
 
