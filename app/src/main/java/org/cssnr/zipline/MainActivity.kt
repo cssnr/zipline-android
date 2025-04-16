@@ -217,6 +217,12 @@ class MainActivity : AppCompatActivity() {
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                 }
             }
+            val fromShortcut = intent.getStringExtra("fromShortcut")
+            Log.d("handleIntent", "fromShortcut: $fromShortcut")
+            if (fromShortcut == "upload") {
+                Log.d("handleIntent", "filePickerLauncher.launch")
+                filePickerLauncher.launch(arrayOf("*/*"))
+            }
 
         } else if (Intent.ACTION_SEND == intent.action) {
             Log.d("handleIntent", "ACTION_SEND")

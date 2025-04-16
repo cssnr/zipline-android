@@ -23,6 +23,10 @@
             android:configChanges="orientation|smallestScreenSize|screenSize|screenLayout|keyboardHidden"
             android:launchMode="singleTask">
 
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
