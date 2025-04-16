@@ -24,6 +24,8 @@ import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
+    var currentUrl: String = ""
+
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
 
@@ -147,6 +149,7 @@ class HomeFragment : Fragment() {
 
         override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
             Log.d("doUpdateVisitedHistory", "url: $url")
+            currentUrl = url
             if (url.endsWith("/auth/login") == true) {
                 Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 

@@ -13,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
@@ -71,8 +72,6 @@ class MainActivity : AppCompatActivity() {
             when (menuItem.itemId) {
                 R.id.nav_item_home -> {
                     Log.d("NavigationDrawer", "nav_item_home")
-                    val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-                    Log.d("NavigationDrawer", "currentFragment: $currentFragment")
                     if (currentFragment !is HomeFragment) {
                         Log.d("NavigationDrawer", "NOT HomeFragment")
                         if (supportFragmentManager.backStackEntryCount > 0) {
@@ -91,6 +90,28 @@ class MainActivity : AppCompatActivity() {
                         //supportFragmentManager.beginTransaction()
                         //    .replace(R.id.main, HomeFragment())
                         //    .commit()
+                    } else {
+                        Log.d("NavigationDrawer", "WELCOME HOME BABY")
+                        //val fragment = supportFragmentManager.findFragmentByTag("HomeFragment")
+                        val fragment = supportFragmentManager.findFragmentById(R.id.main) as? HomeFragment
+                        Log.d("NavigationDrawer", "fragment: $fragment")
+                        val url = fragment?.currentUrl
+                        Log.d("NavigationDrawer", "url: $url")
+                        val sharedPreferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
+                        val ziplineUrl = sharedPreferences.getString("ziplineUrl", null)
+                        Log.d("handleIntent", "ziplineUrl: $ziplineUrl")
+                        if (url != null && ziplineUrl != null){
+                            val path = url.removePrefix(ziplineUrl)
+                            if (path.startsWith("/u/") || path.startsWith("/view/")) {
+                                val home = HomeFragment()
+                                home.arguments = bundleOf("url" to ziplineUrl)
+                                Log.d("processUpload", "arguments.url: $ziplineUrl")
+                                supportFragmentManager.beginTransaction()
+                                    .replace(R.id.main, home)
+                                    .commit()
+                            }
+                        }
+
                     }
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                     binding.drawerLayout.closeDrawers()
