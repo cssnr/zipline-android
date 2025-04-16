@@ -3,22 +3,28 @@ package org.cssnr.zipline
 import android.annotation.SuppressLint
 import android.content.Context.MODE_PRIVATE
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
+
+    var currentUrl: String = ""
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -74,6 +80,7 @@ class HomeFragment : Fragment() {
 
         binding.webView.apply {
             webViewClient = MyWebViewClient()
+            webChromeClient = MyWebChromeClient()
             settings.domStorageEnabled = true
             settings.javaScriptEnabled = true
             settings.allowFileAccess = true
@@ -142,6 +149,7 @@ class HomeFragment : Fragment() {
 
         override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
             Log.d("doUpdateVisitedHistory", "url: $url")
+            currentUrl = url
             if (url.endsWith("/auth/login") == true) {
                 Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 
@@ -175,6 +183,42 @@ class HomeFragment : Fragment() {
             errorResponse: WebResourceResponse
         ) {
             Log.d("onReceivedHttpError", "ERROR: " + errorResponse.statusCode)
+        }
+    }
+
+    inner class MyWebChromeClient : WebChromeClient() {
+        private var filePathCallback: ValueCallback<Array<Uri>>? = null
+
+        private val fileChooserLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                val clipData = result.data?.clipData
+                val dataUri = result.data?.data
+                val uris = when {
+                    clipData != null -> Array(clipData.itemCount) { i -> clipData.getItemAt(i).uri }
+                    dataUri != null -> arrayOf(dataUri)
+                    else -> null
+                }
+                Log.d("fileChooserLauncher", "uris: ${uris?.contentToString()}")
+                filePathCallback?.onReceiveValue(uris)
+                filePathCallback = null
+            }
+
+        override fun onShowFileChooser(
+            view: WebView,
+            callback: ValueCallback<Array<Uri>>,
+            params: FileChooserParams
+        ): Boolean {
+            filePathCallback?.onReceiveValue(null)
+            filePathCallback = callback
+            return try {
+                Log.d("onShowFileChooser", "fileChooserLauncher.launch")
+                fileChooserLauncher.launch(params.createIntent())
+                true
+            } catch (e: Exception) {
+                Log.w("onShowFileChooser", "Exception: $e")
+                filePathCallback = null
+                false
+            }
         }
     }
 }

@@ -1,6 +1,5 @@
 package org.cssnr.zipline
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
@@ -14,6 +13,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityMainBinding
 
-    private lateinit var permissionLauncher: ActivityResultLauncher<Array<String>>
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
 
 
@@ -51,18 +50,6 @@ class MainActivity : AppCompatActivity() {
             insets
         }
 
-        permissionLauncher =
-            registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
-                val allGranted = permissions.all { it.value }
-                Log.d("permissionLauncher", "allGranted: $allGranted")
-                if (allGranted) {
-                    filePickerLauncher.launch(arrayOf("*/*"))
-                } else {
-                    Log.w("permissionLauncher", "Permission Denied!")
-                    Toast.makeText(this, "Permission Denied!", Toast.LENGTH_LONG).show()
-                }
-            }
-
         filePickerLauncher =
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
                 Log.d("filePickerLauncher", "uri: $uri")
@@ -72,35 +59,30 @@ class MainActivity : AppCompatActivity() {
                     showPreview(uri, mimeType)
                 } else {
                     Log.w("filePickerLauncher", "No File Selected!")
-                    Toast.makeText(this, "No File Selected!", Toast.LENGTH_LONG).show()
+                    Toast.makeText(this, "No File Selected!", Toast.LENGTH_SHORT).show()
                 }
             }
 
         // Navigation - On Click
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
+            Log.d("NavigationDrawer", "menuItem: $menuItem")
             val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-            Log.d("setNavigationItemSelectedListener", "currentFragment: $currentFragment")
+            Log.d("NavigationDrawer", "currentFragment: $currentFragment")
 
             when (menuItem.itemId) {
-
                 R.id.nav_item_home -> {
-                    Log.d("setNavigationItemSelectedListener", "nav_item_home")
-                    val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-                    Log.d("setNavigationItemSelectedListener", "currentFragment: $currentFragment")
+                    Log.d("NavigationDrawer", "nav_item_home")
                     if (currentFragment !is HomeFragment) {
-                        Log.d("setNavigationItemSelectedListener", "NOT HomeFragment")
-
+                        Log.d("NavigationDrawer", "NOT ON HomeFragment")
                         if (supportFragmentManager.backStackEntryCount > 0) {
-                            Log.i("setNavigationItemSelectedListener", "popBackStack()")
+                            Log.i("NavigationDrawer", "popBackStack()")
                             supportFragmentManager.popBackStack()
                         } else {
-                            Log.i("setNavigationItemSelectedListener", "beginTransaction()")
+                            Log.i("NavigationDrawer", "beginTransaction()")
                             supportFragmentManager.beginTransaction()
                                 .replace(R.id.main, HomeFragment())
                                 .commitNow()
                         }
-
                         //supportFragmentManager.popBackStack(
                         //    null,
                         //    FragmentManager.POP_BACK_STACK_INCLUSIVE
@@ -108,6 +90,25 @@ class MainActivity : AppCompatActivity() {
                         //supportFragmentManager.beginTransaction()
                         //    .replace(R.id.main, HomeFragment())
                         //    .commit()
+                    } else {
+                        Log.d("NavigationDrawer", "ALREADY ON HomeFragment")
+                        val url = currentFragment.currentUrl
+                        Log.d("NavigationDrawer", "currentFragment.currentUrl: $url")
+                        val ziplineUrl = getSharedPreferences("default_preferences", MODE_PRIVATE)
+                            .getString("ziplineUrl", null)
+                        Log.d("NavigationDrawer", "ziplineUrl: $ziplineUrl")
+                        val path = url.removePrefix(ziplineUrl!!)
+                        Log.d("NavigationDrawer", "path: $path")
+                        if (path.startsWith("/u/") || path.startsWith("/view/")) {
+                            Log.i("NavigationDrawer", "Reloading HomeFragment!")
+                            val home = HomeFragment().apply {
+                                arguments = bundleOf("url" to ziplineUrl)
+                            }
+                            Log.d("NavigationDrawer", "arguments.url: $ziplineUrl")
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.main, home)
+                                .commit()
+                        }
                     }
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                     binding.drawerLayout.closeDrawers()
@@ -115,24 +116,14 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 R.id.nav_item_upload -> {
-                    Log.d("setNavigationItemSelectedListener", "nav_item_upload")
-                    val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        arrayOf(
-                            Manifest.permission.READ_MEDIA_IMAGES,
-                            Manifest.permission.READ_MEDIA_VIDEO,
-                            Manifest.permission.READ_MEDIA_AUDIO
-                        )
-                    } else {
-                        arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE)
-                    }
-                    Log.d("setNavigationItemSelectedListener", "permissions: $permissions")
-                    permissionLauncher.launch(permissions)
+                    Log.d("NavigationDrawer", "nav_item_upload")
+                    filePickerLauncher.launch(arrayOf("*/*"))
                     binding.drawerLayout.closeDrawers()
                     false
                 }
 
                 R.id.nav_item_settings -> {
-                    Log.d("setNavigationItemSelectedListener", "nav_item_settings")
+                    Log.d("NavigationDrawer", "nav_item_settings")
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.main, SettingsFragment())
                         .addToBackStack(null)
@@ -142,26 +133,30 @@ class MainActivity : AppCompatActivity() {
                     true
                 }
 
-                else -> false
+                else -> {
+                    Log.w("NavigationDrawer", "UNKNOWN")
+                    Toast.makeText(this, "Unknown Menu Item!", Toast.LENGTH_LONG).show()
+                    false
+                }
             }
         }
 
         // Navigation - Back Button
         supportFragmentManager.addOnBackStackChangedListener {
             val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-            Log.d("addOnBackStackChangedListener", "currentFragment: $currentFragment")
+            Log.d("BackStackChanged", "currentFragment: $currentFragment")
             val itemId = when (currentFragment) {
                 is SettingsFragment -> R.id.nav_item_settings
                 is HomeFragment -> R.id.nav_item_home
                 is PreviewFragment -> View.NO_ID
                 else -> View.NO_ID
             }
-            Log.d("addOnBackStackChangedListener", "itemId: $itemId")
+            Log.d("BackStackChanged", "itemId: $itemId")
             if (itemId != View.NO_ID) {
-                Log.d("addOnBackStackChangedListener", "SET isChecked")
+                Log.d("BackStackChanged", "SET isChecked")
                 binding.navigationView.menu.findItem(itemId)?.isChecked = true
             } else {
-                Log.d("addOnBackStackChangedListener", "NOT Checkable")
+                Log.d("BackStackChanged", "NOT Checkable")
                 //binding.navigationView.menu.setGroupCheckable(0, false, true)
                 binding.navigationView.menu.setGroupCheckable(0, true, true)
                 for (i in 0 until binding.navigationView.menu.size) {
@@ -191,6 +186,9 @@ class MainActivity : AppCompatActivity() {
         Log.d("handleIntent", "intent.data: ${intent.data}")
         Log.d("handleIntent", "intent.type: ${intent.type}")
         Log.d("handleIntent", "intent.action: ${intent.action}")
+
+        val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
+        Log.d("handleIntent", "extraText: $extraText")
 
         val sharedPreferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
         val ziplineUrl = sharedPreferences.getString("ziplineUrl", null)
