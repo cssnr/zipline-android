@@ -94,15 +94,16 @@ class MainActivity : AppCompatActivity() {
                         Log.d("NavigationDrawer", "ALREADY ON HomeFragment")
                         val url = currentFragment.currentUrl
                         Log.d("NavigationDrawer", "currentFragment.currentUrl: $url")
-                        val preferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
-                        val ziplineUrl = preferences.getString("ziplineUrl", null)
+                        val ziplineUrl = getSharedPreferences("default_preferences", MODE_PRIVATE)
+                            .getString("ziplineUrl", null)
                         Log.d("NavigationDrawer", "ziplineUrl: $ziplineUrl")
                         val path = url.removePrefix(ziplineUrl!!)
                         Log.d("NavigationDrawer", "path: $path")
                         if (path.startsWith("/u/") || path.startsWith("/view/")) {
                             Log.i("NavigationDrawer", "Reloading HomeFragment!")
-                            val home = HomeFragment()
-                            home.arguments = bundleOf("url" to ziplineUrl)
+                            val home = HomeFragment().apply {
+                                arguments = bundleOf("url" to ziplineUrl)
+                            }
                             Log.d("NavigationDrawer", "arguments.url: $ziplineUrl")
                             supportFragmentManager.beginTransaction()
                                 .replace(R.id.main, home)
