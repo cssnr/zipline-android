@@ -73,7 +73,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.nav_item_home -> {
                     Log.d("NavigationDrawer", "nav_item_home")
                     if (currentFragment !is HomeFragment) {
-                        Log.d("NavigationDrawer", "NOT HomeFragment")
+                        Log.d("NavigationDrawer", "NOT ON HomeFragment")
                         if (supportFragmentManager.backStackEntryCount > 0) {
                             Log.i("NavigationDrawer", "popBackStack()")
                             supportFragmentManager.popBackStack()
@@ -91,27 +91,23 @@ class MainActivity : AppCompatActivity() {
                         //    .replace(R.id.main, HomeFragment())
                         //    .commit()
                     } else {
-                        Log.d("NavigationDrawer", "WELCOME HOME BABY")
-                        //val fragment = supportFragmentManager.findFragmentByTag("HomeFragment")
-                        val fragment = supportFragmentManager.findFragmentById(R.id.main) as? HomeFragment
-                        Log.d("NavigationDrawer", "fragment: $fragment")
-                        val url = fragment?.currentUrl
-                        Log.d("NavigationDrawer", "url: $url")
-                        val sharedPreferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
-                        val ziplineUrl = sharedPreferences.getString("ziplineUrl", null)
-                        Log.d("handleIntent", "ziplineUrl: $ziplineUrl")
-                        if (url != null && ziplineUrl != null){
-                            val path = url.removePrefix(ziplineUrl)
-                            if (path.startsWith("/u/") || path.startsWith("/view/")) {
-                                val home = HomeFragment()
-                                home.arguments = bundleOf("url" to ziplineUrl)
-                                Log.d("processUpload", "arguments.url: $ziplineUrl")
-                                supportFragmentManager.beginTransaction()
-                                    .replace(R.id.main, home)
-                                    .commit()
-                            }
+                        Log.d("NavigationDrawer", "ALREADY ON HomeFragment")
+                        val url = currentFragment.currentUrl
+                        Log.d("NavigationDrawer", "currentFragment.currentUrl: $url")
+                        val preferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
+                        val ziplineUrl = preferences.getString("ziplineUrl", null)
+                        Log.d("NavigationDrawer", "ziplineUrl: $ziplineUrl")
+                        val path = url.removePrefix(ziplineUrl!!)
+                        Log.d("NavigationDrawer", "path: $path")
+                        if (path.startsWith("/u/") || path.startsWith("/view/")) {
+                            Log.i("NavigationDrawer", "Reloading HomeFragment!")
+                            val home = HomeFragment()
+                            home.arguments = bundleOf("url" to ziplineUrl)
+                            Log.d("NavigationDrawer", "arguments.url: $ziplineUrl")
+                            supportFragmentManager.beginTransaction()
+                                .replace(R.id.main, home)
+                                .commit()
                         }
-
                     }
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                     binding.drawerLayout.closeDrawers()
