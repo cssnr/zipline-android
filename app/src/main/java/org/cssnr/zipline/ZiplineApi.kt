@@ -69,6 +69,42 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
+    suspend fun shorten(url: String, vanity: String?, ziplineUrl: String): ShortResponse? {
+        Log.d("upload", "url: $url")
+        Log.d("upload", "vanity: $vanity")
+        Log.d("upload", "ziplineUrl: $ziplineUrl")
+
+        val ziplineToken = preferences.getString("ziplineToken", null)
+        Log.d("upload", "ziplineToken: $ziplineToken")
+        if (ziplineToken == null) {
+            Log.e("upload", "inputStream/ziplineToken is null")
+            return null
+        }
+
+        val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
+        return try {
+            api.postShort(ziplineToken, ShortRequest(url, vanity, true))
+        } catch (e: HttpException) {
+            Log.e("upload", "HttpException: ${e.message}")
+            val response = e.response()?.errorBody()?.string()
+            Log.d("upload", "response: $response")
+            if (e.code() == 401) {
+                try {
+                    val token = reAuthenticate(api, ziplineUrl)
+                    if (!token.isNullOrEmpty()) {
+                        api.postShort(ziplineToken, ShortRequest(url, vanity, true))
+                    }
+                } catch (e: Exception) {
+                    Log.w("upload", "Exception: ${e.message}")
+                }
+            }
+            null
+        } catch (e: Exception) {
+            Log.e("upload", "Exception: ${e.message}")
+            null
+        }
+    }
+
     suspend fun upload(uri: Uri, fileName: String, ziplineUrl: String): FileResponse? {
         Log.d("upload", "uri: $uri")
         Log.d("upload", "fileName: $fileName")
@@ -174,7 +210,22 @@ class ZiplineApi(private val context: Context) {
             @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
         ): FileResponse
+
+        @POST("user/urls")
+        suspend fun postShort(
+            @Header("authorization") token: String,
+            @Body request: ShortRequest,
+        ): ShortResponse
     }
+
+    data class LoginRequest(
+        val username: String,
+        val password: String,
+    )
+
+    data class TokenResponse(
+        val token: String
+    )
 
     data class FileResponse(
         val files: List<UploadedFile>
@@ -186,13 +237,24 @@ class ZiplineApi(private val context: Context) {
         val url: String,
     )
 
-    data class LoginRequest(
-        val username: String,
-        val password: String,
+    data class ShortRequest(
+        val destination: String,
+        val vanity: String?,
+        val enabled: Boolean,
     )
 
-    data class TokenResponse(
-        val token: String
+    data class ShortResponse(
+        val id: String,
+        val createdAt: String,
+        val updatedAt: String,
+        val code: String,
+        val vanity: String,
+        val destination: String,
+        val views: Int,
+        val maxViews: Int?,
+        val enabled: Boolean,
+        val userId: String,
+        val url: String
     )
 
     inner class SimpleCookieJar : CookieJar {
