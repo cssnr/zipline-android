@@ -12,7 +12,7 @@
 
 # Zipline Android App
 
-[![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20for%20Android&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+[![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
 
 - [Install](#Install)
   - [Setup](#Setup)
@@ -25,17 +25,17 @@
 - [Support](#Support)
 - [Contributing](#Contributing)
 
-Allows you to Share or Open any file with your [Zipline](https://github.com/diced/zipline) server.
-The URL to the file is automatically copied to the clipboard and the preview is shown in the app.
+Allows you to Share or Open any file and Shorten URLs with your [Zipline v4](https://github.com/diced/zipline) server.
+Shows a preview with custom options and copies the URL to the clipboard after upload.
 
-- Supports Android 8 (API 26) 2017 or Newer.
+- Supports Android 8 (API 26) 2017 +
 
 ## Install
 
 > [!TIP]  
 > To install, download and open the [latest release](https://github.com/cssnr/zipline-android/releases/latest).
 >
-> [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20for%20Android&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+> [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
@@ -69,17 +69,18 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ## Features
 
-- Share or Open any file to your Zipline server and automatically copy the URL to the clipboard.
+- Share or Open any file or URL to your Zipline server.
+- Preview the file or URL with custom options before uploading.
+- Copies the URL to the clipboard after uploading and shows preview.
+- Shortcut to directly upload files from long press or shortcut icon.
 
 ### Planned
 
-- Preview file before uploading.
 - Sharing multiple files at once.
 
 ### Known Issues
 
 - Not [Django Files](https://github.com/django-files).
-- You can not use the website file upload.
 
 # Development
 
@@ -97,7 +98,7 @@ https://developer.android.com/studio
    - Import the Project
    - Run Gradle Sync
 
-To Run: Select your device and press Play ▶️
+To Run: Select a device and press Play ▶️
 
 To Build:
 
