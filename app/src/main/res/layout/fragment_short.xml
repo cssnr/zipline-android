@@ -14,57 +14,49 @@
         android:orientation="vertical"
         android:paddingHorizontal="24dp">
 
-        <FrameLayout
+        <EditText
+            android:id="@+id/url_text"
             android:layout_width="match_parent"
-            android:layout_height="220dp">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_preview"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="8dp"
-                android:contentDescription="@string/preview"
-                android:scaleType="fitCenter"
-                app:contentPadding="8dp"
-                app:strokeWidth="2dp" />
-
-            <TextView
-                android:id="@+id/image_overlay_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:visibility="gone"
-                android:background="@android:color/transparent" />
-
-        </FrameLayout>
+            android:layout_height="wrap_content"
+            android:autofillHints="URL to Shorten"
+            android:background="@drawable/edit_text_border"
+            android:ellipsize="end"
+            android:gravity="top|start"
+            android:inputType="textUri|textMultiLine"
+            android:maxLines="6"
+            android:minLines="6"
+            android:overScrollMode="ifContentScrolls"
+            android:padding="8dp"
+            android:scrollHorizontally="false"
+            android:scrollbars="vertical"
+            tools:text="https://github.com/django-files/android-client?tab=readme-ov-file#readme" />
 
         <EditText
-            android:id="@+id/file_name"
+            android:id="@+id/vanity_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:autofillHints="File Name"
             android:ellipsize="end"
             android:gravity="center"
-            android:hint="@string/file_name"
+            android:hint="@string/vanity"
             android:inputType="textNoSuggestions"
             android:maxLines="1"
             android:singleLine="true"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            tools:text="test_file.jpg" />
+            android:labelFor="@id/url_text" />
 
         <Button
-            android:id="@+id/upload_button"
+            android:id="@+id/short_button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="8dp"
             android:paddingEnd="36dp"
             android:paddingStart="36dp"
-            android:text="@string/upload"
+            android:text="@string/shorten_url"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:icon="@drawable/baseline_file_upload_24"
+            app:icon="@drawable/baseline_link_24"
             app:iconGravity="end"
             app:iconPadding="-36dp"
             app:iconSize="24dp" />

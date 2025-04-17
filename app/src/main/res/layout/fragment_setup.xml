@@ -62,13 +62,11 @@
             android:paddingEnd="36dp"
             android:paddingStart="36dp"
             android:text="@string/login"
-            android:textColor="?attr/colorControlNormal"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:icon="@drawable/baseline_login_24"
             app:iconGravity="end"
             app:iconPadding="-36dp"
-            app:iconSize="24dp"
-            app:iconTint="?attr/colorControlNormal" />
+            app:iconSize="24dp" />
 
         <TextView
             android:id="@+id/github_link"
@@ -77,7 +75,7 @@
             android:layout_marginTop="24dp"
             android:text="@string/github_link"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textColorLink="@android:color/holo_blue_bright"
+            android:textColorLink="@android:color/holo_blue_dark"
             android:drawablePadding="12dp"
             app:drawableStartCompat="@drawable/fa_github"
             tools:text="github.com/cssnr/zipline-android" />

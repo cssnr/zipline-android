@@ -2,10 +2,12 @@ package org.cssnr.zipline
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.util.Patterns
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
@@ -49,6 +51,8 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
+        drawer.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
         filePickerLauncher =
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -217,6 +221,12 @@ class MainActivity : AppCompatActivity() {
                     binding.navigationView.setCheckedItem(R.id.nav_item_home)
                 }
             }
+            val fromShortcut = intent.getStringExtra("fromShortcut")
+            Log.d("handleIntent", "fromShortcut: $fromShortcut")
+            if (fromShortcut == "upload") {
+                Log.d("handleIntent", "filePickerLauncher.launch")
+                filePickerLauncher.launch(arrayOf("*/*"))
+            }
 
         } else if (Intent.ACTION_SEND == intent.action) {
             Log.d("handleIntent", "ACTION_SEND")
@@ -228,7 +238,24 @@ class MainActivity : AppCompatActivity() {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
             Log.d("handleIntent", "File URI: $fileUri")
-            showPreview(fileUri, intent.type)
+
+            if (fileUri == null && !extraText.isNullOrEmpty()) {
+                Log.d("handleIntent", "SEND TEXT DETECTED: $extraText")
+                //if (extraText.lowercase().startsWith("http")) {
+                if (Patterns.WEB_URL.matcher(extraText).matches()) {
+                    Log.d("handleIntent", "URL DETECTED: $extraText")
+                    val fragment = ShortFragment()
+                    val bundle = Bundle().apply {
+                        putString("url", extraText)
+                    }
+                    fragment.arguments = bundle
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.main, fragment)
+                        .commit()
+                }
+            } else {
+                showPreview(fileUri, intent.type)
+            }
 
         } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
             Log.d("handleIntent", "ACTION_SEND_MULTIPLE")

@@ -12,6 +12,10 @@
     <string name="options">Options</string>
     <string name="file_name">File Name</string>
     <string name="settings">Settings</string>
+    <string name="upload_shortcut_short">Upload File</string>
+    <string name="upload_shortcut_long">Upload File</string>
+    <string name="vanity">Vanity</string>
+    <string name="shorten_url">Shorten URL</string>
 
     <string-array name="dropdown_entries">
         <item>Random</item>
