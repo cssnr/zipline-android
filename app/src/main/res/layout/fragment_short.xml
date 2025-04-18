@@ -10,9 +10,10 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="top"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp">
+        android:paddingHorizontal="24dp"
+        android:paddingTop="8dp">
 
         <EditText
             android:id="@+id/url_text"
@@ -23,8 +24,8 @@
             android:ellipsize="end"
             android:gravity="top|start"
             android:inputType="textUri|textMultiLine"
-            android:maxLines="6"
-            android:minLines="6"
+            android:maxLines="7"
+            android:minLines="7"
             android:overScrollMode="ifContentScrolls"
             android:padding="8dp"
             android:scrollHorizontally="false"
@@ -69,7 +70,7 @@
             android:paddingEnd="36dp"
             android:paddingStart="36dp"
             android:text="@string/options"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:icon="@drawable/baseline_settings_24"
             app:iconGravity="end"
             app:iconPadding="-36dp"

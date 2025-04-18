@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
@@ -28,9 +29,14 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesName = "default_preferences"
         setPreferencesFromResource(R.xml.preferences_settings, rootKey)
 
+        val launcherAction = findPreference<ListPreference>("launcher_action")
+        launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
+        val fileNameFormat = findPreference<ListPreference>("file_name_format")
+        fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
         val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
         Log.d("SettingsFragment", "showPreviewPref: $showPreviewPref")
-
         showPreviewPref?.setOnPreferenceChangeListener { _, newValue ->
             val newBool = newValue as Boolean
             Log.d("showPreviewPref", "show_preview: $newBool")

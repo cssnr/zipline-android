@@ -3,9 +3,9 @@
     <shortcut
         android:shortcutId="upload"
         android:enabled="true"
-        android:icon="@drawable/ic_launcher_foreground"
-        android:shortcutShortLabel="@string/upload_shortcut_short"
-        android:shortcutLongLabel="@string/upload_shortcut_long">
+        android:icon="@drawable/shortcut_upload"
+        android:shortcutShortLabel="@string/upload"
+        android:shortcutLongLabel="@string/upload_file">
         <intent
             android:action="android.intent.action.MAIN"
             android:targetPackage="org.cssnr.zipline"
