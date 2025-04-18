@@ -1,21 +1,22 @@
 <resources>
     <string name="app_name">Zipline</string>
+
     <string name="hostname">Hostname</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="github_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android">github.com/cssnr/zipline-android</a>]]></string>
-    <string name="upload">Upload</string>
     <string name="preview">Preview</string>
     <string name="share">Share</string>
     <string name="open">Open</string>
     <string name="options">Options</string>
-    <string name="file_name">File Name</string>
     <string name="settings">Settings</string>
-    <string name="upload_shortcut_short">Upload File</string>
-    <string name="upload_shortcut_long">Upload File</string>
     <string name="vanity">Vanity</string>
+    <string name="upload">Upload</string>
+    <string name="upload_file">Upload File</string>
+    <string name="file_name">File Name</string>
     <string name="shorten_url">Shorten URL</string>
+
+    <string name="github_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android">github.com/cssnr/zipline-android</a>]]></string>
 
     <string-array name="dropdown_entries">
         <item>Random</item>
@@ -24,12 +25,20 @@
         <item>Name</item>
         <item>Gfycat</item>
     </string-array>
-
     <string-array name="dropdown_values">
         <item>random</item>
         <item>date</item>
         <item>uuid</item>
         <item>name</item>
         <item>gfycat</item>
+    </string-array>
+
+    <string-array name="launcher_entries">
+        <item>Load Home Page</item>
+        <item>Load Previous Page</item>
+    </string-array>
+    <string-array name="launcher_values">
+        <item>home</item>
+        <item>previous</item>
     </string-array>
 </resources>

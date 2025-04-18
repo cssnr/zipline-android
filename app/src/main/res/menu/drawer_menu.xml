@@ -21,4 +21,11 @@
             android:checkable="true" />
     </group>
 
+    <item
+        android:id="@+id/nav_item_none"
+        android:title=""
+        android:enabled="false"
+        android:visible="false"
+        android:checkable="true" />
+
 </menu>

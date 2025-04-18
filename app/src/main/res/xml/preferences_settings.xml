@@ -3,6 +3,14 @@
 
     <PreferenceCategory android:title="App Settings">
 
+        <ListPreference
+            android:key="launcher_action"
+            android:title="Launcher Icon Action"
+            android:defaultValue="home"
+            android:entries="@array/launcher_entries"
+            android:entryValues="@array/launcher_values"
+            android:icon="@drawable/baseline_menu_24" />
+
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/baseline_preview_24"
@@ -27,8 +35,7 @@
             android:defaultValue="random"
             android:entries="@array/dropdown_entries"
             android:entryValues="@array/dropdown_values"
-            android:icon="@drawable/baseline_menu_24"
-            android:summary="%s" />
+            android:icon="@drawable/baseline_menu_24" />
 
     </PreferenceCategory>
 
