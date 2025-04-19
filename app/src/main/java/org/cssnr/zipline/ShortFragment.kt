@@ -15,6 +15,9 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -24,6 +27,8 @@ class ShortFragment : Fragment() {
 
     private var _binding: FragmentShortBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,6 +51,8 @@ class ShortFragment : Fragment() {
         Log.d("Short[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Short[onViewCreated]", "arguments: $arguments")
 
+        navController = findNavController()
+
         val url = requireArguments().getString("url")
         Log.d("Short[onViewCreated]", "url: $url")
 
@@ -66,9 +73,11 @@ class ShortFragment : Fragment() {
             Log.e("Short[onViewCreated]", "ziplineUrl || ziplineToken is null")
             Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
                 .show()
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, SetupFragment())
-                .commit()
+            navController.navigate(
+                R.id.nav_item_setup, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_home, true)
+                    .build()
+            )
             return
         }
 
@@ -85,10 +94,7 @@ class ShortFragment : Fragment() {
 
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, SettingsFragment())
-                .addToBackStack(null)
-                .commit()
+            navController.navigate(R.id.nav_item_settings)
         }
 
         binding.openButton.setOnClickListener {
@@ -115,16 +121,18 @@ class ShortFragment : Fragment() {
         val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
         val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
         val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
-        Log.d("onViewCreated", "ziplineUrl: $ziplineUrl")
-        Log.d("onViewCreated", "ziplineToken: $ziplineToken")
+        Log.d("processShort", "ziplineUrl: $ziplineUrl")
+        Log.d("processShort", "ziplineToken: $ziplineToken")
 
         if (ziplineUrl == null || ziplineToken == null) {
-            Log.e("onViewCreated", "ziplineUrl || ziplineToken is null")
+            Log.e("processShort", "ziplineUrl || ziplineToken is null")
             Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
                 .show()
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, SetupFragment())
-                .commit()
+            navController.navigate(
+                R.id.nav_item_setup, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_home, true)
+                    .build()
+            )
             return
         }
 
@@ -133,23 +141,24 @@ class ShortFragment : Fragment() {
             val response = api.shorten(longUrl, vanityName, ziplineUrl)
             Log.d("processShort", "response: $response")
             if (response != null) {
-                Log.d("processShort", "result.url: ${response.url}")
+                Log.d("processShort", "response.url: ${response.url}")
                 copyToClipboard(response.url)
-
-                val activity = requireActivity()
-                Log.d("processShort", "activity: $activity")
-                parentFragmentManager.beginTransaction()
-                    .remove(this@ShortFragment)
-                    .commit()
-                activity.window.decorView.post {
-                    val home = HomeFragment()
-                    Log.d("processShort", "home: $home")
-                    home.arguments = bundleOf("url" to "${ziplineUrl}/dashboard/urls")
-                    Log.d("processShort", "arguments.url: ${ziplineUrl}/dashboard/urls")
-                    activity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.main, home)
-                        .commit()
+                val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
+                Log.d("processShort", "shareUrl: $shareUrl")
+                if (shareUrl) {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, response.url)
+                    }
+                    startActivity(Intent.createChooser(shareIntent, null))
                 }
+                navController.navigate(
+                    R.id.nav_item_home,
+                    bundleOf("url" to "${ziplineUrl}/dashboard/urls"),
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.nav_graph, inclusive = true)
+                        .build()
+                )
                 Log.d("processShort", "DONE")
             } else {
                 Log.e("processShort", "uploadedFile is null")

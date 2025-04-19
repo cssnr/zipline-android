@@ -20,6 +20,9 @@ import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,6 +33,8 @@ class PreviewFragment : Fragment() {
 
     private var _binding: FragmentPreviewBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var navController: NavController
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -51,6 +56,8 @@ class PreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
         Log.d("onViewCreated", "arguments: $arguments")
+
+        navController = findNavController()
 
         //val uri = arguments?.getString("uri")?.toUri()
         val uri = requireArguments().getString("uri")?.toUri()
@@ -119,9 +126,11 @@ class PreviewFragment : Fragment() {
             Log.e("onViewCreated", "ziplineUrl || ziplineToken is null")
             Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
                 .show()
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, SetupFragment())
-                .commit()
+            navController.navigate(
+                R.id.nav_item_setup, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_home, true)
+                    .build()
+            )
             return
         }
 
@@ -137,10 +146,7 @@ class PreviewFragment : Fragment() {
 
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            parentFragmentManager.beginTransaction()
-                .replace(R.id.main, SettingsFragment())
-                .addToBackStack(null)
-                .commit()
+            navController.navigate(R.id.nav_item_settings)
         }
 
         binding.openButton.setOnClickListener {
@@ -151,7 +157,6 @@ class PreviewFragment : Fragment() {
             }
             startActivity(Intent.createChooser(openIntent, null))
         }
-
 
         binding.uploadButton.setOnClickListener {
             val fileName = binding.fileName.text.toString().trim()
@@ -172,21 +177,13 @@ class PreviewFragment : Fragment() {
             if (result != null) {
                 Log.d("processUpload", "result.url: ${result.url}")
                 copyToClipboard(result.url)
-
-                val activity = requireActivity()
-                Log.d("processUpload", "activity: $activity")
-                parentFragmentManager.beginTransaction()
-                    .remove(this@PreviewFragment)
-                    .commit()
-                activity.window.decorView.post {
-                    val home = HomeFragment()
-                    Log.d("processUpload", "home: $home")
-                    home.arguments = bundleOf("url" to result.url)
-                    Log.d("processUpload", "arguments.url: ${result.url}")
-                    activity.supportFragmentManager.beginTransaction()
-                        .replace(R.id.main, home)
-                        .commit()
-                }
+                navController.navigate(
+                    R.id.nav_item_home,
+                    bundleOf("url" to result.url),
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.nav_graph, inclusive = true)
+                        .build()
+                )
                 Log.d("processUpload", "DONE")
             } else {
                 Log.e("processUpload", "uploadedFile is null")

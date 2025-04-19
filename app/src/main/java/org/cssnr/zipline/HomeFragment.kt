@@ -89,14 +89,16 @@ class HomeFragment : Fragment() {
             settings.useWideViewPort = true // prevent loading images zoomed in
 
             if (url != null) {
-                Log.d("Home[onViewCreated]", "ARGUMENT URL: $url")
+                Log.i("Home[webView.apply]", "ARGUMENT URL: $url")
                 loadUrl(url)
             } else if (webViewState.size() > 0) {
-                Log.d("Home[onViewCreated]", "RESTORE STATE")
+                Log.i("Home[webView.apply]", "RESTORE STATE")
                 restoreState(webViewState)
-            } else {
-                Log.d("Home[onViewCreated]", "LOAD URL: $ziplineUrl")
+            } else if (ziplineUrl.isNotBlank()) {
+                Log.i("Home[webView.apply]", "LOAD ziplineUrl: $ziplineUrl")
                 loadUrl(ziplineUrl)
+            } else {
+                Log.i("Home[webView.apply]", "NO ZIPLINE URL - DOING NOTHING")
             }
         }
     }
@@ -160,12 +162,8 @@ class HomeFragment : Fragment() {
                 sharedPreferences.edit { remove("ziplineToken") }
 
                 Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
-                //view.destroy()
                 view.loadUrl("about:blank")
-
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.main, SetupFragment())
-                    .commit()
+                //view.destroy()
             }
         }
 

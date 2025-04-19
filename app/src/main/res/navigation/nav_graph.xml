@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/nav_item_home">
+
+    <fragment
+        android:id="@+id/nav_item_home"
+        android:name="org.cssnr.zipline.HomeFragment"
+        android:label="Home" />
+
+    <fragment
+        android:id="@+id/nav_item_settings"
+        android:name="org.cssnr.zipline.SettingsFragment"
+        android:label="Settings" />
+
+    <fragment
+        android:id="@+id/nav_item_preview"
+        android:name="org.cssnr.zipline.PreviewFragment"
+        android:label="Preview" />
+
+    <fragment
+        android:id="@+id/nav_item_short"
+        android:name="org.cssnr.zipline.ShortFragment"
+        android:label="Preview" />
+
+    <fragment
+        android:id="@+id/nav_item_setup"
+        android:name="org.cssnr.zipline.SetupFragment"
+        android:label="Preview" />
+</navigation>
