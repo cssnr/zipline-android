@@ -37,6 +37,12 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 >
 > [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
 
+<details><summary>View QR Code 📸</summary>
+
+[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android-client/zipline-android-client-download.png)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+
+</details>
+
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
 Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
