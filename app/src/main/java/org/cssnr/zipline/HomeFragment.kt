@@ -20,6 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -164,6 +166,11 @@ class HomeFragment : Fragment() {
                 Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
                 view.loadUrl("about:blank")
                 //view.destroy()
+                findNavController().navigate(
+                    R.id.nav_item_setup, null, NavOptions.Builder()
+                        .setPopUpTo(R.id.nav_item_home, true)
+                        .build()
+                )
             }
         }
 
