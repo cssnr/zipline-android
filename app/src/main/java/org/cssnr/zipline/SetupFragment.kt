@@ -15,6 +15,8 @@ import androidx.core.content.edit
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.databinding.FragmentSetupBinding
 
@@ -107,30 +109,11 @@ class SetupFragment : Fragment() {
                     Log.d("getSharedPreferences", "ziplineUrl: $host")
                     sharedPreferences?.edit { putString("ziplineToken", token) }
                     Log.d("getSharedPreferences", "ziplineToken: $token")
-
-                    //activity?.supportFragmentManager?.beginTransaction()
-                    //    ?.replace(R.id.main, HomeFragment())
-                    //    ?.commit()
-
-                    Log.d("fragment", "START")
-                    //parentFragmentManager.beginTransaction()
-                    //    .replace(R.id.main, HomeFragment())
-                    //    //.addToBackStack(null)
-                    //    .commitNow()
-                    //(requireActivity() as MainActivity).binding.navigationView.setCheckedItem(R.id.nav_item_home)
-                    (activity as? MainActivity)?.let { main ->
-                        main.supportFragmentManager.beginTransaction()
-                            .replace(R.id.main, HomeFragment())
-                            .commit()
-                        main.binding.navigationView.setCheckedItem(R.id.nav_item_home)
-                    }
-                    Log.d("fragment", "DONE")
+                    findNavController().navigate(R.id.nav_item_home, null, NavOptions.Builder()
+                        .setPopUpTo(R.id.nav_item_setup, true)
+                        .build())
                 }
             }
-
-            //val mainActivity = activity as MainActivity
-            //mainActivity.loadUrl("https://intranet.cssnr.com")
-            //activity?.supportFragmentManager?.beginTransaction()?.remove(this)?.commit()
             Log.d("setOnClickListener", "DONE")
         }
     }

@@ -7,27 +7,24 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.get
-import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.FragmentManager
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import org.cssnr.zipline.databinding.ActivityMainBinding
 import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityMainBinding
-
+    private lateinit var navController: NavController
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
 
 
@@ -39,6 +36,11 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // NOTE: This is used over findNavController to use androidx.fragment.app.FragmentContainerView
+        navController =
+            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+        NavigationUI.setupWithNavController(binding.navigationView, navController)
+
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
@@ -47,13 +49,23 @@ class MainActivity : AppCompatActivity() {
         val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
         versionTextView.text = "v${versionName}"
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
+        binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
+
+        // Handle Custom Navigation Items
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            if (menuItem.itemId == R.id.nav_item_upload) {
+                Log.d("Drawer", "nav_item_upload")
+                filePickerLauncher.launch(arrayOf("*/*"))
+                binding.drawerLayout.closeDrawers()
+                true
+            } else {
+                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                if (handled) {
+                    binding.drawerLayout.closeDrawers()
+                }
+                handled
+            }
         }
-        val drawer = findViewById<DrawerLayout>(R.id.drawer_layout)
-        drawer.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
         filePickerLauncher =
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -67,106 +79,6 @@ class MainActivity : AppCompatActivity() {
                     Toast.makeText(this, "No File Selected!", Toast.LENGTH_SHORT).show()
                 }
             }
-
-        // Navigation - On Click
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
-            Log.d("NavigationDrawer", "menuItem: $menuItem")
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-            Log.d("NavigationDrawer", "currentFragment: $currentFragment")
-
-            when (menuItem.itemId) {
-                R.id.nav_item_home -> {
-                    Log.d("NavigationDrawer", "nav_item_home")
-                    if (currentFragment !is HomeFragment) {
-                        Log.d("NavigationDrawer", "NOT ON HomeFragment")
-                        val fragmentManager = supportFragmentManager
-                        val fragmentFound = fragmentManager.fragments.any { it is HomeFragment }
-                        Log.d("NavigationDrawer", "fragmentFound: $fragmentFound")
-
-                        val popped = supportFragmentManager.popBackStackImmediate("HomeFragment", 0)
-                        Log.d("NavigationDrawer", "popped: $popped")
-                        if (!popped) {
-                            Log.d("NavigationDrawer", "beginTransaction: HomeFragment")
-                            supportFragmentManager.beginTransaction()
-                                .replace(R.id.main, HomeFragment())
-                                .addToBackStack("HomeFragment")
-                                .commit()
-                        }
-                    } else {
-                        Log.d("NavigationDrawer", "ALREADY ON HomeFragment")
-                        val url = currentFragment.currentUrl
-                        Log.d("NavigationDrawer", "currentFragment.currentUrl: $url")
-                        val ziplineUrl = getSharedPreferences("default_preferences", MODE_PRIVATE)
-                            .getString("ziplineUrl", null)
-                        Log.d("NavigationDrawer", "ziplineUrl: $ziplineUrl")
-                        val path = url.removePrefix(ziplineUrl!!)
-                        Log.d("NavigationDrawer", "path: $path")
-                        if (path.startsWith("/u/") || path.startsWith("/view/")) {
-                            Log.i("NavigationDrawer", "Reloading HomeFragment!")
-                            val home = HomeFragment().apply {
-                                arguments = bundleOf("url" to ziplineUrl)
-                            }
-                            Log.d("NavigationDrawer", "arguments.url: $ziplineUrl")
-                            supportFragmentManager.beginTransaction()
-                                .replace(R.id.main, home)
-                                .addToBackStack("HomeFragment")
-                                .commit()
-                        }
-                    }
-                    Log.w("NavigationDrawer", "setCheckedItem: nav_item_home")
-                    binding.navigationView.setCheckedItem(R.id.nav_item_home)
-                    binding.drawerLayout.closeDrawers()
-                    true
-                }
-
-                R.id.nav_item_upload -> {
-                    Log.d("NavigationDrawer", "nav_item_upload")
-                    filePickerLauncher.launch(arrayOf("*/*"))
-                    binding.drawerLayout.closeDrawers()
-                    false
-                }
-
-                R.id.nav_item_settings -> {
-                    Log.d("NavigationDrawer", "nav_item_settings")
-                    if (currentFragment !is SettingsFragment) {
-                        supportFragmentManager.beginTransaction()
-                            .replace(R.id.main, SettingsFragment())
-                            .addToBackStack("SettingsFragment")
-                            .commit()
-                    }
-                    binding.navigationView.setCheckedItem(R.id.nav_item_settings)
-                    binding.drawerLayout.closeDrawers()
-                    true
-                }
-
-                else -> {
-                    Log.w("NavigationDrawer", "UNKNOWN ITEM")
-                    Toast.makeText(this, "Unknown Menu Item!", Toast.LENGTH_LONG).show()
-                    false
-                }
-            }
-        }
-
-        // Navigation - Back Button
-        supportFragmentManager.addOnBackStackChangedListener {
-            val currentFragment = supportFragmentManager.findFragmentById(R.id.main)
-            Log.d("BackStackChanged", "currentFragment: $currentFragment")
-            val itemId = when (currentFragment) {
-                is SettingsFragment -> R.id.nav_item_settings
-                is HomeFragment -> R.id.nav_item_home
-                is PreviewFragment -> View.NO_ID
-                else -> View.NO_ID
-            }
-            Log.d("BackStackChanged", "itemId: $itemId")
-            if (itemId != View.NO_ID) {
-                Log.d("BackStackChanged", "SET isChecked")
-                binding.navigationView.menu.findItem(itemId)?.isChecked = true
-            } else {
-                Log.w("BackStackChanged", "NOT Checkable")
-                //binding.navigationView.menu.setGroupCheckable(0, false, true)
-                clearDrawer()
-            }
-        }
 
         handleIntent(intent, savedInstanceState)
     }
@@ -185,7 +97,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun handleIntent(intent: Intent, savedInstanceState: Bundle?) {
         Log.d("handleIntent", "intent: $intent")
-
         Log.d("handleIntent", "intent.data: ${intent.data}")
         Log.d("handleIntent", "intent.type: ${intent.type}")
         Log.d("handleIntent", "intent.action: ${intent.action}")
@@ -202,51 +113,41 @@ class MainActivity : AppCompatActivity() {
         if (ziplineUrl.isNullOrEmpty() || ziplineToken.isNullOrEmpty()) {
             Log.w("handleIntent", "Missing Zipline URL or Token...")
 
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.main, SetupFragment())
-                .commit()
+            navController.navigate(
+                R.id.nav_item_setup, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_home, true)
+                    .build()
+            )
 
         } else if (Intent.ACTION_MAIN == intent.action) {
             Log.d("handleIntent", "ACTION_MAIN: ${savedInstanceState?.size()}")
 
-            // TODO: Verify this does not cause any issues
-            if (savedInstanceState == null) {
-                val existingFragment = supportFragmentManager.findFragmentById(R.id.main)
-                Log.d("handleIntent", "existingFragment: $existingFragment")
-                val launcherAction = sharedPreferences.getString("launcher_action", null)
-                Log.d("handleIntent", "launcherAction: $launcherAction")
+            binding.drawerLayout.closeDrawers()
 
-                if (launcherAction != "previous") {
-                    Log.d("MyLogic", "Check for Home Fragment")
-                    if (existingFragment !is HomeFragment) {
-                        Log.d("MyLogic", "COLD START")
-                    }
-                } else {
-                    Log.d("MyLogic", "Check for Any Fragment")
-                    if (existingFragment == null) {
-                        Log.d("MyLogic", "COLD START")
-                    }
-                }
-
-                //if (existingFragment !is HomeFragment) {
-                if ((launcherAction != "previous" && existingFragment !is HomeFragment) || (launcherAction == "previous" && existingFragment == null)) {
-                    // TODO: Hack for ListPreference dialog open on intent start
-                    val existingDialog =
-                        supportFragmentManager.findFragmentByTag("androidx.preference.PreferenceFragment.DIALOG")
-                    if (existingDialog != null) {
-                        Log.d("handleIntent", "REMOVE: $existingDialog")
-                        supportFragmentManager.beginTransaction().remove(existingDialog).commit()
-                    }
-                    Log.i("handleIntent", "COLD START: popBackStack and beginTransaction")
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main, HomeFragment())
-                        .commit()
-                    binding.navigationView.setCheckedItem(R.id.nav_item_home)
-                }
-            }
+            // TODO: Cleanup the logic for handling MAIN intent...
+            val currentDestinationId = navController.currentDestination?.id
+            Log.d("handleIntent", "currentDestinationId: $currentDestinationId")
+            val launcherAction = sharedPreferences.getString("launcher_action", null)
+            Log.d("handleIntent", "launcherAction: $launcherAction")
             val fromShortcut = intent.getStringExtra("fromShortcut")
             Log.d("handleIntent", "fromShortcut: $fromShortcut")
+            Log.d("handleIntent", "nav_item_preview: ${R.id.nav_item_preview}")
+            Log.d("handleIntent", "nav_item_short: ${R.id.nav_item_short}")
+
+            if (currentDestinationId == R.id.nav_item_preview || currentDestinationId == R.id.nav_item_short) {
+                Log.i("handleIntent", "ON PREVIEW/SHORT - Navigating to HomeFragment w/ setPopUpTo")
+                // TODO: Determine the correct navigation call here...
+                //navController.navigate(R.id.nav_item_home)
+                navController.navigate(
+                    R.id.nav_item_home, null, NavOptions.Builder()
+                        .setPopUpTo(navController.graph.id, true)
+                        .build()
+                )
+            } else if (currentDestinationId != R.id.nav_item_home && launcherAction != "previous") {
+                Log.i("handleIntent", "HOME SETTING SET - Navigating to HomeFragment")
+                navController.navigate(R.id.nav_item_home)
+            }
+            // TODO: Determine if this needs to be in the above if/else
             if (fromShortcut == "upload") {
                 Log.d("handleIntent", "filePickerLauncher.launch")
                 filePickerLauncher.launch(arrayOf("*/*"))
@@ -269,15 +170,18 @@ class MainActivity : AppCompatActivity() {
                 //if (Patterns.WEB_URL.matcher(extraText).matches()) {
                 if (isURL(extraText)) {
                     Log.d("handleIntent", "URL DETECTED: $extraText")
-                    val fragment = ShortFragment()
+                    binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply {
                         putString("url", extraText)
                     }
-                    fragment.arguments = bundle
-                    supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                    supportFragmentManager.beginTransaction()
-                        .replace(R.id.main, fragment)
-                        .commit()
+                    // TODO: Determine how to better pop navigation history...
+                    navController.popBackStack(R.id.nav_graph, true)
+                    navController.navigate(
+                        R.id.nav_item_short, bundle, NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_item_home, true)
+                            .setLaunchSingleTop(true)
+                            .build()
+                    )
                 } else {
                     Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_SHORT).show()
                     Log.w("handleIntent", "NOT IMPLEMENTED")
@@ -330,34 +234,20 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun clearDrawer(close: Boolean = false) {
-        Log.w("clearDrawer", "CLEAR DRAWER CLEAR DRAWER close: $close")
-        binding.navigationView.menu.setGroupCheckable(0, true, true)
-        for (i in 0 until binding.navigationView.menu.size) {
-            binding.navigationView.menu[i].isChecked = false
-        }
-        if (close) {
-            binding.drawerLayout.closeDrawers()
-        }
-    }
-
     private fun showPreview(uri: Uri?, type: String?) {
-        Log.d("Main[showPreview]", "File URI: $uri")
-
-        // TODO: Dummy item since I clearly don't know how navigation works...
-        Log.d("Main[showPreview]", "checkedItem: ${binding.navigationView.checkedItem}")
-        binding.navigationView.setCheckedItem(R.id.nav_item_none)
-        binding.drawerLayout.closeDrawers()
-
-        val fragment = PreviewFragment()
+        Log.d("Main[showPreview]", "$type - $uri")
         val bundle = Bundle().apply {
             putString("uri", uri.toString())
             putString("type", type)
         }
-        fragment.arguments = bundle
-        supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.main, fragment)
-            .commit()
+        binding.drawerLayout.closeDrawers()
+        // TODO: This destroys the home fragment making restore from state impossible
+        navController.popBackStack(R.id.nav_graph, true)
+        navController.navigate(
+            R.id.nav_item_preview, bundle, NavOptions.Builder()
+                .setPopUpTo(R.id.nav_item_home, true)
+                .setLaunchSingleTop(true)
+                .build()
+        )
     }
 }

@@ -20,6 +20,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -89,14 +91,16 @@ class HomeFragment : Fragment() {
             settings.useWideViewPort = true // prevent loading images zoomed in
 
             if (url != null) {
-                Log.d("Home[onViewCreated]", "ARGUMENT URL: $url")
+                Log.i("Home[webView.apply]", "ARGUMENT URL: $url")
                 loadUrl(url)
             } else if (webViewState.size() > 0) {
-                Log.d("Home[onViewCreated]", "RESTORE STATE")
+                Log.i("Home[webView.apply]", "RESTORE STATE")
                 restoreState(webViewState)
-            } else {
-                Log.d("Home[onViewCreated]", "LOAD URL: $ziplineUrl")
+            } else if (ziplineUrl.isNotBlank()) {
+                Log.i("Home[webView.apply]", "LOAD ziplineUrl: $ziplineUrl")
                 loadUrl(ziplineUrl)
+            } else {
+                Log.i("Home[webView.apply]", "NO ZIPLINE URL - DOING NOTHING")
             }
         }
     }
@@ -160,12 +164,13 @@ class HomeFragment : Fragment() {
                 sharedPreferences.edit { remove("ziplineToken") }
 
                 Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
-                //view.destroy()
                 view.loadUrl("about:blank")
-
-                parentFragmentManager.beginTransaction()
-                    .replace(R.id.main, SetupFragment())
-                    .commit()
+                //view.destroy()
+                findNavController().navigate(
+                    R.id.nav_item_setup, null, NavOptions.Builder()
+                        .setPopUpTo(R.id.nav_item_home, true)
+                        .build()
+                )
             }
         }
 
