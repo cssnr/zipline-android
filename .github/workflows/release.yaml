@@ -15,7 +15,7 @@ env:
   name: zipline.apk # Final APK Name
   key_name: zipline-release
   key_file: release.keystore
-  tools_path: /usr/local/lib/android/sdk/build-tools/35.0.0
+  tools_path: /usr/local/lib/android/sdk/build-tools/36.0.0
   cmdline_tools: /usr/local/lib/android/sdk/cmdline-tools/latest/bin
 
 jobs:
