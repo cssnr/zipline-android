@@ -1,6 +1,10 @@
 package org.cssnr.zipline
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -131,10 +135,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("handleIntent", "launcherAction: $launcherAction")
             val fromShortcut = intent.getStringExtra("fromShortcut")
             Log.d("handleIntent", "fromShortcut: $fromShortcut")
-            Log.d("handleIntent", "nav_item_preview: ${R.id.nav_item_preview}")
+            Log.d("handleIntent", "nav_item_preview: ${R.id.nav_item_upload}")
             Log.d("handleIntent", "nav_item_short: ${R.id.nav_item_short}")
 
-            if (currentDestinationId == R.id.nav_item_preview || currentDestinationId == R.id.nav_item_short) {
+            if (currentDestinationId == R.id.nav_item_upload || currentDestinationId == R.id.nav_item_short) {
                 Log.i("handleIntent", "ON PREVIEW/SHORT - Navigating to HomeFragment w/ setPopUpTo")
                 // TODO: Determine the correct navigation call here...
                 //navController.navigate(R.id.nav_item_home)
@@ -201,15 +205,11 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d("handleIntent", "fileUris: $fileUris")
             if (fileUris == null) {
-                Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_LONG).show()
                 Log.w("handleIntent", "fileUris is null")
                 return
             }
-            for (fileUri in fileUris) {
-                Log.d("handleIntent", "MULTI: fileUri: $fileUri")
-            }
-            Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_SHORT).show()
-            Log.w("handleIntent", "NOT IMPLEMENTED")
+            showMultiPreview(fileUris)
 
         } else if (Intent.ACTION_VIEW == intent.action) {
             Log.d("handleIntent", "ACTION_VIEW")
@@ -244,10 +244,32 @@ class MainActivity : AppCompatActivity() {
         // TODO: This destroys the home fragment making restore from state impossible
         navController.popBackStack(R.id.nav_graph, true)
         navController.navigate(
-            R.id.nav_item_preview, bundle, NavOptions.Builder()
+            R.id.nav_item_upload, bundle, NavOptions.Builder()
                 .setPopUpTo(R.id.nav_item_home, true)
                 .setLaunchSingleTop(true)
                 .build()
         )
     }
+
+    private fun showMultiPreview(fileUris: ArrayList<Uri>) {
+        Log.d("Main[showMultiPreview]", "fileUris: $fileUris")
+        //fileUris.sort()
+        binding.drawerLayout.closeDrawers()
+        val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
+        navController.popBackStack(R.id.nav_graph, true)
+        navController.navigate(
+            R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
+                .setPopUpTo(R.id.nav_item_home, true)
+                .setLaunchSingleTop(true)
+                .build()
+        )
+    }
+}
+
+fun copyToClipboard(context: Context, url: String) {
+    Log.d("copyToClipboard", "url: $url")
+    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("URL", url)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(context, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
 }

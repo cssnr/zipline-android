@@ -142,7 +142,7 @@ class ShortFragment : Fragment() {
             Log.d("processShort", "response: $response")
             if (response != null) {
                 Log.d("processShort", "response.url: ${response.url}")
-                copyToClipboard(response.url)
+                copyToClipboard(requireContext(), response.url)
                 val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
                 Log.d("processShort", "shareUrl: $shareUrl")
                 if (shareUrl) {
@@ -168,13 +168,5 @@ class ShortFragment : Fragment() {
                 }
             }
         }
-    }
-
-    private fun copyToClipboard(url: String) {
-        Log.d("copyToClipboard", "url: $url")
-        val clipboard = requireContext().getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("URL", url)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(requireContext(), "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
     }
 }

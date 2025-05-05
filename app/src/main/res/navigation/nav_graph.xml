@@ -14,9 +14,19 @@
         android:name="org.cssnr.zipline.SettingsFragment"
         android:label="Settings" />
 
+<!--    <fragment-->
+<!--        android:id="@+id/nav_item_preview"-->
+<!--        android:name="org.cssnr.zipline.PreviewFragment"-->
+<!--        android:label="Preview" />-->
+
     <fragment
-        android:id="@+id/nav_item_preview"
-        android:name="org.cssnr.zipline.PreviewFragment"
+        android:id="@+id/nav_item_upload"
+        android:name="org.cssnr.zipline.upload.UploadFragment"
+        android:label="Preview" />
+
+    <fragment
+        android:id="@+id/nav_item_upload_multi"
+        android:name="org.cssnr.zipline.upload.UploadMultiFragment"
         android:label="Preview" />
 
     <fragment
