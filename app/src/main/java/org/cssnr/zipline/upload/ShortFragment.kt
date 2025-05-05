@@ -15,13 +15,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.ZiplineApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentShortBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class ShortFragment : Fragment() {
 
@@ -147,32 +147,35 @@ class ShortFragment : Fragment() {
         lifecycleScope.launch {
             val response = api.shorten(longUrl, vanityName, ziplineUrl)
             Log.d("processShort", "response: $response")
-            if (response != null) {
-                Log.d("processShort", "response.url: ${response.url}")
-                copyToClipboard(requireContext(), response.url)
-                val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
-                Log.d("processShort", "shareUrl: $shareUrl")
-                if (shareUrl) {
-                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                        type = "text/plain"
-                        putExtra(Intent.EXTRA_TEXT, response.url)
+            if (response.isSuccessful) {
+                val shortResponse = response.body()
+                if (shortResponse != null) {
+                    Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
+                    copyToClipboard(requireContext(), shortResponse.url)
+                    val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
+                    Log.d("processShort", "shareUrl: $shareUrl")
+                    if (shareUrl) {
+                        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                            type = "text/plain"
+                            putExtra(Intent.EXTRA_TEXT, shortResponse.url)
+                        }
+                        startActivity(Intent.createChooser(shareIntent, null))
                     }
-                    startActivity(Intent.createChooser(shareIntent, null))
+                    navController.navigate(
+                        R.id.nav_item_home,
+                        bundleOf("url" to "${ziplineUrl}/dashboard/urls"),
+                        NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_graph, inclusive = true)
+                            .build()
+                    )
+                    Log.d("processShort", "DONE")
+                    return@launch
                 }
-                navController.navigate(
-                    R.id.nav_item_home,
-                    bundleOf("url" to "${ziplineUrl}/dashboard/urls"),
-                    NavOptions.Builder()
-                        .setPopUpTo(R.id.nav_graph, inclusive = true)
-                        .build()
-                )
-                Log.d("processShort", "DONE")
-            } else {
-                Log.e("processShort", "uploadedFile is null")
-                withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_LONG)
-                        .show()
-                }
+            }
+            Log.e("processShort", "response/shortResponse is null")
+            withContext(Dispatchers.Main) {
+                Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_LONG)
+                    .show()
             }
         }
     }

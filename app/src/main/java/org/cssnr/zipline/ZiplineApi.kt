@@ -73,40 +73,22 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
-    suspend fun shorten(url: String, vanity: String?, ziplineUrl: String): ShortResponse? {
+    suspend fun shorten(url: String, vanity: String?, ziplineUrl: String): Response<ShortResponse> {
         Log.d("upload", "url: $url")
         Log.d("upload", "vanity: $vanity")
         Log.d("upload", "ziplineUrl: $ziplineUrl")
 
-        val ziplineToken = preferences.getString("ziplineToken", null)
-        Log.d("upload", "ziplineToken: $ziplineToken")
-        if (ziplineToken == null) {
-            Log.e("upload", "inputStream/ziplineToken is null")
-            return null
-        }
-
+        val ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
-        return try {
-            api.postShort(ziplineToken, ShortRequest(url, vanity, true))
-        } catch (e: HttpException) {
-            Log.e("upload", "HttpException: ${e.message}")
-            val response = e.response()?.errorBody()?.string()
-            Log.d("upload", "response: $response")
-            if (e.code() == 401) {
-                try {
-                    val token = reAuthenticate(api, ziplineUrl)
-                    if (!token.isNullOrEmpty()) {
-                        api.postShort(ziplineToken, ShortRequest(url, vanity, true))
-                    }
-                } catch (e: Exception) {
-                    Log.w("upload", "Exception: ${e.message}")
-                }
+        val response = api.postShort(ziplineToken, ShortRequest(url, vanity, true))
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "token: $token")
+            if (token != null) {
+                return api.postShort(token, ShortRequest(url, vanity, true))
             }
-            null
-        } catch (e: Exception) {
-            Log.e("upload", "Exception: ${e.message}")
-            null
         }
+        return response
     }
 
     suspend fun upload(fileName: String, inputStream: InputStream, ziplineUrl: String): Response<FileResponse> {
@@ -201,7 +183,7 @@ class ZiplineApi(private val context: Context) {
         suspend fun postShort(
             @Header("authorization") token: String,
             @Body request: ShortRequest,
-        ): ShortResponse
+        ): Response<ShortResponse>
     }
 
     data class LoginRequest(
