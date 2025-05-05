@@ -82,7 +82,7 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ### Planned
 
-- Sharing multiple files at once.
+- Improve [Django Files](https://github.com/django-files).
 
 ### Known Issues
 
