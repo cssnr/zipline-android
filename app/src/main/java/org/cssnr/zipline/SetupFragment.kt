@@ -109,9 +109,11 @@ class SetupFragment : Fragment() {
                     Log.d("getSharedPreferences", "ziplineUrl: $host")
                     sharedPreferences?.edit { putString("ziplineToken", token) }
                     Log.d("getSharedPreferences", "ziplineToken: $token")
-                    findNavController().navigate(R.id.nav_item_home, null, NavOptions.Builder()
-                        .setPopUpTo(R.id.nav_item_setup, true)
-                        .build())
+                    findNavController().navigate(
+                        R.id.nav_item_home, null, NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_item_setup, true)
+                            .build()
+                    )
                 }
             }
             Log.d("setOnClickListener", "DONE")

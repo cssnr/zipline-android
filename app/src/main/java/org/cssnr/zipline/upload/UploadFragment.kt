@@ -32,13 +32,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.ZiplineApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentUploadBinding
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.json.JSONObject
 
 class UploadFragment : Fragment() {

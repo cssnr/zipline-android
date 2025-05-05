@@ -1,16 +1,12 @@
 package org.cssnr.zipline
 
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
 import android.net.Uri
 import android.provider.OpenableColumns
 import android.util.Log
 import android.webkit.CookieManager
-import android.widget.Toast
 import androidx.core.content.edit
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -23,7 +19,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -91,7 +86,11 @@ class ZiplineApi(private val context: Context) {
         return response
     }
 
-    suspend fun upload(fileName: String, inputStream: InputStream, ziplineUrl: String): Response<FileResponse> {
+    suspend fun upload(
+        fileName: String,
+        inputStream: InputStream,
+        ziplineUrl: String
+    ): Response<FileResponse> {
         Log.d("upload", "fileName: $fileName")
         val ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("upload", "ziplineToken: $ziplineToken")

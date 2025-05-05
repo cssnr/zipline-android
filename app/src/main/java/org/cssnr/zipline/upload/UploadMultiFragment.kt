@@ -17,11 +17,11 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.ZiplineApi
-import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
-import kotlinx.coroutines.launch
 import org.cssnr.zipline.ZiplineApi.FileResponse
+import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
 
 class UploadMultiFragment : Fragment() {
 
@@ -191,7 +191,8 @@ class UploadMultiFragment : Fragment() {
                 Toast.makeText(requireContext(), "All Uploads Failed!", Toast.LENGTH_SHORT).show()
                 return@launch
             }
-            val destUrl = if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
+            val destUrl =
+                if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
             Log.d("processMultiUpload", "destUrl: $destUrl")
             val msg = "Uploaded ${results.size} Files."
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()

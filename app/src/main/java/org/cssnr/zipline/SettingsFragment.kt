@@ -11,6 +11,7 @@ import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
 
 class SettingsFragment : PreferenceFragmentCompat() {
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
