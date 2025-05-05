@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:fillViewport="true"
     android:background="?android:attr/colorBackground">
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,27 +15,43 @@
         android:paddingTop="8dp">
 
         <FrameLayout
+            android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="200dp">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_preview"
+            android:layout_height="240dp">
+            <FrameLayout
+                android:id="@+id/image_holder"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:contentDescription="@string/preview"
-                android:scaleType="fitCenter"
-                app:contentPadding="8dp"
-                app:strokeWidth="2dp" />
-
-            <TextView
-                android:id="@+id/image_overlay_text"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:padding="4dp"
+                android:background="@drawable/edit_text_border"
                 android:visibility="gone"
-                android:background="@android:color/transparent" />
-
+                tools:visibility="visible">
+                <ImageView
+                    android:id="@+id/image_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="@string/preview"
+                    android:scaleType="fitCenter" />
+                <TextView
+                    android:id="@+id/image_overlay_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center_horizontal"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:background="@android:color/transparent"
+                    android:visibility="gone"
+                    tools:visibility="visible"
+                    android:text="text/comma-separated-values"/>
+            </FrameLayout>
+            <androidx.media3.ui.PlayerView
+                android:id="@+id/player_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:show_buffering="always"
+                app:show_shuffle_button="false"
+                app:resize_mode="fit"
+                tools:visibility="gone" />
         </FrameLayout>
 
         <EditText
@@ -64,9 +79,9 @@
             android:paddingStart="36dp"
             android:text="@string/upload"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:icon="@drawable/baseline_file_upload_24"
+            app:icon="@drawable/md_upload_24px"
             app:iconGravity="end"
-            app:iconPadding="-36dp"
+            app:iconPadding="-24dp"
             app:iconSize="24dp" />
 
         <Button
@@ -78,9 +93,9 @@
             android:paddingStart="36dp"
             android:text="@string/options"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:icon="@drawable/baseline_settings_24"
+            app:icon="@drawable/md_settings_24px"
             app:iconGravity="end"
-            app:iconPadding="-36dp"
+            app:iconPadding="-24dp"
             app:iconSize="24dp" />
 
         <LinearLayout
@@ -88,40 +103,27 @@
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
             <Button
                 android:id="@+id/share_button"
-                android:layout_width="140dp"
-                android:layout_height="match_parent"
-                android:text="@string/share"
-                app:icon="@drawable/baseline_share_24"
-                app:iconGravity="textEnd"
-                app:iconSize="24dp" />
-
-            <Space
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
-
+                android:layout_weight="1"
+                android:text="@string/share"
+                app:icon="@drawable/md_share_24px"
+                app:iconGravity="textEnd"
+                app:iconSize="24dp" />
+            <Space
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
             <Button
                 android:id="@+id/open_button"
-                android:layout_width="140dp"
-                android:layout_height="match_parent"
-                android:text="@string/open"
-                app:icon="@drawable/baseline_open_in_new_24"
-                app:iconGravity="textEnd"
-                app:iconSize="24dp" />
-
-            <Space
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
-                android:layout_weight="1" />
-
+                android:layout_weight="1"
+                android:text="@string/open"
+                app:icon="@drawable/md_open_in_new_24px"
+                app:iconGravity="textEnd"
+                app:iconSize="24dp" />
         </LinearLayout>
 
     </LinearLayout>

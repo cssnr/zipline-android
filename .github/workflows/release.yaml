@@ -15,7 +15,7 @@ env:
   name: zipline.apk # Final APK Name
   key_name: zipline-release
   key_file: release.keystore
-  tools_path: /usr/local/lib/android/sdk/build-tools/35.0.0
+  tools_path: /usr/local/lib/android/sdk/build-tools/36.0.0
   cmdline_tools: /usr/local/lib/android/sdk/cmdline-tools/latest/bin
 
 jobs:
@@ -80,6 +80,16 @@ jobs:
           echo "::group::cat app/build.gradle.kts"
           cat app/build.gradle.kts
           echo "::endgroup::"
+
+      - name: "Setup Node 22"
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: "Prepare Build"
+        working-directory: ".github/scripts"
+        run: |
+          bash prepare.sh
 
       - name: "Setup Java"
         uses: actions/setup-java@v4

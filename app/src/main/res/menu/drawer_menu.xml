@@ -9,14 +9,14 @@
             android:checkable="true" />
         <item
             android:id="@+id/nav_item_upload"
-            android:icon="@drawable/baseline_file_upload_24"
+            android:icon="@drawable/md_upload_24px"
             android:title="@string/upload" />
     </group>
 
     <group android:id="@+id/nav_app">
         <item
             android:id="@+id/nav_item_settings"
-            android:icon="@drawable/baseline_settings_24"
+            android:icon="@drawable/md_settings_24px"
             android:title="@string/settings"
             android:checkable="true" />
     </group>

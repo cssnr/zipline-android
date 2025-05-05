@@ -1,6 +1,10 @@
 package org.cssnr.zipline
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -26,7 +30,6 @@ class MainActivity : AppCompatActivity() {
     internal lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
-
 
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -68,34 +71,38 @@ class MainActivity : AppCompatActivity() {
         }
 
         filePickerLauncher =
-            registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-                Log.d("filePickerLauncher", "uri: $uri")
-                if (uri != null) {
-                    val mimeType = contentResolver.getType(uri)
-                    Log.d("filePickerLauncher", "mimeType: $mimeType")
-                    showPreview(uri, mimeType)
+            registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
+                Log.d("filePickerLauncher", "uris: $uris")
+                if (uris.size > 1) {
+                    Log.i("filePickerLauncher", "MULTI!")
+                    showMultiPreview(uris as ArrayList<Uri>)
+                } else if (uris.size == 1) {
+                    Log.i("filePickerLauncher", "SINGLE!")
+                    showPreview(uris[0])
                 } else {
-                    Log.w("filePickerLauncher", "No File Selected!")
-                    Toast.makeText(this, "No File Selected!", Toast.LENGTH_SHORT).show()
+                    Log.w("filePickerLauncher", "No Files Selected!")
+                    Toast.makeText(this, "No Files Selected!", Toast.LENGTH_SHORT).show()
                 }
             }
 
-        handleIntent(intent, savedInstanceState)
+        // Only Handel Intent Once Here after App Start
+        if (savedInstanceState?.getBoolean("intentHandled") != true) {
+            handleIntent(intent)
+        }
     }
 
-    fun setDrawerLockMode(enabled: Boolean) {
-        val lockMode =
-            if (enabled) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
-        binding.drawerLayout.setDrawerLockMode(lockMode)
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("intentHandled", true)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.d("onNewIntent", "intent: $intent")
-        handleIntent(intent, null)
+        handleIntent(intent)
     }
 
-    private fun handleIntent(intent: Intent, savedInstanceState: Bundle?) {
+    private fun handleIntent(intent: Intent) {
         Log.d("handleIntent", "intent: $intent")
         Log.d("handleIntent", "intent.data: ${intent.data}")
         Log.d("handleIntent", "intent.type: ${intent.type}")
@@ -120,7 +127,7 @@ class MainActivity : AppCompatActivity() {
             )
 
         } else if (Intent.ACTION_MAIN == intent.action) {
-            Log.d("handleIntent", "ACTION_MAIN: ${savedInstanceState?.size()}")
+            Log.d("handleIntent", "ACTION_MAIN")
 
             binding.drawerLayout.closeDrawers()
 
@@ -131,10 +138,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("handleIntent", "launcherAction: $launcherAction")
             val fromShortcut = intent.getStringExtra("fromShortcut")
             Log.d("handleIntent", "fromShortcut: $fromShortcut")
-            Log.d("handleIntent", "nav_item_preview: ${R.id.nav_item_preview}")
+            Log.d("handleIntent", "nav_item_preview: ${R.id.nav_item_upload}")
             Log.d("handleIntent", "nav_item_short: ${R.id.nav_item_short}")
 
-            if (currentDestinationId == R.id.nav_item_preview || currentDestinationId == R.id.nav_item_short) {
+            if (currentDestinationId == R.id.nav_item_upload || currentDestinationId == R.id.nav_item_short) {
                 Log.i("handleIntent", "ON PREVIEW/SHORT - Navigating to HomeFragment w/ setPopUpTo")
                 // TODO: Determine the correct navigation call here...
                 //navController.navigate(R.id.nav_item_home)
@@ -187,7 +194,7 @@ class MainActivity : AppCompatActivity() {
                     Log.w("handleIntent", "NOT IMPLEMENTED")
                 }
             } else {
-                showPreview(fileUri, intent.type)
+                showPreview(fileUri)
             }
 
         } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
@@ -201,21 +208,17 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d("handleIntent", "fileUris: $fileUris")
             if (fileUris == null) {
-                Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_LONG).show()
                 Log.w("handleIntent", "fileUris is null")
                 return
             }
-            for (fileUri in fileUris) {
-                Log.d("handleIntent", "MULTI: fileUri: $fileUri")
-            }
-            Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_SHORT).show()
-            Log.w("handleIntent", "NOT IMPLEMENTED")
+            showMultiPreview(fileUris)
 
         } else if (Intent.ACTION_VIEW == intent.action) {
             Log.d("handleIntent", "ACTION_VIEW")
 
             Log.d("handleIntent", "File URI: ${intent.data}")
-            showPreview(intent.data, intent.type)
+            showPreview(intent.data)
 
         } else {
             Toast.makeText(this, "That's a Bug!", Toast.LENGTH_SHORT).show()
@@ -234,20 +237,47 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showPreview(uri: Uri?, type: String?) {
-        Log.d("Main[showPreview]", "$type - $uri")
+    private fun showPreview(uri: Uri?) {
+        Log.d("Main[showPreview]", "uri: $uri")
         val bundle = Bundle().apply {
             putString("uri", uri.toString())
-            putString("type", type)
         }
         binding.drawerLayout.closeDrawers()
         // TODO: This destroys the home fragment making restore from state impossible
         navController.popBackStack(R.id.nav_graph, true)
         navController.navigate(
-            R.id.nav_item_preview, bundle, NavOptions.Builder()
+            R.id.nav_item_upload, bundle, NavOptions.Builder()
                 .setPopUpTo(R.id.nav_item_home, true)
                 .setLaunchSingleTop(true)
                 .build()
         )
     }
+
+    private fun showMultiPreview(fileUris: ArrayList<Uri>) {
+        Log.d("Main[showMultiPreview]", "fileUris: $fileUris")
+        //fileUris.sort()
+        binding.drawerLayout.closeDrawers()
+        val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
+        navController.popBackStack(R.id.nav_graph, true)
+        navController.navigate(
+            R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
+                .setPopUpTo(R.id.nav_item_home, true)
+                .setLaunchSingleTop(true)
+                .build()
+        )
+    }
+
+    fun setDrawerLockMode(enabled: Boolean) {
+        val lockMode =
+            if (enabled) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+        binding.drawerLayout.setDrawerLockMode(lockMode)
+    }
+}
+
+fun copyToClipboard(context: Context, url: String) {
+    Log.d("copyToClipboard", "url: $url")
+    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("URL", url)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(context, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
 }

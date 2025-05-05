@@ -19,7 +19,6 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
-import retrofit2.HttpException
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -69,77 +68,45 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
-    suspend fun shorten(url: String, vanity: String?, ziplineUrl: String): ShortResponse? {
+    suspend fun shorten(url: String, vanity: String?, ziplineUrl: String): Response<ShortResponse> {
         Log.d("upload", "url: $url")
         Log.d("upload", "vanity: $vanity")
         Log.d("upload", "ziplineUrl: $ziplineUrl")
 
-        val ziplineToken = preferences.getString("ziplineToken", null)
-        Log.d("upload", "ziplineToken: $ziplineToken")
-        if (ziplineToken == null) {
-            Log.e("upload", "inputStream/ziplineToken is null")
-            return null
-        }
-
+        val ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
-        return try {
-            api.postShort(ziplineToken, ShortRequest(url, vanity, true))
-        } catch (e: HttpException) {
-            Log.e("upload", "HttpException: ${e.message}")
-            val response = e.response()?.errorBody()?.string()
-            Log.d("upload", "response: $response")
-            if (e.code() == 401) {
-                try {
-                    val token = reAuthenticate(api, ziplineUrl)
-                    if (!token.isNullOrEmpty()) {
-                        api.postShort(ziplineToken, ShortRequest(url, vanity, true))
-                    }
-                } catch (e: Exception) {
-                    Log.w("upload", "Exception: ${e.message}")
-                }
+        val response = api.postShort(ziplineToken, ShortRequest(url, vanity, true))
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "token: $token")
+            if (token != null) {
+                return api.postShort(token, ShortRequest(url, vanity, true))
             }
-            null
-        } catch (e: Exception) {
-            Log.e("upload", "Exception: ${e.message}")
-            null
         }
+        return response
     }
 
-    suspend fun upload(uri: Uri, fileName: String, ziplineUrl: String): FileResponse? {
-        Log.d("upload", "uri: $uri")
+    suspend fun upload(
+        fileName: String,
+        inputStream: InputStream,
+        ziplineUrl: String
+    ): Response<FileResponse> {
         Log.d("upload", "fileName: $fileName")
-        val ziplineToken = preferences.getString("ziplineToken", null)
+        val ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("upload", "ziplineToken: $ziplineToken")
-        val fileNameFormat = preferences.getString("file_name_format", "random")
+        val fileNameFormat = preferences.getString("file_name_format", null) ?: "random"
         Log.d("upload", "fileNameFormat: $fileNameFormat")
-        val inputStream = context.contentResolver.openInputStream(uri)
-        if (ziplineToken == null || inputStream == null) {
-            Log.e("upload", "inputStream/ziplineToken is null")
-            return null
-        }
         val api = createRetrofit(ziplineUrl).create(ApiService::class.java)
         val multiPart: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        return try {
-            api.postUpload(ziplineToken, fileNameFormat.toString(), multiPart)
-        } catch (e: HttpException) {
-            Log.e("upload", "HttpException: ${e.message}")
-            val response = e.response()?.errorBody()?.string()
-            Log.d("upload", "response: $response")
-            if (e.code() == 401) {
-                try {
-                    val token = reAuthenticate(api, ziplineUrl)
-                    if (!token.isNullOrEmpty()) {
-                        return api.postUpload(token, fileNameFormat.toString(), multiPart)
-                    }
-                } catch (e: Exception) {
-                    Log.w("upload", "Exception: ${e.message}")
-                }
+        val response = api.postUpload(ziplineToken, fileNameFormat.toString(), multiPart)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "token: $token")
+            if (token != null) {
+                return api.postUpload(token, fileNameFormat, multiPart)
             }
-            null
-        } catch (e: Exception) {
-            Log.e("upload", "Exception: ${e.message}")
-            null
         }
+        return response
     }
 
     private suspend fun reAuthenticate(api: ApiService, ziplineUrl: String): String? {
@@ -209,13 +176,13 @@ class ZiplineApi(private val context: Context) {
             @Header("authorization") token: String,
             @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
-        ): FileResponse
+        ): Response<FileResponse>
 
         @POST("user/urls")
         suspend fun postShort(
             @Header("authorization") token: String,
             @Body request: ShortRequest,
-        ): ShortResponse
+        ): Response<ShortResponse>
     }
 
     data class LoginRequest(
