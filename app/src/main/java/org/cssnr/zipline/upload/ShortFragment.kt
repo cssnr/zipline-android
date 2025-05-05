@@ -117,11 +117,67 @@ class ShortFragment : Fragment() {
             Log.d("uploadButton", "longUrl: $longUrl")
             val vanityName = binding.vanityName.text.toString().trim()
             Log.d("uploadButton", "vanityName: $vanityName")
-//            processShort(longUrl, vanityName)
+            processShort(longUrl, vanityName)
         }
     }
 
-//    // TODO: DUPLICATION: PreviewFragment.processUpload
+    private fun processShort(longUrl: String, vanityName: String?) {
+        Log.d("processShort", "URL: $longUrl")
+        Log.d("processShort", "Vanity: $vanityName")
+
+        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
+        val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
+        val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
+        Log.d("processShort", "ziplineUrl: $ziplineUrl")
+        Log.d("processShort", "ziplineToken: $ziplineToken")
+
+        if (ziplineUrl == null || ziplineToken == null) {
+            Log.e("processShort", "ziplineUrl || ziplineToken is null")
+            Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
+                .show()
+            navController.navigate(
+                R.id.nav_item_setup, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_home, true)
+                    .build()
+            )
+            return
+        }
+
+        val api = ZiplineApi(requireContext())
+        lifecycleScope.launch {
+            val response = api.shorten(longUrl, vanityName, ziplineUrl)
+            Log.d("processShort", "response: $response")
+            if (response != null) {
+                Log.d("processShort", "response.url: ${response.url}")
+                copyToClipboard(requireContext(), response.url)
+                val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
+                Log.d("processShort", "shareUrl: $shareUrl")
+                if (shareUrl) {
+                    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, response.url)
+                    }
+                    startActivity(Intent.createChooser(shareIntent, null))
+                }
+                navController.navigate(
+                    R.id.nav_item_home,
+                    bundleOf("url" to "${ziplineUrl}/dashboard/urls"),
+                    NavOptions.Builder()
+                        .setPopUpTo(R.id.nav_graph, inclusive = true)
+                        .build()
+                )
+                Log.d("processShort", "DONE")
+            } else {
+                Log.e("processShort", "uploadedFile is null")
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_LONG)
+                        .show()
+                }
+            }
+        }
+    }
+
+//    // TODO: This is the DjangoFiles processShort, Old Zipline processShort was used above...
 //    private fun processShort(url: String, vanity: String?) {
 //        Log.d("processShort", "url: $url")
 //        Log.d("processShort", "vanity: $vanity")

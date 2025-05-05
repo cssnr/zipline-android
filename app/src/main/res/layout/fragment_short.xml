@@ -24,8 +24,8 @@
             android:ellipsize="end"
             android:gravity="top|start"
             android:inputType="textUri|textMultiLine"
-            android:maxLines="7"
-            android:minLines="7"
+            android:minLines="2"
+            android:maxLines="11"
             android:overScrollMode="ifContentScrolls"
             android:padding="8dp"
             android:scrollHorizontally="false"
@@ -42,11 +42,11 @@
             android:gravity="center"
             android:hint="@string/vanity"
             android:inputType="textNoSuggestions"
+            android:labelFor="@id/url_text"
             android:maxLines="1"
             android:singleLine="true"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:labelFor="@id/url_text" />
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <Button
             android:id="@+id/short_button"
@@ -57,9 +57,9 @@
             android:paddingStart="36dp"
             android:text="@string/shorten_url"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:icon="@drawable/baseline_link_24"
+            app:icon="@drawable/md_link_24px"
             app:iconGravity="end"
-            app:iconPadding="-36dp"
+            app:iconPadding="-24dp"
             app:iconSize="24dp" />
 
         <Button
@@ -71,9 +71,9 @@
             android:paddingStart="36dp"
             android:text="@string/options"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:icon="@drawable/baseline_settings_24"
+            app:icon="@drawable/md_settings_24px"
             app:iconGravity="end"
-            app:iconPadding="-36dp"
+            app:iconPadding="-24dp"
             app:iconSize="24dp" />
 
         <LinearLayout
@@ -81,39 +81,27 @@
             android:layout_height="48dp"
             android:layout_marginTop="8dp"
             android:orientation="horizontal">
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
             <Button
                 android:id="@+id/share_button"
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="@string/share"
-                app:icon="@drawable/baseline_share_24"
+                app:icon="@drawable/md_share_24px"
                 app:iconGravity="textEnd"
                 app:iconSize="24dp" />
-
             <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
-
+                android:layout_width="20dp"
+                android:layout_height="match_parent" />
             <Button
                 android:id="@+id/open_button"
                 android:layout_width="140dp"
                 android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:text="@string/open"
-                app:icon="@drawable/baseline_open_in_new_24"
+                app:icon="@drawable/md_open_in_new_24px"
                 app:iconGravity="textEnd"
                 app:iconSize="24dp" />
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1" />
 
         </LinearLayout>
 

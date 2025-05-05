@@ -31,7 +31,7 @@
 
     <fragment
         android:id="@+id/nav_item_short"
-        android:name="org.cssnr.zipline.ShortFragment"
+        android:name="org.cssnr.zipline.upload.ShortFragment"
         android:label="Preview" />
 
     <fragment
