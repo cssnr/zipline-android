@@ -7,8 +7,11 @@
 .gradle/
 .kotlin/
 captures/
+app/debug
 app/release
 
 local.properties
 *.keystore
 *.logcat
+
+**/dist/

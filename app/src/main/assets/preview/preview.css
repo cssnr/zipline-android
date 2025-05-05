@@ -1,0 +1,22 @@
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: auto !important;
+    overflow: auto !important;
+    background: #1c1b1b;
+    color: #ccc;
+}
+
+@media (prefers-color-scheme: light) {
+    html,
+    body {
+        background: #f6f6f6;
+        color: #1c1b1b;
+    }
+}
+
+pre {
+    margin: 0;
+    padding: 6px;
+}

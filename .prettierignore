@@ -1,0 +1,10 @@
+# IDE
+.idea/
+.vscode/
+
+# Build
+**/dist/
+**/node_modules/
+
+# App
+app/src/main/assets/preview/**

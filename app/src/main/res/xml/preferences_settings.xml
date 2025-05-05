@@ -9,24 +9,24 @@
             android:defaultValue="home"
             android:entries="@array/launcher_entries"
             android:entryValues="@array/launcher_values"
-            android:icon="@drawable/baseline_menu_24" />
+            android:icon="@drawable/md_menu_24px" />
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:icon="@drawable/baseline_share_24"
+            android:icon="@drawable/md_share_24px"
             android:key="share_after_short"
             android:title="Share URL After Creation" />
 
         <SwitchPreferenceCompat
             android:defaultValue="true"
-            android:icon="@drawable/baseline_preview_24"
+            android:icon="@drawable/md_preview_24px"
             android:key="show_preview"
             android:title="Show Preview Screen"
             android:enabled="false" />
 
         <SwitchPreferenceCompat
             android:defaultValue="false"
-            android:icon="@drawable/baseline_fingerprint_24"
+            android:icon="@drawable/md_fingerprint_24px"
             android:key="enable_biometrics"
             android:title="Enable Biometrics"
             android:enabled="false" />
@@ -41,7 +41,7 @@
             android:defaultValue="random"
             android:entries="@array/dropdown_entries"
             android:entryValues="@array/dropdown_values"
-            android:icon="@drawable/baseline_menu_24" />
+            android:icon="@drawable/md_menu_24px" />
 
     </PreferenceCategory>
 
