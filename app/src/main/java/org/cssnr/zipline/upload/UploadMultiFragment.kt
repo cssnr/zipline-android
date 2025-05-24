@@ -145,9 +145,10 @@ class UploadMultiFragment : Fragment() {
 
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
-            Log.w("processMultiUpload", "Missing OR savedUrl/authToken/fileName")
+            Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
             Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
                 .show()
+            logFileUpload("Missing URL or Token", false, true)
             return
         }
         val msg = "Uploading ${fileUris.size} Files..."
@@ -189,12 +190,14 @@ class UploadMultiFragment : Fragment() {
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
                 Toast.makeText(requireContext(), "All Uploads Failed!", Toast.LENGTH_SHORT).show()
+                logFileUpload("All Uploads Failed", false, true)
                 return@launch
             }
             val destUrl =
                 if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
             Log.d("processMultiUpload", "destUrl: $destUrl")
             val msg = "Uploaded ${results.size} Files."
+            logFileUpload("Uploaded ${results.size}/${fileUris.size} Files.", true, true)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
             navController.navigate(
                 R.id.nav_item_home,
