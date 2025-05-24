@@ -9,6 +9,8 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
@@ -28,7 +30,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         Log.d("SettingsFragment", "onCreatePreferences rootKey: $rootKey")
 
         preferenceManager.sharedPreferencesName = "default_preferences"
-        setPreferencesFromResource(R.xml.preferences_settings, rootKey)
+        setPreferencesFromResource(R.xml.preferences, rootKey)
 
         val launcherAction = findPreference<ListPreference>("launcher_action")
         launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
@@ -36,13 +38,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
-        val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
-        Log.d("SettingsFragment", "showPreviewPref: $showPreviewPref")
-        showPreviewPref?.setOnPreferenceChangeListener { _, newValue ->
-            val newBool = newValue as Boolean
-            Log.d("showPreviewPref", "show_preview: $newBool")
+        val toggleAnalytics = findPreference<SwitchPreferenceCompat>("analytics_enabled")
+        toggleAnalytics?.setOnPreferenceChangeListener { _, newValue ->
+            Log.d("toggleAnalytics", "analytics_enabled: $newValue")
+            if (newValue as Boolean) {
+                Log.d("toggleAnalytics", "+++ ENABLE Analytics")
+                Firebase.analytics.setAnalyticsCollectionEnabled(true)
+            } else {
+                Log.d("toggleAnalytics", "--- DISABLE Analytics")
+                Firebase.analytics.setAnalyticsCollectionEnabled(false)
+            }
             true
         }
+
+        //val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
+        //showPreviewPref?.setOnPreferenceChangeListener { _, newValue ->
+        //    val newBool = newValue as Boolean
+        //    Log.d("showPreviewPref", "show_preview: $newBool")
+        //    true
+        //}
 
         //val preferences = context?.getSharedPreferences("default_preferences", Context.MODE_PRIVATE)
         //val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
@@ -50,7 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         //var showPreview = preferences?.getBoolean("show_preview", false)
         //Log.d("SettingsFragment", "showPreview: $showPreview")
-        //var enableBiometrics = preferences?.getBoolean("enable_biometrics", false)
+        //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
 
         //PreferenceManager.getDefaultSharedPreferences(requireContext())
