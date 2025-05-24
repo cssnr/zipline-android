@@ -239,7 +239,7 @@ class UploadFragment : Fragment() {
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
             Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
                 .show()
-            logFileUpload("Missing URL or Token", false)
+            logFileUpload(false, "URL or Token is null")
             return
         }
         val fileName = fileName ?: getFileNameFromUri(requireContext(), fileUri)
@@ -248,7 +248,7 @@ class UploadFragment : Fragment() {
             Log.w("processUpload", "Unable to parse fileName from URI")
             Toast.makeText(requireContext(), "Unable to Parse File Name", Toast.LENGTH_SHORT)
                 .show()
-            logFileUpload("File Name Parsing Failed", false)
+            logFileUpload(false, "File Name is null")
             return
         }
         //val contentType = URLConnection.guessContentTypeFromName(fileName)
@@ -258,7 +258,7 @@ class UploadFragment : Fragment() {
             Log.w("processUpload", "inputStream is null")
             val msg = getString(R.string.tst_upload_error)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
-            logFileUpload("Input Stream is Null", false)
+            logFileUpload(false, "Input Stream is null")
             return
         }
         val api = ZiplineApi(requireContext())
@@ -274,7 +274,7 @@ class UploadFragment : Fragment() {
                     Log.d("processUpload", "uploadResponse: $uploadResponse")
                     withContext(Dispatchers.Main) {
                         if (uploadResponse != null) {
-                            logFileUpload("Upload Successful")
+                            logFileUpload()
                             copyToClipboard(requireContext(), uploadResponse.files.first().url)
                             navController.navigate(
                                 R.id.nav_item_home,
@@ -287,13 +287,13 @@ class UploadFragment : Fragment() {
                             Log.w("processUpload", "uploadResponse is null")
                             val msg = "Unknown Response!"
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
-                            logFileUpload("Upload Response is Null", false)
+                            logFileUpload(false, "Upload Response is null")
                         }
                     }
                 } else {
                     val msg = "Error: ${response.code()}: ${response.message()}"
                     Log.w("processUpload", "Error: $msg")
-                    logFileUpload("Upload Error: $msg", false)
+                    logFileUpload(false, "Error: $msg")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                     }
@@ -302,7 +302,7 @@ class UploadFragment : Fragment() {
                 e.printStackTrace()
                 val msg = e.message ?: "Unknown Error!"
                 Log.i("processUpload", "msg: $msg")
-                logFileUpload("Upload Exception: $msg", false)
+                logFileUpload(false, "Exception: $msg")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                 }
@@ -323,14 +323,16 @@ class UploadFragment : Fragment() {
     }
 }
 
-fun logFileUpload(message: String, status: Boolean = true, multi: Boolean = false) {
+fun logFileUpload(status: Boolean = true, message: String? = null, multiple: Boolean = false) {
+    val event = if (status) "upload_success" else "upload_failed"
     val params = Bundle().apply {
-        putString("message", message)
-        putString("status", if (status) "success" else "failure")
-        putString("multi", if (multi) "true" else "false")
+        message?.let { putString("message", it) }
+        if (multiple == true) {
+            putString("multiple", "true")
+        }
     }
-    Log.i("Firebase", "logEvent: $params")
-    Firebase.analytics.logEvent("upload_file", params)
+    Log.i("Firebase", "logEvent: $event - $params")
+    Firebase.analytics.logEvent(event, params)
 }
 
 fun getFileNameFromUri(context: Context, uri: Uri): String? {

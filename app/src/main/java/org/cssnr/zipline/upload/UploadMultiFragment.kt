@@ -148,7 +148,7 @@ class UploadMultiFragment : Fragment() {
             Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
             Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
                 .show()
-            logFileUpload("Missing URL or Token", false, true)
+            logFileUpload(false, "URL or Token is null", true)
             return
         }
         val msg = "Uploading ${fileUris.size} Files..."
@@ -186,19 +186,20 @@ class UploadMultiFragment : Fragment() {
                 }
             }
             Log.d("processMultiUpload", "results: $results")
-            Log.d("processMultiUpload", "results,size: ${results.size}")
+            Log.d("processMultiUpload", "results.size: ${results.size}")
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
                 Toast.makeText(requireContext(), "All Uploads Failed!", Toast.LENGTH_SHORT).show()
-                logFileUpload("All Uploads Failed", false, true)
+                logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
             val destUrl =
                 if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
             Log.d("processMultiUpload", "destUrl: $destUrl")
             val msg = "Uploaded ${results.size} Files."
-            logFileUpload("Uploaded ${results.size}/${fileUris.size} Files.", true, true)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
+            logFileUpload(true, fcMsg, true)
             navController.navigate(
                 R.id.nav_item_home,
                 bundleOf("url" to destUrl),
