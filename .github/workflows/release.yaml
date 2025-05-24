@@ -91,6 +91,11 @@ jobs:
         run: |
           bash prepare.sh
 
+      - name: "Write Google Services File"
+        if: ${{ !github.event.act }}
+        run: |
+          echo "${{ secrets.GOOGLE_SERVICES }}" | base64 --decode > app/google-services.json
+
       - name: "Setup Java"
         uses: actions/setup-java@v4
         with:
@@ -98,11 +103,10 @@ jobs:
           java-version: "17"
           #cache: "gradle"
 
-      - name: "Set Gradle Executable"
-        run: chmod +x ./gradlew
-
       - name: "Gradle Assemble"
-        run: ./gradlew assembleRelease
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleRelease
 
       - name: "Verify Build"
         run: |
