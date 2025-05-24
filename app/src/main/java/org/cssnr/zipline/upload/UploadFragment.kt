@@ -32,6 +32,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.bumptech.glide.Glide
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -232,13 +234,21 @@ class UploadFragment : Fragment() {
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = sharedPreferences.getString("ziplineToken", null)
         Log.d("processUpload", "authToken: $authToken")
-        val fileName = fileName ?: getFileNameFromUri(requireContext(), fileUri)
-        Log.d("processUpload", "fileName: $fileName")
-        if (savedUrl == null || authToken == null || fileName == null) {
+        if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
             Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
                 .show()
+            logFileUpload(false, "URL or Token is null")
+            return
+        }
+        val fileName = fileName ?: getFileNameFromUri(requireContext(), fileUri)
+        Log.d("processUpload", "fileName: $fileName")
+        if (fileName == null) {
+            Log.w("processUpload", "Unable to parse fileName from URI")
+            Toast.makeText(requireContext(), "Unable to Parse File Name", Toast.LENGTH_SHORT)
+                .show()
+            logFileUpload(false, "File Name is null")
             return
         }
         //val contentType = URLConnection.guessContentTypeFromName(fileName)
@@ -248,6 +258,7 @@ class UploadFragment : Fragment() {
             Log.w("processUpload", "inputStream is null")
             val msg = getString(R.string.tst_upload_error)
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            logFileUpload(false, "Input Stream is null")
             return
         }
         val api = ZiplineApi(requireContext())
@@ -263,6 +274,7 @@ class UploadFragment : Fragment() {
                     Log.d("processUpload", "uploadResponse: $uploadResponse")
                     withContext(Dispatchers.Main) {
                         if (uploadResponse != null) {
+                            logFileUpload()
                             copyToClipboard(requireContext(), uploadResponse.files.first().url)
                             navController.navigate(
                                 R.id.nav_item_home,
@@ -275,11 +287,13 @@ class UploadFragment : Fragment() {
                             Log.w("processUpload", "uploadResponse is null")
                             val msg = "Unknown Response!"
                             Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                            logFileUpload(false, "Upload Response is null")
                         }
                     }
                 } else {
                     val msg = "Error: ${response.code()}: ${response.message()}"
                     Log.w("processUpload", "Error: $msg")
+                    logFileUpload(false, "Error: $msg")
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                     }
@@ -288,6 +302,7 @@ class UploadFragment : Fragment() {
                 e.printStackTrace()
                 val msg = e.message ?: "Unknown Error!"
                 Log.i("processUpload", "msg: $msg")
+                logFileUpload(false, "Exception: $msg")
                 withContext(Dispatchers.Main) {
                     Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                 }
@@ -308,6 +323,18 @@ class UploadFragment : Fragment() {
     }
 }
 
+fun logFileUpload(status: Boolean = true, message: String? = null, multiple: Boolean = false) {
+    val event = if (status) "upload_success" else "upload_failed"
+    val params = Bundle().apply {
+        message?.let { putString("message", it) }
+        if (multiple == true) {
+            putString("multiple", "true")
+        }
+    }
+    Log.i("Firebase", "logEvent: $event - $params")
+    Firebase.analytics.logEvent(event, params)
+}
+
 fun getFileNameFromUri(context: Context, uri: Uri): String? {
     var fileName: String? = null
     context.contentResolver.query(uri, null, null, null, null).use { cursor ->
@@ -321,22 +348,21 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
     return fileName
 }
 
+//fun openUrl(context: Context, url: String) {
+//    val openIntent = Intent(Intent.ACTION_VIEW).apply {
+//        setDataAndType(url.toUri(), "text/plain")
+//        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//    }
+//    context.startActivity(Intent.createChooser(openIntent, null))
+//}
 
-fun openUrl(context: Context, url: String) {
-    val openIntent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(url.toUri(), "text/plain")
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }
-    context.startActivity(Intent.createChooser(openIntent, null))
-}
-
-fun shareUrl(context: Context, url: String) {
-    val shareIntent = Intent(Intent.ACTION_SEND).apply {
-        type = "text/plain"
-        putExtra(Intent.EXTRA_TEXT, url)
-    }
-    context.startActivity(Intent.createChooser(shareIntent, null))
-}
+//fun shareUrl(context: Context, url: String) {
+//    val shareIntent = Intent(Intent.ACTION_SEND).apply {
+//        type = "text/plain"
+//        putExtra(Intent.EXTRA_TEXT, url)
+//    }
+//    context.startActivity(Intent.createChooser(shareIntent, null))
+//}
 
 fun isGlideMime(mimeType: String): Boolean {
     return when (mimeType.lowercase()) {

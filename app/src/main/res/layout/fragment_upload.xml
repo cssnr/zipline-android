@@ -11,13 +11,13 @@
         android:layout_height="wrap_content"
         android:gravity="top"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="8dp">
+        android:padding="4dp">
 
         <FrameLayout
             android:id="@+id/frame_layout"
             android:layout_width="match_parent"
-            android:layout_height="240dp">
+            android:layout_height="240dp"
+            android:layout_marginBottom="4dp">
             <FrameLayout
                 android:id="@+id/image_holder"
                 android:layout_width="match_parent"
@@ -58,7 +58,6 @@
             android:id="@+id/file_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:autofillHints="File Name"
             android:ellipsize="end"
             android:gravity="center"
@@ -74,57 +73,61 @@
             android:id="@+id/upload_button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="36dp"
-            android:paddingStart="36dp"
-            android:text="@string/upload"
+            android:layout_marginBottom="4dp"
+            android:text="@string/upload_file"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:icon="@drawable/md_upload_24px"
             app:iconGravity="end"
-            app:iconPadding="-24dp"
-            app:iconSize="24dp" />
+            app:iconPadding="-28dp"
+            app:iconSize="28dp" />
 
-        <Button
-            android:id="@+id/options_button"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="36dp"
-            android:paddingStart="36dp"
-            android:text="@string/options"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:icon="@drawable/md_settings_24px"
-            app:iconGravity="end"
-            app:iconPadding="-24dp"
-            app:iconSize="24dp" />
-
-        <LinearLayout
+            android:layout_height="wrap_content">
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            app:constraint_referenced_ids="album_button,share_button,open_button,options_button"
+            app:flow_wrapMode="chain"
+            app:flow_horizontalGap="4dp"
+            app:flow_verticalGap="4dp"
+            app:flow_horizontalAlign="center"
+            app:flow_maxElementsWrap="8"
+            app:layout_constraintTop_toTopOf="parent" />
+            <Button
+                android:id="@+id/album_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/md_imagesmode_24px"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
             <Button
                 android:id="@+id/share_button"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/share"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:icon="@drawable/md_share_24px"
-                app:iconGravity="textEnd"
-                app:iconSize="24dp" />
-            <Space
-                android:layout_width="20dp"
-                android:layout_height="match_parent" />
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
             <Button
                 android:id="@+id/open_button"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/open"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:icon="@drawable/md_open_in_new_24px"
-                app:iconGravity="textEnd"
-                app:iconSize="24dp" />
-        </LinearLayout>
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+            <Button
+                android:id="@+id/options_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:icon="@drawable/md_settings_24px"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
     </LinearLayout>
 </ScrollView>

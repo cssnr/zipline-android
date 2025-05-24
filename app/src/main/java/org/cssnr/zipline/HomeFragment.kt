@@ -16,6 +16,7 @@ import android.webkit.WebResourceRequest
 import android.webkit.WebResourceResponse
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
@@ -103,6 +104,21 @@ class HomeFragment : Fragment() {
                 Log.i("Home[webView.apply]", "NO ZIPLINE URL - DOING NOTHING")
             }
         }
+
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if (binding.webView.canGoBack()) {
+                    Log.d("Home[OnBackPressedCallback]", "binding.webView.goBack")
+                    binding.webView.goBack()
+                } else {
+                    Log.d("Home[OnBackPressedCallback]", "onBackPressedDispatcher.onBackPressed")
+                    isEnabled = false
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+
+                }
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

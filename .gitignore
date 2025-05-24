@@ -13,5 +13,7 @@ app/release
 local.properties
 *.keystore
 *.logcat
+**/google-services.json
+**/firebase-adminsdk.json
 
 **/dist/

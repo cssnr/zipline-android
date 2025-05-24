@@ -182,6 +182,23 @@ _Note: you may have to uninstall before installing due to different certificate 
 
 For more details, see the [ADB Documentation](https://developer.android.com/tools/adb#move).
 
+## Google Services
+
+This app is using Google Services. To enable/disable DebugView use the following commands:
+
+```shell
+# set
+adb shell setprop debug.firebase.analytics.app org.cssnr.zipline.dev
+
+# unset
+adb shell setprop debug.firebase.analytics.app .none.
+
+# check
+adb shell getprop debug.firebase.analytics.app
+```
+
+Note: Only 1 app can be in debug mode at a time and must be set every restart.
+
 # Support
 
 For general help or to request a feature, see:
