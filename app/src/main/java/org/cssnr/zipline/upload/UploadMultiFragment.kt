@@ -1,6 +1,7 @@
 package org.cssnr.zipline.upload
 
 import android.content.Context.MODE_PRIVATE
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -108,7 +109,10 @@ class UploadMultiFragment : Fragment() {
             }
         }
 
-        binding.previewRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        val spanCount =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
+        Log.i("Multi[onViewCreated]", "GridLayoutManager: $spanCount")
+        binding.previewRecycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
         if (binding.previewRecycler.adapter == null) {
             binding.previewRecycler.adapter = adapter
         }
