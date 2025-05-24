@@ -9,6 +9,7 @@ import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SwitchPreferenceCompat
 import com.google.android.material.color.MaterialColors
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 
@@ -32,6 +33,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesName = "default_preferences"
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
+        val ctx = requireContext()
+
         val launcherAction = findPreference<ListPreference>("launcher_action")
         launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
@@ -42,13 +45,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
         toggleAnalytics?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("toggleAnalytics", "analytics_enabled: $newValue")
             if (newValue as Boolean) {
-                Log.d("toggleAnalytics", "+++ ENABLE Analytics")
+                Log.d("toggleAnalytics", "ENABLE Analytics")
                 Firebase.analytics.setAnalyticsCollectionEnabled(true)
+                toggleAnalytics.isChecked = true
             } else {
-                Log.d("toggleAnalytics", "--- DISABLE Analytics")
-                Firebase.analytics.setAnalyticsCollectionEnabled(false)
+                MaterialAlertDialogBuilder(ctx)
+                    .setTitle("Please Reconsider")
+                    .setMessage("Analytics are only used to fix bugs and make improvements.")
+                    .setPositiveButton("Disable Anyway") { _, _ ->
+                        Log.d("toggleAnalytics", "DISABLE Analytics")
+                        Firebase.analytics.setAnalyticsCollectionEnabled(false)
+                        toggleAnalytics.isChecked = false
+                    }
+                    .setNegativeButton("Cancel", null)
+                    .show()
             }
-            true
+            false
         }
 
         //val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
