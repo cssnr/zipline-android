@@ -44,21 +44,21 @@
                 android:id="@+id/flow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="album_button,options_button"
+                app:constraint_referenced_ids="options_button"
                 app:flow_wrapMode="chain"
                 app:flow_horizontalGap="4dp"
                 app:flow_verticalGap="4dp"
                 app:flow_horizontalAlign="center"
                 app:flow_maxElementsWrap="8"
                 app:layout_constraintTop_toTopOf="parent" />
-            <Button
-                android:id="@+id/album_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/md_imagesmode_24px"
-                app:iconSize="24dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp" />
+<!--            <Button-->
+<!--                android:id="@+id/album_button"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:icon="@drawable/md_imagesmode_24px"-->
+<!--                app:iconSize="24dp"-->
+<!--                app:iconGravity="textStart"-->
+<!--                app:iconPadding="0dp" />-->
             <Button
                 android:id="@+id/options_button"
                 android:layout_width="wrap_content"
