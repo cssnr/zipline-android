@@ -102,7 +102,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     fun showFeedbackDialog() {
-        context
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.dialog_feedback, null)
         val input = view.findViewById<EditText>(R.id.feedback_input)
