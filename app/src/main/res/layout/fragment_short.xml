@@ -59,49 +59,50 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             app:icon="@drawable/md_link_24px"
             app:iconGravity="end"
-            app:iconPadding="-24dp"
-            app:iconSize="24dp" />
-
-        <Button
-            android:id="@+id/options_button"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="36dp"
-            android:paddingStart="36dp"
-            android:text="@string/options"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            app:icon="@drawable/md_settings_24px"
-            app:iconGravity="end"
-            app:iconPadding="-24dp"
-            app:iconSize="24dp" />
+            app:iconPadding="-28dp"
+            app:iconSize="28dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="48dp"
+            android:layout_height="56dp"
             android:layout_marginTop="8dp"
+            android:gravity="center"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/share_button"
-                android:layout_width="140dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/share"
                 app:icon="@drawable/md_share_24px"
-                app:iconGravity="textEnd"
-                app:iconSize="24dp" />
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+
             <Space
-                android:layout_width="20dp"
+                android:layout_width="10dp"
                 android:layout_height="match_parent" />
+
             <Button
                 android:id="@+id/open_button"
-                android:layout_width="140dp"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="@string/open"
                 app:icon="@drawable/md_open_in_new_24px"
-                app:iconGravity="textEnd"
-                app:iconSize="24dp" />
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+
+            <Space
+                android:layout_width="10dp"
+                android:layout_height="match_parent" />
+
+            <Button
+                android:id="@+id/options_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                app:icon="@drawable/md_settings_24px"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
 
         </LinearLayout>
 

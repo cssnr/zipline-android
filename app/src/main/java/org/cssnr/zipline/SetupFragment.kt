@@ -59,7 +59,8 @@ class SetupFragment : Fragment() {
         }
 
         val link: TextView = binding.githubLink
-        link.text = Html.fromHtml(getString(R.string.github_link), Html.FROM_HTML_MODE_LEGACY)
+        val linkText = getString(R.string.github_link, "github.com/cssnr/zipline-android")
+        link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
         link.movementMethod = LinkMovementMethod.getInstance()
 
         binding.loginHostname.setText("https://")

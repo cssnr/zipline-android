@@ -1,6 +1,7 @@
 package org.cssnr.zipline.upload
 
 import android.content.Context.MODE_PRIVATE
+import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -108,7 +109,10 @@ class UploadMultiFragment : Fragment() {
             }
         }
 
-        binding.previewRecycler.layoutManager = GridLayoutManager(requireContext(), 2)
+        val spanCount =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
+        Log.i("Multi[onViewCreated]", "GridLayoutManager: $spanCount")
+        binding.previewRecycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
         if (binding.previewRecycler.adapter == null) {
             binding.previewRecycler.adapter = adapter
         }
@@ -145,9 +149,10 @@ class UploadMultiFragment : Fragment() {
 
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
-            Log.w("processMultiUpload", "Missing OR savedUrl/authToken/fileName")
+            Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
             Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
                 .show()
+            logFileUpload(false, "URL or Token is null", true)
             return
         }
         val msg = "Uploading ${fileUris.size} Files..."
@@ -185,10 +190,11 @@ class UploadMultiFragment : Fragment() {
                 }
             }
             Log.d("processMultiUpload", "results: $results")
-            Log.d("processMultiUpload", "results,size: ${results.size}")
+            Log.d("processMultiUpload", "results.size: ${results.size}")
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
                 Toast.makeText(requireContext(), "All Uploads Failed!", Toast.LENGTH_SHORT).show()
+                logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
             val destUrl =
@@ -196,6 +202,8 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "destUrl: $destUrl")
             val msg = "Uploaded ${results.size} Files."
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
+            logFileUpload(true, fcMsg, true)
             navController.navigate(
                 R.id.nav_item_home,
                 bundleOf("url" to destUrl),

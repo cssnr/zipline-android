@@ -39,7 +39,7 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 
 <details><summary>View QR Code 📸</summary>
 
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android-client/zipline-android-client-download.png)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-download.png)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
 
 </details>
 
@@ -82,6 +82,8 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ### Planned
 
+- Stats Widget
+- File List/Gallery
 - Improve [Django Files](https://github.com/django-files).
 
 ### Known Issues
@@ -181,6 +183,23 @@ $ adb -s RF9M33Z1Q0M install app-release-unsigned.apk
 _Note: you may have to uninstall before installing due to different certificate signatures._
 
 For more details, see the [ADB Documentation](https://developer.android.com/tools/adb#move).
+
+## Google Services
+
+This app is using Google Services. To enable/disable DebugView use the following commands:
+
+```shell
+# set
+adb shell setprop debug.firebase.analytics.app org.cssnr.zipline.dev
+
+# unset
+adb shell setprop debug.firebase.analytics.app .none.
+
+# check
+adb shell getprop debug.firebase.analytics.app
+```
+
+Note: Only 1 app can be in debug mode at a time and must be set every restart.
 
 # Support
 
