@@ -64,6 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     .setMessage("Analytics are only used to fix bugs and make improvements.")
                     .setPositiveButton("Disable Anyway") { _, _ ->
                         Log.d("toggleAnalytics", "DISABLE Analytics")
+                        Firebase.analytics.logEvent("disable_analytics", null)
                         Firebase.analytics.setAnalyticsCollectionEnabled(false)
                         toggleAnalytics.isChecked = false
                     }
