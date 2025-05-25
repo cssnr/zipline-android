@@ -39,7 +39,7 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 
 <details><summary>View QR Code 📸</summary>
 
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android-client/zipline-android-client-download.png)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-download.png)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
 
 </details>
 
@@ -82,6 +82,8 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ### Planned
 
+- Stats Widget
+- File List/Gallery
 - Improve [Django Files](https://github.com/django-files).
 
 ### Known Issues

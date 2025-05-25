@@ -40,19 +40,25 @@
             android:icon="@drawable/md_monitoring_24px"
             android:defaultValue="true" />
 
-        <SwitchPreferenceCompat
-            android:key="show_preview"
-            android:title="Show Preview Screen"
-            android:icon="@drawable/md_preview_24px"
-            android:defaultValue="true"
-            android:enabled="false" />
+        <Preference
+            android:key="send_feedback"
+            android:title="Send Feedback"
+            android:summary="Submit Suggestions or Bugs"
+            android:icon="@drawable/md_bug_report_24px" />
 
-        <SwitchPreferenceCompat
-            android:key="biometrics_enabled"
-            android:title="Enable Biometrics"
-            android:icon="@drawable/md_fingerprint_24px"
-            android:defaultValue="false"
-            android:enabled="false" />
+<!--        <SwitchPreferenceCompat-->
+<!--            android:key="show_preview"-->
+<!--            android:title="Show Preview Screen"-->
+<!--            android:icon="@drawable/md_preview_24px"-->
+<!--            android:defaultValue="true"-->
+<!--            android:enabled="false" />-->
+
+<!--        <SwitchPreferenceCompat-->
+<!--            android:key="biometrics_enabled"-->
+<!--            android:title="Enable Biometrics"-->
+<!--            android:icon="@drawable/md_fingerprint_24px"-->
+<!--            android:defaultValue="false"-->
+<!--            android:enabled="false" />-->
 
     </PreferenceCategory>
 
