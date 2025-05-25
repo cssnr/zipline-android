@@ -94,6 +94,7 @@ jobs:
       - name: "Write Google Services File"
         if: ${{ !github.event.act }}
         run: |
+          [[ -z "${{ secrets.GOOGLE_SERVICES }}" ]] && echo "Missing: GOOGLE_SERVICES" && exit 1
           echo "${{ secrets.GOOGLE_SERVICES }}" | base64 --decode > app/google-services.json
 
       - name: "Setup Java"
