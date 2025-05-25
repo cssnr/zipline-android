@@ -20,12 +20,15 @@
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
 - [Development](#Development)
+  - [Building](#Building)
   - [Android Studio](#Android-Studio)
   - [Command Line](#Command-Line)
 - [Support](#Support)
 - [Contributing](#Contributing)
 
-Allows you to Share or Open any file and Shorten URLs with your [Zipline v4](https://github.com/diced/zipline) server.
+Native Kotlin Android Application for [Zipline v4](https://github.com/diced/zipline).
+
+Allows you to Share or Open any file and Shorten URLs with your Zipline server.
 Shows a preview with custom options and copies the URL to the clipboard after upload.
 
 - Supports Android 8 (API 26) 2017 +
@@ -76,9 +79,8 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 ## Features
 
 - Share or Open any file or URL to your Zipline server.
-- Preview the file or URL with custom options before uploading.
-- Copies the URL to the clipboard after uploading and shows preview.
-- Shortcut to directly upload files from long press or shortcut icon.
+- Single file previews most media with custom name option.
+- Multiple file upload previews, options and file selector.
 
 ### Planned
 
@@ -93,6 +95,16 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 # Development
 
 This section briefly covers running and building in [Android Studio](#Android-Studio) and the [Command Line](#Command-Line).
+
+## Building
+
+To build the app you must first add a [Google Services](#Google-Services) file and optionally prepare highlightjs.
+
+1. Building this app requires a valid `app/google-services.json` file. For more info see [Google Services](#Google-Services).
+
+2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to `assets/preview/dist`.
+
+Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) below.
 
 ## Android Studio
 
@@ -186,7 +198,10 @@ For more details, see the [ADB Documentation](https://developer.android.com/tool
 
 ## Google Services
 
-This app is using Google Services. To enable/disable DebugView use the following commands:
+This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
+You must add `org.cssnr.zipline.dev` to a Firebase campaign here: https://firebase.google.com/
+
+To enable/disable Firebase DebugView use the following commands:
 
 ```shell
 # set
@@ -199,7 +214,7 @@ adb shell setprop debug.firebase.analytics.app .none.
 adb shell getprop debug.firebase.analytics.app
 ```
 
-Note: Only 1 app can be in debug mode at a time and must be set every restart.
+Only 1 app can be in debug mode at a time and this must be set every restart.
 
 # Support
 

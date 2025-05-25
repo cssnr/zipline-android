@@ -64,6 +64,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     .setMessage("Analytics are only used to fix bugs and make improvements.")
                     .setPositiveButton("Disable Anyway") { _, _ ->
                         Log.d("toggleAnalytics", "DISABLE Analytics")
+                        Firebase.analytics.logEvent("disable_analytics", null)
                         Firebase.analytics.setAnalyticsCollectionEnabled(false)
                         toggleAnalytics.isChecked = false
                     }
@@ -101,7 +102,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     fun showFeedbackDialog() {
-        context
         val inflater = LayoutInflater.from(context)
         val view = inflater.inflate(R.layout.dialog_feedback, null)
         val input = view.findViewById<EditText>(R.id.feedback_input)
@@ -129,6 +129,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             "Feedback Sent. Thank You!"
                         } else {
                             sendButton.isEnabled = true
+                            val params = Bundle().apply {
+                                putString("message", response.message())
+                                putString("code", response.code().toString())
+                            }
+                            Firebase.analytics.logEvent("feedback_failed", params)
                             "Error: ${response.code()}"
                         }
                         Log.d("showFeedbackDialog", "msg: $msg")

@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.databinding.FragmentSetupBinding
 
@@ -102,6 +104,7 @@ class SetupFragment : Fragment() {
                 if (token.isNullOrEmpty()) {
                     Log.d("lifecycleScope.launch", "LOGIN FAILED")
                     Toast.makeText(context, "Login Failed!", Toast.LENGTH_SHORT).show()
+                    Firebase.analytics.logEvent("login_failed", null)
                 } else {
                     Log.d("lifecycleScope.launch", "LOGIN SUCCESS")
                     val sharedPreferences =
@@ -110,6 +113,7 @@ class SetupFragment : Fragment() {
                     Log.d("getSharedPreferences", "ziplineUrl: $host")
                     sharedPreferences?.edit { putString("ziplineToken", token) }
                     Log.d("getSharedPreferences", "ziplineToken: $token")
+                    Firebase.analytics.logEvent("login_success", null)
                     findNavController().navigate(
                         R.id.nav_item_home, null, NavOptions.Builder()
                             .setPopUpTo(R.id.nav_item_setup, true)
