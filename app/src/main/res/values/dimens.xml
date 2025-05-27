@@ -1,3 +1,5 @@
 <resources>
     <dimen name="image_radius">16dp</dimen>
+
+    <dimen name="dialog_vertical_margin">8dp</dimen>
 </resources>

@@ -1,5 +1,6 @@
 package org.cssnr.zipline
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -45,12 +46,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesName = "default_preferences"
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
+        // File Name Option
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
+        // Launcher Icon Action
         val launcherAction = findPreference<ListPreference>("launcher_action")
         launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
+        // Toggle Analytics
         val toggleAnalytics = findPreference<SwitchPreferenceCompat>("analytics_enabled")
         toggleAnalytics?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("toggleAnalytics", "analytics_enabled: $newValue")
@@ -74,10 +78,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
             false
         }
 
+        // Send Feedback
         val sendFeedback = findPreference<Preference>("send_feedback")
         sendFeedback?.setOnPreferenceClickListener {
             Log.d("sendFeedback", "setOnPreferenceClickListener")
-            showFeedbackDialog()
+            requireContext().showFeedbackDialog()
+            false
+        }
+
+        // Show App Info
+        findPreference<Preference>("app_info")?.setOnPreferenceClickListener {
+            Log.d("app_info", "showAppInfoDialog")
+            requireContext().showAppInfoDialog()
             false
         }
 
@@ -101,12 +113,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //    .edit { putString("saved_url", newUrl) }
     }
 
-    fun showFeedbackDialog() {
-        val inflater = LayoutInflater.from(context)
+    fun Context.showFeedbackDialog() {
+        val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_feedback, null)
         val input = view.findViewById<EditText>(R.id.feedback_input)
 
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Send", null)
@@ -119,7 +131,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 val message = input.text.toString().trim()
                 Log.d("showFeedbackDialog", "message: $message")
                 if (message.isNotEmpty()) {
-                    val api = FeedbackApi(requireContext())
+                    val api = FeedbackApi(this)
                     lifecycleScope.launch {
                         val response = withContext(Dispatchers.IO) { api.sendFeedback(message) }
                         Log.d("showFeedbackDialog", "response: $response")
@@ -137,7 +149,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             "Error: ${response.code()}"
                         }
                         Log.d("showFeedbackDialog", "msg: $msg")
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@showFeedbackDialog, msg, Toast.LENGTH_LONG).show()
                     }
                 } else {
                     sendButton.isEnabled = true
@@ -146,15 +158,49 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
 
             input.requestFocus()
+
             val link = view.findViewById<TextView>(R.id.github_link)
-            val linkText = getString(R.string.github_link, "Visit GitHub for More")
+            val linkText = getString(R.string.github_link, link.tag)
             link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
             link.movementMethod = LinkMovementMethod.getInstance()
-            //val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+            //val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             //imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
         }
 
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Send") { _, _ -> }
+        dialog.show()
+    }
+
+    fun Context.showAppInfoDialog() {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_app_info, null)
+        val appId = view.findViewById<TextView>(R.id.app_identifier)
+        val appVersion = view.findViewById<TextView>(R.id.app_version)
+        val sourceLink = view.findViewById<TextView>(R.id.source_link)
+
+        val sourceText = getString(R.string.github_link, sourceLink.tag)
+        Log.d("showAppInfoDialog", "sourceText: $sourceText")
+
+        val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
+        val versionName = packageInfo.versionName
+        Log.d("showAppInfoDialog", "versionName: $versionName")
+
+        val formattedVersion = getString(R.string.version_string, versionName)
+        Log.d("showAppInfoDialog", "formattedVersion: $formattedVersion")
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Close", null)
+            .create()
+
+        dialog.setOnShowListener {
+            appId.text = this.packageName
+            appVersion.text = formattedVersion
+
+            sourceLink.text = Html.fromHtml(sourceText, Html.FROM_HTML_MODE_LEGACY)
+            sourceLink.movementMethod = LinkMovementMethod.getInstance()
+        }
         dialog.show()
     }
 }
