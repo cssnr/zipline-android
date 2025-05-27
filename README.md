@@ -216,6 +216,9 @@ adb shell getprop debug.firebase.analytics.app
 
 Only 1 app can be in debug mode at a time and this must be set every restart.
 
+Note: Firebase is disabled in debug builds.
+See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) file debug config.
+
 # Support
 
 For general help or to request a feature, see:
