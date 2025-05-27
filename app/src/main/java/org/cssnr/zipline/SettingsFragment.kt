@@ -146,8 +146,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
 
             input.requestFocus()
+
             val link = view.findViewById<TextView>(R.id.github_link)
-            val linkText = getString(R.string.github_link, "Visit GitHub for More")
+            val linkText = getString(R.string.github_link, link.tag)
             link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
             link.movementMethod = LinkMovementMethod.getInstance()
             //val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

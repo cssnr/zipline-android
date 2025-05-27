@@ -22,7 +22,6 @@
         android:id="@+id/feedback_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:padding="8dp"
         android:autofillHints="Request Features, Report Issues, or Send Feedback."
         android:inputType="textMultiLine"
@@ -37,10 +36,11 @@
         android:id="@+id/github_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:layout_gravity="center"
-        android:textColorLink="@android:color/holo_blue_dark"
         android:drawablePadding="8dp"
         app:drawableStartCompat="@drawable/fa_github"
-        tools:text="github.com/cssnr/zipline-android" />
+        android:text="More Info on GitHub"
+        android:tag="More Info on GitHub" />
 
 </LinearLayout>
