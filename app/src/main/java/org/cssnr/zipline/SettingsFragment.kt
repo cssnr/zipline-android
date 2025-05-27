@@ -1,5 +1,6 @@
 package org.cssnr.zipline
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
@@ -77,7 +78,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val sendFeedback = findPreference<Preference>("send_feedback")
         sendFeedback?.setOnPreferenceClickListener {
             Log.d("sendFeedback", "setOnPreferenceClickListener")
-            showFeedbackDialog()
+            requireContext().showFeedbackDialog()
             false
         }
 
@@ -101,12 +102,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //    .edit { putString("saved_url", newUrl) }
     }
 
-    fun showFeedbackDialog() {
-        val inflater = LayoutInflater.from(context)
+    fun Context.showFeedbackDialog() {
+        val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_feedback, null)
         val input = view.findViewById<EditText>(R.id.feedback_input)
 
-        val dialog = MaterialAlertDialogBuilder(requireContext())
+        val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Send", null)
@@ -119,7 +120,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 val message = input.text.toString().trim()
                 Log.d("showFeedbackDialog", "message: $message")
                 if (message.isNotEmpty()) {
-                    val api = FeedbackApi(requireContext())
+                    val api = FeedbackApi(this)
                     lifecycleScope.launch {
                         val response = withContext(Dispatchers.IO) { api.sendFeedback(message) }
                         Log.d("showFeedbackDialog", "response: $response")
@@ -137,7 +138,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             "Error: ${response.code()}"
                         }
                         Log.d("showFeedbackDialog", "msg: $msg")
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@showFeedbackDialog, msg, Toast.LENGTH_LONG).show()
                     }
                 } else {
                     sendButton.isEnabled = true
@@ -151,7 +152,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
             val linkText = getString(R.string.github_link, link.tag)
             link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
             link.movementMethod = LinkMovementMethod.getInstance()
-            //val imm = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+            //val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             //imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
         }
 
