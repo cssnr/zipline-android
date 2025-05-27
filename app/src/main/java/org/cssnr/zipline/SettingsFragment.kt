@@ -46,12 +46,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         preferenceManager.sharedPreferencesName = "default_preferences"
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
+        // File Name Option
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
+        // Launcher Icon Action
         val launcherAction = findPreference<ListPreference>("launcher_action")
         launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
+        // Toggle Analytics
         val toggleAnalytics = findPreference<SwitchPreferenceCompat>("analytics_enabled")
         toggleAnalytics?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("toggleAnalytics", "analytics_enabled: $newValue")
@@ -75,10 +78,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
             false
         }
 
+        // Send Feedback
         val sendFeedback = findPreference<Preference>("send_feedback")
         sendFeedback?.setOnPreferenceClickListener {
             Log.d("sendFeedback", "setOnPreferenceClickListener")
             requireContext().showFeedbackDialog()
+            false
+        }
+
+        // Show App Info
+        findPreference<Preference>("app_info")?.setOnPreferenceClickListener {
+            Log.d("app_info", "showAppInfoDialog")
+            requireContext().showAppInfoDialog()
             false
         }
 
@@ -158,6 +169,38 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Send") { _, _ -> }
+        dialog.show()
+    }
+
+    fun Context.showAppInfoDialog() {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_app_info, null)
+        val appId = view.findViewById<TextView>(R.id.app_identifier)
+        val appVersion = view.findViewById<TextView>(R.id.app_version)
+        val sourceLink = view.findViewById<TextView>(R.id.source_link)
+
+        val sourceText = getString(R.string.github_link, sourceLink.tag)
+        Log.d("showAppInfoDialog", "sourceText: $sourceText")
+
+        val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
+        val versionName = packageInfo.versionName
+        Log.d("showAppInfoDialog", "versionName: $versionName")
+
+        val formattedVersion = getString(R.string.version_string, versionName)
+        Log.d("showAppInfoDialog", "formattedVersion: $formattedVersion")
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Close", null)
+            .create()
+
+        dialog.setOnShowListener {
+            appId.text = this.packageName
+            appVersion.text = formattedVersion
+
+            sourceLink.text = Html.fromHtml(sourceText, Html.FROM_HTML_MODE_LEGACY)
+            sourceLink.movementMethod = LinkMovementMethod.getInstance()
+        }
         dialog.show()
     }
 }

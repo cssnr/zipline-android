@@ -46,6 +46,12 @@
             android:summary="Submit Suggestions or Bugs"
             android:icon="@drawable/md_bug_report_24px" />
 
+        <Preference
+            android:key="app_info"
+            android:title="Application Information"
+            android:summary="View Mobile App Details"
+            android:icon="@drawable/md_mobile_info_24px" />
+
 <!--        <SwitchPreferenceCompat-->
 <!--            android:key="show_preview"-->
 <!--            android:title="Show Preview Screen"-->
