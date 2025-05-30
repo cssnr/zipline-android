@@ -34,7 +34,7 @@ android {
         debug {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            manifestPlaceholders["firebaseAnalyticsDeactivated"] = true
+            manifestPlaceholders["firebaseAnalyticsDeactivated"] = false
         }
     }
 
