@@ -1,12 +1,14 @@
 [versions]
-agp = "8.9.3"
+agp = "8.10.1"
 kotlin = "2.1.21"
+#ksp = "2.1.20-1.0.32"
 coreKtx = "1.16.0"
 junit = "4.13.2"
 junitVersion = "1.2.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
 material = "1.12.0"
+
 activity = "1.10.1"
 preferenceKtx = "1.2.1"
 lifecycleLivedataKtx = "2.9.0"
@@ -16,12 +18,11 @@ navigationUiKtx = "2.9.0"
 
 googleServices = "4.4.2"
 firebaseBom = "33.14.0"
-firebaseAnalytics = "22.4.0"
+crashlyticsPlugin = "3.0.3"
 
 okhttp = "4.12.0"
 retrofit = "3.0.0"
 #room = "2.7.1"
-#ksp = "2.1.20-1.0.32"
 glide = "5.0.0-rc01"
 media3 = "1.7.1"
 
@@ -32,6 +33,7 @@ androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "j
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-preference-ktx = { group = "androidx.preference", name = "preference-ktx", version.ref = "preferenceKtx" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
@@ -40,8 +42,9 @@ androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navi
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
 firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebaseBom" }
-firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics", version.ref = "firebaseAnalytics" }
+firebase-analytics = { group = "com.google.firebase", name = "firebase-analytics" }
 firebase-crashlytics = { group = "com.google.firebase", name = "firebase-crashlytics" }
+#firebase-messaging = { group = "com.google.firebase", name = "firebase-messaging" }
 
 okhttp = { module = "com.squareup.okhttp3:okhttp", version.ref = "okhttp" }
 retrofit = { module = "com.squareup.retrofit2:retrofit", version.ref = "retrofit" }
@@ -56,6 +59,6 @@ media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", ver
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
-google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
-firebase-crashlytics = { id = "com.google.firebase.crashlytics", version = "3.0.3" }
 #ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+google-services = { id = "com.google.gms.google-services", version.ref = "googleServices" }
+firebase-crashlytics = { id = "com.google.firebase.crashlytics", version.ref = "crashlyticsPlugin" }

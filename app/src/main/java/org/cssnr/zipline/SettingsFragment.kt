@@ -1,7 +1,10 @@
 package org.cssnr.zipline
 
 import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.Settings
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
@@ -41,10 +44,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        Log.d("SettingsFragment", "onCreatePreferences rootKey: $rootKey")
-
+        Log.d("SettingsFragment", "rootKey: $rootKey - sharedPreferencesName: default_preferences")
         preferenceManager.sharedPreferencesName = "default_preferences"
         setPreferencesFromResource(R.xml.preferences, rootKey)
+
+        val ctx = requireContext()
 
         // File Name Option
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
@@ -55,26 +59,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
         // Toggle Analytics
-        val toggleAnalytics = findPreference<SwitchPreferenceCompat>("analytics_enabled")
-        toggleAnalytics?.setOnPreferenceChangeListener { _, newValue ->
-            Log.d("toggleAnalytics", "analytics_enabled: $newValue")
-            if (newValue as Boolean) {
-                Log.d("toggleAnalytics", "ENABLE Analytics")
-                Firebase.analytics.setAnalyticsCollectionEnabled(true)
-                toggleAnalytics.isChecked = true
-            } else {
-                MaterialAlertDialogBuilder(requireContext())
-                    .setTitle("Please Reconsider")
-                    .setMessage("Analytics are only used to fix bugs and make improvements.")
-                    .setPositiveButton("Disable Anyway") { _, _ ->
-                        Log.d("toggleAnalytics", "DISABLE Analytics")
-                        Firebase.analytics.logEvent("disable_analytics", null)
-                        Firebase.analytics.setAnalyticsCollectionEnabled(false)
-                        toggleAnalytics.isChecked = false
-                    }
-                    .setNegativeButton("Cancel", null)
-                    .show()
-            }
+        val analyticsEnabled = findPreference<SwitchPreferenceCompat>("analytics_enabled")
+        analyticsEnabled?.setOnPreferenceChangeListener { _, newValue ->
+            Log.d("analyticsEnabled", "analytics_enabled: $newValue")
+            ctx.toggleAnalytics(analyticsEnabled, newValue)
             false
         }
 
@@ -82,14 +70,24 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val sendFeedback = findPreference<Preference>("send_feedback")
         sendFeedback?.setOnPreferenceClickListener {
             Log.d("sendFeedback", "setOnPreferenceClickListener")
-            requireContext().showFeedbackDialog()
+            ctx.showFeedbackDialog()
             false
         }
 
         // Show App Info
         findPreference<Preference>("app_info")?.setOnPreferenceClickListener {
             Log.d("app_info", "showAppInfoDialog")
-            requireContext().showAppInfoDialog()
+            ctx.showAppInfoDialog()
+            false
+        }
+
+        // Open App Settings
+        findPreference<Preference>("android_settings")?.setOnPreferenceClickListener {
+            Log.d("android_settings", "setOnPreferenceClickListener")
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", ctx.packageName, null)
+            }
+            startActivity(intent)
             false
         }
 
@@ -101,7 +99,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //}
 
         //val preferences = context?.getSharedPreferences("default_preferences", Context.MODE_PRIVATE)
-        //val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        //val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
         //Log.d("SettingsFragment", "preferences: $preferences")
 
         //var showPreview = preferences?.getBoolean("show_preview", false)
@@ -109,8 +107,29 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
 
-        //PreferenceManager.getDefaultSharedPreferences(requireContext())
+        //PreferenceManager.getDefaultSharedPreferences(ctx)
         //    .edit { putString("saved_url", newUrl) }
+    }
+
+    fun Context.toggleAnalytics(switchPreference: SwitchPreferenceCompat, newValue: Any) {
+        Log.d("toggleAnalytics", "newValue: $newValue")
+        if (newValue as Boolean) {
+            Log.d("toggleAnalytics", "ENABLE Analytics")
+            Firebase.analytics.setAnalyticsCollectionEnabled(true)
+            switchPreference.isChecked = true
+        } else {
+            MaterialAlertDialogBuilder(this)
+                .setTitle("Please Reconsider")
+                .setMessage("Analytics are only used to fix bugs and make improvements.")
+                .setPositiveButton("Disable Anyway") { _, _ ->
+                    Log.d("toggleAnalytics", "DISABLE Analytics")
+                    Firebase.analytics.logEvent("disable_analytics", null)
+                    Firebase.analytics.setAnalyticsCollectionEnabled(false)
+                    switchPreference.isChecked = false
+                }
+                .setNegativeButton("Cancel", null)
+                .show()
+        }
     }
 
     fun Context.showFeedbackDialog() {
