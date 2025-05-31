@@ -18,6 +18,8 @@ android {
         versionName = "0.0.1"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        manifestPlaceholders["firebaseAnalyticsDeactivated"] = false // enabled
+        manifestPlaceholders["firebaseCrashlyticsEnabled"] = true // enabled
     }
 
     buildTypes {
@@ -28,13 +30,13 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            manifestPlaceholders["firebaseAnalyticsDeactivated"] = false
         }
 
         debug {
             applicationIdSuffix = ".dev"
             versionNameSuffix = "-dev"
-            manifestPlaceholders["firebaseAnalyticsDeactivated"] = false
+            manifestPlaceholders["firebaseAnalyticsDeactivated"] = true // disabled
+            manifestPlaceholders["firebaseCrashlyticsEnabled"] = false // disabled
         }
     }
 
@@ -63,6 +65,7 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
+    //implementation(libs.firebase.messaging)
     implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)
