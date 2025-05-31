@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <PreferenceCategory android:title="Sharing Settings">
+    <PreferenceCategory android:title="Share Settings">
 
         <ListPreference
             android:key="file_name_format"
