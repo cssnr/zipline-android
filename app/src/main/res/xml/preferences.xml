@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <PreferenceCategory android:title="Upload Settings">
+    <PreferenceCategory android:title="Sharing Settings">
 
         <ListPreference
             android:key="file_name_format"
@@ -12,6 +12,13 @@
             android:entryValues="@array/dropdown_values"
             android:icon="@drawable/md_menu_24px"
             tools:summary="Random" />
+
+        <SwitchPreferenceCompat
+            android:title="Share URL After Creation"
+            android:key="share_after_short"
+            android:summary="Automatically Show Dialog"
+            android:icon="@drawable/md_share_24px"
+            android:defaultValue="true" />
 
     </PreferenceCategory>
 
@@ -25,13 +32,6 @@
             android:entries="@array/launcher_entries"
             android:entryValues="@array/launcher_values"
             tools:summary="Load Home Page" />
-
-        <SwitchPreferenceCompat
-            android:title="Share URL After Creation"
-            android:key="share_after_short"
-            android:summary="Automatically Show Dialog"
-            android:icon="@drawable/md_share_24px"
-            android:defaultValue="true" />
 
         <SwitchPreferenceCompat
             android:key="analytics_enabled"
@@ -51,6 +51,12 @@
             android:title="Application Information"
             android:summary="View Mobile App Details"
             android:icon="@drawable/md_mobile_info_24px" />
+
+        <Preference
+            android:key="android_settings"
+            android:title="Android Settings"
+            android:summary="Edit Android Settings"
+            android:icon="@drawable/md_mobile_gear_24px" />
 
 <!--        <SwitchPreferenceCompat-->
 <!--            android:key="show_preview"-->
