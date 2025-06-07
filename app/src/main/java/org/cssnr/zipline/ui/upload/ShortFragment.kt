@@ -126,12 +126,12 @@ class ShortFragment : Fragment() {
         Log.d("processShort", "URL: $longUrl")
         Log.d("processShort", "Vanity: $vanityName")
 
-        val ziplineUrl = preferences.getString("ziplineUrl", null)
-        val ziplineToken = preferences.getString("ziplineToken", null)
-        Log.d("processShort", "ziplineUrl: $ziplineUrl")
-        Log.d("processShort", "ziplineToken: $ziplineToken")
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("processShort", "savedUrl: $savedUrl")
+        Log.d("processShort", "authToken: $authToken")
 
-        if (ziplineUrl == null || ziplineToken == null) {
+        if (savedUrl == null || authToken == null) {
             Log.e("processShort", "ziplineUrl || ziplineToken is null")
             Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
                 .show()
@@ -145,7 +145,7 @@ class ShortFragment : Fragment() {
 
         val api = ZiplineApi(requireContext())
         lifecycleScope.launch {
-            val response = api.shorten(longUrl, vanityName, ziplineUrl)
+            val response = api.shorten(longUrl, vanityName, authToken)
             Log.d("processShort", "response: $response")
             if (response.isSuccessful) {
                 val shortResponse = response.body()
@@ -163,7 +163,7 @@ class ShortFragment : Fragment() {
                     }
                     navController.navigate(
                         R.id.nav_item_home,
-                        bundleOf("url" to "${ziplineUrl}/dashboard/urls"),
+                        bundleOf("url" to "${authToken}/dashboard/urls"),
                         NavOptions.Builder()
                             .setPopUpTo(R.id.nav_graph, inclusive = true)
                             .build()

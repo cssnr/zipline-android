@@ -110,12 +110,12 @@ class MainActivity : AppCompatActivity() {
         val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
         Log.d("onNewIntent", "extraText: $extraText")
 
-        val ziplineUrl = preferences.getString("ziplineUrl", null)
-        val ziplineToken = preferences.getString("ziplineToken", null)
-        Log.d("onNewIntent", "ziplineUrl: $ziplineUrl")
-        Log.d("onNewIntent", "ziplineToken: $ziplineToken")
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("onNewIntent", "savedUrl: $savedUrl")
+        Log.d("onNewIntent", "authToken: $authToken")
 
-        if (ziplineUrl.isNullOrEmpty() || ziplineToken.isNullOrEmpty()) {
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.w("onNewIntent", "Missing Zipline URL or Token...")
 
             navController.navigate(
