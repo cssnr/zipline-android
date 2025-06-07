@@ -1,4 +1,4 @@
-package org.cssnr.zipline.upload
+package org.cssnr.zipline.ui.upload
 
 import android.content.Context
 import android.net.Uri

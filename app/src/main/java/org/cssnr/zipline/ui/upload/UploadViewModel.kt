@@ -1,4 +1,4 @@
-package org.cssnr.zipline.upload
+package org.cssnr.zipline.ui.upload
 
 import android.net.Uri
 import androidx.lifecycle.MutableLiveData

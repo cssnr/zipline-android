@@ -1,6 +1,5 @@
-package org.cssnr.zipline.upload
+package org.cssnr.zipline.ui.upload
 
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,11 +14,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
-import org.cssnr.zipline.ZiplineApi
+import org.cssnr.zipline.api.ZiplineApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentShortBinding
 
@@ -29,6 +29,8 @@ class ShortFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
+
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -70,10 +72,9 @@ class ShortFragment : Fragment() {
             return
         }
 
-        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val savedUrl = sharedPreferences?.getString("ziplineUrl", null)
+        val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Short[onViewCreated]", "savedUrl: $savedUrl")
-        val authToken = sharedPreferences?.getString("ziplineToken", null)
+        val authToken = preferences.getString("ziplineToken", null)
         Log.d("Short[onViewCreated]", "authToken: $authToken")
 
         if (savedUrl == null) {
@@ -125,9 +126,8 @@ class ShortFragment : Fragment() {
         Log.d("processShort", "URL: $longUrl")
         Log.d("processShort", "Vanity: $vanityName")
 
-        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val ziplineUrl = sharedPreferences?.getString("ziplineUrl", null)
-        val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
+        val ziplineUrl = preferences.getString("ziplineUrl", null)
+        val ziplineToken = preferences.getString("ziplineToken", null)
         Log.d("processShort", "ziplineUrl: $ziplineUrl")
         Log.d("processShort", "ziplineToken: $ziplineToken")
 
@@ -152,7 +152,7 @@ class ShortFragment : Fragment() {
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
                     copyToClipboard(requireContext(), shortResponse.url)
-                    val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
+                    val shareUrl = preferences.getBoolean("share_after_short", true)
                     Log.d("processShort", "shareUrl: $shareUrl")
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
@@ -185,11 +185,9 @@ class ShortFragment : Fragment() {
 //        Log.d("processShort", "url: $url")
 //        Log.d("processShort", "vanity: $vanity")
 //        //val preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-//        val sharedPreferences =
-//            requireContext().getSharedPreferences("default_preferences", MODE_PRIVATE)
-//        val savedUrl = sharedPreferences.getString("ziplineUrl", null)
+//        val savedUrl = preferences.getString("ziplineUrl", null)
 //        Log.d("processShort", "savedUrl: $savedUrl")
-//        val authToken = sharedPreferences.getString("ziplineToken", null)
+//        val authToken = preferences.getString("ziplineToken", null)
 //        Log.d("processShort", "authToken: $authToken")
 //        if (savedUrl == null || authToken == null) {
 //            // TODO: Show settings dialog here...

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="upload"
+        android:enabled="true"
+        android:icon="@drawable/shortcut_upload"
+        android:shortcutShortLabel="@string/upload"
+        android:shortcutLongLabel="@string/upload_file">
+        <intent
+            android:action="android.intent.action.MAIN"
+            android:targetPackage="org.cssnr.zipline.dev"
+            android:targetClass="org.cssnr.zipline.MainActivity">
+            <extra
+                android:name="fromShortcut"
+                android:value="upload" />
+        </intent>
+    </shortcut>
+</shortcuts>

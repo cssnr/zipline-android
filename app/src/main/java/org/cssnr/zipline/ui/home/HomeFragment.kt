@@ -1,7 +1,6 @@
-package org.cssnr.zipline
+package org.cssnr.zipline.ui.home
 
 import android.annotation.SuppressLint
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +22,8 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
+import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -72,10 +73,10 @@ class HomeFragment : Fragment() {
             Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
         }
 
-        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        ziplineUrl = sharedPreferences?.getString("ziplineUrl", "").toString()
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        ziplineUrl = preferences.getString("ziplineUrl", "").toString()
         Log.d("Home[onViewCreated]", "ziplineUrl: $ziplineUrl")
-        //val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
+        //val ziplineToken = preferences?.getString("ziplineToken", null)
         //Log.d("Home[onViewCreated]", "ziplineToken: $ziplineToken")
 
         val url = arguments?.getString("url")
@@ -173,11 +174,10 @@ class HomeFragment : Fragment() {
             if (url.endsWith("/auth/login") == true) {
                 Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 
-                val sharedPreferences =
-                    view.context.getSharedPreferences("default_preferences", MODE_PRIVATE)
+                val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
                 Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
-                //sharedPreferences.edit { putString("ziplineToken", "") }
-                sharedPreferences.edit { remove("ziplineToken") }
+                //preferences.edit { putString("ziplineToken", "") }
+                preferences.edit { remove("ziplineToken") }
 
                 Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
                 view.loadUrl("about:blank")

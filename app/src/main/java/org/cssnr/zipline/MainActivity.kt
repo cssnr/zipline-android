@@ -22,6 +22,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.preference.PreferenceManager
 import org.cssnr.zipline.databinding.ActivityMainBinding
 import java.net.URL
 
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
     internal lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
+
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,19 +57,19 @@ class MainActivity : AppCompatActivity() {
 
         binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
+        //// Set Default Preferences
+        //PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+
         // Handle Custom Navigation Items
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            Log.d("navigationView", "setNavigationItemSelectedListener: $menuItem")
+            binding.drawerLayout.closeDrawers()
             if (menuItem.itemId == R.id.nav_item_upload) {
-                Log.d("Drawer", "nav_item_upload")
+                Log.d("navigationView", "nav_item_upload")
                 filePickerLauncher.launch(arrayOf("*/*"))
-                binding.drawerLayout.closeDrawers()
                 true
             } else {
-                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
-                if (handled) {
-                    binding.drawerLayout.closeDrawers()
-                }
-                handled
+                NavigationUI.onNavDestinationSelected(menuItem, navController)
             }
         }
 
@@ -87,7 +90,7 @@ class MainActivity : AppCompatActivity() {
 
         // Only Handel Intent Once Here after App Start
         if (savedInstanceState?.getBoolean("intentHandled") != true) {
-            handleIntent(intent)
+            onNewIntent(intent)
         }
     }
 
@@ -99,26 +102,21 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         Log.d("onNewIntent", "intent: $intent")
-        handleIntent(intent)
-    }
-
-    private fun handleIntent(intent: Intent) {
-        Log.d("handleIntent", "intent: $intent")
-        Log.d("handleIntent", "intent.data: ${intent.data}")
-        Log.d("handleIntent", "intent.type: ${intent.type}")
-        Log.d("handleIntent", "intent.action: ${intent.action}")
+        Log.d("onNewIntent", "intent: $intent")
+        Log.d("onNewIntent", "intent.data: ${intent.data}")
+        Log.d("onNewIntent", "intent.type: ${intent.type}")
+        Log.d("onNewIntent", "intent.action: ${intent.action}")
 
         val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
-        Log.d("handleIntent", "extraText: $extraText")
+        Log.d("onNewIntent", "extraText: $extraText")
 
-        val sharedPreferences = getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val ziplineUrl = sharedPreferences.getString("ziplineUrl", null)
-        val ziplineToken = sharedPreferences.getString("ziplineToken", null)
-        Log.d("handleIntent", "ziplineUrl: $ziplineUrl")
-        Log.d("handleIntent", "ziplineToken: $ziplineToken")
+        val ziplineUrl = preferences.getString("ziplineUrl", null)
+        val ziplineToken = preferences.getString("ziplineToken", null)
+        Log.d("onNewIntent", "ziplineUrl: $ziplineUrl")
+        Log.d("onNewIntent", "ziplineToken: $ziplineToken")
 
         if (ziplineUrl.isNullOrEmpty() || ziplineToken.isNullOrEmpty()) {
-            Log.w("handleIntent", "Missing Zipline URL or Token...")
+            Log.w("onNewIntent", "Missing Zipline URL or Token...")
 
             navController.navigate(
                 R.id.nav_item_setup, null, NavOptions.Builder()
@@ -127,22 +125,22 @@ class MainActivity : AppCompatActivity() {
             )
 
         } else if (Intent.ACTION_MAIN == intent.action) {
-            Log.d("handleIntent", "ACTION_MAIN")
+            Log.d("onNewIntent", "ACTION_MAIN")
 
             binding.drawerLayout.closeDrawers()
 
             // TODO: Cleanup the logic for handling MAIN intent...
             val currentDestinationId = navController.currentDestination?.id
-            Log.d("handleIntent", "currentDestinationId: $currentDestinationId")
-            val launcherAction = sharedPreferences.getString("launcher_action", null)
-            Log.d("handleIntent", "launcherAction: $launcherAction")
+            Log.d("onNewIntent", "currentDestinationId: $currentDestinationId")
+            val launcherAction = preferences.getString("launcher_action", null)
+            Log.d("onNewIntent", "launcherAction: $launcherAction")
             val fromShortcut = intent.getStringExtra("fromShortcut")
-            Log.d("handleIntent", "fromShortcut: $fromShortcut")
-            Log.d("handleIntent", "nav_item_preview: ${R.id.nav_item_upload}")
-            Log.d("handleIntent", "nav_item_short: ${R.id.nav_item_short}")
+            Log.d("onNewIntent", "fromShortcut: $fromShortcut")
+            Log.d("onNewIntent", "nav_item_preview: ${R.id.nav_item_upload}")
+            Log.d("onNewIntent", "nav_item_short: ${R.id.nav_item_short}")
 
             if (currentDestinationId == R.id.nav_item_upload || currentDestinationId == R.id.nav_item_short) {
-                Log.i("handleIntent", "ON PREVIEW/SHORT - Navigating to HomeFragment w/ setPopUpTo")
+                Log.i("onNewIntent", "ON PREVIEW/SHORT - Navigating to HomeFragment w/ setPopUpTo")
                 // TODO: Determine the correct navigation call here...
                 //navController.navigate(R.id.nav_item_home)
                 navController.navigate(
@@ -151,17 +149,17 @@ class MainActivity : AppCompatActivity() {
                         .build()
                 )
             } else if (currentDestinationId != R.id.nav_item_home && launcherAction != "previous") {
-                Log.i("handleIntent", "HOME SETTING SET - Navigating to HomeFragment")
+                Log.i("onNewIntent", "HOME SETTING SET - Navigating to HomeFragment")
                 navController.navigate(R.id.nav_item_home)
             }
             // TODO: Determine if this needs to be in the above if/else
             if (fromShortcut == "upload") {
-                Log.d("handleIntent", "filePickerLauncher.launch")
+                Log.d("onNewIntent", "filePickerLauncher.launch")
                 filePickerLauncher.launch(arrayOf("*/*"))
             }
 
         } else if (Intent.ACTION_SEND == intent.action) {
-            Log.d("handleIntent", "ACTION_SEND")
+            Log.d("onNewIntent", "ACTION_SEND")
 
             val fileUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM, Uri::class.java)
@@ -169,14 +167,14 @@ class MainActivity : AppCompatActivity() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
-            Log.d("handleIntent", "File URI: $fileUri")
+            Log.d("onNewIntent", "File URI: $fileUri")
 
             if (fileUri == null && !extraText.isNullOrEmpty()) {
-                Log.d("handleIntent", "SEND TEXT DETECTED: $extraText")
+                Log.d("onNewIntent", "SEND TEXT DETECTED: $extraText")
                 //if (extraText.lowercase().startsWith("http")) {
                 //if (Patterns.WEB_URL.matcher(extraText).matches()) {
                 if (isURL(extraText)) {
-                    Log.d("handleIntent", "URL DETECTED: $extraText")
+                    Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply {
                         putString("url", extraText)
@@ -190,15 +188,25 @@ class MainActivity : AppCompatActivity() {
                             .build()
                     )
                 } else {
-                    Toast.makeText(this, "Not Yet Implemented!", Toast.LENGTH_SHORT).show()
-                    Log.w("handleIntent", "NOT IMPLEMENTED")
+                    Log.i("handleIntent", "PLAIN TEXT DETECTED")
+                    val bundle = Bundle().apply {
+                        putString("text", extraText)
+                    }
+                    // TODO: Determine how to properly navigate on new intent...
+                    navController.popBackStack(R.id.nav_graph, true)
+                    navController.navigate(
+                        R.id.nav_item_text, bundle, NavOptions.Builder()
+                            .setPopUpTo(R.id.nav_item_home, true)
+                            .setLaunchSingleTop(true)
+                            .build()
+                    )
                 }
             } else {
                 showPreview(fileUri)
             }
 
         } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
-            Log.d("handleIntent", "ACTION_SEND_MULTIPLE")
+            Log.d("onNewIntent", "ACTION_SEND_MULTIPLE")
 
             val fileUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM, Uri::class.java)
@@ -206,23 +214,23 @@ class MainActivity : AppCompatActivity() {
                 @Suppress("DEPRECATION")
                 intent.getParcelableArrayListExtra(Intent.EXTRA_STREAM)
             }
-            Log.d("handleIntent", "fileUris: $fileUris")
+            Log.d("onNewIntent", "fileUris: $fileUris")
             if (fileUris == null) {
                 Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_LONG).show()
-                Log.w("handleIntent", "fileUris is null")
+                Log.w("onNewIntent", "fileUris is null")
                 return
             }
             showMultiPreview(fileUris)
 
         } else if (Intent.ACTION_VIEW == intent.action) {
-            Log.d("handleIntent", "ACTION_VIEW")
+            Log.d("onNewIntent", "ACTION_VIEW")
 
-            Log.d("handleIntent", "File URI: ${intent.data}")
+            Log.d("onNewIntent", "File URI: ${intent.data}")
             showPreview(intent.data)
 
         } else {
             Toast.makeText(this, "That's a Bug!", Toast.LENGTH_SHORT).show()
-            Log.w("handleIntent", "BUG: UNKNOWN intent.action: ${intent.action}")
+            Log.w("onNewIntent", "BUG: UNKNOWN intent.action: ${intent.action}")
         }
     }
 
