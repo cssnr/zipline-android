@@ -29,7 +29,7 @@ import retrofit2.http.Part
 import java.io.InputStream
 import java.net.URLConnection
 
-class ZiplineApi(private val context: Context) {
+class ZiplineApi(private val context: Context, url: String? = null) {
     val api: ApiService
     private var ziplineUrl: String
     private var ziplineToken: String
@@ -41,7 +41,7 @@ class ZiplineApi(private val context: Context) {
     private lateinit var client: OkHttpClient
 
     init {
-        ziplineUrl = preferences.getString("ziplineUrl", null) ?: ""
+        ziplineUrl = preferences.getString("ziplineUrl", null) ?: url ?: ""
         ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("ServerApi", "ziplineUrl: $ziplineUrl")
         Log.d("ServerApi", "ziplineToken: $ziplineToken")
