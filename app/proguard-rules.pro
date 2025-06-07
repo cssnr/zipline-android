@@ -40,7 +40,8 @@
 
 
 ## Retrofit
--keep class org.cssnr.zipline.ZiplineApi$* { *; }
+-keep class org.cssnr.zipline.api.ZiplineApi$* { *; }
+-keep class org.cssnr.zipline.api.FeedbackApi { *; }
 
 -keepclassmembers class * {
     @com.google.gson.annotations.SerializedName <fields>;
