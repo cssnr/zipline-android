@@ -89,7 +89,19 @@ class HomeFragment : Fragment() {
         Log.d("Home[onViewCreated]", "arguments: url: $url")
 
         binding.webView.apply {
+            Log.i("Home[webView]", "binding.webView.apply")
             webViewClient = MyWebViewClient()
+            //webViewClient = MyWebViewClient(
+            //    onPageLoaded = {
+            //        if (!url.isNullOrEmpty()) {
+            //            arguments?.remove("url")
+            //            Log.i("Home[webView]", "Zipline Retarded")
+            //            binding.webView.evaluateJavascript("console.log('Zipline Retarded');", null)
+            //            val js = "document.querySelector('.mantine-Card-root').click();"
+            //            binding.webView.evaluateJavascript(js, null)
+            //        }
+            //    }
+            //)
             webChromeClient = MyWebChromeClient()
             settings.domStorageEnabled = true
             settings.javaScriptEnabled = true
@@ -99,16 +111,17 @@ class HomeFragment : Fragment() {
             settings.useWideViewPort = true // prevent loading images zoomed in
 
             if (url != null) {
-                Log.i("Home[webView.apply]", "ARGUMENT URL: $url")
+                Log.i("Home[webView]", "ARGUMENT URL: $url")
+                arguments?.remove("url")
                 loadUrl(url)
             } else if (webViewState.size() > 0) {
-                Log.i("Home[webView.apply]", "RESTORE STATE")
+                Log.i("Home[webView]", "RESTORE STATE")
                 restoreState(webViewState)
             } else if (ziplineUrl.isNotBlank()) {
-                Log.i("Home[webView.apply]", "LOAD ziplineUrl: $ziplineUrl")
+                Log.i("Home[webView]", "LOAD ziplineUrl: $ziplineUrl")
                 loadUrl(ziplineUrl)
             } else {
-                Log.i("Home[webView.apply]", "NO ZIPLINE URL - DOING NOTHING")
+                Log.i("Home[webView]", "NO ZIPLINE URL - DOING NOTHING")
             }
         }
 
@@ -150,14 +163,15 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
-        Log.d("Home[onResume]", "ON RESUME")
+        Log.i("Home[onResume]", "ON RESUME")
         super.onResume()
-        Log.d("Home[onPause]", "webView. onResume() / resumeTimers()")
+        //if (webViewState.size() > 0) {
+        Log.d("Home[onResume]", "webView. onResume() / resumeTimers()")
         binding.webView.onResume()
         binding.webView.resumeTimers()
     }
 
-    inner class MyWebViewClient : WebViewClient() {
+    inner class MyWebViewClient() : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
             Log.d("shouldOverrideUrl", "url: $url")
@@ -211,6 +225,12 @@ class HomeFragment : Fragment() {
         ) {
             Log.d("onReceivedHttpError", "ERROR: " + errorResponse.statusCode)
         }
+
+        // // private val onPageLoaded: (() -> Unit)? = null
+        //override fun onPageFinished(view: WebView?, url: String?) {
+        //    Log.d("MyWebViewClient", "Page finished loading: $url")
+        //    onPageLoaded?.invoke()
+        //}
     }
 
     inner class MyWebChromeClient : WebChromeClient() {

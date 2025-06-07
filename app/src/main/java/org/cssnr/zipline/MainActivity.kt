@@ -102,8 +102,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        Log.d("onNewIntent", "intent: $intent")
-        Log.d("onNewIntent", "intent: $intent")
         Log.d("onNewIntent", "intent.data: ${intent.data}")
         Log.d("onNewIntent", "intent.type: ${intent.type}")
         Log.d("onNewIntent", "intent.action: ${intent.action}")
