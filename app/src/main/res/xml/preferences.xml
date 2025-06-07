@@ -29,16 +29,16 @@
             android:entryValues="@array/launcher_values"
             tools:summary="Load Home Page" />
 
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Application Information">
+
         <SwitchPreferenceCompat
             android:key="analytics_enabled"
             android:title="Enable Analytics"
             android:summary="Help Fix Bugs"
             android:icon="@drawable/md_monitoring_24px"
             android:defaultValue="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="Application Information">
 
         <Preference
             android:key="send_feedback"
