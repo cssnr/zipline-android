@@ -1,4 +1,4 @@
-package org.cssnr.zipline
+package org.cssnr.zipline.ui.settings
 
 import android.content.Context
 import android.content.Intent
@@ -27,6 +27,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -44,8 +45,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
-        Log.d("SettingsFragment", "rootKey: $rootKey - sharedPreferencesName: default_preferences")
-        preferenceManager.sharedPreferencesName = "default_preferences"
+        Log.d("SettingsFragment", "rootKey: $rootKey")
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         val ctx = requireContext()
@@ -98,17 +98,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //    true
         //}
 
-        //val preferences = context?.getSharedPreferences("default_preferences", Context.MODE_PRIVATE)
-        //val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-        //Log.d("SettingsFragment", "preferences: $preferences")
-
         //var showPreview = preferences?.getBoolean("show_preview", false)
         //Log.d("SettingsFragment", "showPreview: $showPreview")
         //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
-
-        //PreferenceManager.getDefaultSharedPreferences(ctx)
-        //    .edit { putString("saved_url", newUrl) }
     }
 
     fun Context.toggleAnalytics(switchPreference: SwitchPreferenceCompat, newValue: Any) {

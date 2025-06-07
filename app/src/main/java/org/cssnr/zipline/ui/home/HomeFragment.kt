@@ -1,7 +1,6 @@
-package org.cssnr.zipline
+package org.cssnr.zipline.ui.home
 
 import android.annotation.SuppressLint
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -23,6 +22,9 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
+import org.cssnr.zipline.MainActivity
+import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
@@ -72,17 +74,34 @@ class HomeFragment : Fragment() {
             Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
         }
 
-        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        ziplineUrl = sharedPreferences?.getString("ziplineUrl", "").toString()
+        binding.toggleMenu.setOnClickListener {
+            Log.i("Home[onViewCreated]", "toggleMenu.setOnClickListener")
+            (requireActivity() as MainActivity).toggleDrawer()
+        }
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        ziplineUrl = preferences.getString("ziplineUrl", "").toString()
         Log.d("Home[onViewCreated]", "ziplineUrl: $ziplineUrl")
-        //val ziplineToken = sharedPreferences?.getString("ziplineToken", null)
+        //val ziplineToken = preferences?.getString("ziplineToken", null)
         //Log.d("Home[onViewCreated]", "ziplineToken: $ziplineToken")
 
         val url = arguments?.getString("url")
         Log.d("Home[onViewCreated]", "arguments: url: $url")
 
         binding.webView.apply {
+            Log.i("Home[webView]", "binding.webView.apply")
             webViewClient = MyWebViewClient()
+            //webViewClient = MyWebViewClient(
+            //    onPageLoaded = {
+            //        if (!url.isNullOrEmpty()) {
+            //            arguments?.remove("url")
+            //            Log.i("Home[webView]", "Zipline Retarded")
+            //            binding.webView.evaluateJavascript("console.log('Zipline Retarded');", null)
+            //            val js = "document.querySelector('.mantine-Card-root').click();"
+            //            binding.webView.evaluateJavascript(js, null)
+            //        }
+            //    }
+            //)
             webChromeClient = MyWebChromeClient()
             settings.domStorageEnabled = true
             settings.javaScriptEnabled = true
@@ -92,16 +111,17 @@ class HomeFragment : Fragment() {
             settings.useWideViewPort = true // prevent loading images zoomed in
 
             if (url != null) {
-                Log.i("Home[webView.apply]", "ARGUMENT URL: $url")
+                Log.i("Home[webView]", "ARGUMENT URL: $url")
+                arguments?.remove("url")
                 loadUrl(url)
             } else if (webViewState.size() > 0) {
-                Log.i("Home[webView.apply]", "RESTORE STATE")
+                Log.i("Home[webView]", "RESTORE STATE")
                 restoreState(webViewState)
             } else if (ziplineUrl.isNotBlank()) {
-                Log.i("Home[webView.apply]", "LOAD ziplineUrl: $ziplineUrl")
+                Log.i("Home[webView]", "LOAD ziplineUrl: $ziplineUrl")
                 loadUrl(ziplineUrl)
             } else {
-                Log.i("Home[webView.apply]", "NO ZIPLINE URL - DOING NOTHING")
+                Log.i("Home[webView]", "NO ZIPLINE URL - DOING NOTHING")
             }
         }
 
@@ -143,14 +163,15 @@ class HomeFragment : Fragment() {
     }
 
     override fun onResume() {
-        Log.d("Home[onResume]", "ON RESUME")
+        Log.i("Home[onResume]", "ON RESUME")
         super.onResume()
-        Log.d("Home[onPause]", "webView. onResume() / resumeTimers()")
+        //if (webViewState.size() > 0) {
+        Log.d("Home[onResume]", "webView. onResume() / resumeTimers()")
         binding.webView.onResume()
         binding.webView.resumeTimers()
     }
 
-    inner class MyWebViewClient : WebViewClient() {
+    inner class MyWebViewClient() : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
             Log.d("shouldOverrideUrl", "url: $url")
@@ -173,11 +194,10 @@ class HomeFragment : Fragment() {
             if (url.endsWith("/auth/login") == true) {
                 Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 
-                val sharedPreferences =
-                    view.context.getSharedPreferences("default_preferences", MODE_PRIVATE)
+                val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
                 Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
-                //sharedPreferences.edit { putString("ziplineToken", "") }
-                sharedPreferences.edit { remove("ziplineToken") }
+                //preferences.edit { putString("ziplineToken", "") }
+                preferences.edit { remove("ziplineToken") }
 
                 Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
                 view.loadUrl("about:blank")
@@ -205,6 +225,12 @@ class HomeFragment : Fragment() {
         ) {
             Log.d("onReceivedHttpError", "ERROR: " + errorResponse.statusCode)
         }
+
+        // // private val onPageLoaded: (() -> Unit)? = null
+        //override fun onPageFinished(view: WebView?, url: String?) {
+        //    Log.d("MyWebViewClient", "Page finished loading: $url")
+        //    onPageLoaded?.invoke()
+        //}
     }
 
     inner class MyWebChromeClient : WebChromeClient() {

@@ -2,7 +2,7 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <PreferenceCategory android:title="Share Settings">
+    <PreferenceCategory android:title="Application Settings">
 
         <ListPreference
             android:key="file_name_format"
@@ -10,7 +10,7 @@
             android:defaultValue="random"
             android:entries="@array/dropdown_entries"
             android:entryValues="@array/dropdown_values"
-            android:icon="@drawable/md_menu_24px"
+            android:icon="@drawable/md_text_format_24px"
             tools:summary="Random" />
 
         <SwitchPreferenceCompat
@@ -20,18 +20,18 @@
             android:icon="@drawable/md_share_24px"
             android:defaultValue="true" />
 
-    </PreferenceCategory>
-
-    <PreferenceCategory android:title="App Settings">
-
         <ListPreference
             android:key="launcher_action"
             android:title="Launcher Icon Action"
-            android:icon="@drawable/md_menu_24px"
+            android:icon="@drawable/md_flight_takeoff_24px"
             android:defaultValue="home"
             android:entries="@array/launcher_entries"
             android:entryValues="@array/launcher_values"
             tools:summary="Load Home Page" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Application Information">
 
         <SwitchPreferenceCompat
             android:key="analytics_enabled"
@@ -58,19 +58,19 @@
             android:summary="Edit Android Settings"
             android:icon="@drawable/md_mobile_gear_24px" />
 
-<!--        <SwitchPreferenceCompat-->
-<!--            android:key="show_preview"-->
-<!--            android:title="Show Preview Screen"-->
-<!--            android:icon="@drawable/md_preview_24px"-->
-<!--            android:defaultValue="true"-->
-<!--            android:enabled="false" />-->
+        <!--<SwitchPreferenceCompat-->
+        <!--    android:key="show_preview"-->
+        <!--    android:title="Show Preview Screen"-->
+        <!--    android:icon="@drawable/md_preview_24px"-->
+        <!--    android:defaultValue="true"-->
+        <!--    android:enabled="false" />-->
 
-<!--        <SwitchPreferenceCompat-->
-<!--            android:key="biometrics_enabled"-->
-<!--            android:title="Enable Biometrics"-->
-<!--            android:icon="@drawable/md_fingerprint_24px"-->
-<!--            android:defaultValue="false"-->
-<!--            android:enabled="false" />-->
+        <!--<SwitchPreferenceCompat-->
+        <!--    android:key="biometrics_enabled"-->
+        <!--    android:title="Enable Biometrics"-->
+        <!--    android:icon="@drawable/md_fingerprint_24px"-->
+        <!--    android:defaultValue="false"-->
+        <!--    android:enabled="false" />-->
 
     </PreferenceCategory>
 

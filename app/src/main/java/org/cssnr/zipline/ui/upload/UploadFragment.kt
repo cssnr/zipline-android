@@ -1,8 +1,7 @@
-package org.cssnr.zipline.upload
+package org.cssnr.zipline.ui.upload
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.net.Uri
@@ -31,6 +30,7 @@ import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
-import org.cssnr.zipline.ZiplineApi
+import org.cssnr.zipline.api.ZiplineApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentUploadBinding
 import org.json.JSONObject
@@ -227,12 +227,10 @@ class UploadFragment : Fragment() {
     // TODO: DUPLICATION: ShortFragment.processShort
     private fun processUpload(fileUri: Uri, fileName: String?) {
         Log.d("processUpload", "fileUri: $fileUri")
-        //val preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-        val sharedPreferences =
-            requireContext().getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val savedUrl = sharedPreferences.getString("ziplineUrl", null)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processUpload", "savedUrl: $savedUrl")
-        val authToken = sharedPreferences.getString("ziplineToken", null)
+        val authToken = preferences.getString("ziplineToken", null)
         Log.d("processUpload", "authToken: $authToken")
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
@@ -261,13 +259,15 @@ class UploadFragment : Fragment() {
             logFileUpload(false, "Input Stream is null")
             return
         }
+        Log.d("processUpload", "DEBUG 1")
         val api = ZiplineApi(requireContext())
+        Log.d("processUpload", "DEBUG 2")
         Log.d("processUpload", "api: $api")
         Toast.makeText(requireContext(), getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
             .show()
         lifecycleScope.launch {
             try {
-                val response = api.upload(fileName, inputStream, savedUrl)
+                val response = api.upload(fileName, inputStream)
                 Log.d("processUpload", "response: $response")
                 if (response.isSuccessful) {
                     val uploadResponse = response.body()
@@ -278,7 +278,7 @@ class UploadFragment : Fragment() {
                             copyToClipboard(requireContext(), uploadResponse.files.first().url)
                             navController.navigate(
                                 R.id.nav_item_home,
-                                bundleOf("url" to uploadResponse.files.first().url),
+                                bundleOf("url" to "${savedUrl}/dashboard/files/"),
                                 NavOptions.Builder()
                                     .setPopUpTo(R.id.nav_graph, inclusive = true)
                                     .build()

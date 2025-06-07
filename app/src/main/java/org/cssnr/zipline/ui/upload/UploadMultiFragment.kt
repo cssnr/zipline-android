@@ -1,6 +1,5 @@
-package org.cssnr.zipline.upload
+package org.cssnr.zipline.ui.upload
 
-import android.content.Context.MODE_PRIVATE
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Build
@@ -17,11 +16,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
-import org.cssnr.zipline.ZiplineApi
-import org.cssnr.zipline.ZiplineApi.FileResponse
+import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ZiplineApi.FileResponse
 import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
 
 class UploadMultiFragment : Fragment() {
@@ -61,10 +61,10 @@ class UploadMultiFragment : Fragment() {
 
         navController = findNavController()
 
-        val sharedPreferences = context?.getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val savedUrl = sharedPreferences?.getString("ziplineUrl", null)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Multi[onViewCreated]", "savedUrl: $savedUrl")
-        val authToken = sharedPreferences?.getString("ziplineToken", null)
+        val authToken = preferences.getString("ziplineToken", null)
         Log.d("Multi[onViewCreated]", "authToken: $authToken")
 
         if (savedUrl == null) {
@@ -140,11 +140,10 @@ class UploadMultiFragment : Fragment() {
     private fun processMultiUpload(fileUris: Set<Uri>) {
         Log.d("processMultiUpload", "fileUris: $fileUris")
         Log.d("processMultiUpload", "fileUris.size: ${fileUris.size}")
-        val sharedPreferences =
-            requireContext().getSharedPreferences("default_preferences", MODE_PRIVATE)
-        val savedUrl = sharedPreferences.getString("ziplineUrl", null)
+        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processMultiUpload", "savedUrl: $savedUrl")
-        val authToken = sharedPreferences.getString("ziplineToken", null)
+        val authToken = preferences.getString("ziplineToken", null)
         Log.d("processMultiUpload", "authToken: $authToken")
 
         if (savedUrl == null || authToken == null) {
@@ -173,7 +172,7 @@ class UploadMultiFragment : Fragment() {
                         Log.w("processMultiUpload", "inputStream is null")
                         continue
                     }
-                    val response = api.upload(fileName!!, inputStream, savedUrl)
+                    val response = api.upload(fileName!!, inputStream)
                     Log.d("processMultiUpload", "response: $response")
                     if (response.isSuccessful) {
                         val fileResponse = response.body()
@@ -197,16 +196,16 @@ class UploadMultiFragment : Fragment() {
                 logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
-            val destUrl =
-                if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
-            Log.d("processMultiUpload", "destUrl: $destUrl")
+            //val destUrl =
+            //    if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
+            //Log.d("processMultiUpload", "destUrl: $destUrl")
             val msg = "Uploaded ${results.size} Files."
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
             navController.navigate(
                 R.id.nav_item_home,
-                bundleOf("url" to destUrl),
+                bundleOf("url" to "${savedUrl}/dashboard/files/"),
                 NavOptions.Builder()
                     .setPopUpTo(R.id.nav_graph, inclusive = true)
                     .build()

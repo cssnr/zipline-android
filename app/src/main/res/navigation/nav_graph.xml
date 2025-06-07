@@ -6,12 +6,12 @@
 
     <fragment
         android:id="@+id/nav_item_home"
-        android:name="org.cssnr.zipline.HomeFragment"
+        android:name="org.cssnr.zipline.ui.home.HomeFragment"
         android:label="Home" />
 
     <fragment
         android:id="@+id/nav_item_settings"
-        android:name="org.cssnr.zipline.SettingsFragment"
+        android:name="org.cssnr.zipline.ui.settings.SettingsFragment"
         android:label="Settings" />
 
 <!--    <fragment-->
@@ -21,21 +21,23 @@
 
     <fragment
         android:id="@+id/nav_item_upload"
-        android:name="org.cssnr.zipline.upload.UploadFragment"
+        android:name="org.cssnr.zipline.ui.upload.UploadFragment"
         android:label="Preview" />
-
     <fragment
         android:id="@+id/nav_item_upload_multi"
-        android:name="org.cssnr.zipline.upload.UploadMultiFragment"
+        android:name="org.cssnr.zipline.ui.upload.UploadMultiFragment"
         android:label="Preview" />
-
     <fragment
         android:id="@+id/nav_item_short"
-        android:name="org.cssnr.zipline.upload.ShortFragment"
+        android:name="org.cssnr.zipline.ui.upload.ShortFragment"
         android:label="Preview" />
+    <fragment
+        android:id="@+id/nav_item_text"
+        android:name="org.cssnr.zipline.ui.upload.TextFragment"
+        android:label="Text" />
 
     <fragment
         android:id="@+id/nav_item_setup"
-        android:name="org.cssnr.zipline.SetupFragment"
+        android:name="org.cssnr.zipline.ui.setup.SetupFragment"
         android:label="Preview" />
 </navigation>
