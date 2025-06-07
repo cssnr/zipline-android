@@ -101,7 +101,7 @@ class SetupFragment : Fragment() {
 
             Log.d("loginButton", "lifecycleScope.launch")
             lifecycleScope.launch {
-                val api = ZiplineApi(requireContext())
+                val api = ZiplineApi(requireContext(), host)
                 val token = api.login(host, user, pass)
                 Log.d("loginButton", "token: $token")
                 if (token.isNullOrEmpty()) {
