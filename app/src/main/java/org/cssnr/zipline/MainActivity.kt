@@ -17,6 +17,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -44,24 +45,24 @@ class MainActivity : AppCompatActivity() {
 
         // NOTE: This is used over findNavController to use androidx.fragment.app.FragmentContainerView
         navController =
-            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
-        NavigationUI.setupWithNavController(binding.navigationView, navController)
+            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment).navController
+        NavigationUI.setupWithNavController(binding.navView, navController)
 
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
 
-        val headerView = binding.navigationView.getHeaderView(0)
+        val headerView = binding.navView.getHeaderView(0)
         val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
         versionTextView.text = "v${versionName}"
 
         binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
-        //// Set Default Preferences
-        //PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        // Set Default Preferences
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
 
         // Handle Custom Navigation Items
-        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
             Log.d("navigationView", "setNavigationItemSelectedListener: $menuItem")
             binding.drawerLayout.closeDrawers()
             if (menuItem.itemId == R.id.nav_item_upload) {
@@ -273,6 +274,15 @@ class MainActivity : AppCompatActivity() {
                 .setLaunchSingleTop(true)
                 .build()
         )
+    }
+
+    fun toggleDrawer(open: Boolean = true) {
+        if (open) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        } else {
+
+            binding.drawerLayout.closeDrawers()
+        }
     }
 
     fun setDrawerLockMode(enabled: Boolean) {

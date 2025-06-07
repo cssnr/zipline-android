@@ -23,6 +23,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding
 
@@ -71,6 +72,11 @@ class HomeFragment : Fragment() {
             webViewState =
                 savedInstanceState.getBundle("webViewState") ?: Bundle()  // Ensure non-null
             Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
+        }
+
+        binding.toggleMenu.setOnClickListener {
+            Log.i("Home[onViewCreated]", "toggleMenu.setOnClickListener")
+            (requireActivity() as MainActivity).toggleDrawer()
         }
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
