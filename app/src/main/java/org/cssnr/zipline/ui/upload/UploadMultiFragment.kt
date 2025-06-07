@@ -196,16 +196,16 @@ class UploadMultiFragment : Fragment() {
                 logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
-            val destUrl =
-                if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
-            Log.d("processMultiUpload", "destUrl: $destUrl")
+            //val destUrl =
+            //    if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
+            //Log.d("processMultiUpload", "destUrl: $destUrl")
             val msg = "Uploaded ${results.size} Files."
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
             navController.navigate(
                 R.id.nav_item_home,
-                bundleOf("url" to destUrl),
+                bundleOf("url" to "${savedUrl}/dashboard/files/"),
                 NavOptions.Builder()
                     .setPopUpTo(R.id.nav_graph, inclusive = true)
                     .build()

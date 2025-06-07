@@ -145,7 +145,7 @@ class ShortFragment : Fragment() {
 
         val api = ZiplineApi(requireContext())
         lifecycleScope.launch {
-            val response = api.shorten(longUrl, vanityName, authToken)
+            val response = api.shorten(longUrl, vanityName)
             Log.d("processShort", "response: $response")
             if (response.isSuccessful) {
                 val shortResponse = response.body()
@@ -163,7 +163,7 @@ class ShortFragment : Fragment() {
                     }
                     navController.navigate(
                         R.id.nav_item_home,
-                        bundleOf("url" to "${authToken}/dashboard/urls"),
+                        bundleOf("url" to "${savedUrl}/dashboard/urls"),
                         NavOptions.Builder()
                             .setPopUpTo(R.id.nav_graph, inclusive = true)
                             .build()

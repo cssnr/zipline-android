@@ -76,10 +76,9 @@ class ZiplineApi(private val context: Context) {
         }
     }
 
-    suspend fun shorten(url: String, vanity: String?, ziplineUrl: String): Response<ShortResponse> {
+    suspend fun shorten(url: String, vanity: String?): Response<ShortResponse> {
         Log.d("upload", "url: $url")
         Log.d("upload", "vanity: $vanity")
-        Log.d("upload", "ziplineUrl: $ziplineUrl")
 
         val response = api.postShort(ziplineToken, ShortRequest(url, vanity, true))
         if (response.code() == 401) {

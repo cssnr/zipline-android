@@ -278,7 +278,7 @@ class UploadFragment : Fragment() {
                             copyToClipboard(requireContext(), uploadResponse.files.first().url)
                             navController.navigate(
                                 R.id.nav_item_home,
-                                bundleOf("url" to uploadResponse.files.first().url),
+                                bundleOf("url" to "${savedUrl}/dashboard/files/"),
                                 NavOptions.Builder()
                                     .setPopUpTo(R.id.nav_graph, inclusive = true)
                                     .build()
