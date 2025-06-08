@@ -44,7 +44,7 @@
             android:key="send_feedback"
             android:title="Send Feedback"
             android:summary="Submit Suggestions or Bugs"
-            android:icon="@drawable/md_bug_report_24px" />
+            android:icon="@drawable/md_thumb_up_24px" />
 
         <Preference
             android:key="app_info"

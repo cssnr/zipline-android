@@ -2,6 +2,7 @@
 <resources>
     <color name="primary">#AEB4F6</color>
     <color name="primary_accent">#8189F4</color>
+    <color name="button_color">#6750A4</color>
 
     <color name="selected_border">#87b3f4</color>
 </resources>
