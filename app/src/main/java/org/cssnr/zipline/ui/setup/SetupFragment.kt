@@ -35,7 +35,6 @@ class SetupFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?,
     ): View {
-        Log.d("SetupFragment", "onCreateView: $savedInstanceState")
         _binding = FragmentSetupBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root
@@ -55,6 +54,7 @@ class SetupFragment : Fragment() {
         // Lock Navigation Drawer
         (requireActivity() as MainActivity).setDrawerLockMode(false)
 
+        // TODO: Determine if this is necessary...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             binding.root.setOnApplyWindowInsetsListener { _, insets ->
                 val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
@@ -63,15 +63,21 @@ class SetupFragment : Fragment() {
             }
         }
 
+        val ctx = requireContext()
+
+        //binding.loginHostname.setText("https://")
+        binding.loginHostname.requestFocus()
+
+        val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
+        binding.appVersion.text = ctx.getString(R.string.version_string, versionName)
+
         val link: TextView = binding.githubLink
         val linkText = getString(R.string.github_link, "github.com/cssnr/zipline-android")
         link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
         link.movementMethod = LinkMovementMethod.getInstance()
 
-        binding.loginHostname.setText("https://")
-        binding.loginHostname.requestFocus()
-
         binding.loginButton.setOnClickListener {
+            it.isEnabled = false
             val inputHost = binding.loginHostname.text.toString().trim()
             Log.d("loginButton", "inputHost: $inputHost")
             val host = parseHost(inputHost)
@@ -97,21 +103,24 @@ class SetupFragment : Fragment() {
                 binding.loginPassword.error = "Required"
                 valid = false
             }
-            if (!valid) return@setOnClickListener
+            if (!valid) {
+                it.isEnabled = true
+                return@setOnClickListener
+            }
 
             Log.d("loginButton", "lifecycleScope.launch")
             lifecycleScope.launch {
-                val api = ZiplineApi(requireContext(), host)
+                val api = ZiplineApi(ctx, host)
                 val token = api.login(host, user, pass)
                 Log.d("loginButton", "token: $token")
                 if (token.isNullOrEmpty()) {
                     Log.d("loginButton", "LOGIN FAILED")
-                    Toast.makeText(context, "Login Failed!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
                     Log.d("loginButton", "LOGIN SUCCESS")
                     val preferences =
-                        PreferenceManager.getDefaultSharedPreferences(requireContext())
+                        PreferenceManager.getDefaultSharedPreferences(ctx)
                     preferences?.edit { putString("ziplineUrl", host) }
                     Log.d("loginButton", "ziplineUrl: $host")
                     preferences?.edit { putString("ziplineToken", token) }
@@ -123,8 +132,9 @@ class SetupFragment : Fragment() {
                             .build()
                     )
                 }
+                it.isEnabled = true
+                Log.d("loginButton", "lifecycleScope: DONE")
             }
-            Log.d("loginButton", "DONE")
         }
     }
 

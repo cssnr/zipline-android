@@ -41,7 +41,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
     private lateinit var client: OkHttpClient
 
     init {
-        ziplineUrl = preferences.getString("ziplineUrl", null) ?: url ?: ""
+        ziplineUrl = url ?: preferences.getString("ziplineUrl", null) ?: ""
         ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("ServerApi", "ziplineUrl: $ziplineUrl")
         Log.d("ServerApi", "ziplineToken: $ziplineToken")
@@ -54,6 +54,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
 
         return try {
             val loginResponse = api.postLogin(LoginRequest(user, pass))
+            Log.i("login", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
                 val tokenResponse = api.getToken()
                 val cookies = cookieJar.loadForRequest(host.toHttpUrl())
@@ -67,7 +68,10 @@ class ZiplineApi(private val context: Context, url: String? = null) {
                 }
                 tokenResponse.token
             } else {
-                Log.e("login", "Exception: ${loginResponse.errorBody()?.string()}")
+                //loginResponse.errorBody()?.string()?.take(200)?.let {
+                //    Log.i("login", "errorBody: $it")
+                //}
+                Log.i("login", "errorBody: ${loginResponse.errorBody()?.string()?.take(255)}")
                 null
             }
         } catch (e: Exception) {
