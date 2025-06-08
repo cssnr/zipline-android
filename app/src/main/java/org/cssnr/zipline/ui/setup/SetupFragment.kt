@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.text.Html
 import android.text.method.LinkMovementMethod
 import android.util.Log
+import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -80,6 +81,7 @@ class SetupFragment : Fragment() {
 
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
+            binding.loginError.visibility = View.INVISIBLE
             val inputHost = binding.loginHostname.text.toString().trim()
             Log.d("loginButton", "inputHost: $inputHost")
             val host = parseHost(inputHost)
@@ -117,7 +119,8 @@ class SetupFragment : Fragment() {
                 Log.d("loginButton", "token: $token")
                 if (token.isNullOrEmpty()) {
                     Log.d("loginButton", "LOGIN FAILED")
-                    Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_LONG).show()
+                    binding.loginError.visibility = View.VISIBLE
+                    Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
 
                     val shake = ObjectAnimator.ofFloat(
                         binding.loginButton, "translationX",
@@ -126,12 +129,17 @@ class SetupFragment : Fragment() {
                     shake.duration = 800
                     shake.start()
                     val red =
-                        ContextCompat.getColor(requireContext(), android.R.color.holo_red_light)
+                        ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark)
                     val original = ContextCompat.getColor(requireContext(), R.color.button_color)
                     binding.loginButton.setBackgroundColor(red)
                     binding.loginButton.postDelayed({
                         binding.loginButton.setBackgroundColor(original)
                     }, 700)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                        binding.loginButton.performHapticFeedback(HapticFeedbackConstants.REJECT)
+                    } else {
+                        binding.loginButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                    }
 
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
