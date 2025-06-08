@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.setup
 
+import android.animation.ObjectAnimator
 import android.os.Build
 import android.os.Bundle
 import android.text.Html
@@ -10,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
@@ -115,7 +117,22 @@ class SetupFragment : Fragment() {
                 Log.d("loginButton", "token: $token")
                 if (token.isNullOrEmpty()) {
                     Log.d("loginButton", "LOGIN FAILED")
-                    Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_LONG).show()
+
+                    val shake = ObjectAnimator.ofFloat(
+                        binding.loginButton, "translationX",
+                        0f, 25f, -25f, 20f, -20f, 15f, -15f, 6f, -6f, 0f
+                    )
+                    shake.duration = 800
+                    shake.start()
+                    val red =
+                        ContextCompat.getColor(requireContext(), android.R.color.holo_red_light)
+                    val original = ContextCompat.getColor(requireContext(), R.color.button_color)
+                    binding.loginButton.setBackgroundColor(red)
+                    binding.loginButton.postDelayed({
+                        binding.loginButton.setBackgroundColor(original)
+                    }, 700)
+
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
                     Log.d("loginButton", "LOGIN SUCCESS")

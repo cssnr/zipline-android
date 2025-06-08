@@ -243,3 +243,9 @@ You can also support other related projects:
 - [Django Files iOS App](https://github.com/django-files/ios-client)
 - [Django Files Android App](https://github.com/django-files/android-client)
 - [Django Files Web Extension](https://github.com/django-files/web-extension)
+
+Additional Android projects:
+
+- [NOAA Weather Android](https://github.com/cssnr/noaa-weather-android?tab=readme-ov-file#readme)
+- [Remote Wallpaper Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
+- [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)

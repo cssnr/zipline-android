@@ -9,7 +9,7 @@
 
     <style name="CustomMaterialButton" parent="Widget.Material3.Button">
         <item name="android:textColor">@android:color/white</item>
-        <item name="backgroundTint">#6750A4</item>
+        <item name="backgroundTint">@color/button_color</item>
         <item name="iconTint">@android:color/white</item>
     </style>
 </resources>
