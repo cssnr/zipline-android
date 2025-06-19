@@ -5,6 +5,7 @@
 # Build
 **/dist/
 **/node_modules/
+.github/assets/
 
 # App
 app/src/main/assets/preview/**
