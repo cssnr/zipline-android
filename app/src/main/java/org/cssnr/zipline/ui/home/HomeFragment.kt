@@ -2,12 +2,15 @@ package org.cssnr.zipline.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.graphics.Color
+import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -23,6 +26,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.getkeepsafe.taptargetview.TapTarget
+import com.getkeepsafe.taptargetview.TapTargetView
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding
@@ -142,33 +147,71 @@ class HomeFragment : Fragment() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        Log.d("Home[onSave]", "outState: ${outState.size()}")
-        super.onSaveInstanceState(outState)
-        Log.d("Home[onSave]", "webViewState: ${webViewState.size()}")
-        _binding?.webView?.saveState(outState)
         outState.putBundle("webViewState", webViewState)
-        Log.d("Home[onSave]", "outState: ${outState.size()}")
+        Log.d("Home[onSave]", "ON SAVE")
+        super.onSaveInstanceState(outState)
     }
 
     override fun onPause() {
+        Log.d("Home[onPause]", "cookieManager.flush()")
+        val cookieManager = CookieManager.getInstance()
+        cookieManager.flush()
+
+        Log.d("Home[onPause]", "webView. onPause() / pauseTimers()")
+        Log.d("Home[onPause]", "webViewState: ${webViewState.size()}")
+        _binding?.webView?.saveState(webViewState)
+        _binding?.webView?.onPause()
+        _binding?.webView?.pauseTimers()
+
         Log.d("Home[onPause]", "ON PAUSE")
         super.onPause()
-        Log.d("Home[onPause]", "webView. onPause() / pauseTimers()")
-        binding.webView.onPause()
-        binding.webView.pauseTimers()
-
-        Log.d("Home[onPause]", "webViewState: ${webViewState.size()}")
-        binding.webView.saveState(webViewState)
-        Log.d("Home[onPause]", "webViewState: ${webViewState.size()}")
     }
 
     override fun onResume() {
         Log.i("Home[onResume]", "ON RESUME")
         super.onResume()
-        //if (webViewState.size() > 0) {
         Log.d("Home[onResume]", "webView. onResume() / resumeTimers()")
         binding.webView.onResume()
         binding.webView.resumeTimers()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("onStart", "onStart")
+
+        val isFirstRun = arguments?.getBoolean("isFirstRun", false) == true
+        Log.d("onStart", "isFirstRun: $isFirstRun")
+        if (isFirstRun) {
+            arguments?.remove("isFirstRun")
+            showTapTargets()
+        }
+    }
+
+    private fun showTapTargets() {
+        Log.d("showTapTargets", "start")
+        val target1 = TapTarget.forView(
+            binding.toggleMenu,
+            "Main Menu",
+            "Tap the Icon to Access the Menu\nOr Swipe from the Left"
+        )
+            .titleTextSize(32)
+            .descriptionTextSize(18)
+            .textTypeface(Typeface.SANS_SERIF)
+            .textColorInt(Color.WHITE)
+            .dimColorInt(Color.BLACK)
+            .outerCircleColor(R.color.tap_target_background)
+            .outerCircleAlpha(0.96f)
+            .drawShadow(true)
+            .transparentTarget(true)
+            .targetRadius(48)
+
+        TapTargetView.showFor(requireActivity(), target1, object : TapTargetView.Listener() {
+            override fun onTargetClick(view: TapTargetView?) {
+                Log.d("onTargetClick", "view: $view")
+                super.onTargetClick(view)
+                (requireActivity() as MainActivity).toggleDrawer(true)
+            }
+        })
     }
 
     inner class MyWebViewClient() : WebViewClient() {
@@ -215,7 +258,7 @@ class HomeFragment : Fragment() {
             request: WebResourceRequest,
             errorResponse: WebResourceError
         ) {
-            Log.d("onReceivedError", "ERROR: " + errorResponse.errorCode)
+            Log.d("onReceivedError", "ERROR: ${errorResponse.errorCode}")
         }
 
         override fun onReceivedHttpError(
@@ -223,7 +266,7 @@ class HomeFragment : Fragment() {
             request: WebResourceRequest,
             errorResponse: WebResourceResponse
         ) {
-            Log.d("onReceivedHttpError", "ERROR: " + errorResponse.statusCode)
+            Log.d("onReceivedHttpError", "HTTP ERROR: ${errorResponse.statusCode}")
         }
 
         // // private val onPageLoaded: (() -> Unit)? = null
@@ -262,7 +305,7 @@ class HomeFragment : Fragment() {
                 fileChooserLauncher.launch(params.createIntent())
                 true
             } catch (e: Exception) {
-                Log.w("onShowFileChooser", "Exception: $e")
+                Log.e("onShowFileChooser", "Exception: $e")
                 filePathCallback = null
                 false
             }

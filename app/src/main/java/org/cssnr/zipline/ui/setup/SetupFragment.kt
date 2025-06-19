@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
@@ -151,8 +152,10 @@ class SetupFragment : Fragment() {
                     preferences?.edit { putString("ziplineToken", token) }
                     Log.d("loginButton", "ziplineToken: $token")
                     Firebase.analytics.logEvent("login_success", null)
+                    val bundle = bundleOf("isFirstRun" to true)
+                    Log.d("loginButton", "bundle: $bundle")
                     findNavController().navigate(
-                        R.id.nav_item_home, null, NavOptions.Builder()
+                        R.id.nav_item_home, bundle, NavOptions.Builder()
                             .setPopUpTo(R.id.nav_item_setup, true)
                             .build()
                     )

@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <group android:id="@+id/nav_site">
+    <group android:id="@+id/nav_main">
         <item
             android:id="@+id/nav_item_home"
-            android:icon="@drawable/ic_launcher_foreground"
-            android:title="@string/app_name"
+            android:icon="@drawable/md_dashboard_24px"
+            android:title="@string/home"
             android:checkable="true" />
-        <item
-            android:id="@+id/nav_item_upload"
-            android:icon="@drawable/md_upload_24px"
-            android:title="@string/upload" />
-    </group>
-
-    <group android:id="@+id/nav_app">
         <item
             android:id="@+id/nav_item_settings"
             android:icon="@drawable/md_settings_24px"
             android:title="@string/settings"
             android:checkable="true" />
+    </group>
+
+    <group android:id="@+id/nav_extra">
+        <item
+            android:id="@+id/nav_item_upload"
+            android:icon="@drawable/md_upload_24px"
+            android:title="@string/upload" />
     </group>
 
     <item
@@ -27,5 +27,4 @@
         android:enabled="false"
         android:visible="false"
         android:checkable="true" />
-
 </menu>
