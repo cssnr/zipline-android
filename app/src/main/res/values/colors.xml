@@ -4,5 +4,6 @@
     <color name="primary_accent">#8189F4</color>
     <color name="button_color">#6750A4</color>
 
+    <color name="tap_target_background">#be00dc</color>
     <color name="selected_border">#87b3f4</color>
 </resources>
