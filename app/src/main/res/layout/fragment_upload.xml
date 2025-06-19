@@ -41,7 +41,7 @@
                     android:background="@android:color/transparent"
                     android:visibility="gone"
                     tools:visibility="visible"
-                    android:text="text/comma-separated-values"/>
+                    android:text="text/comma-separated-values" />
             </FrameLayout>
             <androidx.media3.ui.PlayerView
                 android:id="@+id/player_view"

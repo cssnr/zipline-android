@@ -192,7 +192,7 @@ class HomeFragment : Fragment() {
         val target1 = TapTarget.forView(
             binding.toggleMenu,
             "Main Menu",
-            "Tap the Icon to Access the Menu\nOr Swipe from the Left"
+            "Tap the Icon to Open the Menu\nOr Swipe from the Left"
         )
             .titleTextSize(32)
             .descriptionTextSize(18)
@@ -203,7 +203,7 @@ class HomeFragment : Fragment() {
             .outerCircleAlpha(0.96f)
             .drawShadow(true)
             .transparentTarget(true)
-            .targetRadius(48)
+            .targetRadius(56)
 
         TapTargetView.showFor(requireActivity(), target1, object : TapTargetView.Listener() {
             override fun onTargetClick(view: TapTargetView?) {

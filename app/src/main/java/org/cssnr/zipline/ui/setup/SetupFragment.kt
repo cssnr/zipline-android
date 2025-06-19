@@ -80,6 +80,9 @@ class SetupFragment : Fragment() {
         link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
         link.movementMethod = LinkMovementMethod.getInstance()
 
+        binding.serverText.text =
+            Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
+
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             binding.loginError.visibility = View.INVISIBLE
@@ -152,7 +155,12 @@ class SetupFragment : Fragment() {
                     preferences?.edit { putString("ziplineToken", token) }
                     Log.d("loginButton", "ziplineToken: $token")
                     Firebase.analytics.logEvent("login_success", null)
-                    val bundle = bundleOf("isFirstRun" to true)
+                    val bundle = bundleOf()
+                    // TODO: Consider managing first run logic in MainActivity...
+                    if (!preferences.getBoolean("first_run_shown", false)) {
+                        preferences?.edit { putBoolean("first_run_shown", true) }
+                        bundle.putBoolean("isFirstRun", true)
+                    }
                     Log.d("loginButton", "bundle: $bundle")
                     findNavController().navigate(
                         R.id.nav_item_home, bundle, NavOptions.Builder()
