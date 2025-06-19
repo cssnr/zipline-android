@@ -16,7 +16,7 @@
         android:layout_marginBottom="8dp"
         android:text="Feedback, Suggetions, Issues"
         android:textAppearance="?attr/textAppearanceBody1"
-        android:labelFor="@+id/feedback_input"/>
+        android:labelFor="@+id/feedback_input" />
 
     <EditText
         android:id="@+id/feedback_input"

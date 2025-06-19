@@ -45,6 +45,14 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/server_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+            android:text="Enter your Zipline v4 Server Details to Proceed." />
+
         <EditText
             android:id="@+id/login_hostname"
             android:layout_width="match_parent"
@@ -104,10 +112,15 @@
             tools:visibility="visible" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="For Additional Support visit GitHub." />
+
+        <TextView
             android:id="@+id/github_link"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
-            android:layout_marginTop="12dp"
             android:gravity="center_vertical"
             android:text="@string/github_link"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"

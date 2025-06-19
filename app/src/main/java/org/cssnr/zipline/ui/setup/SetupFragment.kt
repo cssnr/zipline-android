@@ -80,6 +80,9 @@ class SetupFragment : Fragment() {
         link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
         link.movementMethod = LinkMovementMethod.getInstance()
 
+        binding.serverText.text =
+            Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
+
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             binding.loginError.visibility = View.INVISIBLE
