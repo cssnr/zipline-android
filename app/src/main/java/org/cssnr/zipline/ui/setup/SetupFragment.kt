@@ -157,7 +157,7 @@ class SetupFragment : Fragment() {
                     Firebase.analytics.logEvent("login_success", null)
                     val bundle = bundleOf()
                     // TODO: Consider managing first run logic in MainActivity...
-                    if (preferences.getBoolean("first_run_shown", false)) {
+                    if (!preferences.getBoolean("first_run_shown", false)) {
                         preferences?.edit { putBoolean("first_run_shown", true) }
                         bundle.putBoolean("isFirstRun", true)
                     }
