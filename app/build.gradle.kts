@@ -33,8 +33,8 @@ android {
         }
 
         debug {
-            applicationIdSuffix = ".dev"
-            versionNameSuffix = "-dev"
+            //applicationIdSuffix = ".dev"
+            //versionNameSuffix = "-dev"
             manifestPlaceholders["firebaseAnalyticsDeactivated"] = true // disabled
             manifestPlaceholders["firebaseCrashlyticsEnabled"] = false // disabled
         }
@@ -65,7 +65,6 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
-    //implementation(libs.firebase.messaging)
     implementation(libs.okhttp)
     implementation(libs.retrofit)
     implementation(libs.retrofit.gson)

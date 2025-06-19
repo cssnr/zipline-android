@@ -1,4 +1,4 @@
-[![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=github)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+[![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=github)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/releases/latest)
 [![Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=github&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/zipline-android?logo=htmx)](https://github.com/cssnr/zipline-android)
@@ -12,7 +12,7 @@
 
 # Zipline Android App
 
-[![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+[![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
 - [Install](#Install)
   - [Setup](#Setup)
@@ -38,17 +38,17 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 > [!TIP]  
 > To install, download and open the [latest release](https://github.com/cssnr/zipline-android/releases/latest).
 >
-> [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+> [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
 <details><summary>View QR Code 📸</summary>
 
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-download.png)](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
 </details>
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
-Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk)
+Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled.
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website).
 
@@ -59,7 +59,7 @@ For more information, see [Release through a website](https://developer.android.
 3. Choose the app you will install the apk file from.
    - Select your web browser to install directly from it.
    - Select your file manager to open it, locate the apk and install from there.
-4. Download the [Latest Release](https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk).
+4. Download the [Latest Release](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk).
 5. Open the download apk in the app you selected in step #3.
 6. Choose Install and Accept any Play Protect notifications.
 7. The app is now installed. Proceed to the [Setup](#Setup) section below.
@@ -134,9 +134,9 @@ You will need to have [ADB](https://developer.android.com/tools/adb) installed.
 <details><summary>Click Here to Download and Install a Release</summary>
 
 ```shell
-$ wget https://github.com/cssnr/zipline-android/releases/latest/download/zipline.apk
+$ wget https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk
 $ ls
-zipline.apk
+app-release.apk
 
 $ which adb
 C:\Users\Shane\Android\sdk\platform-tools\adb.EXE
@@ -145,7 +145,7 @@ $ adb devices
 List of devices attached
 RF9M33Z1Q0M     device
 
-$ adb -s RF9M33Z1Q0M install zipline.apk
+$ adb -s RF9M33Z1Q0M install app-release.apk
 Performing Incremental Install
 Serving...
 All files should be loaded. Notifying the device.
