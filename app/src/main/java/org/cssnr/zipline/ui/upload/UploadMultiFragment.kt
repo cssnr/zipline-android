@@ -1,6 +1,7 @@
 package org.cssnr.zipline.ui.upload
 
 import android.content.res.Configuration
+import android.graphics.Rect
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -18,6 +19,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ZiplineApi
@@ -110,8 +112,32 @@ class UploadMultiFragment : Fragment() {
         }
 
         val spanCount =
-            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 3
-        Log.i("Multi[onViewCreated]", "GridLayoutManager: $spanCount")
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT) 2 else 4
+        Log.i("Multi[onViewCreated]", "spanCount: $spanCount")
+
+        val bottomPadding =
+            if (resources.configuration.orientation == Configuration.ORIENTATION_PORTRAIT)
+                resources.getDimensionPixelSize(R.dimen.recycler_bottom_port) else
+                resources.getDimensionPixelSize(R.dimen.recycler_bottom_land)
+        Log.d("Multi[onViewCreated]", "bottomPadding: $bottomPadding")
+
+        binding.previewRecycler.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State
+            ) {
+                val position = parent.getChildAdapterPosition(view)
+                val itemCount = state.itemCount
+                if (itemCount == 0 || position == RecyclerView.NO_POSITION) return
+
+                val rowCount = (itemCount + spanCount - 1) / spanCount
+                val itemRow = position / spanCount
+
+                if (itemRow == rowCount - 1) {
+                    outRect.bottom = bottomPadding
+                }
+            }
+        })
+
         binding.previewRecycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
         if (binding.previewRecycler.adapter == null) {
             binding.previewRecycler.adapter = adapter

@@ -144,6 +144,8 @@ class HomeFragment : Fragment() {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
+
+        binding.toggleMenu.apply { animate().alpha(1f).setDuration(3000).start() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

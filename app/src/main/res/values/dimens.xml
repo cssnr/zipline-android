@@ -2,4 +2,7 @@
     <dimen name="image_radius">16dp</dimen>
 
     <dimen name="dialog_vertical_margin">8dp</dimen>
+
+    <dimen name="recycler_bottom_port">100dp</dimen>
+    <dimen name="recycler_bottom_land">48dp</dimen>
 </resources>
