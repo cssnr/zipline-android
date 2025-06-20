@@ -14,6 +14,10 @@
 
 [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
+> [!IMPORTANT]  
+> Google Play Testers Needed!
+> See [this discussion](https://github.com/cssnr/zipline-android/discussions/25) for more details.
+
 - [Install](#Install)
   - [Setup](#Setup)
 - [Features](#Features)
