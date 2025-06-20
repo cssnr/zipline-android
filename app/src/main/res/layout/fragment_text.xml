@@ -1,43 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:background="?android:attr/colorBackground">
+    android:layout_height="match_parent">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/content_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:padding="4dp"
         android:gravity="top"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp"
-        android:paddingTop="8dp">
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_layout">
         <EditText
             android:id="@+id/text_content"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:autofillHints="URL to Shorten"
             android:background="@drawable/edit_text_border"
             android:ellipsize="end"
             android:gravity="top|start"
             android:inputType="textUri|textMultiLine"
-            android:minLines="2"
-            android:maxLines="10"
             android:overScrollMode="ifContentScrolls"
             android:padding="8dp"
             android:scrollHorizontally="false"
             android:scrollbars="vertical"
             android:hint="Text Content"
             tools:text="@tools:sample/lorem/random" />
+    </LinearLayout>
 
+
+    <LinearLayout
+        android:id="@+id/bottom_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="8dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
         <EditText
             android:id="@+id/vanity_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
             android:autofillHints="File Name"
             android:ellipsize="end"
             android:gravity="center"
@@ -47,29 +57,31 @@
             android:maxLines="1"
             android:singleLine="true"
             android:textAlignment="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-        <Button
-            android:id="@+id/upload_button"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:paddingEnd="36dp"
-            android:paddingStart="36dp"
-            android:text="Upload Text"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            app:icon="@drawable/md_edit_note_24px"
-            app:iconGravity="end"
-            app:iconPadding="-28dp"
-            app:iconSize="28dp" />
+            tools:text="" />
 
-        <LinearLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-
+            android:layout_height="wrap_content">
+            <androidx.constraintlayout.helper.widget.Flow
+                android:id="@+id/flow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:constraint_referenced_ids="share_button,options_button"
+                app:flow_wrapMode="chain"
+                app:flow_horizontalGap="4dp"
+                app:flow_verticalGap="4dp"
+                app:flow_horizontalAlign="center"
+                app:flow_maxElementsWrap="8"
+                app:layout_constraintTop_toTopOf="parent" />
+            <!--<Button-->
+            <!--    android:id="@+id/album_button"-->
+            <!--    android:layout_width="wrap_content"-->
+            <!--    android:layout_height="wrap_content"-->
+            <!--    app:icon="@drawable/md_imagesmode_24px"-->
+            <!--    app:iconSize="24dp"-->
+            <!--    app:iconGravity="textStart"-->
+            <!--    app:iconPadding="0dp" />-->
             <Button
                 android:id="@+id/share_button"
                 android:layout_width="wrap_content"
@@ -79,10 +91,6 @@
                 app:iconGravity="textStart"
                 app:iconPadding="0dp" />
 
-            <Space
-                android:layout_width="10dp"
-                android:layout_height="match_parent" />
-
             <Button
                 android:id="@+id/options_button"
                 android:layout_width="wrap_content"
@@ -91,8 +99,19 @@
                 app:iconSize="24dp"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </LinearLayout>
-
+        <Button
+            android:id="@+id/upload_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginBottom="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="Upload Text"
+            app:icon="@drawable/md_edit_note_24px"
+            app:iconGravity="end"
+            app:iconPadding="-28dp"
+            app:iconSize="28dp" />
     </LinearLayout>
-</ScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

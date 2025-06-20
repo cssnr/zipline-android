@@ -143,7 +143,7 @@ class UploadFragment : Fragment() {
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
             Log.d("Upload[onViewCreated]", "WEBVIEW")
             webView = WebView(requireContext())
-            binding.frameLayout.addView(webView)
+            binding.contentLayout.addView(webView)
 
             val url = "file:///android_asset/preview/preview.html"
             Log.d("Upload[onViewCreated]", "url: $url")

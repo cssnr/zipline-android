@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <WebView
         android:id="@+id/web_view"
@@ -15,14 +15,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="6dp"
-        android:layout_marginStart="64dp"
+        android:layout_marginStart="128dp"
         android:contentDescription="Add Station"
         android:theme="@style/Theme.Material3.Dark"
         android:backgroundTint="#666750A4"
+        android:alpha="0"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/md_side_navigation_24px"
         app:fabSize="auto"
-        app:fabCustomSize="48dp" />
+        app:fabCustomSize="48dp"
+        tools:alpha="1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
