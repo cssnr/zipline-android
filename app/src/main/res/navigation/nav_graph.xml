@@ -26,11 +26,17 @@
         android:name="org.cssnr.zipline.ui.settings.WidgetSettingsFragment"
         android:label="Widget Settings" />
 
-
     <fragment
         android:id="@+id/nav_item_login"
         android:name="org.cssnr.zipline.ui.setup.LoginFragment"
         android:label="Login">
+        <action
+            android:id="@+id/nav_action_login_home"
+            app:destination="@id/nav_item_home"
+            app:exitAnim="@anim/slide_out_left"
+            app:enterAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right" />
         <action
             android:id="@+id/nav_action_login_setup"
             app:destination="@id/nav_item_setup"
@@ -52,7 +58,6 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
-
 
     <fragment
         android:id="@+id/nav_item_upload"

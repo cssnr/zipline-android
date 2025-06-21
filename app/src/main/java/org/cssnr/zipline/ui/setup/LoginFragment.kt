@@ -167,7 +167,7 @@ class LoginFragment : Fragment() {
                         )
                     } else {
                         findNavController().navigate(
-                            R.id.nav_action_setup_home, null, NavOptions.Builder()
+                            R.id.nav_action_login_home, null, NavOptions.Builder()
                                 .setPopUpTo(R.id.nav_item_login, true)
                                 .build()
                         )
