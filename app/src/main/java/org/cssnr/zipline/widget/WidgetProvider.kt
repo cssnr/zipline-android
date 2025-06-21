@@ -167,10 +167,13 @@ class WidgetProvider : AppWidgetProvider() {
                     views.setTextViewText(R.id.files_unit, split.getOrElse(1) { "" })
                 }
 
-                val time = DateFormat.getTimeFormat(context).format(Date())
-                Log.d("Widget[onUpdate]", "time: $time")
-                views.setTextViewText(R.id.update_time, time)
-
+                if (workInterval == "0") {
+                    views.setTextViewText(R.id.update_time, "Disabled")
+                } else {
+                    val time = DateFormat.getTimeFormat(context).format(Date())
+                    Log.d("Widget[onUpdate]", "time: $time")
+                    views.setTextViewText(R.id.update_time, time)
+                }
                 Log.i("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
