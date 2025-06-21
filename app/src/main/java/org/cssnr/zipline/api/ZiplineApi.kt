@@ -5,7 +5,9 @@ import android.util.Log
 import android.webkit.CookieManager
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
-import com.google.gson.annotations.SerializedName
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Cookie
@@ -20,7 +22,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import org.cssnr.zipline.R
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.Header
@@ -31,14 +33,14 @@ import java.io.InputStream
 import java.net.URLConnection
 
 class ZiplineApi(private val context: Context, url: String? = null) {
+
     val api: ApiService
     private var ziplineUrl: String
     private var ziplineToken: String
 
-    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
-
     private lateinit var cookieJar: SimpleCookieJar
-    private lateinit var client: OkHttpClient
+
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     init {
         ziplineUrl = url ?: preferences.getString("ziplineUrl", null) ?: ""
@@ -164,7 +166,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         val userAgent = "${context.getString(R.string.app_name)}/${versionName}"
         Log.d("createRetrofit", "versionName: $versionName")
         cookieJar = SimpleCookieJar()
-        client = OkHttpClient.Builder()
+        val client = OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .addInterceptor { chain ->
                 val request = chain.request().newBuilder()
@@ -174,16 +176,19 @@ class ZiplineApi(private val context: Context, url: String? = null) {
                 chain.proceed(request)
             }
             .build()
+        val moshi = Moshi.Builder().build()
         return Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
             .build()
     }
 
     interface ApiService {
         @POST("auth/login")
-        suspend fun postLogin(@Body request: LoginRequest): Response<Unit>
+        suspend fun postLogin(
+            @Body request: LoginRequest,
+        ): Response<Unit>
 
         @GET("user/token")
         suspend fun getToken(): TokenResponse
@@ -204,54 +209,61 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         ): Response<ShortResponse>
     }
 
+    @JsonClass(generateAdapter = true)
     data class LoginRequest(
         val username: String,
         val password: String,
     )
 
+    @JsonClass(generateAdapter = true)
     data class TokenResponse(
-        val token: String
+        val token: String,
     )
 
+    @JsonClass(generateAdapter = true)
     data class FileResponse(
-        val files: List<UploadedFile>
+        val files: List<UploadedFile>,
     )
 
+    @JsonClass(generateAdapter = true)
     data class UploadedFile(
         val id: String,
         val type: String,
         val url: String,
     )
 
+    @JsonClass(generateAdapter = true)
     data class ShortRequest(
         val destination: String,
         val vanity: String?,
         val enabled: Boolean,
     )
 
+    @JsonClass(generateAdapter = true)
     data class ShortResponse(
         val id: String,
         val createdAt: String,
         val updatedAt: String,
         val code: String,
-        val vanity: String,
+        val vanity: String?,
         val destination: String,
         val views: Int,
         val maxViews: Int?,
         val enabled: Boolean,
         val userId: String,
-        val url: String
+        val url: String,
     )
 
+    @JsonClass(generateAdapter = true)
     data class StatsResponse(
-        @SerializedName("filesUploaded") val filesUploaded: Int,
-        @SerializedName("favoriteFiles") val favoriteFiles: Int,
-        @SerializedName("views") val views: Int,
-        @SerializedName("avgViews") val avgViews: Double,
-        @SerializedName("storageUsed") val storageUsed: Long,
-        @SerializedName("avgStorageUsed") val avgStorageUsed: Double,
-        @SerializedName("urlsCreated") val urlsCreated: Int,
-        @SerializedName("urlViews") val urlViews: Int,
+        @Json(name = "filesUploaded") val filesUploaded: Int,
+        @Json(name = "favoriteFiles") val favoriteFiles: Int,
+        @Json(name = "views") val views: Int,
+        @Json(name = "avgViews") val avgViews: Double,
+        @Json(name = "storageUsed") val storageUsed: Long,
+        @Json(name = "avgStorageUsed") val avgStorageUsed: Double,
+        @Json(name = "urlsCreated") val urlsCreated: Int,
+        @Json(name = "urlViews") val urlViews: Int,
     )
 
 
@@ -276,27 +288,3 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         //}
     }
 }
-
-
-//data class LoginResponse(
-//    val user: TokenUser
-//)
-
-//data class TokenUser(
-//    val id: String,
-//    val username: String,
-//    val token: String,
-//)
-
-//fun getFileNameFromUri(context: Context, uri: Uri): String? {
-//    var fileName: String? = null
-//    context.contentResolver.query(uri, null, null, null, null).use { cursor ->
-//        if (cursor != null && cursor.moveToFirst()) {
-//            val nameIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-//            if (nameIndex != -1) {
-//                fileName = cursor.getString(nameIndex)
-//            }
-//        }
-//    }
-//    return fileName
-//}

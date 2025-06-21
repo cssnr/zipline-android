@@ -44,10 +44,6 @@
 -keep class org.cssnr.zipline.api.ZiplineApi$* { *; }
 -keep class org.cssnr.zipline.api.FeedbackApi$* { *; }
 
--keepclassmembers class * {
-    @com.google.gson.annotations.SerializedName <fields>;
-}
-
 
 ## https://github.com/square/retrofit/blob/trunk/retrofit/src/main/resources/META-INF/proguard/retrofit2.pro
 # Retrofit does reflection on generic parameters. InnerClasses is required to use Signature and
