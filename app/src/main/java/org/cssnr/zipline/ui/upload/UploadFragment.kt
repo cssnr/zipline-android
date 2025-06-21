@@ -49,7 +49,6 @@ class UploadFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
-
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
 
@@ -85,21 +84,6 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
 
         navController = findNavController()
-
-        //val callback = object : OnBackPressedCallback(true) {
-        //    override fun handleOnBackPressed() {
-        //        requireActivity().finish()
-        //    }
-        //}
-        //requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
-        //val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        //    requireArguments().getParcelable("EXTRA_INTENT", Intent::class.java)
-        //} else {
-        //    @Suppress("DEPRECATION")
-        //    requireArguments().getParcelable("EXTRA_INTENT") as? Intent
-        //}
-        //Log.d("Upload[onViewCreated]", "intent: $intent")
 
         val uri = requireArguments().getString("uri")?.toUri()
         Log.d("Upload[onViewCreated]", "uri: $uri")

@@ -59,22 +59,10 @@ class TextFragment : Fragment() {
 
         if (extraText.isEmpty()) {
             // TODO: Better Handle this Error
-            Log.e("Text[onViewCreated]", "extraText is null")
+            Log.w("Text[onViewCreated]", "extraText is null")
             Toast.makeText(requireContext(), "No Text to Process!", Toast.LENGTH_LONG).show()
             //return
         }
-
-        //val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        //val savedUrl = preferences.getString("ziplineUrl", null)
-        //Log.d("Text[onViewCreated]", "savedUrl: $savedUrl")
-        //val authToken = preferences.getString("ziplineToken", null)
-        //Log.d("Text[onViewCreated]", "authToken: $authToken")
-        //if (savedUrl == null) {
-        //    // TODO: Better Handle this Error
-        //    Log.e("Text[onViewCreated]", "savedUrl is null")
-        //    Toast.makeText(requireContext(), "No Server Setup!", Toast.LENGTH_LONG).show()
-        //    return
-        //}
 
         binding.textContent.setText(extraText)
 
@@ -82,7 +70,7 @@ class TextFragment : Fragment() {
             Log.d("shareButton", "setOnClickListener")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, extraText)
+                putExtra(Intent.EXTRA_TEXT, binding.textContent.text)
             }
             startActivity(Intent.createChooser(shareIntent, null))
         }

@@ -55,13 +55,6 @@ class ShortFragment : Fragment() {
 
         navController = findNavController()
 
-        //val callback = object : OnBackPressedCallback(true) {
-        //    override fun handleOnBackPressed() {
-        //        requireActivity().finish()
-        //    }
-        //}
-        //requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
         val url = requireArguments().getString("url")
         Log.d("Short[onViewCreated]", "url: $url")
 
@@ -179,73 +172,4 @@ class ShortFragment : Fragment() {
             }
         }
     }
-
-//    // TODO: This is the DjangoFiles processShort, Old Zipline processShort was used above...
-//    private fun processShort(url: String, vanity: String?) {
-//        Log.d("processShort", "url: $url")
-//        Log.d("processShort", "vanity: $vanity")
-//        //val preferences = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
-//        val savedUrl = preferences.getString("ziplineUrl", null)
-//        Log.d("processShort", "savedUrl: $savedUrl")
-//        val authToken = preferences.getString("ziplineToken", null)
-//        Log.d("processShort", "authToken: $authToken")
-//        if (savedUrl == null || authToken == null) {
-//            // TODO: Show settings dialog here...
-//            Log.w("processShort", "Missing OR savedUrl/authToken")
-//            Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
-//                .show()
-//            return
-//        }
-//        val api = ServerApi(requireContext())
-//        Log.d("processShort", "api: $api")
-//        Toast.makeText(requireContext(), "Creating Short URL...", Toast.LENGTH_SHORT).show()
-//        lifecycleScope.launch {
-//            try {
-//                val response = api.shorten(url, vanity, savedUrl)
-//                Log.d("processShort", "response: $response")
-//                if (response.isSuccessful) {
-//                    val shortResponse = response.body()
-//                    Log.d("processShort", "shortResponse: $shortResponse")
-//                    withContext(Dispatchers.Main) {
-//                        if (shortResponse != null) {
-//                            copyToClipboard(requireContext(), shortResponse.url)
-//                            val shareUrl = sharedPreferences.getBoolean("share_after_short", true)
-//                            Log.d("processShort", "shareUrl: $shareUrl")
-//                            if (shareUrl) {
-//                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-//                                    type = "text/plain"
-//                                    putExtra(Intent.EXTRA_TEXT, shortResponse.url)
-//                                }
-//                                startActivity(Intent.createChooser(shareIntent, null))
-//                            }
-//                            navController.navigate(
-//                                R.id.nav_item_home,
-//                                bundleOf("url" to "${savedUrl}/shorts/#shorts-table_wrapper"),
-//                                NavOptions.Builder()
-//                                    .setPopUpTo(R.id.nav_graph, inclusive = true)
-//                                    .build()
-//                            )
-//                        } else {
-//                            Log.w("processShort", "shortResponse is null")
-//                            val msg = "Unknown Response!"
-//                            Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
-//                        }
-//                    }
-//                } else {
-//                    val msg = "Error: ${response.code()}: ${response.message()}"
-//                    Log.w("processShort", "Error: $msg")
-//                    withContext(Dispatchers.Main) {
-//                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
-//                    }
-//                }
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                val msg = e.message ?: "Unknown Error!"
-//                Log.i("processShort", "msg: $msg")
-//                withContext(Dispatchers.Main) {
-//                    Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
-//                }
-//            }
-//        }
-//    }
 }
