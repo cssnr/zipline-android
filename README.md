@@ -9,6 +9,7 @@
 [![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/stargazers)
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
+[![](https://repository-images.githubusercontent.com/963715375/4fff6aeb-4f7c-4228-a0e5-8cdceb6ee3e8)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
 # Zipline Android App
 

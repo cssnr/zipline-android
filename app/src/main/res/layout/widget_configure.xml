@@ -110,8 +110,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:text="@string/background_opacity"
-            android:labelFor="@id/opacity_percent" />
+            android:labelFor="@id/opacity_percent"
+            android:text="@string/background_opacity" />
         <SeekBar
             android:id="@+id/opacity_percent"
             android:layout_width="match_parent"
