@@ -23,11 +23,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.getkeepsafe.taptargetview.TapTarget
-import com.getkeepsafe.taptargetview.TapTargetView
+import com.getkeepsafe.taptargetview.TapTargetSequence
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding
@@ -41,6 +42,8 @@ class HomeFragment : Fragment() {
 
     private var webViewState: Bundle = Bundle()
     private lateinit var ziplineUrl: String
+
+    private val viewModel: HomeViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -89,6 +92,12 @@ class HomeFragment : Fragment() {
         Log.d("Home[onViewCreated]", "ziplineUrl: $ziplineUrl")
         //val ziplineToken = preferences?.getString("ziplineToken", null)
         //Log.d("Home[onViewCreated]", "ziplineToken: $ziplineToken")
+
+        if (arguments?.getBoolean("isFirstRun", false) == true) {
+            Log.i("onStart", "FIRST RUN ARGUMENT DETECTED")
+            arguments?.remove("isFirstRun")
+            viewModel.tapTargetActive.value = true
+        }
 
         val url = arguments?.getString("url")
         Log.d("Home[onViewCreated]", "arguments: url: $url")
@@ -181,10 +190,7 @@ class HomeFragment : Fragment() {
         super.onStart()
         Log.d("onStart", "onStart")
 
-        val isFirstRun = arguments?.getBoolean("isFirstRun", false) == true
-        Log.d("onStart", "isFirstRun: $isFirstRun")
-        if (isFirstRun) {
-            arguments?.remove("isFirstRun")
+        if (viewModel.tapTargetActive.value == true) {
             showTapTargets()
         }
     }
@@ -207,13 +213,36 @@ class HomeFragment : Fragment() {
             .transparentTarget(true)
             .targetRadius(56)
 
-        TapTargetView.showFor(requireActivity(), target1, object : TapTargetView.Listener() {
-            override fun onTargetClick(view: TapTargetView?) {
-                Log.d("onTargetClick", "view: $view")
-                super.onTargetClick(view)
-                (requireActivity() as MainActivity).toggleDrawer(true)
+        //TapTargetView.showFor(requireActivity(), target1, object : TapTargetView.Listener() {
+        //    override fun onTargetClick(view: TapTargetView?) {
+        //        Log.d("onTargetClick", "view: $view")
+        //        super.onTargetClick(view)
+        //        (requireActivity() as MainActivity).toggleDrawer(true)
+        //    }
+        //})
+
+        // Note: using sequence to detect a done condition by combining finish and cancelled
+        //  This allows re-showing targets on screen rotation, etc...
+        val sequenceListener = object : TapTargetSequence.Listener {
+            override fun onSequenceFinish() {
+                Log.d("onSequenceFinish", "TapTargetSequence Done.")
+                viewModel.tapTargetActive.value = false
             }
-        })
+
+            override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean) {
+                Log.d("onSequenceStep", "lastTarget: $lastTarget - clicked: $targetClicked")
+            }
+
+            override fun onSequenceCanceled(lastTarget: TapTarget?) {
+                Log.d("onSequenceCanceled", "lastTarget: $lastTarget")
+                viewModel.tapTargetActive.value = false
+            }
+        }
+
+        TapTargetSequence(requireActivity())
+            .targets(target1)
+            .listener(sequenceListener)
+            .start()
     }
 
     inner class MyWebViewClient() : WebViewClient() {
