@@ -1,15 +1,18 @@
 package org.cssnr.zipline.api
 
 import android.content.Context
+import android.os.Build
 import android.util.Log
-import com.google.gson.GsonBuilder
+import com.squareup.moshi.Json
+import com.squareup.moshi.JsonClass
+import com.squareup.moshi.Moshi
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.cssnr.zipline.R
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.POST
 
@@ -30,7 +33,7 @@ class FeedbackApi(val context: Context) {
     suspend fun sendFeedback(messageText: String): Response<Unit> {
         Log.d("sendFeedback", "messageText: $messageText")
         val feedbackText =
-            "**${context.getString(R.string.app_name)}** `v${versionName}`\n```\n${messageText}\n```"
+            "**${context.getString(R.string.app_name)}** `v${versionName}` API **${Build.VERSION.SDK_INT}**\n```\n${messageText}\n```"
         Log.d("sendFeedback", "feedbackText: $feedbackText")
         val message = Message(content = feedbackText)
         Log.d("sendFeedback", "message: $message")
@@ -42,7 +45,9 @@ class FeedbackApi(val context: Context) {
         }
     }
 
+    @JsonClass(generateAdapter = true)
     data class Message(
+        @Json(name = "content")
         val content: String
     )
 
@@ -62,10 +67,10 @@ class FeedbackApi(val context: Context) {
                 chain.proceed(request)
             }
             .build()
-        val gson = GsonBuilder().create()
+        val moshi = Moshi.Builder().build()
         return Retrofit.Builder()
             .baseUrl(RELAY_URL)
-            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
             .client(client)
             .build()
     }
