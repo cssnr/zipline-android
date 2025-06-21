@@ -55,7 +55,7 @@ class TextFragment : Fragment() {
         navController = findNavController()
 
         val extraText = arguments?.getString("text")?.trim() ?: ""
-        Log.d("Text[onViewCreated]", "extraText: $extraText")
+        Log.d("Text[onViewCreated]", "extraText: ${extraText.take(100)}")
 
         if (extraText.isEmpty()) {
             // TODO: Better Handle this Error

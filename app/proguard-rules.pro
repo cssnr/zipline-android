@@ -20,7 +20,8 @@
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
 
-# Logging
+
+## Logging
 -assumenosideeffects class android.util.Log {
     public static int d(...);
     public static int v(...);

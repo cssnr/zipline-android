@@ -1,11 +1,11 @@
 package org.cssnr.zipline.api
 
 import android.content.Context
-import android.content.SharedPreferences
 import android.util.Log
 import android.webkit.CookieManager
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import com.google.gson.annotations.SerializedName
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Cookie
@@ -17,6 +17,7 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.cssnr.zipline.R
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -34,8 +35,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
     private var ziplineUrl: String
     private var ziplineToken: String
 
-    private val preferences: SharedPreferences =
-        PreferenceManager.getDefaultSharedPreferences(context)
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(context) }
 
     private lateinit var cookieJar: SimpleCookieJar
     private lateinit var client: OkHttpClient
@@ -43,24 +43,24 @@ class ZiplineApi(private val context: Context, url: String? = null) {
     init {
         ziplineUrl = url ?: preferences.getString("ziplineUrl", null) ?: ""
         ziplineToken = preferences.getString("ziplineToken", null) ?: ""
-        Log.d("ServerApi", "ziplineUrl: $ziplineUrl")
-        Log.d("ServerApi", "ziplineToken: $ziplineToken")
+        Log.d("ServerApi[init]", "ziplineUrl: $ziplineUrl")
+        Log.d("ServerApi[init]", "ziplineToken: $ziplineToken")
         api = createRetrofit().create(ApiService::class.java)
     }
 
     suspend fun login(host: String, user: String, pass: String): String? {
-        Log.d("login", "host: $host")
-        Log.d("login", "user/pass: ${user}/${pass}")
+        Log.d("Api[login]", "host: $host")
+        Log.d("Api[login]", "user/pass: ${user}/${pass}")
 
         return try {
             val loginResponse = api.postLogin(LoginRequest(user, pass))
-            Log.i("login", "loginResponse.code(): ${loginResponse.code()}")
+            Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
                 val tokenResponse = api.getToken()
                 val cookies = cookieJar.loadForRequest(host.toHttpUrl())
                 val cookieManager = CookieManager.getInstance()
                 for (cookie in cookies) {
-                    Log.d("login", "setCookie: $cookie")
+                    Log.d("Api[login]", "setCookie: $cookie")
                     //cookieManager.setCookie(host, cookie.toString())
                     cookieManager.setCookie(host, cookie.toString()) {
                         cookieManager.flush()
@@ -69,46 +69,56 @@ class ZiplineApi(private val context: Context, url: String? = null) {
                 tokenResponse.token
             } else {
                 //loginResponse.errorBody()?.string()?.take(200)?.let {
-                //    Log.i("login", "errorBody: $it")
+                //    Log.i("Api[login]", "errorBody: $it")
                 //}
-                Log.i("login", "errorBody: ${loginResponse.errorBody()?.string()?.take(255)}")
+                Log.i("Api[login]", "errorBody: ${loginResponse.errorBody()?.string()?.take(255)}")
                 null
             }
         } catch (e: Exception) {
-            Log.e("login", "Exception: ${e.message}")
+            Log.e("Api[login]", "Exception: ${e.message}")
             null
         }
     }
 
     suspend fun shorten(url: String, vanity: String?): Response<ShortResponse> {
-        Log.d("upload", "url: $url")
-        Log.d("upload", "vanity: $vanity")
+        Log.d("Api[upload]", "url: $url")
+        Log.d("Api[upload]", "vanity: $vanity")
 
-        val response = api.postShort(ziplineToken, ShortRequest(url, vanity, true))
+        val response = api.postShort(ShortRequest(url, vanity, true))
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "token: $token")
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.postShort(token, ShortRequest(url, vanity, true))
+                return api.postShort(ShortRequest(url, vanity, true))
             }
         }
         return response
     }
 
-    suspend fun upload(
-        fileName: String,
-        inputStream: InputStream,
-    ): Response<FileResponse> {
-        Log.d("upload", "fileName: $fileName")
+    suspend fun upload(fileName: String, inputStream: InputStream): Response<FileResponse> {
+        Log.d("Api[upload]", "fileName: $fileName")
         val fileNameFormat = preferences.getString("file_name_format", null) ?: "random"
-        Log.d("upload", "fileNameFormat: $fileNameFormat")
+        Log.d("Api[upload]", "fileNameFormat: $fileNameFormat")
         val multiPart: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        val response = api.postUpload(ziplineToken, fileNameFormat.toString(), multiPart)
+        val response = api.postUpload(fileNameFormat.toString(), multiPart)
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "token: $token")
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.postUpload(token, fileNameFormat, multiPart)
+                return api.postUpload(fileNameFormat, multiPart)
+            }
+        }
+        return response
+    }
+
+    suspend fun stats(): Response<StatsResponse> {
+        Log.d("Api[stats]", "stats")
+        val response = api.getStats()
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            if (token != null) {
+                return api.getStats()
             }
         }
         return response
@@ -137,7 +147,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
 
     private suspend fun inputStreamToMultipart(
         file: InputStream,
-        fileName: String
+        fileName: String,
     ): MultipartBody.Part {
         val contentType =
             URLConnection.guessContentTypeFromName(fileName) ?: "application/octet-stream"
@@ -150,9 +160,19 @@ class ZiplineApi(private val context: Context, url: String? = null) {
     private fun createRetrofit(): Retrofit {
         val baseUrl = "${ziplineUrl}/api/"
         Log.d("createRetrofit", "baseUrl: $baseUrl")
+        val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
+        val userAgent = "${context.getString(R.string.app_name)}/${versionName}"
+        Log.d("createRetrofit", "versionName: $versionName")
         cookieJar = SimpleCookieJar()
         client = OkHttpClient.Builder()
             .cookieJar(cookieJar)
+            .addInterceptor { chain ->
+                val request = chain.request().newBuilder()
+                    .header("User-Agent", userAgent)
+                    .header("authorization", ziplineToken)
+                    .build()
+                chain.proceed(request)
+            }
             .build()
         return Retrofit.Builder()
             .baseUrl(baseUrl)
@@ -168,17 +188,18 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         @GET("user/token")
         suspend fun getToken(): TokenResponse
 
+        @GET("user/stats")
+        suspend fun getStats(): Response<StatsResponse>
+
         @Multipart
         @POST("upload")
         suspend fun postUpload(
-            @Header("authorization") token: String,
             @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
         ): Response<FileResponse>
 
         @POST("user/urls")
         suspend fun postShort(
-            @Header("authorization") token: String,
             @Body request: ShortRequest,
         ): Response<ShortResponse>
     }
@@ -222,6 +243,18 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         val url: String
     )
 
+    data class StatsResponse(
+        @SerializedName("filesUploaded") val filesUploaded: Int,
+        @SerializedName("favoriteFiles") val favoriteFiles: Int,
+        @SerializedName("views") val views: Int,
+        @SerializedName("avgViews") val avgViews: Double,
+        @SerializedName("storageUsed") val storageUsed: Long,
+        @SerializedName("avgStorageUsed") val avgStorageUsed: Double,
+        @SerializedName("urlsCreated") val urlsCreated: Int,
+        @SerializedName("urlViews") val urlViews: Int,
+    )
+
+
     inner class SimpleCookieJar : CookieJar {
         private val cookieStore = mutableMapOf<String, List<Cookie>>()
 
@@ -243,6 +276,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         //}
     }
 }
+
 
 //data class LoginResponse(
 //    val user: TokenUser
