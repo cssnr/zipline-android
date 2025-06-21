@@ -163,6 +163,7 @@ class UploadFragment : Fragment() {
             webView.apply {
                 settings.javaScriptEnabled = true
                 addJavascriptInterface(object {
+                    @Suppress("unused")
                     @JavascriptInterface
                     fun notifyReady() {
                         webView.post {

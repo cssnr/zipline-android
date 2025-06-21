@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.upload
 
+import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
 import android.net.Uri
@@ -171,6 +172,8 @@ class UploadMultiFragment : Fragment() {
         Log.d("processMultiUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("processMultiUpload", "authToken: $authToken")
+        val shareUrl = preferences.getBoolean("share_after_upload", true)
+        Log.d("processUpload", "shareUrl: $shareUrl")
 
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
@@ -229,6 +232,15 @@ class UploadMultiFragment : Fragment() {
             Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
+            if (shareUrl && results.size == 1) {
+                val url = results.first().files.first().url
+                Log.d("processMultiUpload", "url: $url")
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, url)
+                }
+                startActivity(Intent.createChooser(shareIntent, null))
+            }
             navController.navigate(
                 R.id.nav_item_home,
                 bundleOf("url" to "${savedUrl}/dashboard/files/"),
