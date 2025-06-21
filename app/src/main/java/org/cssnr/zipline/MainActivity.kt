@@ -132,12 +132,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        Log.d("onNewIntent", "intent.data: ${intent.data}")
+        val action = intent.action
+        Log.d("onNewIntent", "action: $action")
+        Log.d("onNewIntent", "data: ${intent.data}")
         Log.d("onNewIntent", "intent.type: ${intent.type}")
-        Log.d("onNewIntent", "intent.action: ${intent.action}")
 
         val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
-        Log.d("onNewIntent", "extraText: $extraText")
+        Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
 
         val savedUrl = preferences.getString("ziplineUrl", null)
         val authToken = preferences.getString("ziplineToken", null)
@@ -153,7 +154,7 @@ class MainActivity : AppCompatActivity() {
                     .build()
             )
 
-        } else if (Intent.ACTION_MAIN == intent.action) {
+        } else if (Intent.ACTION_MAIN == action) {
             Log.d("onNewIntent", "ACTION_MAIN")
 
             binding.drawerLayout.closeDrawers()
@@ -187,7 +188,7 @@ class MainActivity : AppCompatActivity() {
                 filePickerLauncher.launch(arrayOf("*/*"))
             }
 
-        } else if (Intent.ACTION_SEND == intent.action) {
+        } else if (Intent.ACTION_SEND == action) {
             Log.d("onNewIntent", "ACTION_SEND")
 
             val fileUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -199,7 +200,7 @@ class MainActivity : AppCompatActivity() {
             Log.d("onNewIntent", "File URI: $fileUri")
 
             if (fileUri == null && !extraText.isNullOrEmpty()) {
-                Log.d("onNewIntent", "SEND TEXT DETECTED: $extraText")
+                Log.d("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
                 //if (extraText.lowercase().startsWith("http")) {
                 //if (Patterns.WEB_URL.matcher(extraText).matches()) {
                 if (isURL(extraText)) {
@@ -234,7 +235,7 @@ class MainActivity : AppCompatActivity() {
                 showPreview(fileUri)
             }
 
-        } else if (Intent.ACTION_SEND_MULTIPLE == intent.action) {
+        } else if (Intent.ACTION_SEND_MULTIPLE == action) {
             Log.d("onNewIntent", "ACTION_SEND_MULTIPLE")
 
             val fileUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -251,15 +252,20 @@ class MainActivity : AppCompatActivity() {
             }
             showMultiPreview(fileUris)
 
-        } else if (Intent.ACTION_VIEW == intent.action) {
+        } else if (Intent.ACTION_VIEW == action) {
             Log.d("onNewIntent", "ACTION_VIEW")
 
             Log.d("onNewIntent", "File URI: ${intent.data}")
             showPreview(intent.data)
 
+        } else if ("UPLOAD_FILE" == action) {
+            Log.d("handleIntent", "UPLOAD_FILE")
+
+            filePickerLauncher.launch(arrayOf("*/*"))
+
         } else {
-            Toast.makeText(this, "That's a Bug!", Toast.LENGTH_SHORT).show()
-            Log.w("onNewIntent", "BUG: UNKNOWN intent.action: ${intent.action}")
+            Toast.makeText(this, "That's a Bug!", Toast.LENGTH_LONG).show()
+            Log.w("onNewIntent", "UNKNOWN INTENT - action: $action")
         }
     }
 
