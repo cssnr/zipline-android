@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:text="Feedback, Suggetions, Issues"
+        android:labelFor="@+id/feedback_input"
         android:textAppearance="?attr/textAppearanceBody1"
-        android:labelFor="@+id/feedback_input" />
+        android:text="Feedback, Suggetions, Issues" />
 
     <EditText
         android:id="@+id/feedback_input"
@@ -39,8 +39,8 @@
         android:layout_marginTop="24dp"
         android:layout_gravity="center"
         android:drawablePadding="8dp"
-        app:drawableStartCompat="@drawable/fa_github"
+        android:tag="More Info on GitHub"
         android:text="More Info on GitHub"
-        android:tag="More Info on GitHub" />
+        app:drawableStartCompat="@drawable/fa_github" />
 
 </LinearLayout>

@@ -248,7 +248,7 @@ class HomeFragment : Fragment() {
                 view.loadUrl("about:blank")
                 //view.destroy()
                 findNavController().navigate(
-                    R.id.nav_item_setup, null, NavOptions.Builder()
+                    R.id.nav_item_login, null, NavOptions.Builder()
                         .setPopUpTo(R.id.nav_item_home, true)
                         .build()
                 )
