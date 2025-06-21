@@ -1,0 +1,38 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <PreferenceCategory
+        android:key="widget_settings"
+        android:title="Widget Settings">
+
+        <ListPreference
+            android:key="widget_text_color"
+            android:title="Text Color"
+            android:icon="@drawable/md_text_fields_24px"
+            android:defaultValue="white"
+            android:entries="@array/widget_color_entries"
+            android:entryValues="@array/widget_color_values"
+            tools:summary="White" />
+
+        <ListPreference
+            android:key="widget_bg_color"
+            android:title="Background Color"
+            android:icon="@drawable/md_palette_24px"
+            android:defaultValue="black"
+            android:entries="@array/widget_color_entries"
+            android:entryValues="@array/widget_color_values"
+            tools:summary="Black" />
+
+        <androidx.preference.SeekBarPreference
+            android:key="widget_bg_opacity"
+            android:title="Background Opacity"
+            android:defaultValue="35"
+            android:icon="@drawable/md_texture_24px"
+            android:max="100"
+            app:min="0"
+            app:showSeekBarValue="true" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

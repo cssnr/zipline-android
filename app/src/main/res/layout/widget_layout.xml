@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/widget_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="?android:attr/colorBackground"
+    android:theme="@style/WidgetStyle"
+    tools:layout_width="240dp"
+    tools:layout_height="60dp"
+    tools:ignore="HardcodedText">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="80dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/files_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:textSize="18sp"
+            android:includeFontPadding="false"
+            android:maxLines="1"
+            android:text="0"
+            tools:text="0123456789" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/files_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:textSize="18sp"
+                android:includeFontPadding="false"
+                android:maxLines="1"
+                android:text="0.0"
+                tools:text="9,999.99" />
+
+            <TextView
+                android:id="@+id/files_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:maxLines="1"
+                android:text="B"
+                tools:text="GB" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="end">
+        <ImageButton
+            android:id="@+id/widget_refresh_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:contentDescription="Refresh"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:src="@drawable/md_refresh_24px" />
+        <ImageButton
+            android:id="@+id/widget_upload_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:contentDescription="Upload"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:src="@drawable/md_upload_24px" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/update_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:layout_gravity="center_horizontal|bottom"
+        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+        android:text="--:--"
+        tools:text="23:59" />
+
+</FrameLayout>

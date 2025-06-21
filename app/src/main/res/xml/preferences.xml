@@ -30,6 +30,24 @@
             tools:summary="Load Home Page" />
 
     </PreferenceCategory>
+    <PreferenceCategory android:title="Widget Settings">
+
+        <Preference
+            android:key="open_widget_settings"
+            android:title="Edit Widget Settings"
+            android:summary="Text and Background Color"
+            android:icon="@drawable/md_widgets_24px" />
+
+        <ListPreference
+            android:key="work_interval"
+            android:title="Update Interval"
+            android:defaultValue="0"
+            android:icon="@drawable/md_timer_play_24px"
+            android:entries="@array/work_interval_entries"
+            android:entryValues="@array/work_interval_values"
+            tools:summary="1 Hour" />
+
+    </PreferenceCategory>
 
     <PreferenceCategory android:title="Application Information">
 

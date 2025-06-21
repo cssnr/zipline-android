@@ -1,8 +1,10 @@
 package org.cssnr.zipline
 
 import android.annotation.SuppressLint
+import android.appwidget.AppWidgetManager
 import android.content.ClipData
 import android.content.ClipboardManager
+import android.content.ComponentName
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
@@ -24,8 +26,15 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import androidx.preference.PreferenceManager
+import androidx.work.ExistingPeriodicWorkPolicy
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import org.cssnr.zipline.databinding.ActivityMainBinding
+import org.cssnr.zipline.widget.WidgetProvider
+import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
+import org.cssnr.zipline.work.AppWorker
 import java.net.URL
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -60,6 +69,27 @@ class MainActivity : AppCompatActivity() {
 
         // Set Default Preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
+
+        // TODO: Improve initialization of the WorkRequest
+        val workInterval = preferences.getString("work_interval", null) ?: "0"
+        Log.i("Main[onCreate]", "workInterval: $workInterval")
+        if (workInterval != "0") {
+            val workRequest =
+                PeriodicWorkRequestBuilder<AppWorker>(workInterval.toLong(), TimeUnit.MINUTES)
+                    .setConstraints(APP_WORKER_CONSTRAINTS)
+                    .build()
+            Log.i("Main[onCreate]", "workRequest: $workRequest")
+            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+                "app_worker",
+                ExistingPeriodicWorkPolicy.KEEP,
+                workRequest
+            )
+        } else {
+            // TODO: Confirm this is necessary...
+            Log.i("Main[onCreate]", "Ensuring Work is Disabled")
+            WorkManager.getInstance(this).cancelUniqueWork("app_worker")
+        }
 
         // Handle Custom Navigation Items
         binding.navView.setNavigationItemSelectedListener { menuItem ->
@@ -231,6 +261,16 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this, "That's a Bug!", Toast.LENGTH_SHORT).show()
             Log.w("onNewIntent", "BUG: UNKNOWN intent.action: ${intent.action}")
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("Main[onStop]", "MainActivity - onStop")
+        // Update Widget
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val componentName = ComponentName(this, WidgetProvider::class.java)
+        val ids = appWidgetManager.getAppWidgetIds(componentName)
+        WidgetProvider().onUpdate(this, appWidgetManager, ids)
     }
 
     private fun isURL(url: String): Boolean {
