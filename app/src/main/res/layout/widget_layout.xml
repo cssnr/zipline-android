@@ -72,6 +72,13 @@
             android:contentDescription="Upload"
             android:background="?android:selectableItemBackgroundBorderless"
             android:src="@drawable/md_upload_24px" />
+        <!--<ImageButton-->
+        <!--    android:id="@+id/widget_recent_button"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="match_parent"-->
+        <!--    android:contentDescription="Upload"-->
+        <!--    android:background="?android:selectableItemBackgroundBorderless"-->
+        <!--    android:src="@drawable/md_share_24px" />-->
     </LinearLayout>
 
     <TextView

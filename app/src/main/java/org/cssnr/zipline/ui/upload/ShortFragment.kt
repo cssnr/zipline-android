@@ -19,7 +19,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentShortBinding
 
@@ -143,7 +143,7 @@ class ShortFragment : Fragment() {
             return
         }
 
-        val api = ZiplineApi(requireContext())
+        val api = ServerApi(requireContext())
         lifecycleScope.launch {
             val response = api.shorten(longUrl, vanityName)
             Log.d("processShort", "response: $response")
@@ -196,7 +196,7 @@ class ShortFragment : Fragment() {
 //                .show()
 //            return
 //        }
-//        val api = ZiplineApi(requireContext())
+//        val api = ServerApi(requireContext())
 //        Log.d("processShort", "api: $api")
 //        Toast.makeText(requireContext(), "Creating Short URL...", Toast.LENGTH_SHORT).show()
 //        lifecycleScope.launch {

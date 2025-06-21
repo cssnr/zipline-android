@@ -14,20 +14,27 @@
             tools:summary="Random" />
 
         <SwitchPreferenceCompat
-            android:title="Share URL After Creation"
-            android:key="share_after_short"
-            android:summary="Automatically Show Dialog"
-            android:icon="@drawable/md_share_24px"
+            android:title="Show Share after Upload"
+            android:key="share_after_upload"
+            android:summary="For Single File Uploads"
+            android:icon="@drawable/md_upload_file_24px"
             android:defaultValue="true" />
 
-        <ListPreference
-            android:key="launcher_action"
-            android:title="Launcher Icon Action"
-            android:icon="@drawable/md_flight_takeoff_24px"
-            android:defaultValue="home"
-            android:entries="@array/launcher_entries"
-            android:entryValues="@array/launcher_values"
-            tools:summary="Load Home Page" />
+        <SwitchPreferenceCompat
+            android:title="Show Share after Shorten"
+            android:key="share_after_short"
+            android:summary="For Short URL Creation"
+            android:icon="@drawable/md_add_link_24px"
+            android:defaultValue="true" />
+
+        <!--<ListPreference-->
+        <!--    android:key="launcher_action"-->
+        <!--    android:title="Launcher Icon Action"-->
+        <!--    android:icon="@drawable/md_flight_takeoff_24px"-->
+        <!--    android:defaultValue="home"-->
+        <!--    android:entries="@array/launcher_entries"-->
+        <!--    android:entryValues="@array/launcher_values"-->
+        <!--    tools:summary="Load Home Page" />-->
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Widget Settings">

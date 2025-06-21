@@ -22,8 +22,8 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ZiplineApi
-import org.cssnr.zipline.api.ZiplineApi.FileResponse
+import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.ServerApi.UploadedFiles
 import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
 
 class UploadMultiFragment : Fragment() {
@@ -183,9 +183,9 @@ class UploadMultiFragment : Fragment() {
         val msg = "Uploading ${fileUris.size} Files..."
         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
 
-        val api = ZiplineApi(requireContext())
+        val api = ServerApi(requireContext())
         Log.d("processMultiUpload", "api: $api")
-        val results: MutableList<FileResponse> = mutableListOf()
+        val results: MutableList<UploadedFiles> = mutableListOf()
         val currentContext = requireContext()
         lifecycleScope.launch {
             for (fileUri in fileUris) {
@@ -201,10 +201,10 @@ class UploadMultiFragment : Fragment() {
                     val response = api.upload(fileName!!, inputStream)
                     Log.d("processMultiUpload", "response: $response")
                     if (response.isSuccessful) {
-                        val fileResponse = response.body()
-                        Log.d("processMultiUpload", "fileResponse: $fileResponse")
-                        if (fileResponse != null) {
-                            results.add(fileResponse)
+                        val uploadedFiles = response.body()
+                        Log.d("processMultiUpload", "uploadedFiles: $uploadedFiles")
+                        if (uploadedFiles != null) {
+                            results.add(uploadedFiles)
                         }
                     } else {
                         val msg = "Error: ${response.code()}: ${response.message()}"

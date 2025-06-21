@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentUploadBinding
 import org.json.JSONObject
@@ -260,7 +260,7 @@ class UploadFragment : Fragment() {
             return
         }
         Log.d("processUpload", "DEBUG 1")
-        val api = ZiplineApi(requireContext())
+        val api = ServerApi(requireContext())
         Log.d("processUpload", "DEBUG 2")
         Log.d("processUpload", "api: $api")
         Toast.makeText(requireContext(), getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
@@ -275,7 +275,18 @@ class UploadFragment : Fragment() {
                     withContext(Dispatchers.Main) {
                         if (uploadResponse != null) {
                             logFileUpload()
-                            copyToClipboard(requireContext(), uploadResponse.files.first().url)
+                            val url = uploadResponse.files.first().url
+                            Log.d("processUpload", "url: $url")
+                            copyToClipboard(requireContext(), url)
+                            val shareUrl = preferences.getBoolean("share_after_upload", true)
+                            Log.d("processUpload", "shareUrl: $shareUrl")
+                            if (shareUrl) {
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, url)
+                                }
+                                startActivity(Intent.createChooser(shareIntent, null))
+                            }
                             navController.navigate(
                                 R.id.nav_item_home,
                                 bundleOf("url" to "${savedUrl}/dashboard/files/"),

@@ -29,10 +29,11 @@ import retrofit2.http.Header
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Query
 import java.io.InputStream
 import java.net.URLConnection
 
-class ZiplineApi(private val context: Context, url: String? = null) {
+class ServerApi(private val context: Context, url: String? = null) {
 
     val api: ApiService
     private var ziplineUrl: String
@@ -97,7 +98,7 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         return response
     }
 
-    suspend fun upload(fileName: String, inputStream: InputStream): Response<FileResponse> {
+    suspend fun upload(fileName: String, inputStream: InputStream): Response<UploadedFiles> {
         Log.d("Api[upload]", "fileName: $fileName")
         val fileNameFormat = preferences.getString("file_name_format", null) ?: "random"
         Log.d("Api[upload]", "fileNameFormat: $fileNameFormat")
@@ -121,6 +122,19 @@ class ZiplineApi(private val context: Context, url: String? = null) {
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
                 return api.getStats()
+            }
+        }
+        return response
+    }
+
+    suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
+        Log.d("Api[stats]", "stats")
+        val response = api.getRecent(take)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            if (token != null) {
+                return api.getRecent()
             }
         }
         return response
@@ -196,12 +210,17 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         @GET("user/stats")
         suspend fun getStats(): Response<StatsResponse>
 
+        @GET("user/recent")
+        suspend fun getRecent(
+            @Query("take") take: String = "3"
+        ): Response<List<FileResponse>>
+
         @Multipart
         @POST("upload")
         suspend fun postUpload(
             @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
-        ): Response<FileResponse>
+        ): Response<UploadedFiles>
 
         @POST("user/urls")
         suspend fun postShort(
@@ -221,12 +240,12 @@ class ZiplineApi(private val context: Context, url: String? = null) {
     )
 
     @JsonClass(generateAdapter = true)
-    data class FileResponse(
-        val files: List<UploadedFile>,
+    data class UploadedFiles(
+        val files: List<UploadResponse>,
     )
 
     @JsonClass(generateAdapter = true)
-    data class UploadedFile(
+    data class UploadResponse(
         val id: String,
         val type: String,
         val url: String,
@@ -266,6 +285,24 @@ class ZiplineApi(private val context: Context, url: String? = null) {
         @Json(name = "urlViews") val urlViews: Int,
     )
 
+    @JsonClass(generateAdapter = true)
+    data class FileResponse(
+        @Json(name = "createdAt") val createdAt: String,
+        @Json(name = "updatedAt") val updatedAt: String,
+        @Json(name = "deletesAt") val deletesAt: String?,
+        @Json(name = "favorite") val favorite: Boolean,
+        @Json(name = "id") val id: String,
+        @Json(name = "originalName") val originalName: String?,
+        @Json(name = "name") val name: String,
+        @Json(name = "size") val size: Int,
+        @Json(name = "type") val type: String,
+        @Json(name = "views") val views: Int,
+        @Json(name = "maxViews") val maxViews: Int?,
+        @Json(name = "folderId") val folderId: String?,
+        @Json(name = "thumbnail") val thumbnail: String?,
+        @Json(name = "password") val password: String?,
+        @Json(name = "url") val url: String
+    )
 
     inner class SimpleCookieJar : CookieJar {
         private val cookieStore = mutableMapOf<String, List<Cookie>>()

@@ -110,6 +110,7 @@ class WidgetProvider : AppWidgetProvider() {
 
             views.setInt(R.id.widget_refresh_button, "setColorFilter", selectedTextColor)
             views.setInt(R.id.widget_upload_button, "setColorFilter", selectedTextColor)
+            //views.setInt(R.id.widget_recent_button, "setColorFilter", selectedTextColor)
 
             // Refresh
             val intent1 = Intent(context, WidgetProvider::class.java).apply {
@@ -134,6 +135,15 @@ class WidgetProvider : AppWidgetProvider() {
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
             views.setOnClickPendingIntent(R.id.widget_upload_button, pendingIntent2)
+
+            //// Recent
+            //val pendingIntent3 = PendingIntent.getActivity(
+            //    context,
+            //    0,
+            //    Intent(context, MainActivity::class.java).apply { action = "RECENT_FILE" },
+            //    PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            //)
+            //views.setOnClickPendingIntent(R.id.widget_recent_button, pendingIntent3)
 
             // Room Data
             GlobalScope.launch(Dispatchers.IO) {
