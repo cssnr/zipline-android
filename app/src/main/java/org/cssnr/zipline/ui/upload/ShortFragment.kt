@@ -127,9 +127,11 @@ class ShortFragment : Fragment() {
         Log.d("processShort", "Vanity: $vanityName")
 
         val savedUrl = preferences.getString("ziplineUrl", null)
-        val authToken = preferences.getString("ziplineToken", null)
         Log.d("processShort", "savedUrl: $savedUrl")
+        val authToken = preferences.getString("ziplineToken", null)
         Log.d("processShort", "authToken: $authToken")
+        val shareUrl = preferences.getBoolean("share_after_short", true)
+        Log.d("processShort", "shareUrl: $shareUrl")
 
         if (savedUrl == null || authToken == null) {
             Log.e("processShort", "ziplineUrl || ziplineToken is null")
@@ -152,8 +154,6 @@ class ShortFragment : Fragment() {
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
                     copyToClipboard(requireContext(), shortResponse.url)
-                    val shareUrl = preferences.getBoolean("share_after_short", true)
-                    Log.d("processShort", "shareUrl: $shareUrl")
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"

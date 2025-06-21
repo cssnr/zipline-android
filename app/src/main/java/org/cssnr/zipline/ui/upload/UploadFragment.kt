@@ -233,6 +233,9 @@ class UploadFragment : Fragment() {
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("processUpload", "authToken: $authToken")
+        val shareUrl = preferences.getBoolean("share_after_upload", true)
+        Log.d("processUpload", "shareUrl: $shareUrl")
+
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
@@ -279,8 +282,6 @@ class UploadFragment : Fragment() {
                             val url = uploadResponse.files.first().url
                             Log.d("processUpload", "url: $url")
                             copyToClipboard(requireContext(), url)
-                            val shareUrl = preferences.getBoolean("share_after_upload", true)
-                            Log.d("processUpload", "shareUrl: $shareUrl")
                             if (shareUrl) {
                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                     type = "text/plain"

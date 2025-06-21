@@ -120,6 +120,9 @@ class TextFragment : Fragment() {
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("processUpload", "authToken: $authToken")
+        val shareUrl = preferences.getBoolean("share_after_upload", true)
+        Log.d("processShort", "shareUrl: $shareUrl")
+
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
