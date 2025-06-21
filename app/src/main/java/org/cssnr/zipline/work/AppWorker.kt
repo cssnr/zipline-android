@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
 import org.cssnr.zipline.db.ServerEntity
@@ -55,7 +55,7 @@ suspend fun Context.updateStats(): Boolean {
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val savedUrl = preferences.getString("ziplineUrl", null).toString()
     Log.d("updateStats", "savedUrl: $savedUrl")
-    val api = ZiplineApi(this, savedUrl)
+    val api = ServerApi(this, savedUrl)
     val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
     if (statsResponse.isSuccessful) {

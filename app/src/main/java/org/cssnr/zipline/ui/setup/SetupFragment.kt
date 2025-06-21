@@ -26,7 +26,7 @@ import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.databinding.FragmentSetupBinding
 
 class SetupFragment : Fragment() {
@@ -118,7 +118,7 @@ class SetupFragment : Fragment() {
 
             Log.d("loginButton", "lifecycleScope.launch")
             lifecycleScope.launch {
-                val api = ZiplineApi(ctx, host)
+                val api = ServerApi(ctx, host)
                 val token = api.login(host, user, pass)
                 Log.d("loginButton", "token: $token")
                 if (token.isNullOrEmpty()) {

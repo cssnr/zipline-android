@@ -20,7 +20,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentTextBinding
 
@@ -59,22 +59,10 @@ class TextFragment : Fragment() {
 
         if (extraText.isEmpty()) {
             // TODO: Better Handle this Error
-            Log.e("Text[onViewCreated]", "extraText is null")
+            Log.w("Text[onViewCreated]", "extraText is null")
             Toast.makeText(requireContext(), "No Text to Process!", Toast.LENGTH_LONG).show()
             //return
         }
-
-        //val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-        //val savedUrl = preferences.getString("ziplineUrl", null)
-        //Log.d("Text[onViewCreated]", "savedUrl: $savedUrl")
-        //val authToken = preferences.getString("ziplineToken", null)
-        //Log.d("Text[onViewCreated]", "authToken: $authToken")
-        //if (savedUrl == null) {
-        //    // TODO: Better Handle this Error
-        //    Log.e("Text[onViewCreated]", "savedUrl is null")
-        //    Toast.makeText(requireContext(), "No Server Setup!", Toast.LENGTH_LONG).show()
-        //    return
-        //}
 
         binding.textContent.setText(extraText)
 
@@ -82,7 +70,7 @@ class TextFragment : Fragment() {
             Log.d("shareButton", "setOnClickListener")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, extraText)
+                putExtra(Intent.EXTRA_TEXT, binding.textContent.text)
             }
             startActivity(Intent.createChooser(shareIntent, null))
         }
@@ -120,6 +108,9 @@ class TextFragment : Fragment() {
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("processUpload", "authToken: $authToken")
+        val shareUrl = preferences.getBoolean("share_after_upload", true)
+        Log.d("processShort", "shareUrl: $shareUrl")
+
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
@@ -128,7 +119,7 @@ class TextFragment : Fragment() {
             return
         }
         val inputStream = textContent.byteInputStream()
-        val api = ZiplineApi(requireContext())
+        val api = ServerApi(requireContext())
         Log.d("processUpload", "api: $api")
         Toast.makeText(requireContext(), getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
             .show()

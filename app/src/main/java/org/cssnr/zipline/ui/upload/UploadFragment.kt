@@ -38,7 +38,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ZiplineApi
+import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentUploadBinding
 import org.json.JSONObject
@@ -49,7 +49,6 @@ class UploadFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
-
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
 
@@ -85,21 +84,6 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
 
         navController = findNavController()
-
-        //val callback = object : OnBackPressedCallback(true) {
-        //    override fun handleOnBackPressed() {
-        //        requireActivity().finish()
-        //    }
-        //}
-        //requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
-
-        //val intent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-        //    requireArguments().getParcelable("EXTRA_INTENT", Intent::class.java)
-        //} else {
-        //    @Suppress("DEPRECATION")
-        //    requireArguments().getParcelable("EXTRA_INTENT") as? Intent
-        //}
-        //Log.d("Upload[onViewCreated]", "intent: $intent")
 
         val uri = requireArguments().getString("uri")?.toUri()
         Log.d("Upload[onViewCreated]", "uri: $uri")
@@ -163,6 +147,7 @@ class UploadFragment : Fragment() {
             webView.apply {
                 settings.javaScriptEnabled = true
                 addJavascriptInterface(object {
+                    @Suppress("unused")
                     @JavascriptInterface
                     fun notifyReady() {
                         webView.post {
@@ -232,6 +217,9 @@ class UploadFragment : Fragment() {
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("processUpload", "authToken: $authToken")
+        val shareUrl = preferences.getBoolean("share_after_upload", true)
+        Log.d("processUpload", "shareUrl: $shareUrl")
+
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
@@ -260,7 +248,7 @@ class UploadFragment : Fragment() {
             return
         }
         Log.d("processUpload", "DEBUG 1")
-        val api = ZiplineApi(requireContext())
+        val api = ServerApi(requireContext())
         Log.d("processUpload", "DEBUG 2")
         Log.d("processUpload", "api: $api")
         Toast.makeText(requireContext(), getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
@@ -275,7 +263,16 @@ class UploadFragment : Fragment() {
                     withContext(Dispatchers.Main) {
                         if (uploadResponse != null) {
                             logFileUpload()
-                            copyToClipboard(requireContext(), uploadResponse.files.first().url)
+                            val url = uploadResponse.files.first().url
+                            Log.d("processUpload", "url: $url")
+                            copyToClipboard(requireContext(), url)
+                            if (shareUrl) {
+                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, url)
+                                }
+                                startActivity(Intent.createChooser(shareIntent, null))
+                            }
                             navController.navigate(
                                 R.id.nav_item_home,
                                 bundleOf("url" to "${savedUrl}/dashboard/files/"),

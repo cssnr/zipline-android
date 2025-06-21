@@ -162,8 +162,8 @@ class MainActivity : AppCompatActivity() {
             // TODO: Cleanup the logic for handling MAIN intent...
             val currentDestinationId = navController.currentDestination?.id
             Log.d("onNewIntent", "currentDestinationId: $currentDestinationId")
-            val launcherAction = preferences.getString("launcher_action", null)
-            Log.d("onNewIntent", "launcherAction: $launcherAction")
+            //val launcherAction = preferences.getString("launcher_action", null)
+            //Log.d("onNewIntent", "launcherAction: $launcherAction")
             val fromShortcut = intent.getStringExtra("fromShortcut")
             Log.d("onNewIntent", "fromShortcut: $fromShortcut")
             Log.d("onNewIntent", "nav_item_preview: ${R.id.nav_item_upload}")
@@ -178,10 +178,10 @@ class MainActivity : AppCompatActivity() {
                         .setPopUpTo(navController.graph.id, true)
                         .build()
                 )
-            } else if (currentDestinationId != R.id.nav_item_home && launcherAction != "previous") {
-                Log.i("onNewIntent", "HOME SETTING SET - Navigating to HomeFragment")
-                navController.navigate(R.id.nav_item_home)
             }
+            //} else if (currentDestinationId != R.id.nav_item_home && launcherAction != "previous") {
+            //    Log.i("onNewIntent", "HOME SETTING SET - Navigating to HomeFragment")
+            //    navController.navigate(R.id.nav_item_home)
             // TODO: Determine if this needs to be in the above if/else
             if (fromShortcut == "upload") {
                 Log.d("onNewIntent", "filePickerLauncher.launch")
@@ -266,7 +266,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             Toast.makeText(this, "That's a Bug!", Toast.LENGTH_LONG).show()
             Log.w("onNewIntent", "UNKNOWN INTENT - action: $action")
+
         }
+        //} else if ("RECENT_FILE" == action) {
+        //    Log.d("handleIntent", "RECENT_FILE")
     }
 
     override fun onStop() {

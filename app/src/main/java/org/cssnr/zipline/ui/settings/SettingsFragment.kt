@@ -61,9 +61,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
-        // Launcher Icon Action
-        val launcherAction = findPreference<ListPreference>("launcher_action")
-        launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+        //// Launcher Icon Action
+        //val launcherAction = findPreference<ListPreference>("launcher_action")
+        //launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
         // Widget Settings
         findPreference<Preference>("open_widget_settings")?.setOnPreferenceClickListener {
