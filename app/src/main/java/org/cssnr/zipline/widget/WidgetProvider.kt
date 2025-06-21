@@ -31,14 +31,6 @@ class WidgetProvider : AppWidgetProvider() {
         super.onReceive(context, intent)
         Log.i("Widget[onReceive]", "intent: $intent")
 
-        //if (intent.action == "org.cssnr.zipline.REFRESH_WIDGET") {
-        //    val appWidgetManager = AppWidgetManager.getInstance(context)
-        //    val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
-        //    if (appWidgetId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-        //        onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))
-        //    }
-        //}
-
         if (intent.action == "org.cssnr.zipline.REFRESH_WIDGET") {
             val appWidgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
@@ -134,9 +126,7 @@ class WidgetProvider : AppWidgetProvider() {
             appWidgetManager.updateAppWidget(appWidgetId, views)
 
             // Upload File
-            val intent2 = Intent(context, MainActivity::class.java).apply {
-                action = "UPLOAD_FILE"
-            }
+            val intent2 = Intent(context, MainActivity::class.java).apply { action = "UPLOAD_FILE" }
             val pendingIntent2 = PendingIntent.getActivity(
                 context,
                 0,

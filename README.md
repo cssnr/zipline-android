@@ -50,6 +50,12 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 
 </details>
 
+> [!WARNING]  
+> Google Play is currently in Closed Testing.  
+> To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
+
+[![Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/google/get-on-play-400.webp)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
+
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
 Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
@@ -85,6 +91,7 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 - Share or Open any file or URL to your Zipline server.
 - Single file previews most media with custom name option.
 - Multiple file upload previews, options and file selector.
+- Widget with stats, custom update interval, upload button.
 
 ### Planned
 
@@ -203,13 +210,13 @@ For more details, see the [ADB Documentation](https://developer.android.com/tool
 ## Google Services
 
 This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
-You must add `org.cssnr.zipline.dev` to a Firebase campaign here: https://firebase.google.com/
+You must add `org.cssnr.zipline` to a Firebase campaign here: https://firebase.google.com/
 
 To enable/disable Firebase DebugView use the following commands:
 
 ```shell
 # set
-adb shell setprop debug.firebase.analytics.app org.cssnr.zipline.dev
+adb shell setprop debug.firebase.analytics.app org.cssnr.zipline
 
 # unset
 adb shell setprop debug.firebase.analytics.app .none.
