@@ -14,15 +14,16 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
-import androidx.core.os.bundleOf
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
@@ -125,7 +126,6 @@ class LoginFragment : Fragment() {
                     Log.d("loginButton", "LOGIN FAILED")
                     binding.loginError.visibility = View.VISIBLE
                     Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
-
                     val shake = ObjectAnimator.ofFloat(
                         binding.loginButton, "translationX",
                         0f, 25f, -25f, 20f, -20f, 15f, -15f, 6f, -6f, 0f
@@ -136,15 +136,17 @@ class LoginFragment : Fragment() {
                         ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark)
                     val original = ContextCompat.getColor(requireContext(), R.color.button_color)
                     binding.loginButton.setBackgroundColor(red)
-                    binding.loginButton.postDelayed({
-                        binding.loginButton.setBackgroundColor(original)
-                    }, 700)
+                    viewLifecycleOwner.lifecycleScope.launch {
+                        delay(700)
+                        if (viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+                            binding.loginButton.setBackgroundColor(original)
+                        }
+                    }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
                         binding.loginButton.performHapticFeedback(HapticFeedbackConstants.REJECT)
                     } else {
                         binding.loginButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     }
-
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
                     Log.d("loginButton", "LOGIN SUCCESS")
