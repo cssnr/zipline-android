@@ -22,6 +22,7 @@ import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.edit
 import androidx.core.net.toUri
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
@@ -276,8 +277,10 @@ class HomeFragment : Fragment() {
                 Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
                 view.loadUrl("about:blank")
                 //view.destroy()
+                val bundle = bundleOf("url" to ziplineUrl)
+                Log.i("doUpdateVisitedHistory", "bundle: $bundle")
                 findNavController().navigate(
-                    R.id.nav_item_login, null, NavOptions.Builder()
+                    R.id.nav_item_login, bundle, NavOptions.Builder()
                         .setPopUpTo(R.id.nav_item_home, true)
                         .build()
                 )

@@ -35,6 +35,10 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    companion object {
+        const val LOG_TAG = "LoginFragment"
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -46,7 +50,7 @@ class LoginFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        Log.d("LoginFragment", "onDestroyView")
+        Log.d(LOG_TAG, "onDestroyView")
         super.onDestroyView()
         _binding = null
         // Unlock Navigation Drawer
@@ -70,9 +74,6 @@ class LoginFragment : Fragment() {
 
         val ctx = requireContext()
 
-        //binding.loginHostname.setText("https://")
-        binding.loginHostname.requestFocus()
-
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
         binding.appVersion.text = ctx.getString(R.string.version_string, versionName)
 
@@ -83,6 +84,15 @@ class LoginFragment : Fragment() {
 
         binding.serverText.text =
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
+
+        if (arguments?.getString("url") != null) {
+            Log.i(LOG_TAG, "url: ${arguments?.getString("url")}")
+            binding.loginHostname.setText(arguments?.getString("url").toString())
+            arguments?.remove("url")
+            binding.loginUsername.requestFocus()
+        } else {
+            binding.loginHostname.requestFocus()
+        }
 
         binding.loginButton.setOnClickListener {
             it.isEnabled = false

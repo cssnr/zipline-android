@@ -179,7 +179,6 @@ class SetupFragment : Fragment() {
     }
 
     override fun onStop() {
-        super.onStop()
         Log.d(LOG_TAG, "onStop - Show UI and Unlock Drawer")
         //val act = requireActivity()
         //val padding = TypedValue.applyDimension(
@@ -189,6 +188,7 @@ class SetupFragment : Fragment() {
         //act.findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
         //act.findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.VISIBLE
         (activity as? MainActivity)?.setDrawerLockMode(true)
+        super.onStop()
     }
 
     fun hitEmWithConfetti() {

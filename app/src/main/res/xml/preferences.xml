@@ -17,7 +17,7 @@
             android:title="Show Share after Upload"
             android:key="share_after_upload"
             android:summary="For Single File Uploads"
-            android:icon="@drawable/md_upload_file_24px"
+            android:icon="@drawable/md_attach_file_add_24px"
             android:defaultValue="true" />
 
         <SwitchPreferenceCompat
