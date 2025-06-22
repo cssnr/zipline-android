@@ -53,8 +53,6 @@ class LoginFragment : Fragment() {
         Log.d(LOG_TAG, "onDestroyView")
         super.onDestroyView()
         _binding = null
-        // Unlock Navigation Drawer
-        (requireActivity() as MainActivity).setDrawerLockMode(true)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -176,6 +174,8 @@ class LoginFragment : Fragment() {
                                 .build()
                         )
                     } else {
+                        // Unlock Drawer
+                        (requireActivity() as MainActivity).setDrawerLockMode(true)
                         findNavController().navigate(
                             R.id.nav_action_login_home, null, NavOptions.Builder()
                                 .setPopUpTo(R.id.nav_item_login, true)

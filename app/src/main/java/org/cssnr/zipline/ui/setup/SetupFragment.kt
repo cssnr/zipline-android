@@ -62,6 +62,9 @@ class SetupFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d(LOG_TAG, "onViewCreated: ${savedInstanceState?.size()}")
 
+        // Lock Navigation Drawer
+        (requireActivity() as MainActivity).setDrawerLockMode(false)
+
         val ctx = requireContext()
 
         // Version
@@ -152,6 +155,9 @@ class SetupFragment : Fragment() {
             }
             Log.d(LOG_TAG, "startAppListener: bundle: $bundle")
 
+            // Unlock Drawer
+            (requireActivity() as MainActivity).setDrawerLockMode(true)
+
             // Navigate Home
             findNavController().navigate(
                 R.id.nav_action_setup_home, bundle, NavOptions.Builder()
@@ -166,29 +172,6 @@ class SetupFragment : Fragment() {
             viewModel.confettiShown.value = true
             hitEmWithConfetti()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(LOG_TAG, "onStart - Hide UI and Lock Drawer")
-        //val act = requireActivity()
-        //act.findViewById<ConstraintLayout>(R.id.content_main_layout).setPadding(0, 0, 0, 0)
-        //act.findViewById<Toolbar>(R.id.toolbar).visibility = View.GONE
-        //act.findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-        (activity as? MainActivity)?.setDrawerLockMode(false)
-    }
-
-    override fun onStop() {
-        Log.d(LOG_TAG, "onStop - Show UI and Unlock Drawer")
-        //val act = requireActivity()
-        //val padding = TypedValue.applyDimension(
-        //    TypedValue.COMPLEX_UNIT_DIP, 80f, resources.displayMetrics
-        //).toInt()
-        //act.findViewById<ConstraintLayout>(R.id.content_main_layout).setPadding(0, 0, 0, padding)
-        //act.findViewById<Toolbar>(R.id.toolbar).visibility = View.VISIBLE
-        //act.findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.VISIBLE
-        (activity as? MainActivity)?.setDrawerLockMode(true)
-        super.onStop()
     }
 
     fun hitEmWithConfetti() {
