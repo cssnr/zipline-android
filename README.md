@@ -9,7 +9,7 @@
 [![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/stargazers)
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
-[![](https://repository-images.githubusercontent.com/963715375/4fff6aeb-4f7c-4228-a0e5-8cdceb6ee3e8)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
+[![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
 # Zipline Android App
 
@@ -24,6 +24,7 @@
 - [Features](#Features)
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
+- [Screenshots](#Screenshots)
 - [Development](#Development)
   - [Building](#Building)
   - [Android Studio](#Android-Studio)
@@ -40,24 +41,22 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 
 ## Install
 
-> [!TIP]  
-> To install, download and open the [latest release](https://github.com/cssnr/zipline-android/releases/latest).
->
-> [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+<a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
+    <img alt="GitHub" height="72" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
+<a title="Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
+    <img alt="Google Play" height="72" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
 
-<details><summary>View QR Code 📸</summary>
+_Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
+
+> [!TIP]  
+> Google Play is currently in Closed Testing.  
+> To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
+
+<details><summary>View QR Download Code 📸</summary>
 
 [![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
 </details>
-
-> [!WARNING]  
-> Google Play is currently in Closed Testing.  
-> To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
-
-[![Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/google/get-on-play-400.webp)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
-
-_Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
 Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled.
@@ -103,6 +102,21 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 ### Known Issues
 
 - Not [Django Files](https://github.com/django-files).
+
+## Screenshots
+
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/1.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/1.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/2.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/2.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/3.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/3.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/4.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/4.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/5.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/5.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/6.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/6.jpg"></a>
 
 # Development
 
