@@ -44,21 +44,26 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 <a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
     <img alt="GitHub" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
 <a title="Obtainium" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android/">
-    <img alt="Google Play" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/obtainium.png"></a>
+    <img alt="Obtainium" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/obtainium.png"></a>
 <a title="Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
     <img alt="Google Play" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
+
+<details><summary>📲 Click to View QR Codes 📸</summary>
+
+<a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
+    <img alt="GitHub" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png"></a>
+<a title="Obtainium" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android/">
+    <img alt="Obtainium" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-obtainium.png"></a>
+<a title="Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
+    <img alt="Google Play" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png"></a>
+
+</details>
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
 > [!TIP]  
 > Google Play is currently in Closed Testing.  
 > To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
-
-<details><summary>View QR Download Code 📸</summary>
-
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-
-</details>
 
 Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled.
