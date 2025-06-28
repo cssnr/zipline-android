@@ -42,9 +42,11 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 ## Install
 
 <a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
-    <img alt="GitHub" height="72" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
+    <img alt="GitHub" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
+<a title="Obtainium" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android/">
+    <img alt="Google Play" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/obtainium.png"></a>
 <a title="Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
-    <img alt="Google Play" height="72" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
+    <img alt="Google Play" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
