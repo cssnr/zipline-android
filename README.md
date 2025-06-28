@@ -9,7 +9,7 @@
 [![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/stargazers)
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
-[![](https://repository-images.githubusercontent.com/963715375/4fff6aeb-4f7c-4228-a0e5-8cdceb6ee3e8)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
+[![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
 # Zipline Android App
 
@@ -20,15 +20,15 @@
 > See [this discussion](https://github.com/cssnr/zipline-android/discussions/25) for more details.
 
 - [Install](#Install)
-    - [Setup](#Setup)
+  - [Setup](#Setup)
 - [Screenshots](#Screenshots)
 - [Features](#Features)
-    - [Planned](#Planned)
-    - [Known Issues](#Known-Issues)
+  - [Planned](#Planned)
+  - [Known Issues](#Known-Issues)
 - [Development](#Development)
-    - [Building](#Building)
-    - [Android Studio](#Android-Studio)
-    - [Command Line](#Command-Line)
+  - [Building](#Building)
+  - [Android Studio](#Android-Studio)
+  - [Command Line](#Command-Line)
 - [Support](#Support)
 - [Contributing](#Contributing)
 
@@ -69,8 +69,8 @@ For more information, see [Release through a website](https://developer.android.
 1. Go to your device settings.
 2. Search for "Install unknown apps" or similar.
 3. Choose the app you will install the apk file from.
-    - Select your web browser to install directly from it.
-    - Select your file manager to open it, locate the apk and install from there.
+   - Select your web browser to install directly from it.
+   - Select your file manager to open it, locate the apk and install from there.
 4. Download the [Latest Release](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk).
 5. Open the download apk in the app you selected in step #3.
 6. Choose Install and Accept any Play Protect notifications.
@@ -143,8 +143,8 @@ https://developer.android.com/studio
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
 
 3. Then build or run the app on your device.
-    - Import the Project
-    - Run Gradle Sync
+   - Import the Project
+   - Run Gradle Sync
 
 To Run: Select a device and press Play ▶️
 
