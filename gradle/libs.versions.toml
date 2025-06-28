@@ -18,8 +18,8 @@ navigationUiKtx = "2.9.0"
 workRuntimeKtx = "2.10.2"
 room = "2.7.2"
 
-googleServices = "4.4.2"
-firebaseBom = "33.15.0"
+googleServices = "4.4.3"
+firebaseBom = "33.16.0"
 crashlyticsPlugin = "3.0.4"
 
 okhttp = "4.12.0"

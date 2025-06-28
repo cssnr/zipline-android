@@ -133,9 +133,8 @@ class MainActivity : AppCompatActivity() {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         val action = intent.action
-        Log.d("onNewIntent", "action: $action")
-        Log.d("onNewIntent", "data: ${intent.data}")
-        Log.d("onNewIntent", "intent.type: ${intent.type}")
+        val data = intent.data
+        Log.d("onNewIntent", "${action}: $data")
 
         val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
         Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
@@ -153,8 +152,20 @@ class MainActivity : AppCompatActivity() {
                     .setPopUpTo(R.id.nav_item_home, true)
                     .build()
             )
+            return
+        }
 
-        } else if (Intent.ACTION_MAIN == action) {
+        val isCalendarUri = data != null &&
+                data.authority?.contains("calendar") == true &&
+                listOf("/events", "/calendars", "/time").any { data.path?.contains(it) == true }
+        Log.d("handleIntent", "isCalendarUri: $isCalendarUri")
+        if (isCalendarUri) {
+            Log.i("handleIntent", "Calendar Links Not Supported!")
+            Toast.makeText(this, "Calendar Links Not Supported!", Toast.LENGTH_LONG).show()
+            return
+        }
+
+        if (action == Intent.ACTION_MAIN) {
             Log.d("onNewIntent", "ACTION_MAIN")
 
             binding.drawerLayout.closeDrawers()
@@ -169,26 +180,30 @@ class MainActivity : AppCompatActivity() {
             Log.d("onNewIntent", "nav_item_preview: ${R.id.nav_item_upload}")
             Log.d("onNewIntent", "nav_item_short: ${R.id.nav_item_short}")
 
-            if (currentDestinationId == R.id.nav_item_upload || currentDestinationId == R.id.nav_item_short) {
-                Log.i("onNewIntent", "ON PREVIEW/SHORT - Navigating to HomeFragment w/ setPopUpTo")
-                // TODO: Determine the correct navigation call here...
-                //navController.navigate(R.id.nav_item_home)
-                navController.navigate(
-                    R.id.nav_item_home, null, NavOptions.Builder()
-                        .setPopUpTo(navController.graph.id, true)
-                        .build()
-                )
+            when (currentDestinationId) {
+                R.id.nav_item_upload, R.id.nav_item_short, R.id.nav_item_text -> {
+                    Log.i("onNewIntent", "Navigating away from preview page...")
+                    // TODO: Determine the correct navigation call here...
+                    //navController.navigate(R.id.nav_item_home)
+                    navController.navigate(
+                        R.id.nav_item_home, null, NavOptions.Builder()
+                            .setPopUpTo(navController.graph.id, true)
+                            .build()
+                    )
+                }
             }
+
             //} else if (currentDestinationId != R.id.nav_item_home && launcherAction != "previous") {
             //    Log.i("onNewIntent", "HOME SETTING SET - Navigating to HomeFragment")
             //    navController.navigate(R.id.nav_item_home)
+
             // TODO: Determine if this needs to be in the above if/else
             if (fromShortcut == "upload") {
                 Log.d("onNewIntent", "filePickerLauncher.launch")
                 filePickerLauncher.launch(arrayOf("*/*"))
             }
 
-        } else if (Intent.ACTION_SEND == action) {
+        } else if (action == Intent.ACTION_SEND) {
             Log.d("onNewIntent", "ACTION_SEND")
 
             val fileUri = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -235,7 +250,7 @@ class MainActivity : AppCompatActivity() {
                 showPreview(fileUri)
             }
 
-        } else if (Intent.ACTION_SEND_MULTIPLE == action) {
+        } else if (action == Intent.ACTION_SEND_MULTIPLE) {
             Log.d("onNewIntent", "ACTION_SEND_MULTIPLE")
 
             val fileUris = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -252,23 +267,22 @@ class MainActivity : AppCompatActivity() {
             }
             showMultiPreview(fileUris)
 
-        } else if (Intent.ACTION_VIEW == action) {
+        } else if (action == Intent.ACTION_VIEW) {
             Log.d("onNewIntent", "ACTION_VIEW")
 
-            Log.d("onNewIntent", "File URI: ${intent.data}")
-            showPreview(intent.data)
+            showPreview(data)
 
-        } else if ("UPLOAD_FILE" == action) {
+        } else if (action == "UPLOAD_FILE") {
             Log.d("handleIntent", "UPLOAD_FILE")
 
             filePickerLauncher.launch(arrayOf("*/*"))
 
         } else {
-            Toast.makeText(this, "That's a Bug!", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "Unknown Link!", Toast.LENGTH_LONG).show()
             Log.w("onNewIntent", "UNKNOWN INTENT - action: $action")
 
         }
-        //} else if ("RECENT_FILE" == action) {
+        //} else if (action == "RECENT_FILE") {
         //    Log.d("handleIntent", "RECENT_FILE")
     }
 

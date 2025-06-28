@@ -20,14 +20,15 @@
 > See [this discussion](https://github.com/cssnr/zipline-android/discussions/25) for more details.
 
 - [Install](#Install)
-  - [Setup](#Setup)
+    - [Setup](#Setup)
+- [Screenshots](#Screenshots)
 - [Features](#Features)
-  - [Planned](#Planned)
-  - [Known Issues](#Known-Issues)
+    - [Planned](#Planned)
+    - [Known Issues](#Known-Issues)
 - [Development](#Development)
-  - [Building](#Building)
-  - [Android Studio](#Android-Studio)
-  - [Command Line](#Command-Line)
+    - [Building](#Building)
+    - [Android Studio](#Android-Studio)
+    - [Command Line](#Command-Line)
 - [Support](#Support)
 - [Contributing](#Contributing)
 
@@ -68,8 +69,8 @@ For more information, see [Release through a website](https://developer.android.
 1. Go to your device settings.
 2. Search for "Install unknown apps" or similar.
 3. Choose the app you will install the apk file from.
-   - Select your web browser to install directly from it.
-   - Select your file manager to open it, locate the apk and install from there.
+    - Select your web browser to install directly from it.
+    - Select your file manager to open it, locate the apk and install from there.
 4. Download the [Latest Release](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk).
 5. Open the download apk in the app you selected in step #3.
 6. Choose Install and Accept any Play Protect notifications.
@@ -86,6 +87,21 @@ For more information, see [Release through a website](https://developer.android.
 To use, share or open any file and choose the Zipline app.
 The app will then be upload the file to your Zipline server.
 Additionally, the URL is copied to the clipboard and the preview is show in the app.
+
+## Screenshots
+
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/1.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/1.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/2.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/2.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/3.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/3.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/4.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/4.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/5.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/5.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/6.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/6.jpg"></a>
 
 ## Features
 
@@ -127,8 +143,8 @@ https://developer.android.com/studio
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
 
 3. Then build or run the app on your device.
-   - Import the Project
-   - Run Gradle Sync
+    - Import the Project
+    - Run Gradle Sync
 
 To Run: Select a device and press Play ▶️
 

@@ -155,7 +155,7 @@ class HomeFragment : Fragment() {
         }
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
-        binding.toggleMenu.apply { animate().alpha(1f).setDuration(3000).start() }
+        binding.toggleMenu.apply { animate().alpha(1f).setDuration(1500).start() }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
