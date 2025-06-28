@@ -42,8 +42,7 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 ## Install
 
 > [!TIP]  
-> Google Play is currently in Closed Testing.  
-> To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
+> Google Play is in Closed Testing. To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
 
 <a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
     <img alt="GitHub" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
