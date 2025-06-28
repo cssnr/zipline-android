@@ -41,29 +41,22 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 
 ## Install
 
-> [!TIP]  
-> To install, download and open the [latest release](https://github.com/cssnr/zipline-android/releases/latest).
->
-> [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-
-<details><summary>View QR Code 📸</summary>
-
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-
-</details>
-
-> [!WARNING]  
-> Google Play is currently in Closed Testing.  
-> To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
-
-[![Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/google/get-on-play-400.webp)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
-
 <a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
     <img alt="GitHub" height="56" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
 <a title="Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
     <img alt="Google Play" height="56" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
+
+> [!TIP]  
+> Google Play is currently in Closed Testing.  
+> To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
+
+<details><summary>View QR Download Code 📸</summary>
+
+[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+
+</details>
 
 Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled.
