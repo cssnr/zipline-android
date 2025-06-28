@@ -44,20 +44,20 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 > [!TIP]  
 > Google Play is in Closed Testing. To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
 
-<a title="GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
+<a title="Get on GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
     <img alt="GitHub" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
-<a title="Obtainium" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android/">
+<a title="Get on Obtainium" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android">
     <img alt="Obtainium" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/obtainium.png"></a>
-<a title="Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
+<a title="Get on Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
     <img alt="Google Play" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
 
 <details><summary>📲 Click to View QR Codes 📸</summary>
 
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+[![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android/)
+[![QR Code Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 
-[![QR Code](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
+[![QR Code Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
 </details>
 
@@ -85,7 +85,8 @@ For more information, see [Release through a website](https://developer.android.
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
-3. All Done! You can now share and open files with Zipline.
+3. Done! You can now share and open files with Zipline.
+4. Optionally add a Stats Widget to your Home Screen.
 
 To use, share or open any file and choose the Zipline app.
 The app will then be upload the file to your Zipline server.
@@ -278,5 +279,5 @@ You can also support other related projects:
 Additional Android projects:
 
 - [NOAA Weather Android](https://github.com/cssnr/noaa-weather-android?tab=readme-ov-file#readme)
-- [Remote Wallpaper Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
+- [Remote Wallpaper Android](https://github.com/cssnr/remote-wallpaper-android?tab=readme-ov-file#readme)
 - [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
