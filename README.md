@@ -291,7 +291,7 @@ I **strongly** recommend Obtainium to install and update Android applications fr
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/qr-codes/obtainium-download.png)](https://github.com/ImranR98/Obtainium/releases/latest/download/app-release.apk)
 
-You can add all my applications by pasting this into the Obtainium Import from URL list: 
+You can add all my applications by pasting this into the Obtainium Import from URL list:
 
 ```text
 https://github.com/django-files/android-client
