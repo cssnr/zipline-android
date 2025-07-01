@@ -281,3 +281,22 @@ Additional Android projects:
 - [NOAA Weather Android](https://github.com/cssnr/noaa-weather-android?tab=readme-ov-file#readme)
 - [Remote Wallpaper Android](https://github.com/cssnr/remote-wallpaper-android?tab=readme-ov-file#readme)
 - [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
+
+## Obtainium Import List
+
+I **strongly** recommend Obtainium to install and update Android applications from GitHub, and more...
+
+- https://obtainium.imranr.dev/
+- https://github.com/ImranR98/Obtainium
+
+[![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/qr-codes/obtainium-download.png)](https://github.com/ImranR98/Obtainium/releases/latest/download/app-release.apk)
+
+You can add all my applications by pasting this into the Obtainium Import from URL list: 
+
+```text
+https://github.com/django-files/android-client
+https://github.com/cssnr/zipline-android
+https://github.com/cssnr/noaa-weather-android
+https://github.com/cssnr/remote-wallpaper-android
+https://github.com/cssnr/tibs3dprints-android
+```
