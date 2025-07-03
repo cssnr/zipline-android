@@ -72,7 +72,7 @@ class FilesViewAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //Log.d("UploadMultiAdapter", "position: $position")
         val data = dataSet[position]
-        //Log.d("onBindViewHolder", "data[$position]: $data")
+        Log.d("onBindViewHolder", "data[$position]: $data")
         //Log.d("onBindViewHolder", "data[$position]: ${data.name}")
 
         // Setup
@@ -101,12 +101,12 @@ class FilesViewAdapter(
 
         // Password
         viewHolder.filePassword.compoundDrawableTintList =
-            if (data.password == null) null else colorOnSecondary
+            if (data.password == true) null else colorOnSecondary
 
-        //// Expiration
+        // Expiration
         //viewHolder.fileExpr.text = data.deletesAt
-        //viewHolder.fileExpr.compoundDrawableTintList =
-        //    if (data.deletesAt == null) null else colorOnSecondary
+        viewHolder.fileExpr.compoundDrawableTintList =
+            if (data.deletesAt == null) colorOnSecondary else null
 
         // Variables
         //val passParam = if (data.password.isNotEmpty()) "&password=${data.password}" else ""
@@ -123,7 +123,7 @@ class FilesViewAdapter(
             //putString("thumbUrl", thumbUrl)
             putString("shareUrl", viewUrl)
             putString("rawUrl", rawUrl)
-            putString("filePassword", data.password)
+            putBoolean("filePassword", data.password == true)
             //putBoolean("isPrivate", data.private)
         }
         //Log.d("FilesViewAdapter", "bundle: $bundle")

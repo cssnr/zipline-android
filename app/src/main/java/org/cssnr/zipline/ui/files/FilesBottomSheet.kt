@@ -40,7 +40,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
     private val viewModel: FilesViewModel by activityViewModels()
 
     private lateinit var savedUrl: String
-    private lateinit var filePassword: String
+    private var filePassword: Boolean = false
 
     companion object {
         fun newInstance(bundle: Bundle) = FilesBottomSheet().apply {
@@ -86,7 +86,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             // TODO: HANDLE THIS ERROR!!!
             return
         }
-        filePassword = data.password ?: ""
+        filePassword = data.password == true
 
         // Name
         binding.fileName.text = data.name
@@ -147,7 +147,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         //    deleteConfirmDialog(savedUrl, data.id, data.name)
         //}
         // Password
-        if (!filePassword.isEmpty()) {
+        if (filePassword) {
             tintImage(binding.setPassword)
         }
         //binding.setPassword.setOnClickListener {
