@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="48dp"
+    android:paddingVertical="1dp"
+    android:paddingHorizontal="2dp"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:background="?attr/selectableItemBackground">
+<LinearLayout
+    android:id="@+id/item_border"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:gravity="center_vertical"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:id="@+id/item_select"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:layout_marginStart="3dp">
+
+        <ProgressBar
+            android:id="@+id/loading_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:visibility="gone"
+            tools:visibility="gone" />
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/file_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/file_list"
+            android:scaleType="center"
+            android:src="@drawable/md_docs_24"
+            app:strokeColor="?android:colorControlNormal"
+            app:strokeWidth="1dp" />
+        <ImageView
+            android:id="@+id/check_mark"
+            android:layout_height="24dp"
+            android:layout_width="24dp"
+            android:layout_gravity="center"
+            android:src="@drawable/md_check_circle_24px"
+            android:contentDescription="Selected"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/image_holder"
+            app:tint="@android:color/holo_green_light" />
+<!--        <FrameLayout-->
+<!--            android:id="@+id/item_border"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:background="@drawable/image_border_selected" />-->
+    </FrameLayout>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="4dp">
+
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center_vertical"
+            android:maxLines="1"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="ReallyLongFileNameBecauseIDontKnowHowToRenameFiles.everyone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/file_size"
+                android:layout_width="54dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:gravity="center_vertical"
+                tools:text="999 kB" />
+
+            <TextView
+                android:id="@+id/file_view"
+                android:layout_width="64dp"
+                android:layout_height="fill_parent"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                app:drawableStartCompat="@drawable/md_visibility_24"
+                app:drawableTint="?attr/colorOnSecondary"
+                tools:text="9999" />
+
+            <TextView
+                android:id="@+id/file_private"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:gravity="center_vertical"
+                app:drawableStartCompat="@drawable/md_lock_24"
+                app:drawableTint="?attr/colorOnSecondary" />
+
+            <TextView
+                android:id="@+id/file_password"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:gravity="center_vertical"
+                app:drawableStartCompat="@drawable/md_key_vertical_24"
+                app:drawableTint="?attr/colorOnSecondary" />
+
+            <TextView
+                android:id="@+id/file_expr"
+                android:layout_width="64dp"
+                android:layout_height="fill_parent"
+                android:layout_weight="1"
+                android:drawablePadding="4dp"
+                android:gravity="center_vertical"
+                android:textAlignment="textEnd"
+                app:drawableEndCompat="@drawable/md_timer_24"
+                app:drawableTint="?attr/colorOnSecondary"
+                tools:text="1y"
+                tools:ignore="RtlCompat" />
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/open_menu"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_weight="0"
+        android:layout_marginHorizontal="3dp"
+        android:background="@drawable/edit_text_border">
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/open"
+            android:scaleType="centerInside"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/md_menu_24px" />
+    </LinearLayout>
+
+</LinearLayout>
+</LinearLayout>

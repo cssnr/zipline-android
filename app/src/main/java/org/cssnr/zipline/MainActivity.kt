@@ -21,6 +21,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.media3.common.util.UnstableApi
+import androidx.media3.database.StandaloneDatabaseProvider
+import androidx.media3.datasource.DefaultHttpDataSource
+import androidx.media3.datasource.cache.CacheDataSource
+import androidx.media3.datasource.cache.LeastRecentlyUsedCacheEvictor
+import androidx.media3.datasource.cache.SimpleCache
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
@@ -33,6 +39,7 @@ import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
+import java.io.File
 import java.net.URL
 import java.util.concurrent.TimeUnit
 
@@ -352,6 +359,28 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.setDrawerLockMode(lockMode)
     }
 }
+
+
+@UnstableApi
+object MediaCache {
+    lateinit var simpleCache: SimpleCache
+    lateinit var cacheDataSourceFactory: CacheDataSource.Factory
+
+    fun initialize(context: Context) {
+        if (!::simpleCache.isInitialized) {
+            simpleCache = SimpleCache(
+                File(context.cacheDir, "exoCache"),
+                LeastRecentlyUsedCacheEvictor(350 * 1024 * 1024),
+                StandaloneDatabaseProvider(context)
+            )
+            cacheDataSourceFactory = CacheDataSource.Factory()
+                .setCache(simpleCache)
+                .setUpstreamDataSourceFactory(DefaultHttpDataSource.Factory())
+                .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
+        }
+    }
+}
+
 
 fun copyToClipboard(context: Context, url: String) {
     Log.d("copyToClipboard", "url: $url")
