@@ -140,6 +140,24 @@ class ServerApi(private val context: Context, url: String? = null) {
         return response
     }
 
+    suspend fun files(page: Int, perpage: Int = 25): List<FileResponse>? {
+        Log.d("Api[files]", "page: $page - perpage: $perpage")
+        var response = api.getFiles(page, perpage)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.getFiles(page, perpage)
+            }
+        }
+        Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body?.page
+        }
+        return null
+    }
+
     private suspend fun reAuthenticate(api: ApiService, ziplineUrl: String): String? {
         return try {
             val cookies = CookieManager.getInstance().getCookie(ziplineUrl)
@@ -226,6 +244,12 @@ class ServerApi(private val context: Context, url: String? = null) {
         suspend fun postShort(
             @Body request: ShortRequest,
         ): Response<ShortResponse>
+
+        @GET("user/files")
+        suspend fun getFiles(
+            @Query("page") amount: Int,
+            @Query("perpage") start: Int,
+        ): Response<FilesResponse>
     }
 
     @JsonClass(generateAdapter = true)
@@ -302,6 +326,13 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "thumbnail") val thumbnail: String?,
         @Json(name = "password") val password: String?,
         @Json(name = "url") val url: String
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class FilesResponse(
+        @Json(name = "page") val page: List<FileResponse>,
+        @Json(name = "total") val total: Int,
+        @Json(name = "pages") val pages: Int,
     )
 
     inner class SimpleCookieJar : CookieJar {
