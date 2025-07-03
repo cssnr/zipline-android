@@ -440,8 +440,9 @@ class FilesFragment : Fragment() {
 
     suspend fun getFiles(perPage: Int, reset: Boolean = false) {
         try {
-            //val start = if (reset) 0 else filesAdapter.itemCount
-            //Log.d("getFiles", "start: $start")
+            if (reset) {
+                viewModel.currentPage.value = 1
+            }
             Log.d("getFiles", "currentPage: ${viewModel.currentPage.value}")
             val files = api.files(viewModel.currentPage.value!!, perPage)
             viewModel.currentPage.value = viewModel.currentPage.value?.plus(1)
