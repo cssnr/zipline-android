@@ -17,6 +17,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
@@ -68,14 +69,14 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("File[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
 
-        val sharedPreferences =
-            requireContext().getSharedPreferences("AppPreferences", MODE_PRIVATE)
-        savedUrl = sharedPreferences.getString("ziplineUrl", "").toString()
+        val ctx = requireContext()
+        val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+        savedUrl = preferences.getString("ziplineUrl", "").toString()
 
         Log.d("Bottom[onCreateView]", "arguments: $arguments")
-        val rawUrl = requireArguments().getString("rawUrl") ?: ""
+        val rawUrl = arguments?.getString("rawUrl") ?: ""
         Log.d("Bottom[onCreateView]", "rawUrl: $rawUrl")
-        val viewUrl = requireArguments().getString("viewUrl") ?: ""
+        val viewUrl = arguments?.getString("viewUrl") ?: ""
         Log.d("Bottom[onCreateView]", "viewUrl: $viewUrl")
         val position = requireArguments().getInt("position")
         Log.d("Bottom[onCreateView]", "position: $position")
@@ -97,7 +98,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         //binding.togglePrivate.setOnClickListener {
         //    data.private = !data.private
         //    Log.d("togglePrivate", "New Value: ${data.private}")
-        //    val api = ServerApi(requireContext(), savedUrl)
+        //    val api = ServerApi(ctx, savedUrl)
         //    lifecycleScope.launch {
         //        val response = api.edit(data.id, FileEditRequest(private = data.private))
         //        Log.d("deleteButton", "response: $response")
@@ -113,7 +114,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         //// Album
         //binding.albumButton.setOnClickListener {
         //    Log.d("albumButton", "Album Button")
-        //    val dao = AlbumDatabase.getInstance(requireContext(), savedUrl).albumDao()
+        //    val dao = AlbumDatabase.getInstance(ctx, savedUrl).albumDao()
         //    lifecycleScope.launch {
         //        Log.d("File[albumButton]", "viewModel.selected.value: ${viewModel.selected.value}")
         //        setFragmentResultListener("albums_result") { _, bundle ->
@@ -133,11 +134,11 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
         // Share
         binding.shareButton.setOnClickListener {
-            requireContext().shareUrl(viewUrl)
+            ctx.shareUrl(viewUrl)
         }
         // Copy
         binding.copyButton.setOnClickListener {
-            copyToClipboard(requireContext(), viewUrl)
+            copyToClipboard(ctx, viewUrl)
         }
 
         //// Delete
@@ -151,7 +152,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         }
         //binding.setPassword.setOnClickListener {
         //    Log.d("setPassword", "setOnClickListener")
-        //    setPasswordDialog(requireContext(), data.id, data.name)
+        //    setPasswordDialog(ctx, data.id, data.name)
         //}
         //// Expire
         //binding.expireButton.setOnClickListener {
@@ -161,15 +162,15 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         //        data.expr = newExpr
         //        viewModel.updateRequest.value = listOf(position)
         //    }
-        //    requireContext().showExpireDialog(listOf(data.id), ::callback, data.expr)
+        //    ctx.showExpireDialog(listOf(data.id), ::callback, data.expr)
         //}
         // Open
         binding.openButton.setOnClickListener {
-            requireContext().openUrl(viewUrl)
+            ctx.openUrl(viewUrl)
         }
 
         // Image
-        val radius = requireContext().resources.getDimension(R.dimen.image_preview_large)
+        val radius = ctx.resources.getDimension(R.dimen.image_preview_large)
         binding.imagePreview.setShapeAppearanceModel(
             binding.imagePreview.shapeAppearanceModel
                 .toBuilder()

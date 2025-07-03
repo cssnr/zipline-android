@@ -509,9 +509,8 @@ class FilesFragment : Fragment() {
         val previewMetered = if (metered != null) {
             metered
         } else {
-            val sharedPreferences =
-                requireContext().getSharedPreferences("AppPreferences", MODE_PRIVATE)
-            sharedPreferences.getBoolean("file_preview_metered", false)
+            val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+            preferences.getBoolean("file_preview_metered", false)
         }
         Log.d("File[checkMetered]", "previewMetered: $previewMetered")
         val connectivityManager =

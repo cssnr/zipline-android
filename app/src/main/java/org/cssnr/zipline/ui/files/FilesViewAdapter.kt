@@ -111,8 +111,8 @@ class FilesViewAdapter(
         // Variables
         //val passParam = if (data.password.isNotEmpty()) "&password=${data.password}" else ""
         val viewUrl = "${savedUrl}${data.url}"
-        val rawUrl = "${savedUrl}${data.url}"
-        val thumbUrl = "${savedUrl}${data.thumbnail}"
+        val rawUrl = "${savedUrl}/raw/${data.name}"
+        //val thumbUrl = "${savedUrl}${data.thumbnail}"
 
         val bundle = Bundle().apply {
             putInt("position", viewHolder.bindingAdapterPosition) // TODO: REMOVE EVERYTHING ELSE
@@ -120,7 +120,7 @@ class FilesViewAdapter(
             putString("fileName", data.name)
             putString("mimeType", data.type)
             putString("viewUrl", viewUrl)
-            putString("thumbUrl", thumbUrl)
+            //putString("thumbUrl", thumbUrl)
             putString("shareUrl", viewUrl)
             putString("rawUrl", rawUrl)
             putString("filePassword", data.password)

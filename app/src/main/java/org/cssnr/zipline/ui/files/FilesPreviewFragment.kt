@@ -22,6 +22,7 @@ import androidx.media3.datasource.cache.CacheDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
 import androidx.navigation.fragment.findNavController
+import androidx.preference.PreferenceManager
 import androidx.transition.TransitionInflater
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -97,7 +98,7 @@ class FilesPreviewFragment : Fragment() {
             findNavController().navigateUp()
         }
 
-        val fileId = arguments?.getInt("fileId")
+        val fileId = arguments?.getString("fileId")
         Log.d("FilesPreviewFragment", "fileId: $fileId")
         val fileName = arguments?.getString("fileName")
         Log.d("FilesPreviewFragment", "fileName: $fileName")
@@ -110,14 +111,15 @@ class FilesPreviewFragment : Fragment() {
 
         binding.fileName.text = fileName
 
-        val sharedPreferences =
-            requireContext().getSharedPreferences("AppPreferences", MODE_PRIVATE)
-        val autoPlay = sharedPreferences.getBoolean("file_preview_autoplay", true)
+        val ctx = requireContext()
+
+        val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+        val autoPlay = preferences.getBoolean("file_preview_autoplay", true)
         Log.d("FilesPreviewFragment", "autoPlay: $autoPlay")
-        val savedUrl = sharedPreferences.getString("ziplineUrl", null)
+        val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("FilesPreviewFragment", "savedUrl: $savedUrl")
 
-        binding.playerView.transitionName = fileId.toString()
+        binding.playerView.transitionName = fileId
         //Log.d("FilesPreviewFragment", "transitionName: ${imageView.transitionName}")
 
         if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
@@ -147,7 +149,7 @@ class FilesPreviewFragment : Fragment() {
             Log.d("FilesPreviewFragment", "currentPosition: $currentPosition")
 
             //val mediaSource = ProgressiveMediaSource.Factory(MediaCache.cacheDataSourceFactory)
-            //    .createMediaSource(MediaItem.fromUri(viewUrl!!))
+            //    .createMediaSource(MediaItem.fromUri(rawUrl!!))
             val cookie = CookieManager.getInstance().getCookie(savedUrl)
             Log.d("FilesPreviewFragment", "cookie: $cookie")
             val baseDataSourceFactory = DefaultHttpDataSource.Factory()
@@ -157,7 +159,7 @@ class FilesPreviewFragment : Fragment() {
                 .setUpstreamDataSourceFactory(baseDataSourceFactory)
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
             val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(viewUrl!!))
+                .createMediaSource(MediaItem.fromUri(rawUrl!!))
 
             player.setMediaSource(mediaSource)
             player.prepare()
@@ -190,6 +192,7 @@ class FilesPreviewFragment : Fragment() {
             //    .load(rawUrl)
             //    .into(imageView)
 
+            Log.i("FilesPreviewFragment", "rawUrl: $rawUrl")
             postponeEnterTransition()
             Glide.with(this)
                 .load(rawUrl)
@@ -225,7 +228,7 @@ class FilesPreviewFragment : Fragment() {
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")
             binding.copyText.visibility = View.VISIBLE
-            webView = WebView(requireContext())
+            webView = WebView(ctx)
             binding.previewContainer.addView(webView)
 
             val url = "file:///android_asset/preview/preview.html"
@@ -236,17 +239,17 @@ class FilesPreviewFragment : Fragment() {
             //cookieManager.setAcceptThirdPartyCookies(webView, true)
 
             lifecycleScope.launch {
-                val content = withContext(Dispatchers.IO) { getContent(viewUrl!!) }
+                val content = withContext(Dispatchers.IO) { getContent(rawUrl!!) }
                 if (content == null) {
                     Log.w("FilesPreviewFragment", "content is null")
                     withContext(Dispatchers.Main) {
                         val msg = "Error Loading Content!"
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                        Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show()
                     }
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
-                    copyToClipboard(requireContext(), content)
+                    copyToClipboard(ctx, content)
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)
@@ -278,8 +281,8 @@ class FilesPreviewFragment : Fragment() {
         }
     }
 
-    fun getContent(viewUrl: String): String? {
-        Log.d("getContent", "viewUrl: $viewUrl")
+    fun getContent(rawUrl: String): String? {
+        Log.d("getContent", "rawUrl: $rawUrl")
         val forceCacheInterceptor = Interceptor { chain ->
             val response = chain.proceed(chain.request())
             response.newBuilder()
@@ -287,7 +290,7 @@ class FilesPreviewFragment : Fragment() {
                 .build()
         }
 
-        val cookies = CookieManager.getInstance().getCookie(viewUrl)
+        val cookies = CookieManager.getInstance().getCookie(rawUrl)
         Log.d("getContent", "cookies: $cookies")
 
         val cacheDirectory = File(requireContext().cacheDir, "http_cache")
@@ -298,7 +301,7 @@ class FilesPreviewFragment : Fragment() {
             .cache(cache)
             .build()
 
-        val request = Request.Builder().url(viewUrl).header("Cookie", cookies ?: "").build()
+        val request = Request.Builder().url(rawUrl).header("Cookie", cookies ?: "").build()
         return try {
             client.newCall(request).execute().use { response ->
                 Log.d("getContent", "response.code: ${response.code}")

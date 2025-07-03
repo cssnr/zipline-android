@@ -323,7 +323,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "views") val views: Int,
         @Json(name = "maxViews") val maxViews: Int?,
         @Json(name = "folderId") val folderId: String?,
-        @Json(name = "thumbnail") val thumbnail: String?,
+        //@Json(name = "thumbnail") val thumbnail: String?,
         @Json(name = "password") val password: String?,
         @Json(name = "url") val url: String
     )
