@@ -331,8 +331,8 @@ class ServerApi(private val context: Context, url: String? = null) {
     @JsonClass(generateAdapter = true)
     data class FilesResponse(
         @Json(name = "page") val page: List<FileResponse>,
-        @Json(name = "total") val total: Int,
-        @Json(name = "pages") val pages: Int,
+        @Json(name = "total") val total: Int?,
+        @Json(name = "pages") val pages: Int?,
     )
 
     inner class SimpleCookieJar : CookieJar {
