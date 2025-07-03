@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
+import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -60,6 +61,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // File Name Option
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
+        // Files Per Page
+        val filesPerPage = preferenceManager.sharedPreferences?.getInt("files_per_page", 25)
+        Log.d("onCreatePreferences", "filesPerPage: $filesPerPage")
+        val seekBar = findPreference<SeekBarPreference>("files_per_page")
+        seekBar?.summary = "Current Value: $filesPerPage"
+        seekBar?.apply {
+            setOnPreferenceChangeListener { pref, newValue ->
+                val intValue = (newValue as Int)
+                var stepped = ((intValue + 2) / 5) * 5
+                if (stepped < 10) stepped = 10
+                Log.d("onCreatePreferences", "stepped: $stepped")
+                value = stepped
+                pref.summary = "Current Value: $stepped"
+                false
+            }
+        }
 
         //// Launcher Icon Action
         //val launcherAction = findPreference<ListPreference>("launcher_action")

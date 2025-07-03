@@ -72,7 +72,7 @@ class FilesViewAdapter(
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         //Log.d("UploadMultiAdapter", "position: $position")
         val data = dataSet[position]
-        Log.d("onBindViewHolder", "data[$position]: $data")
+        //Log.d("onBindViewHolder", "data[$position]: $data")
         //Log.d("onBindViewHolder", "data[$position]: ${data.name}")
 
         // Setup
@@ -86,7 +86,7 @@ class FilesViewAdapter(
         colorOnSecondary = ContextCompat.getColorStateList(context, typedValue.resourceId)
 
         // Name
-        viewHolder.fileName.text = data.name
+        viewHolder.fileName.text = data.originalName ?: data.name
 
         // Size
         viewHolder.fileSize.text = bytesToHuman(data.size.toDouble()).toString()
@@ -112,7 +112,7 @@ class FilesViewAdapter(
         //val passParam = if (data.password.isNotEmpty()) "&password=${data.password}" else ""
         val viewUrl = "${savedUrl}${data.url}"
         val rawUrl = "${savedUrl}/raw/${data.name}"
-        //val thumbUrl = "${savedUrl}${data.thumbnail}"
+        val thumbUrl = if (data.thumbnail != null) "${savedUrl}/raw/${data.thumbnail.path}" else null
 
         val bundle = Bundle().apply {
             putInt("position", viewHolder.bindingAdapterPosition) // TODO: REMOVE EVERYTHING ELSE
@@ -120,7 +120,7 @@ class FilesViewAdapter(
             putString("fileName", data.name)
             putString("mimeType", data.type)
             putString("viewUrl", viewUrl)
-            //putString("thumbUrl", thumbUrl)
+            putString("thumbUrl", thumbUrl)
             putString("shareUrl", viewUrl)
             putString("rawUrl", rawUrl)
             putBoolean("filePassword", data.password == true)
@@ -234,12 +234,13 @@ class FilesViewAdapter(
         }
 
         // Image - Logic
-        if (isGlideMime(data.type)) {
+        if (thumbUrl != null || isGlideMime(data.type)) {
             viewHolder.loadingSpinner.visibility = View.VISIBLE
-            //Log.d("Glide", "load: ${data.id}: ${data.mime}: $thumbUrl")
-
+            //val url = data.thumbnail ?: rawUrl
+            val url = thumbUrl ?: rawUrl
+            //Log.i("Glide", "load: ${data.id}: ${data.type}: $url")
             Glide.with(viewHolder.itemView)
-                .load(rawUrl)
+                .load(url)
                 .onlyRetrieveFromCache(isMetered)
                 .listener(glideListener)
                 .into(viewHolder.fileImage)

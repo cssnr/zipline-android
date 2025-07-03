@@ -318,15 +318,21 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "id") val id: String,
         @Json(name = "originalName") val originalName: String?,
         @Json(name = "name") val name: String,
-        @Json(name = "size") val size: Int,
+        @Json(name = "size") val size: Long,
         @Json(name = "type") val type: String,
         @Json(name = "views") val views: Int,
         @Json(name = "maxViews") val maxViews: Int?,
-        @Json(name = "folderId") val folderId: String?,
-        //@Json(name = "thumbnail") val thumbnail: String?,
         @Json(name = "password") val password: Boolean?,
+        @Json(name = "folderId") val folderId: String?,
+        @Json(name = "thumbnail") val thumbnail: Thumbnail?,
+        //@Json(name = "tags") val tags: List<Tags>?,
         @Json(name = "url") val url: String
-    )
+    ) {
+        @JsonClass(generateAdapter = true)
+        data class Thumbnail(
+            val path: String,
+        )
+    }
 
     @JsonClass(generateAdapter = true)
     data class FilesResponse(
