@@ -103,8 +103,8 @@ class FilesPreviewFragment : Fragment() {
         Log.d("FilesPreviewFragment", "fileName: $fileName")
         val mimeType = arguments?.getString("mimeType")
         Log.d("FilesPreviewFragment", "mimeType: $mimeType")
-        val thumbUrl = arguments?.getString("thumbUrl")
-        Log.d("FilesPreviewFragment", "thumbUrl: $thumbUrl")
+        val rawUrl = arguments?.getString("rawUrl")
+        Log.d("FilesPreviewFragment", "rawUrl: $rawUrl")
         val viewUrl = arguments?.getString("viewUrl")
         Log.d("FilesPreviewFragment", "viewUrl: $viewUrl")
 
@@ -187,12 +187,12 @@ class FilesPreviewFragment : Fragment() {
             binding.previewImageView.visibility = View.VISIBLE
 
             //Glide.with(this)
-            //    .load(thumbUrl)
+            //    .load(rawUrl)
             //    .into(imageView)
 
             postponeEnterTransition()
             Glide.with(this)
-                .load(thumbUrl)
+                .load(rawUrl)
                 .listener(object : RequestListener<Drawable> {
                     override fun onLoadFailed(
                         e: GlideException?,
