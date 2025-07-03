@@ -73,6 +73,10 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         savedUrl = sharedPreferences.getString("ziplineUrl", "").toString()
 
         Log.d("Bottom[onCreateView]", "arguments: $arguments")
+        val rawUrl = requireArguments().getString("rawUrl") ?: ""
+        Log.d("Bottom[onCreateView]", "rawUrl: $rawUrl")
+        val viewUrl = requireArguments().getString("viewUrl") ?: ""
+        Log.d("Bottom[onCreateView]", "viewUrl: $viewUrl")
         val position = requireArguments().getInt("position")
         Log.d("Bottom[onCreateView]", "position: $position")
         val data = viewModel.filesData.value?.get(position)
@@ -129,11 +133,11 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
         // Share
         binding.shareButton.setOnClickListener {
-            requireContext().shareUrl(data.url)
+            requireContext().shareUrl(viewUrl)
         }
         // Copy
         binding.copyButton.setOnClickListener {
-            copyToClipboard(requireContext(), data.url)
+            copyToClipboard(requireContext(), viewUrl)
         }
 
         //// Delete
@@ -161,7 +165,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         //}
         // Open
         binding.openButton.setOnClickListener {
-            requireContext().openUrl(data.url)
+            requireContext().openUrl(viewUrl)
         }
 
         // Image
@@ -175,7 +179,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         if (isGlideMime(data.type)) {
             Log.d("Bottom[onCreateView]", "isGlideMime")
             Glide.with(this)
-                .load(data.url) // TODO: NEED TO GET ACTUAL URL THIS IS JUST A PLACEHOLDER!!!
+                .load(rawUrl)
                 .into(binding.imagePreview)
         } else {
             binding.imagePreview.setImageResource(getGenericIcon(data.type))
