@@ -24,11 +24,10 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ServerApi.FileResponse
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
-import org.cssnr.zipline.ui.files.FilesBottomSheet
+import org.cssnr.zipline.R
+import org.cssnr.zipline.api.ServerApi.FileResponse
 
 //import android.widget.ImageView
 //import android.net.ConnectivityManager
@@ -93,7 +92,8 @@ class FilesViewAdapter(
 
         // Views
         viewHolder.fileView.text = data.views.toString()
-        viewHolder.fileView.compoundDrawableTintList = if (data.views > 0) null else colorOnSecondary
+        viewHolder.fileView.compoundDrawableTintList =
+            if (data.views > 0) null else colorOnSecondary
 
         //// Private
         //viewHolder.filePrivate.compoundDrawableTintList =
@@ -112,7 +112,8 @@ class FilesViewAdapter(
         //val passParam = if (data.password.isNotEmpty()) "&password=${data.password}" else ""
         val viewUrl = "${savedUrl}${data.url}"
         val rawUrl = "${savedUrl}/raw/${data.name}"
-        val thumbUrl = if (data.thumbnail != null) "${savedUrl}/raw/${data.thumbnail.path}" else null
+        val thumbUrl =
+            if (data.thumbnail != null) "${savedUrl}/raw/${data.thumbnail.path}" else null
 
         val bundle = Bundle().apply {
             putInt("position", viewHolder.bindingAdapterPosition) // TODO: REMOVE EVERYTHING ELSE

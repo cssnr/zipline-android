@@ -10,6 +10,7 @@ class FilesViewModel : ViewModel() {
     val currentPage = MutableLiveData<Int>(1)
     val atEnd = MutableLiveData<Boolean>()
     val deleteId = MutableLiveData<String>()
+
     //val editRequest = MutableLiveData<FileEditRequest>()
     val updateRequest = MutableLiveData<List<Int>>()
 

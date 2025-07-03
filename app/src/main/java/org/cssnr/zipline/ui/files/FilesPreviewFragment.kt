@@ -1,7 +1,6 @@
 package org.cssnr.zipline.ui.files
 
 import android.annotation.SuppressLint
-import android.content.Context.MODE_PRIVATE
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -29,9 +28,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import org.cssnr.zipline.MediaCache
-import org.cssnr.zipline.copyToClipboard
-import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -39,6 +35,9 @@ import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
+import org.cssnr.zipline.MediaCache
+import org.cssnr.zipline.copyToClipboard
+import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import org.json.JSONObject
 import java.io.File
 

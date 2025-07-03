@@ -1,7 +1,6 @@
 package org.cssnr.zipline.ui.files
 
 import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
@@ -14,13 +13,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.webkit.CookieManager
-import android.widget.EditText
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -30,17 +26,15 @@ import androidx.transition.Slide
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
-import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.databinding.FragmentFilesBinding
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
-import org.cssnr.zipline.ui.files.FilesViewAdapter
-import org.cssnr.zipline.ui.files.FilesViewModel
+import org.cssnr.zipline.R
+import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.databinding.FragmentFilesBinding
 import java.io.InputStream
 
 class FilesFragment : Fragment() {

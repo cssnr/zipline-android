@@ -297,6 +297,8 @@ I also made a Web Extension for Desktop and Android to make installing with Obta
 
 https://github.com/cssnr/obtainium-extension
 
+[![Firefox Android](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/obtainium/qr-code-firefox.png)](https://addons.mozilla.org/addon/obtainium-extension)
+
 Lastly, you can add all my applications by pasting this into the Obtainium Import from URL list:
 
 ```text

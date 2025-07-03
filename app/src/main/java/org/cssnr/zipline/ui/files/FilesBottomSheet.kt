@@ -1,28 +1,19 @@
 package org.cssnr.zipline.ui.files
 
-import android.content.Context
-import android.content.Context.MODE_PRIVATE
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
-import org.cssnr.zipline.R
-import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.copyToClipboard
-import org.cssnr.zipline.databinding.FragmentFilesBottomBinding
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -30,6 +21,10 @@ import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.cssnr.zipline.R
+import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.copyToClipboard
+import org.cssnr.zipline.databinding.FragmentFilesBottomBinding
 
 class FilesBottomSheet : BottomSheetDialogFragment() {
 
