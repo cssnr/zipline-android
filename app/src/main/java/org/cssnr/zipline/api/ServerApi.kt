@@ -24,11 +24,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
+import retrofit2.http.HTTP
 import retrofit2.http.Header
 import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
+import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.InputStream
 import java.net.URLConnection
@@ -158,6 +162,44 @@ class ServerApi(private val context: Context, url: String? = null) {
         return null
     }
 
+    suspend fun deleteMany(files: List<String>): Int? {
+        //Log.d("Api[deleteMany]", "files: $files")
+        val transaction = FilesTransaction(files = files)
+        Log.d("Api[deleteMany]", "transaction: $transaction")
+        var response = api.deleteFiles(transaction)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.deleteFiles(transaction)
+            }
+        }
+        Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body?.count
+        }
+        return null
+    }
+
+    suspend fun deleteSingle(fileId: String): FileResponse? {
+        //Log.d("Api[deleteMany]", "files: $files")
+        var response = api.deleteFile(fileId)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.deleteFile(fileId)
+            }
+        }
+        Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body
+        }
+        return null
+    }
+
     private suspend fun reAuthenticate(api: ApiService, ziplineUrl: String): String? {
         return try {
             val cookies = CookieManager.getInstance().getCookie(ziplineUrl)
@@ -250,6 +292,21 @@ class ServerApi(private val context: Context, url: String? = null) {
             @Query("page") amount: Int,
             @Query("perpage") start: Int,
         ): Response<FilesResponse>
+
+        @DELETE("user/files/{fileId}")
+        suspend fun deleteFile(
+            @Path("fileId") fileId: String,
+        ): Response<FileResponse>
+
+        @PATCH("user/files/transaction")
+        suspend fun editFiles(
+            @Body request: FilesTransaction,
+        ): Response<CountResponse>
+
+        @HTTP(method = "DELETE", path = "user/files/transaction", hasBody = true)
+        suspend fun deleteFiles(
+            @Body request: FilesTransaction,
+        ): Response<CountResponse>
     }
 
     @JsonClass(generateAdapter = true)
@@ -326,7 +383,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "folderId") val folderId: String?,
         @Json(name = "thumbnail") val thumbnail: Thumbnail?,
         //@Json(name = "tags") val tags: List<Tags>?,
-        @Json(name = "url") val url: String
+        @Json(name = "url") val url: String?,
     ) {
         @JsonClass(generateAdapter = true)
         data class Thumbnail(
@@ -340,6 +397,17 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "total") val total: Int?,
         @Json(name = "pages") val pages: Int?,
     )
+
+    @JsonClass(generateAdapter = true)
+    data class FilesTransaction(
+        @Json(name = "files") val files: List<String>,
+        @Json(name = "delete_datasourceFiles") val deleteDatasourceFiles: Boolean? = null,
+        @Json(name = "favorite") val favorite: Boolean? = null,
+        @Json(name = "folder") val folder: String? = null,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class CountResponse(val count: Int)
 
     inner class SimpleCookieJar : CookieJar {
         private val cookieStore = mutableMapOf<String, List<Cookie>>()

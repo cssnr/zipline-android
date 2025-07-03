@@ -30,24 +30,24 @@
             android:layout_weight="0"
             android:orientation="vertical"
             android:gravity="center_horizontal|bottom">
-            <ImageView
-                android:id="@+id/toggle_private"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Edit"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_lock_24" />
-            <ImageView
-                android:id="@+id/album_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Albums"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_imagesmode_24" />
+            <!--<ImageView-->
+            <!--    android:id="@+id/toggle_private"-->
+            <!--    android:layout_width="48dp"-->
+            <!--    android:layout_height="48dp"-->
+            <!--    android:layout_gravity="center"-->
+            <!--    android:contentDescription="Edit"-->
+            <!--    android:padding="4dp"-->
+            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--    android:src="@drawable/md_lock_24" />-->
+            <!--<ImageView-->
+            <!--    android:id="@+id/album_button"-->
+            <!--    android:layout_width="48dp"-->
+            <!--    android:layout_height="48dp"-->
+            <!--    android:layout_gravity="center"-->
+            <!--    android:contentDescription="Albums"-->
+            <!--    android:padding="4dp"-->
+            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--    android:src="@drawable/md_imagesmode_24" />-->
             <ImageView
                 android:id="@+id/share_button"
                 android:layout_width="48dp"
@@ -92,6 +92,24 @@
             android:layout_weight="0"
             android:orientation="vertical"
             android:gravity="center_horizontal|bottom">
+            <!--<ImageView-->
+            <!--    android:id="@+id/set_password"-->
+            <!--    android:layout_width="48dp"-->
+            <!--    android:layout_height="48dp"-->
+            <!--    android:layout_gravity="center"-->
+            <!--    android:contentDescription="Edit"-->
+            <!--    android:padding="4dp"-->
+            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--    android:src="@drawable/md_key_24" />-->
+            <!--<ImageView-->
+            <!--    android:id="@+id/expire_button"-->
+            <!--    android:layout_width="48dp"-->
+            <!--    android:layout_height="48dp"-->
+            <!--    android:layout_gravity="center"-->
+            <!--    android:contentDescription="Expire"-->
+            <!--    android:padding="4dp"-->
+            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--    android:src="@drawable/md_timer_24" />-->
             <ImageView
                 android:id="@+id/delete_button"
                 android:layout_width="48dp"
@@ -102,24 +120,6 @@
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:src="@drawable/md_delete_24px"
                 app:tint="@android:color/holo_red_dark" />
-            <ImageView
-                android:id="@+id/set_password"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Edit"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_key_24" />
-            <ImageView
-                android:id="@+id/expire_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Expire"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_timer_24" />
             <ImageView
                 android:id="@+id/open_button"
                 android:layout_width="48dp"

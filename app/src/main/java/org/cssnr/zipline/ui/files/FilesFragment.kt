@@ -342,27 +342,28 @@ class FilesFragment : Fragment() {
         binding.filesSelectAll.setOnClickListener(filesSelectAll)
         //binding.filesDeselect.setOnClickListener(filesSelectAll)
 
-        //binding.deleteAllButton.setOnClickListener {
-        //    Log.d("File[deleteAllButton]", "viewModel.selected.value: ${viewModel.selected.value}")
-        //    if (viewModel.selected.value.isNullOrEmpty()) {
-        //        return@setOnClickListener
-        //    }
-        //
-        //    val positions = viewModel.selected.value!!.toList()
-        //    Log.d("File[deleteAllButton]", "positions: $positions")
-        //
-        //    val data = viewModel.filesData.value!!.toList()
-        //    Log.d("File[deleteAllButton]", "data.size: ${data.size}")
-        //    val selectedPositions: List<Int> = viewModel.selected.value!!.toList()
-        //    Log.d("File[deleteAllButton]", "selectedPositions: $selectedPositions")
-        //    val ids: List<Int> = selectedPositions.map { index -> data[index].id }
-        //    Log.d("File[deleteAllButton]", "ids: $ids")
-        //    fun callback(deletePositions: List<Int>) {
-        //        Log.d("File[deleteAllButton]", "callback: $deletePositions")
-        //        filesAdapter.deleteIds(deletePositions)
-        //    }
-        //    ctx.deleteConfirmDialog(ids, selectedPositions, ::callback)
-        //}
+        binding.deleteAllButton.setOnClickListener {
+            Log.d("File[deleteAllButton]", "viewModel.selected.value: ${viewModel.selected.value}")
+            if (viewModel.selected.value.isNullOrEmpty()) {
+                return@setOnClickListener
+            }
+
+            val positions = viewModel.selected.value!!.toList()
+            Log.d("File[deleteAllButton]", "positions: $positions")
+
+            val data = viewModel.filesData.value!!.toList()
+            Log.d("File[deleteAllButton]", "data.size: ${data.size}")
+            val selectedPositions: List<Int> = viewModel.selected.value!!.toList()
+            Log.d("File[deleteAllButton]", "selectedPositions: $selectedPositions")
+            val ids: List<String> = selectedPositions.map { index -> data[index].id }
+            Log.d("File[deleteAllButton]", "ids: $ids")
+            fun callback(deletePositions: List<Int>) {
+                Log.d("File[deleteAllButton]", "callback: $deletePositions")
+                filesAdapter.deleteIds(deletePositions)
+            }
+            ctx.deleteConfirmDialog(ids, selectedPositions, ::callback)
+        }
+
         //binding.expireAllButton.setOnClickListener {
         //    Log.d("File[expireAllButton]", "viewModel.selected.value: ${viewModel.selected.value}")
         //    fun callback(newExpr: String) {
@@ -403,13 +404,13 @@ class FilesFragment : Fragment() {
         //    }
         //}
 
-        //// Monitor viewModel.deleteId for changes and attempt to filesAdapter.deleteById the ID
-        //viewModel.deleteId.observe(viewLifecycleOwner) { fileId ->
-        //    Log.d("deleteId[observe]", "fileId: $fileId")
-        //    if (fileId != null) {
-        //        filesAdapter.deleteById(fileId)
-        //    }
-        //}
+        // Monitor viewModel.deleteId for changes and attempt to filesAdapter.deleteById the ID
+        viewModel.deleteId.observe(viewLifecycleOwner) { fileId ->
+            Log.d("deleteId[observe]", "fileId: $fileId")
+            if (fileId != null) {
+                filesAdapter.deleteById(fileId)
+            }
+        }
 
         //// Monitor viewModel.editRequest for changes and do something...
         //viewModel.editRequest.observe(viewLifecycleOwner) { editRequest ->
@@ -550,40 +551,37 @@ class FilesFragment : Fragment() {
     }
 }
 
-//private fun Context.deleteConfirmDialog(
-//    fileIds: List<Int>,
-//    selectedPositions: List<Int>,
-//    callback: (deletePositions: List<Int>) -> Unit,
-//) {
-//    // TODO: Refactor this function to not use a callback or not exist at all...
-//    Log.d("deleteConfirmDialog", "fileIds: $fileIds - selectedPositions: $selectedPositions")
-//    val savedUrl =
-//        this.getSharedPreferences("AppPreferences", MODE_PRIVATE).getString("ziplineUrl", "")
-//            .toString()
-//    val count = fileIds.count()
-//    Log.d("deleteConfirmDialog", "savedUrl: $savedUrl")
-//    MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-//        .setTitle("Delete $count Files?")
-//        .setIcon(R.drawable.md_delete_24px)
-//        .setMessage("This action can not be undone!\nConfirm deleting $count files...")
-//        .setNegativeButton("Cancel", null)
-//        .setPositiveButton("Delete $count Files") { _, _ ->
-//            Log.d("deleteConfirmDialog", "Delete Confirm: fileIds $fileIds")
-//            val api = ServerApi(this, savedUrl)
-//            CoroutineScope(Dispatchers.IO).launch {
-//                val response = api.filesDelete(FilesEditRequest(ids = fileIds))
-//                Log.d("File[deleteAllButton]", "response: $response")
-//                if (response.isSuccessful) {
-//                    Log.d("File[deleteAllButton]", "filesAdapter.deleteIds: $selectedPositions")
-//                    withContext(Dispatchers.Main) {
-//                        callback(selectedPositions)
-//                    }
-//                }
-//            }
-//        }
-//        .show()
-//}
-//
+private fun Context.deleteConfirmDialog(
+    fileIds: List<String>,
+    selectedPositions: List<Int>,
+    callback: (deletePositions: List<Int>) -> Unit,
+) {
+    // TODO: Refactor this function to not use a callback or not exist at all...
+    Log.d("deleteConfirmDialog", "fileIds: $fileIds - selectedPositions: $selectedPositions")
+    val count = fileIds.count()
+    MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+        .setTitle("Delete $count Files?")
+        .setIcon(R.drawable.md_delete_24px)
+        .setMessage("This action can not be undone!\nConfirm deleting $count files...")
+        .setNegativeButton("Cancel", null)
+        .setPositiveButton("Delete $count Files") { _, _ ->
+            Log.d("deleteConfirmDialog", "Delete Confirm: fileIds $fileIds")
+            val api = ServerApi(this)
+            CoroutineScope(Dispatchers.IO).launch {
+                //val transaction = FilesTransaction(files = fileIds)
+                val response = api.deleteMany(fileIds)
+                Log.d("File[deleteAllButton]", "response: $response")
+                if (response != null) {
+                    Log.d("File[deleteAllButton]", "filesAdapter.deleteIds: $selectedPositions")
+                    withContext(Dispatchers.Main) {
+                        callback(selectedPositions)
+                    }
+                }
+            }
+        }
+        .show()
+}
+
 //suspend fun Context.getAlbums(savedUrl: String) {
 //    Log.d("getAlbums", "getAlbums: $savedUrl")
 //    val api = ServerApi(this, savedUrl)

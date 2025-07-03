@@ -141,15 +141,16 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             copyToClipboard(ctx, viewUrl)
         }
 
-        //// Delete
-        //binding.deleteButton.setOnClickListener {
-        //    Log.d("deleteButton", "fileId: ${data.id}")
-        //    deleteConfirmDialog(savedUrl, data.id, data.name)
-        //}
-        // Password
-        if (filePassword) {
-            tintImage(binding.setPassword)
+        // Delete
+        binding.deleteButton.setOnClickListener {
+            Log.d("deleteButton", "fileId: ${data.id}")
+            deleteConfirmDialog(data.id, data.name)
         }
+
+        //// Password
+        //if (filePassword) {
+        //    tintImage(binding.setPassword)
+        //}
         //binding.setPassword.setOnClickListener {
         //    Log.d("setPassword", "setOnClickListener")
         //    setPasswordDialog(ctx, data.id, data.name)
@@ -202,28 +203,30 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             )
     }
 
-    //private fun deleteConfirmDialog(savedUrl: String, fileId: Int, fileName: String) {
-    //    Log.d("deleteConfirmDialog", "$fileId - savedUrl: $fileId")
-    //    MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-    //        .setTitle("Delete File?")
-    //        .setIcon(R.drawable.md_delete_24px)
-    //        .setMessage(fileName)
-    //        .setNegativeButton("Cancel", null)
-    //        .setPositiveButton("Delete") { _, _ ->
-    //            Log.d("deleteConfirmDialog", "Delete Confirm: fileId $fileId")
-    //            val api = ServerApi(requireContext(), savedUrl)
-    //            lifecycleScope.launch {
-    //                api.deleteFile(fileId)
-    //                viewModel.deleteId.value = fileId
-    //                withContext(Dispatchers.Main) {
-    //                    Toast.makeText(requireContext(), "File Deleted!", Toast.LENGTH_SHORT)
-    //                        .show()
-    //                }
-    //                dismiss()
-    //            }
-    //        }
-    //        .show()
-    //}
+    private fun deleteConfirmDialog(fileId: String, fileName: String) {
+        Log.d("deleteConfirmDialog", "${fileId}: $fileName")
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .setTitle("Delete File?")
+            .setIcon(R.drawable.md_delete_24px)
+            .setMessage(fileName)
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Delete") { _, _ ->
+                Log.d("deleteConfirmDialog", "Delete Confirm: fileId $fileId")
+                val api = ServerApi(requireContext())
+                lifecycleScope.launch {
+                    val result = api.deleteSingle(fileId)
+                    Log.d("deleteConfirmDialog", "result: $result")
+                    val msg = if (result != null) "File Deleted" else "File Not Found"
+                    viewModel.deleteId.value = fileId
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
+                            .show()
+                    }
+                    dismiss()
+                }
+            }
+            .show()
+    }
 
     //private fun setPasswordDialog(context: Context, fileId: Int, fileName: String) {
     //    Log.d("setPasswordDialog", "$fileId - savedUrl: $fileId")

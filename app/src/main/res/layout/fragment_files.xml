@@ -68,31 +68,44 @@
             android:text="@string/files_selected_total"
             tools:text="999 / 999 Files" />
 
-        <LinearLayout
-            android:id="@+id/album_all_button"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="Delete All"
-                android:src="@drawable/md_imagesmode_24" />
-        </LinearLayout>
+        <!--<LinearLayout-->
+        <!--    android:id="@+id/album_all_button"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="match_parent"-->
+        <!--    android:gravity="center"-->
+        <!--    android:background="?attr/selectableItemBackground">-->
+        <!--    <ImageView-->
+        <!--        android:layout_width="32dp"-->
+        <!--        android:layout_height="32dp"-->
+        <!--        android:contentDescription="Delete All"-->
+        <!--        android:src="@drawable/md_imagesmode_24" />-->
+        <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/expire_all_button"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="Delete All"
-                android:src="@drawable/md_timer_24" />
-        </LinearLayout>
+        <!--<LinearLayout-->
+        <!--    android:id="@+id/expire_all_button"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="match_parent"-->
+        <!--    android:gravity="center"-->
+        <!--    android:background="?attr/selectableItemBackground">-->
+        <!--    <ImageView-->
+        <!--        android:layout_width="32dp"-->
+        <!--        android:layout_height="32dp"-->
+        <!--        android:contentDescription="Delete All"-->
+        <!--        android:src="@drawable/md_timer_24" />-->
+        <!--</LinearLayout>-->
+
+        <!--<LinearLayout-->
+        <!--    android:id="@+id/favorite_all_button"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="match_parent"-->
+        <!--    android:gravity="center"-->
+        <!--    android:background="?attr/selectableItemBackground">-->
+        <!--    <ImageView-->
+        <!--        android:layout_width="32dp"-->
+        <!--        android:layout_height="32dp"-->
+        <!--        android:contentDescription="Delete All"-->
+        <!--        android:src="@drawable/md_star_24px" />-->
+        <!--</LinearLayout>-->
 
         <LinearLayout
             android:id="@+id/delete_all_button"
