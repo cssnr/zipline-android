@@ -437,7 +437,7 @@ class FilesFragment : Fragment() {
         try {
             if (reset) {
                 viewModel.currentPage.value = 1
-                atEnd = true
+                atEnd = false
             }
             Log.d("getFiles", "currentPage: ${viewModel.currentPage.value}")
             val files = api.files(viewModel.currentPage.value!!, perPage)
