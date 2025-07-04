@@ -36,6 +36,7 @@ import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.cssnr.zipline.MediaCache
+import org.cssnr.zipline.R
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import org.json.JSONObject
@@ -107,6 +108,8 @@ class FilesPreviewFragment : Fragment() {
         Log.d("FilesPreviewFragment", "rawUrl: $rawUrl")
         val viewUrl = arguments?.getString("viewUrl")
         Log.d("FilesPreviewFragment", "viewUrl: $viewUrl")
+        val filePassword = arguments?.getBoolean("filePassword") == true
+        Log.d("FilesPreviewFragment", "filePassword: $filePassword")
 
         binding.fileName.text = fileName
 
@@ -121,7 +124,15 @@ class FilesPreviewFragment : Fragment() {
         binding.playerView.transitionName = fileId
         //Log.d("FilesPreviewFragment", "transitionName: ${imageView.transitionName}")
 
-        if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
+        if (filePassword) {
+            Log.d("FilesPreviewFragment", "PASSWORD PROTECTED")
+            binding.previewImageView.visibility = View.VISIBLE
+            binding.previewImageView.setImageResource(R.drawable.md_encrypted_24px)
+            binding.previewImageView.setOnClickListener {
+                //findNavController().popBackStack()
+                findNavController().navigateUp()
+            }
+        } else if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
             Log.d("FilesPreviewFragment", "EXOPLAYER")
             binding.playerView.visibility = View.VISIBLE
 
@@ -218,11 +229,11 @@ class FilesPreviewFragment : Fragment() {
                     }
                 })
                 .into(binding.previewImageView)
-            binding.previewImageView.setOnClickListener {
-                Log.d("FilesPreviewFragment", "IMAGE BACK")
-                //findNavController().popBackStack()
-                findNavController().navigateUp()
-            }
+            //binding.previewImageView.setOnClickListener {
+            //    Log.d("FilesPreviewFragment", "IMAGE BACK")
+            //    //findNavController().popBackStack()
+            //    findNavController().navigateUp()
+            //}
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")

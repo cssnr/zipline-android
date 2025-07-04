@@ -235,7 +235,9 @@ class FilesViewAdapter(
         }
 
         // Image - Logic
-        if (thumbUrl != null || isGlideMime(data.type)) {
+        if (data.password == true) {
+            viewHolder.fileImage.setImageResource(R.drawable.md_encrypted_24px)
+        } else if (thumbUrl != null || isGlideMime(data.type)) {
             viewHolder.loadingSpinner.visibility = View.VISIBLE
             //val url = data.thumbnail ?: rawUrl
             val url = thumbUrl ?: rawUrl

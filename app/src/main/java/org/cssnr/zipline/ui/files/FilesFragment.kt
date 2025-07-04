@@ -229,14 +229,14 @@ class FilesFragment : Fragment() {
                     }
                 }
 
-                // Only Enable Refresh Layout when At Top
-                if (!rv.canScrollVertically(-1) && rv.scrollState != RecyclerView.SCROLL_STATE_IDLE) {
-                    Log.i("File[onScrolled]", "REFRESH: ON")
-                    binding.refreshLayout.isEnabled = true
-                } else if (binding.refreshLayout.isEnabled) {
-                    Log.i("File[onScrolled]", "REFRESH: OFF")
-                    binding.refreshLayout.isEnabled = false
-                }
+                //// Only Enable Refresh Layout when At Top
+                //if (!rv.canScrollVertically(-1) && rv.scrollState != RecyclerView.SCROLL_STATE_IDLE) {
+                //    Log.i("File[onScrolled]", "REFRESH: ON")
+                //    binding.refreshLayout.isEnabled = true
+                //} else if (binding.refreshLayout.isEnabled) {
+                //    Log.i("File[onScrolled]", "REFRESH: OFF")
+                //    binding.refreshLayout.isEnabled = false
+                //}
             }
         })
 
@@ -259,7 +259,7 @@ class FilesFragment : Fragment() {
                     Log.i("File[refreshLayout]", "3 - getFiles: ON REFRESH")
                     getFiles(perPage, true)
                     binding.refreshLayout.isRefreshing = false
-                    binding.refreshLayout.isEnabled = false
+                    //binding.refreshLayout.isEnabled = false
                     Log.d("File[refreshLayout]", "DONE")
                     // Fade In
                     binding.refreshBanner.post {
@@ -437,6 +437,7 @@ class FilesFragment : Fragment() {
         try {
             if (reset) {
                 viewModel.currentPage.value = 1
+                atEnd = false
             }
             Log.d("getFiles", "currentPage: ${viewModel.currentPage.value}")
             val files = api.files(viewModel.currentPage.value!!, perPage)
