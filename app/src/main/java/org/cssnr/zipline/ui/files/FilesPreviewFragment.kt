@@ -229,11 +229,11 @@ class FilesPreviewFragment : Fragment() {
                     }
                 })
                 .into(binding.previewImageView)
-            binding.previewImageView.setOnClickListener {
-                Log.d("FilesPreviewFragment", "IMAGE BACK")
-                //findNavController().popBackStack()
-                findNavController().navigateUp()
-            }
+            //binding.previewImageView.setOnClickListener {
+            //    Log.d("FilesPreviewFragment", "IMAGE BACK")
+            //    //findNavController().popBackStack()
+            //    findNavController().navigateUp()
+            //}
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")

@@ -30,6 +30,7 @@ glide = "5.0.0-rc01"
 media3 = "1.7.1"
 taptargetview = "1.15.0"
 konfettiXml = "2.1.0-beta01"
+photoview = "1.0.3"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -67,6 +68,7 @@ media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "medi
 media3-ui-compose = { group = "androidx.media3", name = "media3-ui-compose", version.ref = "media3" }
 taptargetview = { group = "com.getkeepsafe.taptargetview", name = "taptargetview", version.ref = "taptargetview" }
 konfetti-xml = { group = "nl.dionsegijn", name = "konfetti-xml", version.ref = "konfettiXml" }
+photoview = { group = "io.getstream", name = "photoview", version.ref = "photoview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

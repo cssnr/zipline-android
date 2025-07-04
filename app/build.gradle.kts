@@ -80,6 +80,7 @@ dependencies {
     implementation(libs.media3.ui.compose)
     implementation(libs.taptargetview)
     implementation(libs.konfetti.xml)
+    implementation(libs.photoview)
     ksp(libs.androidx.room.compiler)
     ksp(libs.moshi.kotlin.codegen)
     testImplementation(libs.junit)
