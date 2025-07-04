@@ -152,7 +152,6 @@ jobs:
           mv "${{ env.apk_path }}/${{ env.apk_file }}" "${{ env.apk_path }}/${{ env.signed_apk }}"
 
       - name: "Upload APK to Artifacts"
-        if: ${{ !github.event.act }}
         uses: actions/upload-artifact@v4
         with:
           name: release
@@ -202,11 +201,21 @@ jobs:
           name: bundle
           path: ${{ env.aab_path }}
 
+      - name: "Parse Release Notes"
+        if: ${{ !github.event.release.prerelease }}
+        id: notes
+        run: |
+          body="$(jq -r .release.body "$GITHUB_EVENT_PATH")"
+          summary="$(printf '%s\n' "$body" | awk 'NF==0{exit} /^\-/')"
+          echo "summary<<EOF" >> $GITHUB_OUTPUT
+          echo "$summary" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
       - name: "Generate Whats New"
         if: ${{ !github.event.release.prerelease }}
         run: |
           mkdir -p whatsNew
-          echo "GitHub Actions Build" > whatsNew/whatsnew-en-US
+          echo "${{ steps.notes.outputs.summary }}" > whatsNew/whatsnew-en-US
           cat whatsNew/whatsnew-en-US
 
       - name: "Upload Google Play"
