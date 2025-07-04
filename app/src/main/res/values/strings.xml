@@ -20,11 +20,15 @@
     <string name="upload_file">Upload File</string>
     <string name="file_name">File Name</string>
     <string name="shorten_url">Shorten URL</string>
+    <string name="file_list">File List</string>
 
     <string name="tst_upload_error">Error Uploading!</string>
     <string name="tst_no_url">URL Not Set!</string>
     <string name="tst_uploading_file">Uploading File…</string>
     <string name="tst_copied_clipboard">Copied to Clipboard</string>
+
+    <string name="files_selected_total">%1$d / %2$d Files</string>
+    <string name="files_total">%1$d Files</string>
 
     <string name="upload_multi">Upload %1$d Files</string>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <PreferenceCategory android:title="Application Settings">
 
@@ -37,6 +38,32 @@
         <!--    tools:summary="Load Home Page" />-->
 
     </PreferenceCategory>
+
+    <PreferenceCategory android:title="File List">
+        <SwitchPreferenceCompat
+            android:defaultValue="true"
+            android:icon="@drawable/md_auto_read_play_24px"
+            android:key="file_preview_autoplay"
+            android:title="Auto Play Media"
+            android:summary="When Viewing a File Preview"/>
+
+        <androidx.preference.SeekBarPreference
+            android:key="files_per_page"
+            android:title="Files Per Page"
+            android:icon="@drawable/md_format_list_numbered_24"
+            android:defaultValue="30"
+            android:max="100"
+            app:min="10"
+            app:showSeekBarValue="true" />
+
+        <SwitchPreferenceCompat
+            android:defaultValue="false"
+            android:icon="@drawable/md_signal_cellular_alt_24"
+            android:key="file_preview_metered"
+            android:title="Load Images on Metered Connection"
+            android:summary="For File List Only"/>
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="Widget Settings">
 
         <Preference

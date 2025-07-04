@@ -43,6 +43,8 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 
 > [!TIP]  
 > Google Play is in Closed Testing. To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
+>
+> To install from GitHub and get updates **you should use [Obtainium](#Obtainium)**.
 
 <a title="Get on GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
     <img alt="GitHub" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
@@ -97,12 +99,12 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 - Share or Open any file or URL to your Zipline server.
 - Single file previews most media with custom name option.
 - Multiple file upload previews, options and file selector.
+- Native file list with thumbnails, previews, and mass selection.
 - Widget with stats, custom update interval, upload button.
 
 ### Planned
 
-- Stats Widget
-- File List/Gallery
+- Add More Options to File List
 - Improve [Django Files](https://github.com/django-files).
 
 ### Known Issues
@@ -281,3 +283,28 @@ Additional Android projects:
 - [NOAA Weather Android](https://github.com/cssnr/noaa-weather-android?tab=readme-ov-file#readme)
 - [Remote Wallpaper Android](https://github.com/cssnr/remote-wallpaper-android?tab=readme-ov-file#readme)
 - [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
+
+# Obtainium
+
+I **strongly** recommend Obtainium to install and update Android applications from source such as GitHub and many more...
+
+- https://obtainium.imranr.dev/
+- https://github.com/ImranR98/Obtainium
+
+[![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/qr-codes/obtainium-download.png)](https://github.com/ImranR98/Obtainium/releases/latest/download/app-release.apk)
+
+I also made a Web Extension for Desktop and Android to make installing with Obtainium even easier:
+
+https://github.com/cssnr/obtainium-extension
+
+[![Firefox Android](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/obtainium/qr-code-firefox.png)](https://addons.mozilla.org/addon/obtainium-extension)
+
+Lastly, you can add all my applications by pasting this into the Obtainium Import from URL list:
+
+```text
+https://github.com/django-files/android-client
+https://github.com/cssnr/zipline-android
+https://github.com/cssnr/noaa-weather-android
+https://github.com/cssnr/remote-wallpaper-android
+https://github.com/cssnr/tibs3dprints-android
+```

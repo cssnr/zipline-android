@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/nav_item_home">
 
@@ -58,6 +59,25 @@
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_right" />
     </fragment>
+
+    <fragment
+        android:id="@+id/nav_item_files"
+        android:name="org.cssnr.zipline.ui.files.FilesFragment"
+        android:label="File List">
+        <action
+            android:id="@+id/nav_item_files_action_preview"
+            app:destination="@id/nav_item_file_preview"
+            app:launchSingleTop="true"
+            app:exitAnim="@anim/slide_out_left"
+            app:enterAnim="@anim/slide_in_left"
+            app:popEnterAnim="@anim/slide_in_right"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/nav_item_file_preview"
+        android:name="org.cssnr.zipline.ui.files.FilesPreviewFragment"
+        android:label="File Preview"
+        tools:layout="@layout/fragment_files_preview" />
 
     <fragment
         android:id="@+id/nav_item_upload"
