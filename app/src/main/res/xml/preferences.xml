@@ -51,7 +51,7 @@
             android:key="files_per_page"
             android:title="Files Per Page"
             android:icon="@drawable/md_format_list_numbered_24"
-            android:defaultValue="25"
+            android:defaultValue="30"
             android:max="100"
             app:min="10"
             app:showSeekBarValue="true" />
