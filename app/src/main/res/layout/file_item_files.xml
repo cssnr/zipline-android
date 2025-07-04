@@ -104,14 +104,14 @@
                 app:drawableTint="?attr/colorOnSecondary"
                 tools:text="9999" />
 
-            <TextView
-                android:id="@+id/file_private"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="0"
-                android:gravity="center_vertical"
-                app:drawableStartCompat="@drawable/md_lock_24"
-                app:drawableTint="?attr/colorOnSecondary" />
+            <!--<TextView-->
+            <!--    android:id="@+id/file_private"-->
+            <!--    android:layout_width="wrap_content"-->
+            <!--    android:layout_height="fill_parent"-->
+            <!--    android:layout_weight="0"-->
+            <!--    android:gravity="center_vertical"-->
+            <!--    app:drawableStartCompat="@drawable/md_lock_24"-->
+            <!--    app:drawableTint="?attr/colorOnSecondary" />-->
 
             <TextView
                 android:id="@+id/file_password"
@@ -124,9 +124,9 @@
 
             <TextView
                 android:id="@+id/file_expr"
-                android:layout_width="64dp"
+                android:layout_width="48dp"
                 android:layout_height="fill_parent"
-                android:layout_weight="1"
+                android:layout_weight="0"
                 android:drawablePadding="4dp"
                 android:gravity="center_vertical"
                 android:textAlignment="textEnd"

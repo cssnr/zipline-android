@@ -51,7 +51,7 @@ class FilesViewAdapter(
         val fileName: TextView = view.findViewById(R.id.file_name)
         val fileSize: TextView = view.findViewById(R.id.file_size)
         val fileView: TextView = view.findViewById(R.id.file_view)
-        val filePrivate: TextView = view.findViewById(R.id.file_private)
+        //val filePrivate: TextView = view.findViewById(R.id.file_private)
         val filePassword: TextView = view.findViewById(R.id.file_password)
         val fileExpr: TextView = view.findViewById(R.id.file_expr)
         val itemSelect: FrameLayout = view.findViewById(R.id.item_select)

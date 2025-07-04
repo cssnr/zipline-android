@@ -293,6 +293,7 @@ class FilesPreviewFragment : Fragment() {
         Log.d("getContent", "cookies: $cookies")
 
         val cacheDirectory = File(requireContext().cacheDir, "http_cache")
+        // TODO: Make Cache Size User Configurable: 100 MB
         val cache = Cache(cacheDirectory, 100 * 1024 * 1024)
 
         val client = OkHttpClient.Builder()

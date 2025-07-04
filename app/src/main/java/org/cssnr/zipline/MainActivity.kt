@@ -370,6 +370,7 @@ object MediaCache {
     lateinit var simpleCache: SimpleCache
     lateinit var cacheDataSourceFactory: CacheDataSource.Factory
 
+    // TODO: Make Cache Size User Configurable: 350 MB
     fun initialize(context: Context) {
         if (!::simpleCache.isInitialized) {
             simpleCache = SimpleCache(
