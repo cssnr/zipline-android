@@ -48,6 +48,15 @@
             <!--    android:padding="4dp"-->
             <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
             <!--    android:src="@drawable/md_imagesmode_24" />-->
+            <!--<ImageView-->
+            <!--    android:id="@+id/download_button"-->
+            <!--    android:layout_width="48dp"-->
+            <!--    android:layout_height="48dp"-->
+            <!--    android:layout_gravity="center"-->
+            <!--    android:contentDescription="Download"-->
+            <!--    android:padding="4dp"-->
+            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+            <!--    android:src="@drawable/md_download_24px" />-->
             <ImageView
                 android:id="@+id/share_button"
                 android:layout_width="48dp"

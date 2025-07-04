@@ -136,6 +136,12 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             copyToClipboard(ctx, viewUrl)
         }
 
+        //// Download
+        //binding.downloadButton.setOnClickListener {
+        //    Log.d("downloadButton", "fileId: ${data.id}")
+        //    Log.d("downloadButton", "fileId: ${data.url}")
+        //}
+
         // Delete
         binding.deleteButton.setOnClickListener {
             Log.d("deleteButton", "fileId: ${data.id}")
