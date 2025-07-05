@@ -54,7 +54,9 @@
             android:defaultValue="30"
             android:max="100"
             app:min="10"
-            app:showSeekBarValue="true" />
+            app:showSeekBarValue="true"
+            app:selectable="false"
+            tools:summary="Current value: 30" />
 
         <SwitchPreferenceCompat
             android:defaultValue="false"

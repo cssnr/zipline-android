@@ -65,9 +65,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Files Per Page
         val filesPerPage = preferenceManager.sharedPreferences?.getInt("files_per_page", 25)
         Log.d("onCreatePreferences", "filesPerPage: $filesPerPage")
-        val seekBar = findPreference<SeekBarPreference>("files_per_page")
-        seekBar?.summary = "Current Value: $filesPerPage"
-        seekBar?.apply {
+        val filesSeekBar = findPreference<SeekBarPreference>("files_per_page")
+        filesSeekBar?.summary = "Current Value: $filesPerPage"
+        filesSeekBar?.apply {
             setOnPreferenceChangeListener { pref, newValue ->
                 val intValue = (newValue as Int)
                 var stepped = ((intValue + 2) / 5) * 5
