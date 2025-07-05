@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.files
 
+import android.app.DownloadManager
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -422,6 +423,11 @@ class FilesFragment : Fragment() {
         //        filesAdapter.notifyItemChanged(pos)
         //    }
         //}
+
+        binding.downloadManager.setOnClickListener {
+            startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS), null)
+        }
+
     }
 
     //fun getFileIds(positions: List<Int>): List<Int> {

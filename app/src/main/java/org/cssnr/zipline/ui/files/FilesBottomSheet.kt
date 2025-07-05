@@ -1,7 +1,10 @@
 package org.cssnr.zipline.ui.files
 
+import android.app.DownloadManager
+import android.content.Context
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.os.Environment
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -9,10 +12,10 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
@@ -34,8 +37,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
     //private val viewModel: FilesViewModel by viewModels()
     private val viewModel: FilesViewModel by activityViewModels()
 
-    private lateinit var savedUrl: String
-    private var filePassword: Boolean = false
+    private lateinit var downloadManager: DownloadManager
 
     companion object {
         fun newInstance(bundle: Bundle) = FilesBottomSheet().apply {
@@ -65,26 +67,22 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         Log.d("File[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
 
         val ctx = requireContext()
-        val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
-        savedUrl = preferences.getString("ziplineUrl", "").toString()
+        //val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-        Log.d("Bottom[onCreateView]", "arguments: $arguments")
+        //Log.d("Bottom[onCreateView]", "arguments: $arguments")
         val rawUrl = arguments?.getString("rawUrl") ?: ""
         Log.d("Bottom[onCreateView]", "rawUrl: $rawUrl")
         val viewUrl = arguments?.getString("viewUrl") ?: ""
-        Log.d("Bottom[onCreateView]", "viewUrl: $viewUrl")
         val position = requireArguments().getInt("position")
-        Log.d("Bottom[onCreateView]", "position: $position")
         val data = viewModel.filesData.value?.get(position)
-        Log.d("Bottom[onCreateView]", "data: $data")
+        Log.d("Bottom[onCreateView]", "${position}: $data")
         if (data == null) {
             // TODO: HANDLE THIS ERROR!!!
             return
         }
-        filePassword = data.password == true
 
         // Name
-        binding.fileName.text = data.name
+        binding.fileName.text = data.originalName ?: data.name
 
         //// Private
         //if (data.private) {
@@ -136,11 +134,44 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             copyToClipboard(ctx, viewUrl)
         }
 
-        //// Download
-        //binding.downloadButton.setOnClickListener {
-        //    Log.d("downloadButton", "fileId: ${data.id}")
-        //    Log.d("downloadButton", "fileId: ${data.url}")
+        // Download
+        downloadManager = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        //// TODO: Code to query and cleanup download manager entries...
+        //val query = DownloadManager.Query()
+        //val cursor = downloadManager.query(query)
+        //while (cursor.moveToNext()) {
+        //    val status = cursor.getIntOrNull(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS))
+        //    val title = cursor.getStringOrNull(cursor.getColumnIndex(DownloadManager.COLUMN_TITLE))
+        //    val downloadId = cursor.getStringOrNull(cursor.getColumnIndex(DownloadManager.COLUMN_ID))
+        //    Log.i("DM", "$status - $downloadId - $title")
+        //    //downloadManager.remove(downloadId?.toLong()!!)
         //}
+
+        binding.downloadButton.setOnClickListener {
+            Log.d("downloadButton", "id: ${data.id}: ${data.originalName ?: data.name}")
+            Log.d("downloadButton", "rawUrl: $rawUrl")
+            binding.downloadButton.isEnabled = false
+
+            val request = DownloadManager.Request(rawUrl.toUri()).apply {
+                setTitle(data.originalName ?: data.name)
+                setMimeType(data.type)
+                setDescription("Zipline Download")
+                setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                setDestinationInExternalPublicDir(
+                    Environment.DIRECTORY_DOWNLOADS,
+                    data.originalName ?: data.name
+                )
+                setAllowedOverMetered(true)
+                setAllowedOverRoaming(true)
+                setRequiresCharging(false)
+            }
+
+            val downloadId = downloadManager.enqueue(request)
+            Log.d("downloadButton", "Download ID: $downloadId")
+            Toast.makeText(ctx, "Download Started", Toast.LENGTH_SHORT).show()
+            //dismiss()
+        }
 
         // Delete
         binding.deleteButton.setOnClickListener {
