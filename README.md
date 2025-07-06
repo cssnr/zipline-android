@@ -9,6 +9,7 @@
 [![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/stargazers)
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
+[![Support](https://img.shields.io/badge/Ko--fi-579fbf?logo=kofi&label=Support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
 # Zipline Android App
@@ -122,6 +123,12 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/5.jpg"></a>
 <a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/6.jpg">
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/6.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/7.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/7.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/8.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/8.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/9.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/9.jpg"></a>
 
 # Development
 
@@ -265,9 +272,12 @@ If you are experiencing an issue/bug or getting unexpected results, you can:
 
 # Contributing
 
-Currently, the best way to contribute to this project is to star this project on GitHub.
+Please consider making a donation to support the development of this project
+and [additional](https://cssnr.com/) open source projects.
 
-You can also support other related projects:
+[![Support](https://img.shields.io/badge/Ko--fi-579fbf?style=for-the-badge&logo=kofi&label=Support)](https://ko-fi.com/cssnr)
+
+You can also star this project on GitHub and support other related projects:
 
 - [Zipline CLI](https://github.com/cssnr/zipline-cli)
 - [Django Files Server](https://github.com/django-files/django-files)
@@ -281,27 +291,4 @@ Additional Android projects:
 - [Remote Wallpaper Android](https://github.com/cssnr/remote-wallpaper-android?tab=readme-ov-file#readme)
 - [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
 
-# Obtainium
-
-I **strongly** recommend Obtainium to install and update Android applications from source such as GitHub and many more...
-
-- https://obtainium.imranr.dev/
-- https://github.com/ImranR98/Obtainium
-
-[![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/qr-codes/obtainium-download.png)](https://github.com/ImranR98/Obtainium/releases/latest/download/app-release.apk)
-
-I also made a Web Extension for Desktop and Android to make installing with Obtainium even easier:
-
-https://github.com/cssnr/obtainium-extension
-
-[![Firefox Android](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/obtainium/qr-code-firefox.png)](https://addons.mozilla.org/addon/obtainium-extension)
-
-Lastly, you can add all my applications by pasting this into the Obtainium Import from URL list:
-
-```text
-https://github.com/django-files/android-client
-https://github.com/cssnr/zipline-android
-https://github.com/cssnr/noaa-weather-android
-https://github.com/cssnr/remote-wallpaper-android
-https://github.com/cssnr/tibs3dprints-android
-```
+For a full list of current projects visit: [https://cssnr.github.io/](https://cssnr.github.io/)
