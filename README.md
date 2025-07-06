@@ -46,12 +46,9 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 >
 > To install from GitHub and get updates **you should use [Obtainium](#Obtainium)**.
 
-<a title="Get on GitHub" href="https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk">
-    <img alt="GitHub" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/github.png"></a>
-<a title="Get on Obtainium" href="https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android">
-    <img alt="Obtainium" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/obtainium.png"></a>
-<a title="Get on Google Play" href="https://play.google.com/store/apps/details?id=org.cssnr.zipline">
-    <img alt="Google Play" height="76" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get/google-play.png"></a>
+[![Get on GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+[![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
+[![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
 <details><summary>📲 Click to View QR Codes 📸</summary>
 

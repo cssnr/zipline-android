@@ -1,144 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="false"
-    android:orientation="vertical">
+    android:transitionGroup="true"
+    tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/file_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:ellipsize="end"
-        android:gravity="center"
-        android:maxLines="1"
-        android:text="SquareOneThousandAndTwentyFourByOneTwoThree.jpg" />
+    <!--<ProgressBar-->
+    <!--    android:id="@+id/loading_spinner"-->
+    <!--    android:layout_width="wrap_content"-->
+    <!--    android:layout_height="wrap_content"-->
+    <!--    android:layout_gravity="center"-->
+    <!--    android:layout_margin="4dp"-->
+    <!--    android:visibility="gone"-->
+    <!--    tools:visibility="gone"-->
+    <!--    app:layout_constraintTop_toTopOf="parent"-->
+    <!--    app:layout_constraintStart_toStartOf="parent"-->
+    <!--    app:layout_constraintEnd_toEndOf="parent"-->
+    <!--    app:layout_constraintBottom_toBottomOf="parent" />-->
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="192dp"
+        android:layout_height="wrap_content"
         android:baselineAligned="false"
-        android:orientation="horizontal">
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <LinearLayout
-            android:layout_width="64dp"
+        <TextView
+            android:id="@+id/file_name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="0"
-            android:orientation="vertical"
-            android:gravity="center_horizontal|bottom">
-            <!--<ImageView-->
-            <!--    android:id="@+id/toggle_private"-->
-            <!--    android:layout_width="48dp"-->
-            <!--    android:layout_height="48dp"-->
-            <!--    android:layout_gravity="center"-->
-            <!--    android:contentDescription="Edit"-->
-            <!--    android:padding="4dp"-->
-            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--    android:src="@drawable/md_lock_24" />-->
-            <!--<ImageView-->
-            <!--    android:id="@+id/album_button"-->
-            <!--    android:layout_width="48dp"-->
-            <!--    android:layout_height="48dp"-->
-            <!--    android:layout_gravity="center"-->
-            <!--    android:contentDescription="Albums"-->
-            <!--    android:padding="4dp"-->
-            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--    android:src="@drawable/md_imagesmode_24" />-->
-            <!--<ImageView-->
-            <!--    android:id="@+id/download_button"-->
-            <!--    android:layout_width="48dp"-->
-            <!--    android:layout_height="48dp"-->
-            <!--    android:layout_gravity="center"-->
-            <!--    android:contentDescription="Download"-->
-            <!--    android:padding="4dp"-->
-            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--    android:src="@drawable/md_download_24px" />-->
-            <ImageView
-                android:id="@+id/share_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Share"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_share_24" />
-            <ImageView
-                android:id="@+id/copy_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Edit"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_content_copy_24px" />
-        </LinearLayout>
+            android:layout_marginHorizontal="24dp"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:maxLines="1"
+            android:text="SquareOneThousandAndTwentyFourByOneTwoThree.jpg" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:gravity="center">
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/image_preview"
+            android:layout_height="192dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="0"
+                android:orientation="vertical"
+                android:gravity="center_horizontal|bottom">
+                <!--<ImageView-->
+                <!--    android:id="@+id/toggle_private"-->
+                <!--    android:layout_width="48dp"-->
+                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_gravity="center"-->
+                <!--    android:contentDescription="Edit"-->
+                <!--    android:padding="4dp"-->
+                <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+                <!--    android:src="@drawable/md_lock_24" />-->
+                <!--<ImageView-->
+                <!--    android:id="@+id/album_button"-->
+                <!--    android:layout_width="48dp"-->
+                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_gravity="center"-->
+                <!--    android:contentDescription="Albums"-->
+                <!--    android:padding="4dp"-->
+                <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+                <!--    android:src="@drawable/md_imagesmode_24" />-->
+                <ImageView
+                    android:id="@+id/download_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Download"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/md_download_24px" />
+                <ImageView
+                    android:id="@+id/share_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Share"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/md_share_24" />
+                <ImageView
+                    android:id="@+id/copy_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Edit"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/md_content_copy_24px" />
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:scaleType="centerCrop"
-                app:strokeColor="?android:colorControlNormal"
-                app:strokeWidth="1dp"
-                tools:src="@tools:sample/backgrounds/scenic" />
-        </LinearLayout>
+                android:layout_weight="1"
+                android:padding="8dp"
+                android:gravity="center">
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/image_preview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:scaleType="centerCrop"
+                    app:strokeColor="?android:colorControlNormal"
+                    app:strokeWidth="1dp"
+                    tools:src="@tools:sample/backgrounds/scenic" />
+            </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="64dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_weight="0"
-            android:orientation="vertical"
-            android:gravity="center_horizontal|bottom">
-            <!--<ImageView-->
-            <!--    android:id="@+id/set_password"-->
-            <!--    android:layout_width="48dp"-->
-            <!--    android:layout_height="48dp"-->
-            <!--    android:layout_gravity="center"-->
-            <!--    android:contentDescription="Edit"-->
-            <!--    android:padding="4dp"-->
-            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--    android:src="@drawable/md_key_24" />-->
-            <!--<ImageView-->
-            <!--    android:id="@+id/expire_button"-->
-            <!--    android:layout_width="48dp"-->
-            <!--    android:layout_height="48dp"-->
-            <!--    android:layout_gravity="center"-->
-            <!--    android:contentDescription="Expire"-->
-            <!--    android:padding="4dp"-->
-            <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
-            <!--    android:src="@drawable/md_timer_24" />-->
-            <ImageView
-                android:id="@+id/delete_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Delete"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_delete_24px"
-                app:tint="@android:color/holo_red_dark" />
-            <ImageView
-                android:id="@+id/open_button"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:contentDescription="Open"
-                android:padding="4dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:src="@drawable/md_captive_portal_24px" />
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:layout_weight="0"
+                android:orientation="vertical"
+                android:gravity="center_horizontal|bottom">
+                <!--<ImageView-->
+                <!--    android:id="@+id/set_password"-->
+                <!--    android:layout_width="48dp"-->
+                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_gravity="center"-->
+                <!--    android:contentDescription="Edit"-->
+                <!--    android:padding="4dp"-->
+                <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+                <!--    android:src="@drawable/md_key_24" />-->
+                <!--<ImageView-->
+                <!--    android:id="@+id/expire_button"-->
+                <!--    android:layout_width="48dp"-->
+                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_gravity="center"-->
+                <!--    android:contentDescription="Expire"-->
+                <!--    android:padding="4dp"-->
+                <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+                <!--    android:src="@drawable/md_timer_24" />-->
+                <ImageView
+                    android:id="@+id/delete_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Delete"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/md_delete_24px"
+                    app:tint="@android:color/holo_red_dark" />
+                <ImageView
+                    android:id="@+id/open_button"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Open"
+                    android:padding="4dp"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/md_captive_portal_24px" />
+            </LinearLayout>
 
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
