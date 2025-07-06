@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.os.Bundle
+import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
@@ -35,6 +36,7 @@ import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.databinding.FragmentFilesBinding
 import java.io.InputStream
 
@@ -49,6 +51,7 @@ class FilesFragment : Fragment() {
 
     private lateinit var api: ServerApi
     private lateinit var filesAdapter: FilesViewAdapter
+    private lateinit var downloadManager: DownloadManager
 
     //private val viewModel: FilesViewModel by viewModels()
     private val viewModel: FilesViewModel by activityViewModels()
@@ -339,13 +342,9 @@ class FilesFragment : Fragment() {
 
         binding.deleteAllButton.setOnClickListener {
             Log.d("File[deleteAllButton]", "viewModel.selected.value: ${viewModel.selected.value}")
-            if (viewModel.selected.value.isNullOrEmpty()) {
-                return@setOnClickListener
-            }
-
+            if (viewModel.selected.value.isNullOrEmpty()) return@setOnClickListener
             val positions = viewModel.selected.value!!.toList()
             Log.d("File[deleteAllButton]", "positions: $positions")
-
             val data = viewModel.filesData.value!!.toList()
             Log.d("File[deleteAllButton]", "data.size: ${data.size}")
             val selectedPositions: List<Int> = viewModel.selected.value!!.toList()
@@ -357,6 +356,29 @@ class FilesFragment : Fragment() {
                 filesAdapter.deleteIds(deletePositions)
             }
             ctx.deleteConfirmDialog(ids, selectedPositions, ::callback)
+        }
+
+        downloadManager = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+
+        binding.downloadAllButton.setOnClickListener {
+            if (viewModel.selected.value.isNullOrEmpty()) return@setOnClickListener
+            val filesData = viewModel.filesData.value!!.toList()
+            val positions: List<Int> = viewModel.selected.value!!.toList()
+            Log.d("File[downloadAllButton]", "positions: $positions")
+            fun callback() {
+                //val fileUrls: List<String> = positions.map { index -> "${savedUrl}/raw/${data[index].name}" }
+                //Log.d("File[callback]", "fileUrls: $fileUrls")
+                lifecycleScope.launch {
+                    for (pos in positions) {
+                        val data = filesData[pos]
+                        Log.d("File[callback]", "data: $data")
+                        val request = getDownloadRequest(savedUrl, data)
+                        val downloadId = downloadManager.enqueue(request)
+                        Log.d("downloadButton", "Download ID: $downloadId")
+                    }
+                }
+            }
+            ctx.downloadConfirmDialog(positions, ::callback)
         }
 
         //binding.expireAllButton.setOnClickListener {
@@ -560,12 +582,13 @@ private fun Context.deleteConfirmDialog(
     // TODO: Refactor this function to not use a callback or not exist at all...
     Log.d("deleteConfirmDialog", "fileIds: $fileIds - selectedPositions: $selectedPositions")
     val count = fileIds.count()
+    val s = if (count > 1) "s" else ""
     MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-        .setTitle("Delete $count Files?")
+        .setTitle("Delete $count File${s}")
         .setIcon(R.drawable.md_delete_24px)
-        .setMessage("This action can not be undone!\nConfirm deleting $count files...")
+        .setMessage("This will permanently delete the file${s}!\nConfirm deleting $count file${s}?")
         .setNegativeButton("Cancel", null)
-        .setPositiveButton("Delete $count Files") { _, _ ->
+        .setPositiveButton("Delete $count File${s}") { _, _ ->
             Log.d("deleteConfirmDialog", "Delete Confirm: fileIds $fileIds")
             val api = ServerApi(this)
             CoroutineScope(Dispatchers.IO).launch {
@@ -580,6 +603,19 @@ private fun Context.deleteConfirmDialog(
                 }
             }
         }
+        .show()
+}
+
+private fun Context.downloadConfirmDialog(positions: List<Int>, callback: () -> Unit) {
+    Log.d("downloadConfirmDialog", "positions: $positions")
+    val count = positions.count()
+    val s = if (count > 1) "s" else ""
+    MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+        .setTitle("Download $count File${s}")
+        .setIcon(R.drawable.md_download_24px)
+        .setMessage("Files are saved to the Downloads directory.")
+        .setNegativeButton("Cancel", null)
+        .setPositiveButton("Download $count File${s}") { _, _ -> callback() }
         .show()
 }
 
@@ -736,4 +772,23 @@ fun getGenericIcon(mimeType: String): Int = when {
     mimeType.startsWith("text/") -> R.drawable.md_docs_24
     mimeType.startsWith("video/") -> R.drawable.md_videocam_24
     else -> R.drawable.md_unknown_document_24
+}
+
+
+fun getDownloadRequest(savedUrl: String, data: FileResponse): DownloadManager.Request {
+    val rawUrl = "${savedUrl}/raw/${data.name}"
+    Log.d("getDownloadRequest", "rawUrl: $rawUrl")
+    return DownloadManager.Request(rawUrl.toUri()).apply {
+        setTitle(data.originalName ?: data.name)
+        setMimeType(data.type)
+        setDescription("Zipline Download")
+        setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+        setDestinationInExternalPublicDir(
+            Environment.DIRECTORY_DOWNLOADS,
+            data.originalName ?: data.name
+        )
+        setAllowedOverMetered(true)
+        setAllowedOverRoaming(true)
+        setRequiresCharging(false)
+    }
 }

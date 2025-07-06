@@ -138,6 +138,7 @@
             android:id="@+id/delete_all_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:layout_marginEnd="12dp"
             android:gravity="center"
             android:background="?attr/selectableItemBackground">
             <ImageView
@@ -146,6 +147,19 @@
                 android:contentDescription="Delete All"
                 android:src="@drawable/md_delete_24px"
                 app:tint="@android:color/holo_red_dark" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/download_all_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Delete All"
+                android:src="@drawable/md_download_24px" />
         </LinearLayout>
     </LinearLayout>
 
