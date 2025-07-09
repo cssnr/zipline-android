@@ -9,7 +9,7 @@
 [![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/stargazers)
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
-[![Ko-fi](https://img.shields.io/badge/Ko--fi-73a4f1?logo=kofi&label=Support)](https://ko-fi.com/cssnr)
+[![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
 # Zipline Android App
@@ -277,11 +277,12 @@ and [additional](https://cssnr.com/) open source projects.
 
 You can also star this project on GitHub and support other related projects:
 
-- [Zipline CLI](https://github.com/cssnr/zipline-cli)
-- [Django Files Server](https://github.com/django-files/django-files)
-- [Django Files iOS App](https://github.com/django-files/ios-client)
-- [Django Files Android App](https://github.com/django-files/android-client)
-- [Django Files Web Extension](https://github.com/django-files/web-extension)
+- [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
+- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme)
+- [Django Files Server](https://github.com/django-files/django-files?tab=readme-ov-file#readme)
+- [Django Files iOS App](https://github.com/django-files/ios-client?tab=readme-ov-file#readme)
+- [Django Files Android App](https://github.com/django-files/android-client?tab=readme-ov-file#readme)
+- [Django Files Web Extension](https://github.com/django-files/web-extension?tab=readme-ov-file#readme)
 
 Additional Android projects:
 

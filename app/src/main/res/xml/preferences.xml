@@ -15,16 +15,20 @@
             tools:summary="Random" />
 
         <SwitchPreferenceCompat
+            android:title="Save Original Filename"
+            android:key="file_name_original"
+            android:icon="@drawable/md_abc_24px"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
             android:title="Show Share after Upload"
             android:key="share_after_upload"
-            android:summary="For Single File Uploads"
             android:icon="@drawable/md_attach_file_add_24px"
             android:defaultValue="true" />
 
         <SwitchPreferenceCompat
             android:title="Show Share after Shorten"
             android:key="share_after_short"
-            android:summary="For Short URL Creation"
             android:icon="@drawable/md_add_link_24px"
             android:defaultValue="true" />
 

@@ -106,13 +106,15 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[upload]", "fileName: $fileName")
         val fileNameFormat = preferences.getString("file_name_format", null) ?: "random"
         Log.d("Api[upload]", "fileNameFormat: $fileNameFormat")
+        val fileNameOriginal = preferences.getBoolean("file_name_original", true)
+        Log.d("Api[upload]", "fileNameOriginal: $fileNameOriginal")
         val multiPart: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        val response = api.postUpload(fileNameFormat.toString(), multiPart)
+        val response = api.postUpload(fileNameFormat.toString(), multiPart, fileNameOriginal)
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.postUpload(fileNameFormat, multiPart)
+                return api.postUpload(fileNameFormat, multiPart, fileNameOriginal)
             }
         }
         return response
@@ -280,6 +282,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         suspend fun postUpload(
             @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
+            @Header("x-zipline-original-name") originalName: Boolean = true,
         ): Response<UploadedFiles>
 
         @POST("user/urls")
