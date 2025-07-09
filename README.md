@@ -277,11 +277,12 @@ and [additional](https://cssnr.com/) open source projects.
 
 You can also star this project on GitHub and support other related projects:
 
-- [Zipline CLI](https://github.com/cssnr/zipline-cli)
-- [Django Files Server](https://github.com/django-files/django-files)
-- [Django Files iOS App](https://github.com/django-files/ios-client)
-- [Django Files Android App](https://github.com/django-files/android-client)
-- [Django Files Web Extension](https://github.com/django-files/web-extension)
+- [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
+- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme)
+- [Django Files Server](https://github.com/django-files/django-files?tab=readme-ov-file#readme)
+- [Django Files iOS App](https://github.com/django-files/ios-client?tab=readme-ov-file#readme)
+- [Django Files Android App](https://github.com/django-files/android-client?tab=readme-ov-file#readme)
+- [Django Files Web Extension](https://github.com/django-files/web-extension?tab=readme-ov-file#readme)
 
 Additional Android projects:
 
