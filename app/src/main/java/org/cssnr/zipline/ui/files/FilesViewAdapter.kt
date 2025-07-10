@@ -51,7 +51,7 @@ class FilesViewAdapter(
         val fileName: TextView = view.findViewById(R.id.file_name)
         val fileSize: TextView = view.findViewById(R.id.file_size)
         val fileView: TextView = view.findViewById(R.id.file_view)
-        //val filePrivate: TextView = view.findViewById(R.id.file_private)
+        val fileFavorite: TextView = view.findViewById(R.id.file_favorite)
         val filePassword: TextView = view.findViewById(R.id.file_password)
         val fileExpr: TextView = view.findViewById(R.id.file_expr)
         val itemSelect: FrameLayout = view.findViewById(R.id.item_select)
@@ -95,9 +95,9 @@ class FilesViewAdapter(
         viewHolder.fileView.compoundDrawableTintList =
             if (data.views > 0) null else colorOnSecondary
 
-        //// Private
-        //viewHolder.filePrivate.compoundDrawableTintList =
-        //    if (data.private) null else colorOnSecondary
+        // Favorite
+        viewHolder.fileFavorite.compoundDrawableTintList =
+            if (data.favorite) null else colorOnSecondary
 
         // Password
         viewHolder.filePassword.compoundDrawableTintList =
@@ -139,8 +139,9 @@ class FilesViewAdapter(
             )
         }
 
-        // Preview - itemView Click
-        viewHolder.itemView.setOnClickListener {
+        // Note: This has been swapped with itemView
+        // Select - itemSelect Click
+        viewHolder.itemSelect.setOnClickListener {
             // TODO: Setup proper transition/animation
             //val activity = context as Activity
             //val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
@@ -163,21 +164,22 @@ class FilesViewAdapter(
             viewHolder.itemBorder.background = null
         }
 
-        // Select - itemSelect Click
-        viewHolder.itemSelect.setOnClickListener {
-            Log.d("Adapter[itemSelect]", "setOnClickListener")
+        // Note: This has been swapped with itemSelect
+        // Preview - itemView Click
+        viewHolder.itemView.setOnClickListener {
+            Log.d("Adapter[itemView]", "setOnClickListener")
 
             val pos = viewHolder.bindingAdapterPosition
-            Log.d("Adapter[itemSelect]", "itemView: $pos")
+            Log.d("Adapter[itemView]", "itemView: $pos")
             if (pos != RecyclerView.NO_POSITION) {
                 if (pos in selected) {
-                    Log.d("Adapter[itemSelect]", "REMOVE - $data")
+                    Log.d("Adapter[itemView]", "REMOVE - $data")
                     selected.remove(pos)
                     viewHolder.checkMark.visibility = View.GONE
                     //viewHolder.itemBorder.setBackgroundResource(R.drawable.image_border)
                     viewHolder.itemBorder.background = null
                 } else {
-                    Log.d("Adapter[itemSelect]", "ADD - $data")
+                    Log.d("Adapter[itemView]", "ADD - $data")
                     selected.add(pos)
                     viewHolder.checkMark.visibility = View.VISIBLE
                     viewHolder.itemBorder.setBackgroundResource(R.drawable.image_border_selected_2dp)

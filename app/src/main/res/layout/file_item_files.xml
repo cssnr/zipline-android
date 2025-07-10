@@ -4,9 +4,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="48dp"
-    android:paddingVertical="1dp"
-    android:paddingHorizontal="2dp"
+    android:layout_height="64dp"
+    android:layout_marginHorizontal="2dp"
+    android:layout_marginBottom="1dp"
     android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="horizontal"
@@ -15,16 +15,17 @@
     android:id="@+id/item_border"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="2dp"
     android:baselineAligned="false"
     android:gravity="center_vertical"
     android:orientation="horizontal">
 
     <FrameLayout
         android:id="@+id/item_select"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_weight="0"
-        android:layout_marginStart="3dp">
+        android:padding="2dp">
 
         <ProgressBar
             android:id="@+id/loading_spinner"
@@ -42,7 +43,8 @@
             android:scaleType="center"
             android:src="@drawable/md_docs_24"
             app:strokeColor="?android:colorControlNormal"
-            app:strokeWidth="1dp" />
+            app:strokeWidth="1dp"
+            tools:src="@tools:sample/avatars" />
         <ImageView
             android:id="@+id/check_mark"
             android:layout_height="24dp"
@@ -72,37 +74,43 @@
             android:id="@+id/file_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
+            android:ellipsize="middle"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:textSize="16sp"
+            android:textSize="18sp"
             android:textStyle="bold"
             tools:text="ReallyLongFileNameBecauseIDontKnowHowToRenameFiles.everyone" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="fill_parent"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/file_size"
-                android:layout_width="54dp"
+                android:layout_width="0dp"
                 android:layout_height="fill_parent"
                 android:layout_weight="1"
+                android:paddingStart="4dp"
                 android:gravity="center_vertical"
+                android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
+                android:textStyle="bold"
+                tools:ignore="RtlSymmetry"
                 tools:text="999 kB" />
 
             <TextView
                 android:id="@+id/file_view"
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:drawablePadding="4dp"
+                android:layout_weight="0"
+                android:paddingHorizontal="2dp"
+                android:drawablePadding="8dp"
                 android:gravity="center_vertical"
-                app:drawableStartCompat="@drawable/md_visibility_24"
+                android:textAlignment="textEnd"
+                app:drawableEndCompat="@drawable/md_visibility_24"
                 app:drawableTint="?attr/colorOnSecondary"
-                tools:text="9999" />
+                tools:text="9999"
+                tools:ignore="RtlCompat" />
 
             <!--<TextView-->
             <!--    android:id="@+id/file_private"-->
@@ -118,40 +126,56 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="0"
+                android:paddingHorizontal="2dp"
                 android:gravity="center_vertical"
                 app:drawableStartCompat="@drawable/md_key_vertical_24"
                 app:drawableTint="?attr/colorOnSecondary" />
 
             <TextView
                 android:id="@+id/file_expr"
-                android:layout_width="48dp"
+                android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="0"
-                android:drawablePadding="4dp"
+                android:paddingHorizontal="2dp"
                 android:gravity="center_vertical"
                 android:textAlignment="textEnd"
                 app:drawableEndCompat="@drawable/md_timer_24"
                 app:drawableTint="?attr/colorOnSecondary"
-                tools:text="1y"
+                tools:text=""
                 tools:ignore="RtlCompat" />
+
+            <TextView
+                android:id="@+id/file_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:paddingHorizontal="2dp"
+                android:gravity="center_vertical"
+                app:drawableStartCompat="@drawable/md_star_24px"
+                app:drawableTint="?attr/colorOnSecondary" />
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
-        android:id="@+id/open_menu"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:layout_weight="0"
-        android:layout_marginHorizontal="3dp"
-        android:background="@drawable/edit_text_border">
-        <ImageView
+        android:padding="2dp">
+        <LinearLayout
+            android:id="@+id/open_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:contentDescription="@string/open"
-            android:scaleType="centerInside"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/md_menu_24px" />
+            android:background="@drawable/edit_text_border"
+            tools:ignore="UselessParent">
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:contentDescription="@string/open"
+                android:scaleType="centerInside"
+                android:background="?attr/selectableItemBackground"
+                android:src="@drawable/md_menu_24px" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>
