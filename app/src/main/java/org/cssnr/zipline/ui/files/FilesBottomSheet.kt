@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentFilesBottomBinding
 
@@ -179,6 +180,27 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             deleteConfirmDialog(data.id, data.name)
         }
 
+        // Favorite
+        if (data.favorite) {
+            tintImage(binding.favoriteButton)
+        }
+        binding.favoriteButton.setOnClickListener {
+            Log.d("favoriteButton", "setOnClickListener: $data")
+            lifecycleScope.launch {
+                val api = ServerApi(ctx)
+                val editRequest = FileEditRequest(id = data.id, favorite = !data.favorite)
+                val result = api.editSingle(data.id, editRequest)
+                Log.d("favoriteButton", "result: $result")
+                if (result != null) {
+                    viewModel.editRequest.value = editRequest
+                    tintImage(binding.favoriteButton, result.favorite != true)
+                    withContext(Dispatchers.Main) {
+                        Toast.makeText(ctx, "Favorite Updated", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
+
         //// Password
         //if (filePassword) {
         //    tintImage(binding.setPassword)
@@ -225,14 +247,18 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun tintImage(item: ImageView) {
-        item.imageTintList =
-            ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    android.R.color.holo_orange_light
+    private fun tintImage(item: ImageView, toNull: Boolean = false) {
+        if (toNull) {
+            item.imageTintList = null
+        } else {
+            item.imageTintList =
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        android.R.color.holo_orange_light
+                    )
                 )
-            )
+        }
     }
 
     private fun deleteConfirmDialog(fileId: String, fileName: String) {

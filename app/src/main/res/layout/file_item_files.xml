@@ -42,14 +42,14 @@
             android:contentDescription="@string/file_list"
             android:scaleType="center"
             android:src="@drawable/md_docs_24"
-            app:strokeColor="?android:colorControlNormal"
+            app:strokeColor="?attr/colorControlHighlight"
             app:strokeWidth="1dp"
             tools:src="@tools:sample/avatars" />
         <ImageView
             android:id="@+id/check_mark"
             android:layout_height="24dp"
             android:layout_width="24dp"
-            android:layout_gravity="center"
+            android:layout_gravity="bottom"
             android:src="@drawable/md_check_circle_24px"
             android:contentDescription="Selected"
             app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +103,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="0"
-                android:paddingHorizontal="2dp"
+                android:paddingEnd="4dp"
                 android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:textAlignment="textEnd"
@@ -122,21 +122,11 @@
             <!--    app:drawableTint="?attr/colorOnSecondary" />-->
 
             <TextView
-                android:id="@+id/file_password"
-                android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
-                android:layout_weight="0"
-                android:paddingHorizontal="2dp"
-                android:gravity="center_vertical"
-                app:drawableStartCompat="@drawable/md_key_vertical_24"
-                app:drawableTint="?attr/colorOnSecondary" />
-
-            <TextView
                 android:id="@+id/file_expr"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="0"
-                android:paddingHorizontal="2dp"
+                android:paddingHorizontal="4dp"
                 android:gravity="center_vertical"
                 android:textAlignment="textEnd"
                 app:drawableEndCompat="@drawable/md_timer_24"
@@ -145,11 +135,21 @@
                 tools:ignore="RtlCompat" />
 
             <TextView
+                android:id="@+id/file_password"
+                android:layout_width="wrap_content"
+                android:layout_height="fill_parent"
+                android:layout_weight="0"
+                android:paddingHorizontal="4dp"
+                android:gravity="center_vertical"
+                app:drawableStartCompat="@drawable/md_key_vertical_24"
+                app:drawableTint="?attr/colorOnSecondary" />
+
+            <TextView
                 android:id="@+id/file_favorite"
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:layout_weight="0"
-                android:paddingHorizontal="2dp"
+                android:paddingHorizontal="4dp"
                 android:gravity="center_vertical"
                 app:drawableStartCompat="@drawable/md_star_24px"
                 app:drawableTint="?attr/colorOnSecondary" />

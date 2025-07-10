@@ -17,20 +17,17 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
-        <LinearLayout
+
+        <ImageView
             android:id="@+id/files_select_all"
-            android:layout_width="wrap_content"
+            android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:padding="6dp"
             android:gravity="center"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:id="@+id/check_box_icon"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginHorizontal="8dp"
-                android:contentDescription="Select All"
-                android:src="@drawable/md_check_box_outline_blank_24px" />
-        </LinearLayout>
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Select All"
+            android:src="@drawable/md_check_box_outline_blank_24px" />
+
         <TextView
             android:id="@+id/files_total_text"
             android:layout_width="wrap_content"
@@ -121,46 +118,40 @@
         <!--        android:src="@drawable/md_timer_24" />-->
         <!--</LinearLayout>-->
 
-        <!--<LinearLayout-->
-        <!--    android:id="@+id/favorite_all_button"-->
-        <!--    android:layout_width="48dp"-->
-        <!--    android:layout_height="match_parent"-->
-        <!--    android:gravity="center"-->
-        <!--    android:background="?attr/selectableItemBackground">-->
-        <!--    <ImageView-->
-        <!--        android:layout_width="32dp"-->
-        <!--        android:layout_height="32dp"-->
-        <!--        android:contentDescription="Delete All"-->
-        <!--        android:src="@drawable/md_star_24px" />-->
-        <!--</LinearLayout>-->
-
-        <LinearLayout
+        <ImageView
             android:id="@+id/delete_all_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="12dp"
+            android:padding="6dp"
             android:gravity="center"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="Delete All"
-                android:src="@drawable/md_delete_24px"
-                app:tint="@android:color/holo_red_dark" />
-        </LinearLayout>
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Delete All"
+            android:src="@drawable/md_delete_24px"
+            app:tint="@android:color/holo_red_dark" />
 
-        <LinearLayout
+        <!-- TODO: https://github.com/diced/zipline/issues/840 -->
+        <ImageView
+            android:id="@+id/favorite_all_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="12dp"
+            android:padding="6dp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Favorite All"
+            android:src="@drawable/md_star_24px"
+            android:visibility="gone" />
+
+        <ImageView
             android:id="@+id/download_all_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="Delete All"
-                android:src="@drawable/md_download_24px" />
-        </LinearLayout>
+            android:padding="6dp"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Delete All"
+            android:src="@drawable/md_download_24px" />
+
     </LinearLayout>
 
     <TextView

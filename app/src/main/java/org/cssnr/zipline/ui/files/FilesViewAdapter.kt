@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 import org.cssnr.zipline.R
+import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
 
 //import android.widget.ImageView
@@ -91,7 +92,7 @@ class FilesViewAdapter(
         viewHolder.fileSize.text = bytesToHuman(data.size.toDouble()).toString()
 
         // Views
-        viewHolder.fileView.text = data.views.toString()
+        viewHolder.fileView.text = if (data.views > 0) data.views.toString() else ""
         viewHolder.fileView.compoundDrawableTintList =
             if (data.views > 0) null else colorOnSecondary
 
@@ -323,22 +324,21 @@ class FilesViewAdapter(
         }
     }
 
-    //fun editById(request: FileEditRequest) {
-    //    Log.d("editById", "id: ${request.id}")
-    //    Log.d("editById", "request: $request")
-    //    val index = dataSet.indexOfFirst { it.id == request.id }
-    //    Log.d("editById", "index: $index")
-    //    if (index != -1) {
-    //        val file = dataSet[index]
-    //        if (request.private != null) {
-    //            file.private = request.private!!
-    //        }
-    //        if (request.password != null) {
-    //            file.password = request.password!!
-    //        }
-    //        notifyItemChanged(index)
-    //    }
-    //}
+    fun editById(request: FileEditRequest) {
+        Log.d("editById", "request: $request")
+        Log.d("editById", "id: ${request.id}")
+        val index = dataSet.indexOfFirst { it.id == request.id }
+        Log.d("editById", "index: $index")
+        if (index != -1) {
+            val file = dataSet[index]
+            Log.d("editById", "file: $file")
+            Log.d("editById", "file: ${file.favorite} - request: ${request.favorite}")
+            if (request.favorite != null) {
+                file.favorite = request.favorite
+            }
+            notifyItemChanged(index)
+        }
+    }
 
     // Note: this has not been tested due to warning on notifyDataSetChanged
     //fun submitList(newList: List<FileResponse>) {

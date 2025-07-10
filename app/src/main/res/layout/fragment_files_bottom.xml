@@ -35,19 +35,19 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="24dp"
-            android:ellipsize="end"
+            android:ellipsize="middle"
             android:gravity="center"
             android:maxLines="1"
-            android:text="SquareOneThousandAndTwentyFourByOneTwoThree.jpg" />
+            tools:text="SquareOneThousandAndTwentyFourByOneTwoThree.jpg" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="192dp"
+            android:layout_height="wrap_content"
             android:baselineAligned="false"
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="0"
@@ -55,47 +55,47 @@
                 android:gravity="center_horizontal|bottom">
                 <!--<ImageView-->
                 <!--    android:id="@+id/toggle_private"-->
-                <!--    android:layout_width="48dp"-->
-                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_width="@dimen/bottom_sheet_icon_size"-->
+                <!--    android:layout_height="@dimen/bottom_sheet_icon_size"-->
                 <!--    android:layout_gravity="center"-->
                 <!--    android:contentDescription="Edit"-->
-                <!--    android:padding="4dp"-->
+                <!--    android:padding="@dimen/bottom_sheet_icon_padding"-->
                 <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
                 <!--    android:src="@drawable/md_lock_24" />-->
                 <!--<ImageView-->
                 <!--    android:id="@+id/album_button"-->
-                <!--    android:layout_width="48dp"-->
-                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_width="@dimen/bottom_sheet_icon_size"-->
+                <!--    android:layout_height="@dimen/bottom_sheet_icon_size"-->
                 <!--    android:layout_gravity="center"-->
                 <!--    android:contentDescription="Albums"-->
-                <!--    android:padding="4dp"-->
+                <!--    android:padding="@dimen/bottom_sheet_icon_padding"-->
                 <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
                 <!--    android:src="@drawable/md_imagesmode_24" />-->
                 <ImageView
                     android:id="@+id/download_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/bottom_sheet_icon_size"
+                    android:layout_height="@dimen/bottom_sheet_icon_size"
                     android:layout_gravity="center"
                     android:contentDescription="Download"
-                    android:padding="4dp"
+                    android:padding="@dimen/bottom_sheet_icon_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/md_download_24px" />
                 <ImageView
                     android:id="@+id/share_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/bottom_sheet_icon_size"
+                    android:layout_height="@dimen/bottom_sheet_icon_size"
                     android:layout_gravity="center"
                     android:contentDescription="Share"
-                    android:padding="4dp"
+                    android:padding="@dimen/bottom_sheet_icon_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/md_share_24" />
                 <ImageView
                     android:id="@+id/copy_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/bottom_sheet_icon_size"
+                    android:layout_height="@dimen/bottom_sheet_icon_size"
                     android:layout_gravity="center"
                     android:contentDescription="Edit"
-                    android:padding="4dp"
+                    android:padding="@dimen/bottom_sheet_icon_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/md_content_copy_24px" />
             </LinearLayout>
@@ -118,7 +118,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
                 android:layout_weight="0"
@@ -126,39 +126,49 @@
                 android:gravity="center_horizontal|bottom">
                 <!--<ImageView-->
                 <!--    android:id="@+id/set_password"-->
-                <!--    android:layout_width="48dp"-->
-                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_width="@dimen/bottom_sheet_icon_size"-->
+                <!--    android:layout_height="@dimen/bottom_sheet_icon_size"-->
                 <!--    android:layout_gravity="center"-->
                 <!--    android:contentDescription="Edit"-->
-                <!--    android:padding="4dp"-->
+                <!--    android:padding="@dimen/bottom_sheet_icon_padding"-->
                 <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
                 <!--    android:src="@drawable/md_key_24" />-->
                 <!--<ImageView-->
                 <!--    android:id="@+id/expire_button"-->
-                <!--    android:layout_width="48dp"-->
-                <!--    android:layout_height="48dp"-->
+                <!--    android:layout_width="@dimen/bottom_sheet_icon_size"-->
+                <!--    android:layout_height="@dimen/bottom_sheet_icon_size"-->
                 <!--    android:layout_gravity="center"-->
                 <!--    android:contentDescription="Expire"-->
-                <!--    android:padding="4dp"-->
+                <!--    android:padding="@dimen/bottom_sheet_icon_padding"-->
                 <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
                 <!--    android:src="@drawable/md_timer_24" />-->
                 <ImageView
                     android:id="@+id/delete_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/bottom_sheet_icon_size"
+                    android:layout_height="@dimen/bottom_sheet_icon_size"
                     android:layout_gravity="center"
                     android:contentDescription="Delete"
-                    android:padding="4dp"
+                    android:padding="@dimen/bottom_sheet_icon_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/md_delete_24px"
                     app:tint="@android:color/holo_red_dark" />
                 <ImageView
+                    android:id="@+id/favorite_button"
+                    android:layout_width="@dimen/bottom_sheet_icon_size"
+                    android:layout_height="@dimen/bottom_sheet_icon_size"
+                    android:layout_gravity="center"
+                    android:contentDescription="Favorite"
+                    android:padding="@dimen/bottom_sheet_icon_padding"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:src="@drawable/md_star_24px" />
+
+                <ImageView
                     android:id="@+id/open_button"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
+                    android:layout_width="@dimen/bottom_sheet_icon_size"
+                    android:layout_height="@dimen/bottom_sheet_icon_size"
                     android:layout_gravity="center"
                     android:contentDescription="Open"
-                    android:padding="4dp"
+                    android:padding="@dimen/bottom_sheet_icon_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/md_captive_portal_24px" />
             </LinearLayout>

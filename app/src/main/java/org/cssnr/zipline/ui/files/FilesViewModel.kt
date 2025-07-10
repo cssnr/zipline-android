@@ -2,6 +2,7 @@ package org.cssnr.zipline.ui.files
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
 
 class FilesViewModel : ViewModel() {
@@ -11,7 +12,7 @@ class FilesViewModel : ViewModel() {
     val atEnd = MutableLiveData<Boolean>()
     val deleteId = MutableLiveData<String>()
 
-    //val editRequest = MutableLiveData<FileEditRequest>()
+    val editRequest = MutableLiveData<FileEditRequest>()
     val updateRequest = MutableLiveData<List<Int>>()
 
     val meterHidden = MutableLiveData<Boolean>().apply { value = false }

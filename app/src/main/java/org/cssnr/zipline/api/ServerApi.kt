@@ -164,6 +164,44 @@ class ServerApi(private val context: Context, url: String? = null) {
         return null
     }
 
+    suspend fun editSingle(fileId: String, editRequest: FileEditRequest): FileEditRequest? {
+        Log.d("Api[editSingle]", "fileId: $fileId - $editRequest")
+        var response = api.editFile(fileId, editRequest)
+        Log.d("Api[editSingle]", "response: $response")
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[editSingle]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.editFile(fileId, editRequest)
+            }
+        }
+        Log.d("Api[editSingle]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body
+        }
+        return null
+    }
+
+    suspend fun editMany(transaction: FilesTransaction): Int? {
+        //Log.d("Api[deleteMany]", "files: $files")
+        Log.d("Api[deleteMany]", "transaction: $transaction")
+        var response = api.editFiles(transaction)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.editFiles(transaction)
+            }
+        }
+        Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body?.count
+        }
+        return null
+    }
+
     suspend fun deleteMany(files: List<String>): Int? {
         //Log.d("Api[deleteMany]", "files: $files")
         val transaction = FilesTransaction(files = files)
@@ -296,6 +334,12 @@ class ServerApi(private val context: Context, url: String? = null) {
             @Query("perpage") start: Int,
         ): Response<FilesResponse>
 
+        @PATCH("user/files/{fileId}")
+        suspend fun editFile(
+            @Path("fileId") fileId: String,
+            @Body request: FileEditRequest,
+        ): Response<FileEditRequest>
+
         @DELETE("user/files/{fileId}")
         suspend fun deleteFile(
             @Path("fileId") fileId: String,
@@ -374,7 +418,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "createdAt") val createdAt: String,
         @Json(name = "updatedAt") val updatedAt: String,
         @Json(name = "deletesAt") val deletesAt: String?,
-        @Json(name = "favorite") val favorite: Boolean,
+        @Json(name = "favorite") var favorite: Boolean,
         @Json(name = "id") val id: String,
         @Json(name = "originalName") val originalName: String?,
         @Json(name = "name") val name: String,
@@ -407,6 +451,17 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "delete_datasourceFiles") val deleteDatasourceFiles: Boolean? = null,
         @Json(name = "favorite") val favorite: Boolean? = null,
         @Json(name = "folder") val folder: String? = null,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class FileEditRequest(
+        @Json(name = "id") val id: String? = null,
+        @Json(name = "favorite") val favorite: Boolean? = null,
+        @Json(name = "maxViews") val maxViews: Int? = null,
+        @Json(name = "password") val password: String? = null,
+        @Json(name = "originalName") val originalName: String? = null,
+        @Json(name = "type") val type: String? = null,
+        @Json(name = "tags") val tags: List<String>? = null
     )
 
     @JsonClass(generateAdapter = true)
