@@ -6,12 +6,14 @@ import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.Environment
 import android.util.Log
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,11 +23,14 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.ServerApi.FileEditRequest
+import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentFilesBottomBinding
 
@@ -34,16 +39,14 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
     private var _binding: FragmentFilesBottomBinding? = null
     private val binding get() = _binding!!
 
-    //private val viewModel: FilesViewModel by viewModels()
     private val viewModel: FilesViewModel by activityViewModels()
 
     private lateinit var downloadManager: DownloadManager
 
-    companion object {
-        fun newInstance(bundle: Bundle) = FilesBottomSheet().apply {
-            arguments = bundle
-        }
-    }
+    private lateinit var data: FileResponse
+    private lateinit var rawUrl: String
+    private lateinit var viewUrl: String
+    private var thumbUrl: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,22 +70,50 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         Log.d("File[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
 
         val ctx = requireContext()
-        //val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
 
-        //Log.d("Bottom[onCreateView]", "arguments: $arguments")
-        val rawUrl = arguments?.getString("rawUrl") ?: ""
-        Log.d("Bottom[onCreateView]", "rawUrl: $rawUrl")
-        val viewUrl = arguments?.getString("viewUrl") ?: ""
-        val position = requireArguments().getInt("position")
-        val data = viewModel.filesData.value?.get(position)
-        Log.d("Bottom[onCreateView]", "${position}: $data")
-        if (data == null) {
-            // TODO: HANDLE THIS ERROR!!!
-            return
+        val radius = ctx.resources.getDimension(R.dimen.image_preview_large)
+        binding.imagePreview.setShapeAppearanceModel(
+            binding.imagePreview.shapeAppearanceModel
+                .toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED, radius)
+                .build()
+        )
+
+        viewModel.activeFile.observe(viewLifecycleOwner) { file ->
+            Log.i("activeFile.observe", "file: $file")
+            if (file == null) return@observe
+            // Data
+            data = file
+            rawUrl = viewModel.getRawUrl(file)
+            Log.d("activeFile.observe", "rawUrl: $rawUrl")
+            viewUrl = viewModel.getViewUrl(file)
+            Log.d("activeFile.observe", "viewUrl: $viewUrl")
+            thumbUrl = viewModel.getThumbUrl(file)
+            Log.d("activeFile.observe", "thumbUrl: $thumbUrl")
+
+            // Name
+            binding.fileName.text = file.originalName ?: file.name
+
+            // Favorite
+            Log.d("activeFile.observe", "file.favorite: ${file.favorite}")
+            if (file.favorite) {
+                Log.d("activeFile.observe", "${file.id}: tintImage")
+                tintImage(binding.favoriteButton)
+            } else {
+                Log.d("activeFile.observe", "${file.id}: tintImage - NULL TRUE")
+                //tintImage(binding.favoriteButton, true)
+            }
+
+            // Image
+            if (isGlideMime(file.type) || thumbUrl != null) {
+                Log.d("activeFile.observe", "isGlideMime")
+                Glide.with(this)
+                    .load(if (thumbUrl != null) thumbUrl else rawUrl)
+                    .into(binding.imagePreview)
+            } else {
+                binding.imagePreview.setImageResource(getGenericIcon(file.type))
+            }
         }
-
-        // Name
-        binding.fileName.text = data.originalName ?: data.name
 
         //// Private
         //if (data.private) {
@@ -176,7 +207,33 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         // Delete
         binding.deleteButton.setOnClickListener {
             Log.d("deleteButton", "fileId: ${data.id}")
-            deleteConfirmDialog(data.id, data.name)
+            deleteConfirmDialog(view, data.id, data.name)
+        }
+
+        // Favorite
+        binding.favoriteButton.setOnClickListener {
+            Log.d("favoriteButton", "setOnClickListener: $data")
+            lifecycleScope.launch {
+                val api = ServerApi(ctx)
+                val editRequest = FileEditRequest(id = data.id, favorite = !data.favorite)
+                val result = api.editSingle(data.id, editRequest)
+                Log.d("favoriteButton", "result: $result")
+                if (result != null) {
+                    viewModel.editRequest.value = editRequest
+                    tintImage(binding.favoriteButton, result.favorite != true)
+                    val text = if (result.favorite == true) "Added to" else "Removed from"
+                    Snackbar.make(view, "File $text as Favorites.", Snackbar.LENGTH_SHORT)
+                        .setAction("Action", null)
+                        .setAnchorView(binding.bottomSheetLayout).show()
+                } else {
+                    Snackbar.make(view, "Error Setting File Favorite!", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null)
+                        //.setActionTextColor(ContextCompat.getColor(ctx, R.color.primary))
+                        //.setBackgroundTint(ContextCompat.getColor(ctx, R.color.tap_target_background))
+                        .setTextColor("#ff0000".toColorInt())
+                        .setAnchorView(binding.bottomSheetLayout).show()
+                }
+            }
         }
 
         //// Password
@@ -197,27 +254,13 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         //    }
         //    ctx.showExpireDialog(listOf(data.id), ::callback, data.expr)
         //}
+
         // Open
         binding.openButton.setOnClickListener {
             ctx.openUrl(viewUrl)
         }
 
         // Image
-        val radius = ctx.resources.getDimension(R.dimen.image_preview_large)
-        binding.imagePreview.setShapeAppearanceModel(
-            binding.imagePreview.shapeAppearanceModel
-                .toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED, radius)
-                .build()
-        )
-        if (isGlideMime(data.type)) {
-            Log.d("Bottom[onCreateView]", "isGlideMime")
-            Glide.with(this)
-                .load(rawUrl)
-                .into(binding.imagePreview)
-        } else {
-            binding.imagePreview.setImageResource(getGenericIcon(data.type))
-        }
         binding.imagePreview.setOnClickListener {
             Log.d("Bottom[onCreateView]", "onClick: imagePreview")
             findNavController().navigate(R.id.nav_item_files_action_preview, arguments)
@@ -225,17 +268,23 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun tintImage(item: ImageView) {
-        item.imageTintList =
-            ColorStateList.valueOf(
-                ContextCompat.getColor(
-                    requireContext(),
-                    android.R.color.holo_orange_light
+    private fun tintImage(item: ImageView, toNull: Boolean = false) {
+        // TODO: Cleanup icon tint setting...
+        val ctx = requireContext()
+        if (toNull) {
+            val defaultColor = TypedValue()
+            ctx.theme.resolveAttribute(android.R.attr.textColorPrimary, defaultColor, true)
+            val color = ContextCompat.getColor(ctx, defaultColor.resourceId)
+            item.imageTintList = ColorStateList.valueOf(color)
+        } else {
+            item.imageTintList =
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(ctx, android.R.color.holo_orange_light)
                 )
-            )
+        }
     }
 
-    private fun deleteConfirmDialog(fileId: String, fileName: String) {
+    private fun deleteConfirmDialog(view: View, fileId: String, fileName: String) {
         Log.d("deleteConfirmDialog", "${fileId}: $fileName")
         MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setTitle("Delete File?")
@@ -248,12 +297,23 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                 lifecycleScope.launch {
                     val result = api.deleteSingle(fileId)
                     Log.d("deleteConfirmDialog", "result: $result")
-                    val msg = if (result != null) "File Deleted" else "File Not Found"
                     viewModel.deleteId.value = fileId
+                    // TODO: Implement Snakebar
+                    val msg = if (result != null) "File Deleted" else "File Not Found"
                     withContext(Dispatchers.Main) {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
                             .show()
                     }
+                    //if (result != null) {
+                    //    Snackbar.make(view, "File Deleted.", Snackbar.LENGTH_SHORT)
+                    //        .setAction("Action", null)
+                    //        .setAnchorView(binding.bottomSheetLayout).show()
+                    //} else {
+                    //    Snackbar.make(view, "Error Deleting File!", Snackbar.LENGTH_LONG)
+                    //        .setAction("Action", null)
+                    //        .setTextColor("#ff0000".toColorInt())
+                    //        .setAnchorView(binding.bottomSheetLayout).show()
+                    //}
                     dismiss()
                 }
             }

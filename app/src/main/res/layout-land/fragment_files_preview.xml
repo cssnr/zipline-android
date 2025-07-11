@@ -7,36 +7,36 @@
 
     <LinearLayout
         android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:orientation="horizontal"
+        android:layout_width="48dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:ignore="UseCompoundDrawables">
         <ImageView
             android:id="@+id/go_back"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:contentDescription="Go Back"
-            android:background="?attr/selectableItemBackground"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/md_right_panel_open_24px" />
         <TextView
             android:id="@+id/file_name"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingHorizontal="4dp"
+            android:paddingHorizontal="0dp"
             android:maxLines="1"
             android:ellipsize="middle"
-            android:gravity="center_vertical"
+            android:gravity="top"
             tools:text="some_long_file_name_here_aaaaaa.why" />
         <ImageView
             android:id="@+id/copy_text"
-            android:layout_width="48dp"
-            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
             android:contentDescription="Copy Text"
-            android:background="?attr/selectableItemBackground"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:visibility="gone"
             android:src="@drawable/md_content_copy_24px"
             tools:visibility="visible" />
@@ -44,11 +44,11 @@
 
     <FrameLayout
         android:id="@+id/preview_container"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:clipToPadding="false"
-        app:layout_constraintTop_toBottomOf="@id/top_bar"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/top_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent">
         <io.getstream.photoview.PhotoView
@@ -67,7 +67,7 @@
             app:show_buffering="always"
             app:show_shuffle_button="false"
             app:resize_mode="fit"
-            tools:visibility="gone" />
+            tools:visibility="visible" />
 <!--        <WebView-->
 <!--            android:id="@+id/web_view"-->
 <!--            android:layout_width="match_parent"-->

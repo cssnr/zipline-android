@@ -20,6 +20,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -37,6 +38,7 @@ import okhttp3.OkHttpClient
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileResponse
+import org.cssnr.zipline.api.ServerApi.FilesTransaction
 import org.cssnr.zipline.databinding.FragmentFilesBinding
 import java.io.InputStream
 
@@ -45,6 +47,8 @@ class FilesFragment : Fragment() {
     private var _binding: FragmentFilesBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: FilesViewModel by activityViewModels()
+
     private var atEnd = false
     private var errorCount = 0
     private var isMetered = false
@@ -52,9 +56,6 @@ class FilesFragment : Fragment() {
     private lateinit var api: ServerApi
     private lateinit var filesAdapter: FilesViewAdapter
     private lateinit var downloadManager: DownloadManager
-
-    //private val viewModel: FilesViewModel by viewModels()
-    private val viewModel: FilesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -106,6 +107,8 @@ class FilesFragment : Fragment() {
         val previewMetered = preferences.getBoolean("file_preview_metered", false)
         //Log.d("File[checkMetered]", "previewMetered: $previewMetered")
 
+        viewModel.setUrl(savedUrl)
+
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
             Toast.makeText(ctx, "Missing Auth Token!", Toast.LENGTH_LONG).show()
@@ -140,11 +143,37 @@ class FilesFragment : Fragment() {
 
         if (!::filesAdapter.isInitialized) {
             Log.i("File[onViewCreated]", "INITIALIZE ADAPTER isMetered: $isMetered")
-            filesAdapter =
-                FilesViewAdapter(ctx, mutableListOf(), selected, savedUrl, isMetered) { list ->
-                    Log.d("File[onViewCreated]", "onItemClick: ${list.size}")
-                    viewModel.selected.value = list
+            filesAdapter = FilesViewAdapter(
+                ctx,
+                mutableListOf(),
+                selected,
+                savedUrl,
+                isMetered,
+                object : OnFileItemClickListener {
+                    override fun onSelect(list: MutableSet<Int>) {
+                        Log.d("OnFileItemClickListener", "onSelect: $list")
+                        viewModel.selected.value = list
+                    }
+
+                    override fun onMenuClick(file: FileResponse, anchor: View) {
+                        Log.d("OnFileItemClickListener", "onMenuClick: $file")
+                        val bottomSheet = FilesBottomSheet()
+                        viewModel.activeFile.value = file
+                        bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+                    }
+
+                    override fun onPreview(file: FileResponse) {
+                        Log.d("OnFileItemClickListener", "onPreview: $file")
+                        viewModel.activeFile.value = file
+                        //findNavController().navigate(R.id.nav_item_files_action_preview)
+                        val navController = findNavController()
+                        if (navController.currentDestination?.id == R.id.nav_item_files) {
+                            navController.navigate(R.id.nav_item_files_action_preview)
+                        }
+
+                    }
                 }
+            )
         }
 
         fun updateCheckButton() {
@@ -155,10 +184,10 @@ class FilesFragment : Fragment() {
                 getString(R.string.files_selected_total, selectedSize, filesSize)
             if (selectedSize == filesSize) {
                 //Log.i("filesData[updateCheckButton]", "ALL SELECTED")
-                binding.checkBoxIcon.setImageResource(R.drawable.md_check_box_24px)
+                binding.filesSelectAll.setImageResource(R.drawable.md_check_box_24px)
             } else {
                 //Log.i("filesData[updateCheckButton]", "NOT ALL SELECTED")
-                binding.checkBoxIcon.setImageResource(R.drawable.md_check_box_outline_blank_24px)
+                binding.filesSelectAll.setImageResource(R.drawable.md_check_box_outline_blank_24px)
             }
         }
 
@@ -381,6 +410,28 @@ class FilesFragment : Fragment() {
             ctx.downloadConfirmDialog(positions, ::callback)
         }
 
+        binding.favoriteAllButton.setOnClickListener {
+            Log.d(
+                "File[favoriteAllButton]",
+                "viewModel.selected.value: ${viewModel.selected.value}"
+            )
+            if (viewModel.selected.value.isNullOrEmpty()) return@setOnClickListener
+            val positions = viewModel.selected.value!!.toList()
+            Log.d("File[favoriteAllButton]", "positions: $positions")
+            val data = viewModel.filesData.value!!.toList()
+            Log.d("File[favoriteAllButton]", "data.size: ${data.size}")
+            val selectedPositions: List<Int> = viewModel.selected.value!!.toList()
+            Log.d("File[favoriteAllButton]", "selectedPositions: $selectedPositions")
+            val ids: List<String> = selectedPositions.map { index -> data[index].id }
+            Log.d("File[favoriteAllButton]", "ids: $ids")
+            fun callback() {
+                Log.d("File[favoriteAllButton]", "callback: $selectedPositions")
+                // TODO: Update viewModel.filesData then notify filesAdapter
+                //filesAdapter.notifyIdsUpdated(selectedPositions)
+            }
+            ctx.favoriteConfirmDialog(ids, selectedPositions, ::callback)
+        }
+
         //binding.expireAllButton.setOnClickListener {
         //    Log.d("File[expireAllButton]", "viewModel.selected.value: ${viewModel.selected.value}")
         //    fun callback(newExpr: String) {
@@ -429,13 +480,13 @@ class FilesFragment : Fragment() {
             }
         }
 
-        //// Monitor viewModel.editRequest for changes and do something...
-        //viewModel.editRequest.observe(viewLifecycleOwner) { editRequest ->
-        //    Log.d("editRequest[observe]", "editRequest: $editRequest")
-        //    if (editRequest != null) {
-        //        filesAdapter.editById(editRequest)
-        //    }
-        //}
+        // Monitor viewModel.editRequest for changes and do something...
+        viewModel.editRequest.observe(viewLifecycleOwner) { editRequest ->
+            Log.d("editRequest[observe]", "editRequest: $editRequest")
+            if (editRequest != null) {
+                filesAdapter.editById(editRequest)
+            }
+        }
 
         //// TODO: Avoid using this...
         //// Monitor viewModel.updateRequest for changes and do something...
@@ -594,9 +645,9 @@ private fun Context.deleteConfirmDialog(
             CoroutineScope(Dispatchers.IO).launch {
                 //val transaction = FilesTransaction(files = fileIds)
                 val response = api.deleteMany(fileIds)
-                Log.d("File[deleteAllButton]", "response: $response")
+                Log.d("deleteConfirmDialog", "response: $response")
                 if (response != null) {
-                    Log.d("File[deleteAllButton]", "filesAdapter.deleteIds: $selectedPositions")
+                    Log.d("deleteConfirmDialog", "filesAdapter.deleteIds: $selectedPositions")
                     withContext(Dispatchers.Main) {
                         callback(selectedPositions)
                     }
@@ -617,6 +668,77 @@ private fun Context.downloadConfirmDialog(positions: List<Int>, callback: () -> 
         .setNegativeButton("Cancel", null)
         .setPositiveButton("Download $count File${s}") { _, _ -> callback() }
         .show()
+}
+
+//private fun Context.favoriteConfirmDialog(
+//    fileIds: List<String>,
+//    selectedPositions: List<Int>,
+//    callback: () -> Unit,
+//) {
+//    // TODO: Add option to Add to favorite or Remove to favorite...
+//    Log.d("favoriteConfirmDialog", "fileIds: $fileIds - selectedPositions: $selectedPositions")
+//    val count = fileIds.count()
+//    val s = if (count > 1) "s" else ""
+//    MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+//        .setTitle("Favorite $count File${s}")
+//        .setIcon(R.drawable.md_delete_24px)
+//        .setMessage("Set all $count file${s} as favorite files?")
+//        .setNegativeButton("Cancel", null)
+//        .setPositiveButton("Favorite $count File${s}") { _, _ ->
+//            Log.d("favoriteConfirmDialog", "Favorite Confirm: fileIds $fileIds")
+//            val api = ServerApi(this)
+//            CoroutineScope(Dispatchers.IO).launch {
+//                //val transaction = FilesTransaction(files = fileIds)
+//                val transaction = FilesTransaction(files = fileIds, favorite = true)
+//                val response = api.editMany(transaction)
+//                Log.d("favoriteConfirmDialog", "response: $response")
+//                if (response != null) {
+//                    Log.d("favoriteConfirmDialog", "callback()")
+//                    withContext(Dispatchers.Main) { callback() }
+//                }
+//            }
+//        }
+//        .show()
+//}
+
+private fun Context.favoriteConfirmDialog(
+    fileIds: List<String>,
+    selectedPositions: List<Int>,
+    callback: () -> Unit,
+) {
+    Log.d("favoriteConfirmDialog", "fileIds: $fileIds - selectedPositions: $selectedPositions")
+    val count = fileIds.count()
+    val s = if (count > 1) "s" else ""
+    MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
+        .setTitle("Favorite $count File${s}")
+        .setIcon(R.drawable.md_delete_24px)
+        .setMessage("Set or remove favorite status for $count file${s}?")
+        .setNegativeButton("Cancel", null)
+        .setPositiveButton("Add") { _, _ ->
+            handleFavoriteUpdate(fileIds, true, callback)
+        }
+        .setNeutralButton("Remove") { _, _ ->
+            handleFavoriteUpdate(fileIds, false, callback)
+        }
+        .show()
+}
+
+private fun Context.handleFavoriteUpdate(
+    fileIds: List<String>,
+    favorite: Boolean,
+    callback: () -> Unit,
+) {
+    Log.d("favoriteConfirmDialog", "Favorite Confirm ($favorite): fileIds $fileIds")
+    val api = ServerApi(this)
+    CoroutineScope(Dispatchers.IO).launch {
+        val transaction = FilesTransaction(files = fileIds, favorite = favorite)
+        val response = api.editMany(transaction)
+        Log.d("favoriteConfirmDialog", "response: $response")
+        if (response != null) {
+            Log.d("favoriteConfirmDialog", "callback()")
+            withContext(Dispatchers.Main) { callback() }
+        }
+    }
 }
 
 //suspend fun Context.getAlbums(savedUrl: String) {
@@ -792,3 +914,10 @@ fun getDownloadRequest(savedUrl: String, data: FileResponse): DownloadManager.Re
         setRequiresCharging(false)
     }
 }
+
+interface OnFileItemClickListener {
+    fun onSelect(list: MutableSet<Int>)
+    fun onMenuClick(file: FileResponse, anchor: View)
+    fun onPreview(file: FileResponse)
+}
+

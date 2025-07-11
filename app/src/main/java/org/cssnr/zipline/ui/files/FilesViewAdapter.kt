@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.drawable.Drawable
-import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -16,8 +15,6 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentActivity
-import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -27,13 +24,9 @@ import com.bumptech.glide.request.target.Target
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
 import org.cssnr.zipline.R
+import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
 
-//import android.widget.ImageView
-//import android.net.ConnectivityManager
-//import androidx.fragment.app.FragmentActivity
-//import androidx.navigation.fragment.FragmentNavigatorExtras
-//import androidx.core.util.Pair as UtilPair
 
 class FilesViewAdapter(
     private val context: Context,
@@ -41,7 +34,7 @@ class FilesViewAdapter(
     val selected: MutableSet<Int>,
     var savedUrl: String,
     var isMetered: Boolean,
-    private val onItemClick: (MutableSet<Int>) -> Unit,
+    private val listener: OnFileItemClickListener,
 ) : RecyclerView.Adapter<FilesViewAdapter.ViewHolder>() {
 
     private var colorOnSecondary: ColorStateList? = null
@@ -55,9 +48,10 @@ class FilesViewAdapter(
         val filePassword: TextView = view.findViewById(R.id.file_password)
         val fileExpr: TextView = view.findViewById(R.id.file_expr)
         val itemSelect: FrameLayout = view.findViewById(R.id.item_select)
+        val itemPreview: LinearLayout = view.findViewById(R.id.item_preview)
         val itemBorder: LinearLayout = view.findViewById(R.id.item_border)
         val checkMark: ImageView = view.findViewById(R.id.check_mark)
-        val openMenu: LinearLayout = view.findViewById(R.id.open_menu)
+        val menuButton: LinearLayout = view.findViewById(R.id.menu_button)
         val loadingSpinner: ProgressBar = view.findViewById(R.id.loading_spinner)
     }
 
@@ -73,6 +67,8 @@ class FilesViewAdapter(
         val data = dataSet[position]
         //Log.d("onBindViewHolder", "data[$position]: $data")
         //Log.d("onBindViewHolder", "data[$position]: ${data.name}")
+
+        //viewHolder.fileImage.transitionName = data.id.toString()
 
         // Setup
         val typedValue = TypedValue()
@@ -91,13 +87,19 @@ class FilesViewAdapter(
         viewHolder.fileSize.text = bytesToHuman(data.size.toDouble()).toString()
 
         // Views
-        viewHolder.fileView.text = data.views.toString()
+        viewHolder.fileView.text = if (data.views > 0) data.views.toString() else ""
         viewHolder.fileView.compoundDrawableTintList =
             if (data.views > 0) null else colorOnSecondary
 
         // Favorite
-        viewHolder.fileFavorite.compoundDrawableTintList =
-            if (data.favorite) null else colorOnSecondary
+        // TODO: Cleanup icon tint setting...
+        viewHolder.fileFavorite.compoundDrawableTintList = if (data.favorite) {
+            ColorStateList.valueOf(
+                ContextCompat.getColor(context, android.R.color.holo_orange_light)
+            )
+        } else {
+            colorOnSecondary
+        }
 
         // Password
         viewHolder.filePassword.compoundDrawableTintList =
@@ -108,65 +110,17 @@ class FilesViewAdapter(
         viewHolder.fileExpr.compoundDrawableTintList =
             if (data.deletesAt == null) colorOnSecondary else null
 
-        // Variables
-        //val passParam = if (data.password.isNotEmpty()) "&password=${data.password}" else ""
-        val viewUrl = "${savedUrl}${data.url}"
-        val rawUrl = "${savedUrl}/raw/${data.name}"
-        val thumbUrl =
-            if (data.thumbnail != null) "${savedUrl}/raw/${data.thumbnail.path}" else null
+        // Menu Button - Bottom Sheet - listener.onMenuClick
+        viewHolder.menuButton.setOnClickListener { view -> listener.onMenuClick(data, view) }
 
-        val bundle = Bundle().apply {
-            putInt("position", viewHolder.bindingAdapterPosition) // TODO: REMOVE EVERYTHING ELSE
-            putString("fileId", data.id)
-            putString("fileName", data.name)
-            putString("mimeType", data.type)
-            putString("viewUrl", viewUrl)
-            putString("thumbUrl", thumbUrl)
-            putString("shareUrl", viewUrl)
-            putString("rawUrl", rawUrl)
-            putBoolean("filePassword", data.password == true)
-            //putBoolean("isPrivate", data.private)
-        }
-        //Log.d("FilesViewAdapter", "bundle: $bundle")
+        // File Image - Item Preview - listener.onPreview
+        viewHolder.itemPreview.setOnClickListener { view -> listener.onPreview(data) }
+        //viewHolder.itemSelect.setOnClickListener {
+        //    it.findNavController().navigate(R.id.nav_item_files_action_preview, bundle)
+        //}
 
-        // Menu Link
-        viewHolder.openMenu.setOnClickListener {
-            Log.d("FilesViewAdapter", "openMenu.setOnClickListener: $bundle")
-            val bottomSheet = FilesBottomSheet.newInstance(bundle)
-            bottomSheet.show(
-                (context as FragmentActivity).supportFragmentManager,
-                bottomSheet.tag
-            )
-        }
-
-        // Note: This has been swapped with itemView
-        // Select - itemSelect Click
+        // Item View - Item Select - listener.onSelect
         viewHolder.itemSelect.setOnClickListener {
-            // TODO: Setup proper transition/animation
-            //val activity = context as Activity
-            //val options = ActivityOptionsCompat.makeSceneTransitionAnimation(
-            //    activity,
-            //    UtilPair.create(viewHolder.fileImage, data.id.toString())
-            //)
-            //val extras = ActivityNavigatorExtras(options)
-            //
-            //val extras = FragmentNavigatorExtras(viewHolder.fileImage to data.id.toString())
-            //it.findNavController()
-            //    .navigate(R.id.nav_item_files_action_preview, bundle, null, extras)
-            it.findNavController().navigate(R.id.nav_item_files_action_preview, bundle)
-        }
-
-        if (position in selected) {
-            viewHolder.checkMark.visibility = View.VISIBLE
-            viewHolder.itemBorder.setBackgroundResource(R.drawable.image_border_selected_2dp)
-        } else {
-            viewHolder.checkMark.visibility = View.GONE
-            viewHolder.itemBorder.background = null
-        }
-
-        // Note: This has been swapped with itemSelect
-        // Preview - itemView Click
-        viewHolder.itemView.setOnClickListener {
             Log.d("Adapter[itemView]", "setOnClickListener")
 
             val pos = viewHolder.bindingAdapterPosition
@@ -186,15 +140,15 @@ class FilesViewAdapter(
                 }
                 notifyItemChanged(viewHolder.bindingAdapterPosition)
 
-                onItemClick(selected)
+                listener.onSelect(selected)
             }
         }
+
         if (position in selected) {
             viewHolder.checkMark.visibility = View.VISIBLE
             viewHolder.itemBorder.setBackgroundResource(R.drawable.image_border_selected_2dp)
         } else {
             viewHolder.checkMark.visibility = View.GONE
-            //viewHolder.itemBorder.setBackgroundResource(R.drawable.image_border)
             viewHolder.itemBorder.background = null
         }
 
@@ -206,7 +160,6 @@ class FilesViewAdapter(
                 .setAllCorners(CornerFamily.ROUNDED, radius)
                 .build()
         )
-        //viewHolder.fileImage.transitionName = data.id.toString()
 
         // Image - Glide Listener
         val glideListener = object : RequestListener<Drawable> {
@@ -235,6 +188,12 @@ class FilesViewAdapter(
                 return false
             }
         }
+
+        // TODO: These methods are in the ViewModel but need to be accessible here...
+        //val viewUrl = "${savedUrl}${data.url}"
+        val rawUrl = "${savedUrl}/raw/${data.name}"
+        val thumbUrl =
+            if (data.thumbnail != null) "${savedUrl}/raw/${data.thumbnail.path}" else null
 
         // Image - Logic
         if (data.password == true) {
@@ -293,7 +252,7 @@ class FilesViewAdapter(
             }
         }
         selected.clear()
-        onItemClick(selected)
+        //onItemClick(selected)
 
         //Log.d("deleteIds", "start: ${sorted.min()} - count: ${dataSet.size - sorted.min()}")
         //notifyItemRangeChanged(sorted.min(), dataSet.size - sorted.min())
@@ -311,7 +270,7 @@ class FilesViewAdapter(
             }
         }
         selected.clear()
-        onItemClick(selected)
+        //onItemClick(selected)
     }
 
 
@@ -323,30 +282,21 @@ class FilesViewAdapter(
         }
     }
 
-    //fun editById(request: FileEditRequest) {
-    //    Log.d("editById", "id: ${request.id}")
-    //    Log.d("editById", "request: $request")
-    //    val index = dataSet.indexOfFirst { it.id == request.id }
-    //    Log.d("editById", "index: $index")
-    //    if (index != -1) {
-    //        val file = dataSet[index]
-    //        if (request.private != null) {
-    //            file.private = request.private!!
-    //        }
-    //        if (request.password != null) {
-    //            file.password = request.password!!
-    //        }
-    //        notifyItemChanged(index)
-    //    }
-    //}
-
-    // Note: this has not been tested due to warning on notifyDataSetChanged
-    //fun submitList(newList: List<FileResponse>) {
-    //    Log.d("submitList", "newList.size: ${newList.size}")
-    //    dataSet.clear()
-    //    dataSet.addAll(newList)
-    //    notifyDataSetChanged()
-    //}
+    fun editById(request: FileEditRequest) {
+        Log.d("editById", "request: $request")
+        Log.d("editById", "id: ${request.id}")
+        val index = dataSet.indexOfFirst { it.id == request.id }
+        Log.d("editById", "index: $index")
+        if (index != -1) {
+            val file = dataSet[index]
+            Log.d("editById", "file: $file")
+            Log.d("editById", "file: ${file.favorite} - request: ${request.favorite}")
+            if (request.favorite != null) {
+                file.favorite = request.favorite
+            }
+            notifyItemChanged(index)
+        }
+    }
 
     private fun bytesToHuman(bytes: Double) = when {
         bytes >= 1 shl 30 -> "%.1f GB".format(bytes / (1 shl 30))

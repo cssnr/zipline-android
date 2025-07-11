@@ -13,6 +13,7 @@ import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -42,11 +43,12 @@ import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import org.json.JSONObject
 import java.io.File
 
-
 class FilesPreviewFragment : Fragment() {
 
     private var _binding: FragmentFilesPreviewBinding? = null
     private val binding get() = _binding!!
+
+    private val viewModel: FilesViewModel by activityViewModels()
 
     private var isPlaying: Boolean? = null
     private var currentPosition: Long = 0
@@ -92,27 +94,6 @@ class FilesPreviewFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("FilesPreviewFragment", "onViewCreated: ${savedInstanceState?.size()}")
 
-        binding.goBack.setOnClickListener {
-            Log.d("FilesPreviewFragment", "GO BACK")
-            //findNavController().popBackStack()
-            findNavController().navigateUp()
-        }
-
-        val fileId = arguments?.getString("fileId")
-        Log.d("FilesPreviewFragment", "fileId: $fileId")
-        val fileName = arguments?.getString("fileName")
-        Log.d("FilesPreviewFragment", "fileName: $fileName")
-        val mimeType = arguments?.getString("mimeType")
-        Log.d("FilesPreviewFragment", "mimeType: $mimeType")
-        val rawUrl = arguments?.getString("rawUrl")
-        Log.d("FilesPreviewFragment", "rawUrl: $rawUrl")
-        val viewUrl = arguments?.getString("viewUrl")
-        Log.d("FilesPreviewFragment", "viewUrl: $viewUrl")
-        val filePassword = arguments?.getBoolean("filePassword") == true
-        Log.d("FilesPreviewFragment", "filePassword: $filePassword")
-
-        binding.fileName.text = fileName
-
         val ctx = requireContext()
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
@@ -121,10 +102,28 @@ class FilesPreviewFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("FilesPreviewFragment", "savedUrl: $savedUrl")
 
-        binding.playerView.transitionName = fileId
-        //Log.d("FilesPreviewFragment", "transitionName: ${imageView.transitionName}")
+        // ViewModel Data
+        viewModel.activeFile.observe(viewLifecycleOwner) { file ->
+            Log.d("activeFile.observe", "file: $file")
+            if (file == null) return@observe
+            binding.fileName.text = file.originalName ?: file.name
+        }
 
-        if (filePassword) {
+        // Static Data
+        // TODO: Currently this uses a mix of these val's and viewModel.activeFile.value data...
+        Log.d("FilesPreviewFragment", "viewModel.activeFile.value: ${viewModel.activeFile.value}")
+        val mimeType = viewModel.activeFile.value?.type
+        val rawUrl = viewModel.getRawUrl(viewModel.activeFile.value!!) // TODO: BANG BANG
+
+        binding.goBack.setOnClickListener {
+            Log.d("FilesPreviewFragment", "GO BACK")
+            findNavController().navigateUp()
+        }
+
+        binding.playerView.transitionName = viewModel.activeFile.value?.id
+
+        // Preview Data
+        if (viewModel.activeFile.value?.password == true) {
             Log.d("FilesPreviewFragment", "PASSWORD PROTECTED")
             binding.previewImageView.visibility = View.VISIBLE
             binding.previewImageView.setImageResource(R.drawable.md_encrypted_24px)
@@ -169,7 +168,7 @@ class FilesPreviewFragment : Fragment() {
                 .setUpstreamDataSourceFactory(baseDataSourceFactory)
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
             val mediaSource = ProgressiveMediaSource.Factory(cacheDataSourceFactory)
-                .createMediaSource(MediaItem.fromUri(rawUrl!!))
+                .createMediaSource(MediaItem.fromUri(rawUrl))
 
             player.setMediaSource(mediaSource)
             player.prepare()
@@ -249,7 +248,7 @@ class FilesPreviewFragment : Fragment() {
             //cookieManager.setAcceptThirdPartyCookies(webView, true)
 
             lifecycleScope.launch {
-                val content = withContext(Dispatchers.IO) { getContent(rawUrl!!) }
+                val content = withContext(Dispatchers.IO) { getContent(rawUrl) }
                 if (content == null) {
                     Log.w("FilesPreviewFragment", "content is null")
                     withContext(Dispatchers.Main) {
