@@ -20,6 +20,7 @@ import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,6 +47,8 @@ class FilesFragment : Fragment() {
     private var _binding: FragmentFilesBinding? = null
     private val binding get() = _binding!!
 
+    private val viewModel: FilesViewModel by activityViewModels()
+
     private var atEnd = false
     private var errorCount = 0
     private var isMetered = false
@@ -53,9 +56,6 @@ class FilesFragment : Fragment() {
     private lateinit var api: ServerApi
     private lateinit var filesAdapter: FilesViewAdapter
     private lateinit var downloadManager: DownloadManager
-
-    //private val viewModel: FilesViewModel by viewModels()
-    private val viewModel: FilesViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -107,6 +107,8 @@ class FilesFragment : Fragment() {
         val previewMetered = preferences.getBoolean("file_preview_metered", false)
         //Log.d("File[checkMetered]", "previewMetered: $previewMetered")
 
+        viewModel.setUrl(savedUrl)
+
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
             Toast.makeText(ctx, "Missing Auth Token!", Toast.LENGTH_LONG).show()
@@ -141,11 +143,37 @@ class FilesFragment : Fragment() {
 
         if (!::filesAdapter.isInitialized) {
             Log.i("File[onViewCreated]", "INITIALIZE ADAPTER isMetered: $isMetered")
-            filesAdapter =
-                FilesViewAdapter(ctx, mutableListOf(), selected, savedUrl, isMetered) { list ->
-                    Log.d("File[onViewCreated]", "onItemClick: ${list.size}")
-                    viewModel.selected.value = list
+            filesAdapter = FilesViewAdapter(
+                ctx,
+                mutableListOf(),
+                selected,
+                savedUrl,
+                isMetered,
+                object : OnFileItemClickListener {
+                    override fun onSelect(list: MutableSet<Int>) {
+                        Log.d("OnFileItemClickListener", "onSelect: $list")
+                        viewModel.selected.value = list
+                    }
+
+                    override fun onMenuClick(file: FileResponse, anchor: View) {
+                        Log.d("OnFileItemClickListener", "onMenuClick: $file")
+                        val bottomSheet = FilesBottomSheet()
+                        viewModel.activeFile.value = file
+                        bottomSheet.show(parentFragmentManager, bottomSheet.tag)
+                    }
+
+                    override fun onPreview(file: FileResponse) {
+                        Log.d("OnFileItemClickListener", "onPreview: $file")
+                        viewModel.activeFile.value = file
+                        //findNavController().navigate(R.id.nav_item_files_action_preview)
+                        val navController = findNavController()
+                        if (navController.currentDestination?.id == R.id.nav_item_files) {
+                            navController.navigate(R.id.nav_item_files_action_preview)
+                        }
+
+                    }
                 }
+            )
         }
 
         fun updateCheckButton() {
@@ -383,7 +411,10 @@ class FilesFragment : Fragment() {
         }
 
         binding.favoriteAllButton.setOnClickListener {
-            Log.d("File[favoriteAllButton]", "viewModel.selected.value: ${viewModel.selected.value}")
+            Log.d(
+                "File[favoriteAllButton]",
+                "viewModel.selected.value: ${viewModel.selected.value}"
+            )
             if (viewModel.selected.value.isNullOrEmpty()) return@setOnClickListener
             val positions = viewModel.selected.value!!.toList()
             Log.d("File[favoriteAllButton]", "positions: $positions")
@@ -883,3 +914,10 @@ fun getDownloadRequest(savedUrl: String, data: FileResponse): DownloadManager.Re
         setRequiresCharging(false)
     }
 }
+
+interface OnFileItemClickListener {
+    fun onSelect(list: MutableSet<Int>)
+    fun onMenuClick(file: FileResponse, anchor: View)
+    fun onPreview(file: FileResponse)
+}
+
