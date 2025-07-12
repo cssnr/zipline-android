@@ -424,10 +424,16 @@ class FilesFragment : Fragment() {
             Log.d("File[favoriteAllButton]", "selectedPositions: $selectedPositions")
             val ids: List<String> = selectedPositions.map { index -> data[index].id }
             Log.d("File[favoriteAllButton]", "ids: $ids")
-            fun callback() {
-                Log.d("File[favoriteAllButton]", "callback: $selectedPositions")
-                // TODO: Update viewModel.filesData then notify filesAdapter
-                //filesAdapter.notifyIdsUpdated(selectedPositions)
+            fun callback(result: Boolean) {
+                Log.d("File[favoriteAllButton]", "callback: $result - $selectedPositions")
+                // TODO: Create method to update viewModel.filesData and viewModel.filesData
+                val currentList = viewModel.filesData.value!!.toMutableList()
+                for (position in selectedPositions) {
+                    val item = currentList[position]
+                    currentList[position] = item.copy(favorite = result)
+                }
+                viewModel.filesData.value = currentList
+                filesAdapter.updateFavorite(selectedPositions, result)
             }
             ctx.favoriteConfirmDialog(ids, selectedPositions, ::callback)
         }
@@ -704,15 +710,15 @@ private fun Context.downloadConfirmDialog(positions: List<Int>, callback: () -> 
 private fun Context.favoriteConfirmDialog(
     fileIds: List<String>,
     selectedPositions: List<Int>,
-    callback: () -> Unit,
+    callback: (result: Boolean) -> Unit,
 ) {
     Log.d("favoriteConfirmDialog", "fileIds: $fileIds - selectedPositions: $selectedPositions")
     val count = fileIds.count()
     val s = if (count > 1) "s" else ""
     MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-        .setTitle("Favorite $count File${s}")
-        .setIcon(R.drawable.md_delete_24px)
-        .setMessage("Set or remove favorite status for $count file${s}?")
+        .setTitle("$count Selected File${s}")
+        .setIcon(R.drawable.md_star_24px)
+        .setMessage("Remove or Add $count file${s} from Favorites?")
         .setNegativeButton("Cancel", null)
         .setPositiveButton("Add") { _, _ ->
             handleFavoriteUpdate(fileIds, true, callback)
@@ -726,7 +732,7 @@ private fun Context.favoriteConfirmDialog(
 private fun Context.handleFavoriteUpdate(
     fileIds: List<String>,
     favorite: Boolean,
-    callback: () -> Unit,
+    callback: (result: Boolean) -> Unit,
 ) {
     Log.d("favoriteConfirmDialog", "Favorite Confirm ($favorite): fileIds $fileIds")
     val api = ServerApi(this)
@@ -736,7 +742,7 @@ private fun Context.handleFavoriteUpdate(
         Log.d("favoriteConfirmDialog", "response: $response")
         if (response != null) {
             Log.d("favoriteConfirmDialog", "callback()")
-            withContext(Dispatchers.Main) { callback() }
+            withContext(Dispatchers.Main) { callback(favorite) }
         }
     }
 }

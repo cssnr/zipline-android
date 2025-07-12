@@ -51,18 +51,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_goneMarginTop="0dp"
         tools:visibility="visible">
-        <LinearLayout
+        <ImageView
             android:id="@+id/download_manager"
             android:layout_width="48dp"
             android:layout_height="match_parent"
+            android:padding="6dp"
             android:gravity="center"
-            android:background="?attr/selectableItemBackground">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:contentDescription="Delete All"
-                android:src="@drawable/md_drive_file_move_24px" />
-        </LinearLayout>
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Delete All"
+            android:src="@drawable/md_drive_file_move_24px" />
     </LinearLayout>
 
     <LinearLayout
@@ -140,8 +137,7 @@
             android:gravity="center"
             android:background="?attr/selectableItemBackground"
             android:contentDescription="Favorite All"
-            android:src="@drawable/md_star_24px"
-            android:visibility="gone" />
+            android:src="@drawable/md_star_24px" />
 
         <ImageView
             android:id="@+id/download_all_button"
