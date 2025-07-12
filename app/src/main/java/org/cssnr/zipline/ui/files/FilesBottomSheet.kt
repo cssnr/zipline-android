@@ -206,7 +206,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         // Delete
         binding.deleteButton.setOnClickListener {
             Log.d("deleteButton", "fileId: ${data.id}")
-            deleteConfirmDialog(view, data.id, data.name)
+            deleteConfirmDialog(data)
         }
 
         // Favorite
@@ -281,13 +281,13 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-    private fun deleteConfirmDialog(view: View, fileId: String, fileName: String) {
-        Log.d("deleteConfirmDialog", "$fileId: $fileName")
+    private fun deleteConfirmDialog(data: FileResponse) {
+        Log.d("deleteConfirmDialog", "${data.id}: ${data.name}")
 
         val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setTitle("Delete File?")
             .setIcon(R.drawable.md_delete_24px)
-            .setMessage(fileName)
+            .setMessage("Name: ${data.name}\nOriginal: ${data.originalName}\nID: ${data.id}")
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Delete", null)
             .create()
@@ -295,14 +295,14 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
-                Log.d("deleteConfirmDialog", "Delete Confirm: fileId $fileId")
+                Log.d("deleteConfirmDialog", "Delete Confirm: fileId ${data.id}:")
                 dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
                 dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
 
                 lifecycleScope.launch {
-                    val result = ServerApi(requireContext()).deleteSingle(fileId)
+                    val result = ServerApi(requireContext()).deleteSingle(data.id)
                     Log.d("deleteConfirmDialog", "result: $result")
-                    viewModel.deleteId.value = fileId
+                    viewModel.deleteId.value = data.id
                     val msg = if (result != null) "File Deleted" else "File Not Found"
                     viewModel.showSnackbar(msg)
                     dialog.dismiss()
