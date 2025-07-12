@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
@@ -24,9 +25,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileEditRequest
@@ -222,16 +221,14 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     viewModel.editRequest.value = editRequest
                     tintImage(binding.favoriteButton, result.favorite != true)
                     val text = if (result.favorite == true) "Added to" else "Removed from"
-                    Snackbar.make(view, "File $text as Favorites.", Snackbar.LENGTH_SHORT)
-                        .setAction("Action", null)
-                        .setAnchorView(binding.bottomSheetLayout).show()
+                    val snackbar =
+                        Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
+                    snackbar.setAction("Close") { snackbar.dismiss() }
+                    snackbar.setAnchorView(requireView()).show()
                 } else {
-                    Snackbar.make(view, "Error Setting File Favorite!", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null)
-                        //.setActionTextColor(ContextCompat.getColor(ctx, R.color.primary))
-                        //.setBackgroundTint(ContextCompat.getColor(ctx, R.color.tap_target_background))
-                        .setTextColor("#ff0000".toColorInt())
-                        .setAnchorView(binding.bottomSheetLayout).show()
+                    Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
+                        .setTextColor("#D32F2F".toColorInt())
+                        .setAnchorView(requireView()).show()
                 }
             }
         }
@@ -285,40 +282,38 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun deleteConfirmDialog(view: View, fileId: String, fileName: String) {
-        Log.d("deleteConfirmDialog", "${fileId}: $fileName")
-        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+        Log.d("deleteConfirmDialog", "$fileId: $fileName")
+
+        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
             .setTitle("Delete File?")
             .setIcon(R.drawable.md_delete_24px)
             .setMessage(fileName)
             .setNegativeButton("Cancel", null)
-            .setPositiveButton("Delete") { _, _ ->
+            .setPositiveButton("Delete", null)
+            .create()
+
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
                 Log.d("deleteConfirmDialog", "Delete Confirm: fileId $fileId")
-                val api = ServerApi(requireContext())
+                dialog.getButton(AlertDialog.BUTTON_POSITIVE).isEnabled = false
+                dialog.getButton(AlertDialog.BUTTON_NEGATIVE).isEnabled = false
+
                 lifecycleScope.launch {
-                    val result = api.deleteSingle(fileId)
+                    val result = ServerApi(requireContext()).deleteSingle(fileId)
                     Log.d("deleteConfirmDialog", "result: $result")
                     viewModel.deleteId.value = fileId
-                    // TODO: Implement Snakebar
                     val msg = if (result != null) "File Deleted" else "File Not Found"
-                    withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                    //if (result != null) {
-                    //    Snackbar.make(view, "File Deleted.", Snackbar.LENGTH_SHORT)
-                    //        .setAction("Action", null)
-                    //        .setAnchorView(binding.bottomSheetLayout).show()
-                    //} else {
-                    //    Snackbar.make(view, "Error Deleting File!", Snackbar.LENGTH_LONG)
-                    //        .setAction("Action", null)
-                    //        .setTextColor("#ff0000".toColorInt())
-                    //        .setAnchorView(binding.bottomSheetLayout).show()
-                    //}
+                    viewModel.showSnackbar(msg)
+                    dialog.dismiss()
                     dismiss()
                 }
             }
-            .show()
+        }
+
+        dialog.show()
     }
+
 
     //private fun setPasswordDialog(context: Context, fileId: Int, fileName: String) {
     //    Log.d("setPasswordDialog", "$fileId - savedUrl: $fileId")

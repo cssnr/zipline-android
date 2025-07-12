@@ -1,6 +1,7 @@
 package org.cssnr.zipline.ui.files
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import org.cssnr.zipline.api.ServerApi.FileEditRequest
@@ -17,6 +18,18 @@ class FilesViewModel : ViewModel() {
             savedUrl = newUrl
         }
     }
+
+    private val _snackbarMessage = MutableLiveData<String?>()
+    val snackbarMessage: LiveData<String?> = _snackbarMessage
+
+    fun showSnackbar(message: String) {
+        _snackbarMessage.value = message
+    }
+
+    fun snackbarShown() {
+        _snackbarMessage.value = null
+    }
+
 
     val filesData = MutableLiveData<List<FileResponse>>()
     val activeFile = MutableLiveData<FileResponse>()

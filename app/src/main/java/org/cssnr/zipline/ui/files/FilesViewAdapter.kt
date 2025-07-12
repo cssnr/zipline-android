@@ -282,12 +282,19 @@ class FilesViewAdapter(
         //onItemClick(selected)
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
     fun deleteById(fileId: String) {
         val index = dataSet.indexOfFirst { it.id == fileId }
         if (index != -1) {
             dataSet.removeAt(index)
             notifyItemRemoved(index)
+            // TODO: We deleted a file so the indexes are invalid, this is a temporary fix
+            //for (pos in selected) {
+            //    notifyItemChanged(pos)
+            //}
+            selected.clear()
+            // TODO: Need to store selected File IDs and not Position Index IDs
+            notifyDataSetChanged()
         }
     }
 
