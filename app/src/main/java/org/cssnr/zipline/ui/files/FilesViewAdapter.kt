@@ -240,6 +240,15 @@ class FilesViewAdapter(
         return dataSet
     }
 
+    fun updateFavorite(positions: List<Int>, favorite: Boolean) {
+        for (position in positions) {
+            val item = dataSet[position]
+            dataSet[position] = item.copy(favorite = favorite)
+            notifyItemChanged(position)
+        }
+    }
+
+
     fun notifyIdsUpdated(positions: List<Int>) {
         // TODO: Look into notifyIdsUpdated and determine if it should be NUKED!!!
         val sorted = positions.sortedDescending()
@@ -247,7 +256,7 @@ class FilesViewAdapter(
         for (pos in sorted) {
             //Log.d("notifyIdsUpdated", "pos: $pos")
             if (pos in dataSet.indices) {
-                Log.d("notifyIdsUpdated", "notifyItemRemoved: $pos")
+                Log.d("notifyIdsUpdated", "notifyItemChanged: pos: $pos")
                 notifyItemChanged(pos)
             }
         }
@@ -273,12 +282,19 @@ class FilesViewAdapter(
         //onItemClick(selected)
     }
 
-
+    @SuppressLint("NotifyDataSetChanged")
     fun deleteById(fileId: String) {
         val index = dataSet.indexOfFirst { it.id == fileId }
         if (index != -1) {
             dataSet.removeAt(index)
             notifyItemRemoved(index)
+            // TODO: We deleted a file so the indexes are invalid, this is a temporary fix
+            //for (pos in selected) {
+            //    notifyItemChanged(pos)
+            //}
+            selected.clear()
+            // TODO: Need to store selected File IDs and not Position Index IDs
+            notifyDataSetChanged()
         }
     }
 
