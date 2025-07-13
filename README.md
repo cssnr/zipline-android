@@ -25,6 +25,7 @@
 - [Features](#Features)
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
+  - [Troubleshooting](#troubleshooting)
 - [Screenshots](#Screenshots)
 - [Development](#Development)
   - [Building](#Building)
@@ -92,20 +93,33 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ## Features
 
-- Share or Open any file or URL to your Zipline server.
-- Single file previews most media with custom name option.
-- Multiple file upload previews, options and file selector.
-- Native file list with thumbnails, previews, and mass selection.
-- Widget with stats, custom update interval, upload button.
+- Share or Open any File, Media, Text or URL
+- Preview, Edit and set Options before Uploading
+- Native File List with Multi-Select, Favorite and Delete
+- Home Screen Widget with File Stats and App Shortcuts
 
 ### Planned
 
-- Add More Options to File List
-- Improve [Django Files](https://github.com/django-files).
+- Add URL Management Page
+- Add Default Upload Options
+- Add Per-Upload Options Overrides
+- Add File Edit Options to File List
 
 ### Known Issues
 
-- Not [Django Files](https://github.com/django-files).
+- After deleting files and then scrolling down in the file list it will skip the number of files deleted when loading more.
+  - To work around this for now, after deleting files, scroll to the top and pull down to refresh.
+- Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
+
+### Troubleshooting
+
+- Most navigation and display issues can be fixed by fully closing the app and restarting it.
+  - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-extension/issues).
+- If you encounter issues with the media in the file list, try clearing the application cache.
+- If you encounter issues with authentication, try clearing the application data (resets settings and auth).
+- If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
+
+If you are having trouble using the app, please reach out to us on [Discord](https://discord.gg/wXy6m2X8wY) or via [GitHub](#support).
 
 ## Screenshots
 
@@ -127,6 +141,12 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/8.jpg"></a>
 <a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/9.jpg">
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/9.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/10.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/10.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/11.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/11.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/12.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/12.jpg"></a>
 
 # Development
 

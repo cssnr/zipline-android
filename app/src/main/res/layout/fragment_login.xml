@@ -39,8 +39,10 @@
                     android:id="@+id/app_version"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
                     android:text=""
-                    tools:text="v0.0.1" />
+                    tools:text="v0.0.1"
+                    tools:ignore="RtlSymmetry" />
             </LinearLayout>
         </LinearLayout>
 

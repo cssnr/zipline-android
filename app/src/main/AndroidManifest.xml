@@ -13,9 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Zipline"
-        android:enableOnBackInvokedCallback="true"
         android:usesCleartextTraffic="true"
-        tools:targetApi="36"> <!-- TODO: Remove enableOnBackInvokedCallback ??? -->
+        tools:targetApi="36"> <!-- TODO: Removed: enableOnBackInvokedCallback - determine effect -->
         <activity
             android:name=".MainActivity"
             android:exported="true"

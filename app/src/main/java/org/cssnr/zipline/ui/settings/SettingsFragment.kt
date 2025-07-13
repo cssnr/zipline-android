@@ -25,6 +25,7 @@ import androidx.preference.SwitchPreferenceCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.ktx.analytics
@@ -58,6 +59,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val ctx = requireContext()
 
+        // Start Destination
+        val startDestination = findPreference<ListPreference>("start_destination")
+        startDestination?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
         // File Name Option
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
@@ -78,10 +83,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 false
             }
         }
-
-        //// Launcher Icon Action
-        //val launcherAction = findPreference<ListPreference>("launcher_action")
-        //launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
         // Widget Settings
         findPreference<Preference>("open_widget_settings")?.setOnPreferenceClickListener {
@@ -142,6 +143,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //Log.d("SettingsFragment", "showPreview: $showPreview")
         //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Settings[onStart]", "onStart: $arguments")
+        if (arguments?.getBoolean("hide_bottom_nav") == true) {
+            Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+                View.GONE
+        }
     }
 
     fun Context.updateWorkManager(listPref: ListPreference, newValue: Any): Boolean {

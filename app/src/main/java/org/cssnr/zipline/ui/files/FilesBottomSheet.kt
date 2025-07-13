@@ -45,7 +45,6 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
     private lateinit var data: FileResponse
     private lateinit var rawUrl: String
     private lateinit var viewUrl: String
-    private var thumbUrl: String? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,7 +86,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             Log.d("activeFile.observe", "rawUrl: $rawUrl")
             viewUrl = viewModel.getViewUrl(file)
             Log.d("activeFile.observe", "viewUrl: $viewUrl")
-            thumbUrl = viewModel.getThumbUrl(file)
+            val thumbUrl = viewModel.getThumbUrl(file)
             Log.d("activeFile.observe", "thumbUrl: $thumbUrl")
 
             // Name
@@ -104,10 +103,12 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
             }
 
             // Image
-            if (isGlideMime(file.type) || thumbUrl != null) {
+            if (file.password == true) {
+                binding.imagePreview.setImageResource(R.drawable.md_encrypted_24px)
+            } else if (isGlideMime(file.type) || thumbUrl != null) {
                 Log.d("activeFile.observe", "isGlideMime")
                 Glide.with(this)
-                    .load(if (thumbUrl != null) thumbUrl else rawUrl)
+                    .load(thumbUrl ?: rawUrl)
                     .into(binding.imagePreview)
             } else {
                 binding.imagePreview.setImageResource(getGenericIcon(file.type))

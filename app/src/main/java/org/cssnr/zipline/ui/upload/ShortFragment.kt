@@ -15,6 +15,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -55,6 +56,22 @@ class ShortFragment : Fragment() {
 
         navController = findNavController()
 
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        Log.d("Short[onViewCreated]", "savedUrl: $savedUrl")
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("Short[onViewCreated]", "authToken: $authToken")
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
+            Log.e("Short[onViewCreated]", "savedUrl is null")
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
+                .show()
+            navController.navigate(
+                R.id.nav_item_login, null, NavOptions.Builder()
+                    .setPopUpTo(navController.graph.id, true)
+                    .build()
+            )
+            return
+        }
+
         val url = requireArguments().getString("url")
         Log.d("Short[onViewCreated]", "url: $url")
 
@@ -62,23 +79,6 @@ class ShortFragment : Fragment() {
             // TODO: Better Handle this Error
             Log.e("Short[onViewCreated]", "URL is null")
             Toast.makeText(requireContext(), "No URL to Process!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val savedUrl = preferences.getString("ziplineUrl", null)
-        Log.d("Short[onViewCreated]", "savedUrl: $savedUrl")
-        val authToken = preferences.getString("ziplineToken", null)
-        Log.d("Short[onViewCreated]", "authToken: $authToken")
-
-        if (savedUrl == null) {
-            Log.e("Short[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
-                .show()
-            navController.navigate(
-                R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_home, true)
-                    .build()
-            )
             return
         }
 
@@ -95,7 +95,7 @@ class ShortFragment : Fragment() {
 
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings)
+            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
 
         binding.openButton.setOnClickListener {
@@ -115,28 +115,27 @@ class ShortFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Short[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Short[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     private fun processShort(longUrl: String, vanityName: String?) {
         Log.d("processShort", "URL: $longUrl")
         Log.d("processShort", "Vanity: $vanityName")
 
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processShort", "savedUrl: $savedUrl")
-        val authToken = preferences.getString("ziplineToken", null)
-        Log.d("processShort", "authToken: $authToken")
         val shareUrl = preferences.getBoolean("share_after_short", true)
         Log.d("processShort", "shareUrl: $shareUrl")
-
-        if (savedUrl == null || authToken == null) {
-            Log.e("processShort", "ziplineUrl || ziplineToken is null")
-            Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
-                .show()
-            navController.navigate(
-                R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_home, true)
-                    .build()
-            )
-            return
-        }
 
         val api = ServerApi(requireContext())
         lifecycleScope.launch {
@@ -154,11 +153,10 @@ class ShortFragment : Fragment() {
                         }
                         startActivity(Intent.createChooser(shareIntent, null))
                     }
+                    val bundle = bundleOf("url" to "${savedUrl}/dashboard/urls")
                     navController.navigate(
-                        R.id.nav_item_home,
-                        bundleOf("url" to "${savedUrl}/dashboard/urls"),
-                        NavOptions.Builder()
-                            .setPopUpTo(R.id.nav_graph, inclusive = true)
+                        R.id.nav_item_home, bundle, NavOptions.Builder()
+                            .setPopUpTo(navController.graph.id, true)
                             .build()
                     )
                     Log.d("processShort", "DONE")

@@ -10,7 +10,6 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -21,6 +20,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
@@ -58,9 +58,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
 
-        // Lock Navigation Drawer
-        (requireActivity() as MainActivity).setDrawerLockMode(false)
-
         // TODO: Determine if this is necessary...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             binding.root.setOnApplyWindowInsetsListener { _, insets ->
@@ -75,13 +72,13 @@ class LoginFragment : Fragment() {
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
         binding.appVersion.text = ctx.getString(R.string.version_string, versionName)
 
-        val link: TextView = binding.githubLink
         val linkText = getString(R.string.github_link, "github.com/cssnr/zipline-android")
-        link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
-        link.movementMethod = LinkMovementMethod.getInstance()
+        binding.githubLink.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
+        binding.githubLink.movementMethod = LinkMovementMethod.getInstance()
 
         binding.serverText.text =
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
+        binding.serverText.movementMethod = LinkMovementMethod.getInstance()
 
         if (arguments?.getString("url") != null) {
             Log.i(LOG_TAG, "url: ${arguments?.getString("url")}")
@@ -174,8 +171,6 @@ class LoginFragment : Fragment() {
                                 .build()
                         )
                     } else {
-                        // Unlock Drawer
-                        (requireActivity() as MainActivity).setDrawerLockMode(true)
                         findNavController().navigate(
                             R.id.nav_action_login_home, null, NavOptions.Builder()
                                 .setPopUpTo(R.id.nav_item_login, true)
@@ -187,6 +182,21 @@ class LoginFragment : Fragment() {
                 Log.d("loginButton", "lifecycleScope: DONE")
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Login[onStart]", "onStart - Hide UI and Lock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        (activity as? MainActivity)?.setDrawerLockMode(false)
+    }
+
+    override fun onStop() {
+        Log.d("Login[onStop]", "onStop - Show UI and Unlock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        (activity as? MainActivity)?.setDrawerLockMode(true)
+        super.onStop()
     }
 
     private fun parseHost(urlString: String): String {

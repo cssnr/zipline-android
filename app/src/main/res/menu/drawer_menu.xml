@@ -9,18 +9,21 @@
             android:checkable="true" />
         <item
             android:id="@+id/nav_item_files"
-            android:icon="@drawable/fa_table_list"
+            android:icon="@drawable/md_data_table_24px"
             android:title="Files"
             android:checkable="true" />
-        <item
-            android:id="@+id/nav_item_upload"
-            android:icon="@drawable/md_upload_24px"
-            android:title="@string/upload" />
         <item
             android:id="@+id/nav_item_settings"
             android:icon="@drawable/md_settings_24px"
             android:title="@string/settings"
             android:checkable="true" />
+    </group>
+
+    <group android:id="@+id/nav_other">
+        <item
+            android:id="@+id/nav_item_upload"
+            android:icon="@drawable/md_upload_24px"
+            android:title="@string/upload" />
     </group>
 
     <item

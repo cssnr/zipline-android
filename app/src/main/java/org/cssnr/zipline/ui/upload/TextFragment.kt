@@ -14,6 +14,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -30,6 +31,8 @@ class TextFragment : Fragment() {
     private val binding get() = _binding!!
 
     private lateinit var navController: NavController
+
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -54,6 +57,22 @@ class TextFragment : Fragment() {
 
         navController = findNavController()
 
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        Log.d("Text[onViewCreated]", "savedUrl: $savedUrl")
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("Text[onViewCreated]", "authToken: $authToken")
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
+            Log.e("Text[onViewCreated]", "savedUrl is null")
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
+                .show()
+            navController.navigate(
+                R.id.nav_item_login, null, NavOptions.Builder()
+                    .setPopUpTo(navController.graph.id, true)
+                    .build()
+            )
+            return
+        }
+
         val extraText = arguments?.getString("text")?.trim() ?: ""
         Log.d("Text[onViewCreated]", "extraText: ${extraText.take(100)}")
 
@@ -77,7 +96,7 @@ class TextFragment : Fragment() {
 
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings)
+            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
 
         binding.uploadButton.setOnClickListener {
@@ -93,6 +112,19 @@ class TextFragment : Fragment() {
             Log.d("uploadButton", "fileName: $fileName")
             processUpload(finalText, fileName)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Text[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Text[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
     }
 
     // TODO: DUPLICATION: UploadFragment.processUpload
@@ -137,11 +169,10 @@ class TextFragment : Fragment() {
                             val params = Bundle().apply { putString("text", "true") }
                             Firebase.analytics.logEvent("upload_file", params)
                             copyToClipboard(requireContext(), uploadResponse.files.first().url)
+                            val bundle = bundleOf("url" to uploadResponse.files.first().url)
                             navController.navigate(
-                                R.id.nav_item_home,
-                                bundleOf("url" to uploadResponse.files.first().url),
-                                NavOptions.Builder()
-                                    .setPopUpTo(R.id.nav_graph, inclusive = true)
+                                R.id.nav_item_home, bundle, NavOptions.Builder()
+                                    .setPopUpTo(navController.graph.id, true)
                                     .build()
                             )
                         } else {
