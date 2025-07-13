@@ -51,6 +51,7 @@ class MainActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
+    private lateinit var navHostFragment: NavHostFragment
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
 
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
@@ -63,39 +64,38 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val navHostFragment =
+        // NavHostFragment
+        navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         navController = navHostFragment.navController
-        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
-        // TODO: SET DYNAMIC START DESTINATION HERE
-        //  https://developer.android.com/guide/navigation/use-graph/programmatic
-        navGraph.setStartDestination(R.id.nav_item_home)
-        navController.graph = navGraph
-
+        // Start Destination
+        if (savedInstanceState == null) {
+            val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+            val startPreference = preferences.getString("start_destination", null)
+            Log.d("Main[onCreate]", "startPreference: $startPreference")
+            val startDestination =
+                if (startPreference == "files") R.id.nav_item_files else R.id.nav_item_home
+            navGraph.setStartDestination(startDestination)
+            navController.graph = navGraph
+        }
+        // Bottom Navigation
         val bottomNav = binding.appBarMain.contentMain.bottomNav
         bottomNav.setupWithNavController(navController)
-
+        // Navigation Drawer
         binding.navView.setupWithNavController(navController)
-
-        // TODO: Update all the: .setPopUpTo(R.id.nav_item_home
-        //  R.id.nav_item_home -> navController.graph.startDestinationId
-        //  navController.graph.startDestinationId
-        //  NOTE: Determine if this should be Start Destination or Current Destination
-
-        // TODO: Navigation...
+        // Destinations w/ a Parent Item
         val destinationToBottomNavItem = mapOf(
             R.id.nav_item_file_preview to R.id.nav_item_files,
             R.id.nav_item_settings_widget to R.id.nav_item_settings
         )
-
+        // Destination w/ No Parent
         val hiddenDestinations = setOf(
             R.id.nav_item_upload,
             R.id.nav_item_upload_multi,
             R.id.nav_item_short,
             R.id.nav_item_text
         )
-
+        // Implement Navigation Hacks Because.......Android?
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d("addOnDestinationChangedListener", "destination: ${destination.label}")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -156,10 +156,10 @@ class MainActivity : AppCompatActivity() {
 
         // Handle Custom Navigation Items
         binding.navView.setNavigationItemSelectedListener { menuItem ->
-            Log.d("navigationView", "setNavigationItemSelectedListener: $menuItem")
+            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
             binding.drawerLayout.closeDrawers()
             if (menuItem.itemId == R.id.nav_item_upload) {
-                Log.d("navigationView", "nav_item_upload")
+                Log.d("setNavigationItemSelectedListener", "nav_item_upload")
                 filePickerLauncher.launch(arrayOf("*/*"))
                 true
             } else {
@@ -167,6 +167,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // File Picker for UPLOAD_FILE Intent and Shortcut
         filePickerLauncher =
             registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
                 Log.d("filePickerLauncher", "uris: $uris")
@@ -239,12 +240,8 @@ class MainActivity : AppCompatActivity() {
             // TODO: Cleanup the logic for handling MAIN intent...
             val currentDestinationId = navController.currentDestination?.id
             Log.d("onNewIntent", "currentDestinationId: $currentDestinationId")
-            //val launcherAction = preferences.getString("launcher_action", null)
-            //Log.d("onNewIntent", "launcherAction: $launcherAction")
             val fromShortcut = intent.getStringExtra("fromShortcut")
             Log.d("onNewIntent", "fromShortcut: $fromShortcut")
-            Log.d("onNewIntent", "nav_item_preview: ${R.id.nav_item_upload}")
-            Log.d("onNewIntent", "nav_item_short: ${R.id.nav_item_short}")
 
             when (currentDestinationId) {
                 R.id.nav_item_upload, R.id.nav_item_short, R.id.nav_item_text -> {
@@ -258,10 +255,6 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
             }
-
-            //} else if (currentDestinationId != R.id.nav_item_home && launcherAction != "previous") {
-            //    Log.i("onNewIntent", "HOME SETTING SET - Navigating to HomeFragment")
-            //    navController.navigate(R.id.nav_item_home)
 
             // TODO: Determine if this needs to be in the above if/else
             if (fromShortcut == "upload") {
@@ -295,7 +288,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(
                         R.id.nav_item_short, bundle, NavOptions.Builder()
                             .setPopUpTo(navController.graph.startDestinationId, true)
-                            //.setLaunchSingleTop(true)
+                            .setLaunchSingleTop(true)
                             .build()
                     )
                 } else {
@@ -308,7 +301,7 @@ class MainActivity : AppCompatActivity() {
                     navController.navigate(
                         R.id.nav_item_text, bundle, NavOptions.Builder()
                             .setPopUpTo(navController.graph.startDestinationId, true)
-                            //.setLaunchSingleTop(true)
+                            .setLaunchSingleTop(true)
                             .build()
                     )
                 }
@@ -384,7 +377,7 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(
             R.id.nav_item_upload, bundle, NavOptions.Builder()
                 .setPopUpTo(navController.graph.startDestinationId, true)
-                //.setLaunchSingleTop(true)
+                .setLaunchSingleTop(true)
                 .build()
         )
     }
@@ -398,7 +391,7 @@ class MainActivity : AppCompatActivity() {
         navController.navigate(
             R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
                 .setPopUpTo(navController.graph.startDestinationId, true)
-                //.setLaunchSingleTop(true)
+                .setLaunchSingleTop(true)
                 .build()
         )
     }

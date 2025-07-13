@@ -34,14 +34,14 @@
 
     <string name="background_opacity">Background Opacity %d</string>
 
-    <string-array name="dropdown_entries">
+    <string-array name="file_name_format_entries">
         <item>Random</item>
         <item>Date</item>
         <item>UUID</item>
         <item>Name</item>
         <item>Gfycat</item>
     </string-array>
-    <string-array name="dropdown_values">
+    <string-array name="file_name_format_values">
         <item>random</item>
         <item>date</item>
         <item>uuid</item>
@@ -50,12 +50,12 @@
     </string-array>
 
     <string-array name="launcher_entries">
-        <item>Load Home Page</item>
-        <item>Load Previous Page</item>
+        <item>Home Web View</item>
+        <item>Show File List</item>
     </string-array>
     <string-array name="launcher_values">
         <item>home</item>
-        <item>previous</item>
+        <item>files</item>
     </string-array>
 
     <string-array name="work_interval_entries">

@@ -32,6 +32,8 @@ class TextFragment : Fragment() {
 
     private lateinit var navController: NavController
 
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +56,22 @@ class TextFragment : Fragment() {
         Log.d("Text[onViewCreated]", "arguments: $arguments")
 
         navController = findNavController()
+
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        Log.d("Text[onViewCreated]", "savedUrl: $savedUrl")
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("Text[onViewCreated]", "authToken: $authToken")
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
+            Log.e("Text[onViewCreated]", "savedUrl is null")
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
+                .show()
+            navController.navigate(
+                R.id.nav_item_login, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_text, true)
+                    .build()
+            )
+            return
+        }
 
         val extraText = arguments?.getString("text")?.trim() ?: ""
         Log.d("Text[onViewCreated]", "extraText: ${extraText.take(100)}")
@@ -155,7 +173,7 @@ class TextFragment : Fragment() {
                                 R.id.nav_item_home,
                                 bundleOf("url" to uploadResponse.files.first().url),
                                 NavOptions.Builder()
-                                    .setPopUpTo(R.id.nav_graph, inclusive = true)
+                                    .setPopUpTo(R.id.nav_item_text, true)
                                     .build()
                             )
                         } else {

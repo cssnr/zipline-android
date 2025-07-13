@@ -2,23 +2,16 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-
     <PreferenceCategory android:title="Application Settings">
 
         <ListPreference
-            android:key="file_name_format"
-            android:title="File Name Option"
-            android:defaultValue="random"
-            android:entries="@array/dropdown_entries"
-            android:entryValues="@array/dropdown_values"
-            android:icon="@drawable/md_text_format_24px"
-            tools:summary="Random" />
-
-        <SwitchPreferenceCompat
-            android:title="Save Original Filename"
-            android:key="file_name_original"
-            android:icon="@drawable/md_abc_24px"
-            android:defaultValue="true" />
+            android:key="start_destination"
+            android:title="Start Destination on Launch"
+            android:defaultValue="home"
+            android:entries="@array/launcher_entries"
+            android:entryValues="@array/launcher_values"
+            android:icon="@drawable/md_flight_takeoff_24px"
+            tools:summary="Home Web View" />
 
         <SwitchPreferenceCompat
             android:title="Show Share after Upload"
@@ -32,18 +25,27 @@
             android:icon="@drawable/md_add_link_24px"
             android:defaultValue="true" />
 
-        <!--<ListPreference-->
-        <!--    android:key="launcher_action"-->
-        <!--    android:title="Launcher Icon Action"-->
-        <!--    android:icon="@drawable/md_flight_takeoff_24px"-->
-        <!--    android:defaultValue="home"-->
-        <!--    android:entries="@array/launcher_entries"-->
-        <!--    android:entryValues="@array/launcher_values"-->
-        <!--    tools:summary="Load Home Page" />-->
+    </PreferenceCategory>
+    <PreferenceCategory android:title="Upload Settings">
+
+        <SwitchPreferenceCompat
+            android:title="Save Original Filename"
+            android:key="file_name_original"
+            android:icon="@drawable/md_abc_24px"
+            android:defaultValue="true" />
+
+        <ListPreference
+            android:key="file_name_format"
+            android:title="File Name Option"
+            android:defaultValue="random"
+            android:entries="@array/file_name_format_entries"
+            android:entryValues="@array/file_name_format_values"
+            android:icon="@drawable/md_text_format_24px"
+            tools:summary="Random" />
 
     </PreferenceCategory>
-
     <PreferenceCategory android:title="File List">
+
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:icon="@drawable/md_auto_read_play_24px"
@@ -68,8 +70,8 @@
             android:key="file_preview_metered"
             android:title="Load Images on Metered Connection"
             android:summary="For File List Only"/>
-    </PreferenceCategory>
 
+    </PreferenceCategory>
     <PreferenceCategory android:title="Widget Settings">
 
         <Preference
@@ -88,7 +90,6 @@
             tools:summary="1 Hour" />
 
     </PreferenceCategory>
-
     <PreferenceCategory android:title="Application Information">
 
         <SwitchPreferenceCompat
@@ -131,5 +132,4 @@
         <!--    android:enabled="false" />-->
 
     </PreferenceCategory>
-
 </PreferenceScreen>

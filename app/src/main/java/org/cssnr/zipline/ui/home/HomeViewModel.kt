@@ -4,5 +4,5 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
-    val tapTargetActive = MutableLiveData<Boolean>(false)
+    val tapTargetStep = MutableLiveData<Int>(0)
 }

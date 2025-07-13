@@ -38,6 +38,8 @@ class UploadMultiFragment : Fragment() {
     private lateinit var navController: NavController
     private lateinit var adapter: UploadMultiAdapter
 
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }
@@ -65,19 +67,17 @@ class UploadMultiFragment : Fragment() {
 
         navController = findNavController()
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Multi[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("Multi[onViewCreated]", "authToken: $authToken")
-
-        if (savedUrl == null) {
-            Log.w("Multi[onViewCreated]", "savedUrl is null")
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
+            Log.e("Multi[onViewCreated]", "savedUrl is null")
             Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
                 .show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_home, true)
+                    .setPopUpTo(R.id.nav_item_upload_multi, true)
                     .build()
             )
             return
@@ -259,7 +259,7 @@ class UploadMultiFragment : Fragment() {
                 R.id.nav_item_home,
                 bundleOf("url" to "${savedUrl}/dashboard/files/"),
                 NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_graph, inclusive = true)
+                    .setPopUpTo(R.id.nav_item_upload_multi, true)
                     .build()
             )
         }

@@ -53,6 +53,8 @@ class UploadFragment : Fragment() {
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
 
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -85,6 +87,22 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
 
         navController = findNavController()
+
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        Log.d("Upload[onViewCreated]", "savedUrl: $savedUrl")
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("Upload[onViewCreated]", "authToken: $authToken")
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
+            Log.e("Upload[onViewCreated]", "savedUrl is null")
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
+                .show()
+            navController.navigate(
+                R.id.nav_item_login, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_upload, true)
+                    .build()
+            )
+            return
+        }
 
         val uri = requireArguments().getString("uri")?.toUri()
         Log.d("Upload[onViewCreated]", "uri: $uri")
@@ -278,7 +296,7 @@ class UploadFragment : Fragment() {
                                 R.id.nav_item_home,
                                 bundleOf("url" to "${savedUrl}/dashboard/files/"),
                                 NavOptions.Builder()
-                                    .setPopUpTo(R.id.nav_graph, inclusive = true)
+                                    .setPopUpTo(R.id.nav_item_upload, true)
                                     .build()
                             )
                         } else {

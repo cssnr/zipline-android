@@ -56,6 +56,22 @@ class ShortFragment : Fragment() {
 
         navController = findNavController()
 
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        Log.d("Short[onViewCreated]", "savedUrl: $savedUrl")
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("Short[onViewCreated]", "authToken: $authToken")
+        if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
+            Log.e("Short[onViewCreated]", "savedUrl is null")
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
+                .show()
+            navController.navigate(
+                R.id.nav_item_login, null, NavOptions.Builder()
+                    .setPopUpTo(R.id.nav_item_short, true)
+                    .build()
+            )
+            return
+        }
+
         val url = requireArguments().getString("url")
         Log.d("Short[onViewCreated]", "url: $url")
 
@@ -63,23 +79,6 @@ class ShortFragment : Fragment() {
             // TODO: Better Handle this Error
             Log.e("Short[onViewCreated]", "URL is null")
             Toast.makeText(requireContext(), "No URL to Process!", Toast.LENGTH_LONG).show()
-            return
-        }
-
-        val savedUrl = preferences.getString("ziplineUrl", null)
-        Log.d("Short[onViewCreated]", "savedUrl: $savedUrl")
-        val authToken = preferences.getString("ziplineToken", null)
-        Log.d("Short[onViewCreated]", "authToken: $authToken")
-
-        if (savedUrl == null) {
-            Log.e("Short[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
-                .show()
-            navController.navigate(
-                R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_home, true)
-                    .build()
-            )
             return
         }
 
@@ -146,7 +145,7 @@ class ShortFragment : Fragment() {
                 .show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_home, true)
+                    .setPopUpTo(R.id.nav_item_short, true)
                     .build()
             )
             return
@@ -172,7 +171,7 @@ class ShortFragment : Fragment() {
                         R.id.nav_item_home,
                         bundleOf("url" to "${savedUrl}/dashboard/urls"),
                         NavOptions.Builder()
-                            .setPopUpTo(R.id.nav_graph, inclusive = true)
+                            .setPopUpTo(R.id.nav_item_short, true)
                             .build()
                     )
                     Log.d("processShort", "DONE")

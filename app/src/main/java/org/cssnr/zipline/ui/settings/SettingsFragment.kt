@@ -58,6 +58,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         val ctx = requireContext()
 
+        // Start Destination
+        val startDestination = findPreference<ListPreference>("start_destination")
+        startDestination?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
         // File Name Option
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
@@ -78,10 +82,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 false
             }
         }
-
-        //// Launcher Icon Action
-        //val launcherAction = findPreference<ListPreference>("launcher_action")
-        //launcherAction?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
         // Widget Settings
         findPreference<Preference>("open_widget_settings")?.setOnPreferenceClickListener {
