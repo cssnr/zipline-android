@@ -116,8 +116,11 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 - Most navigation and display issues can be fixed by fully closing the app and restarting it.
   - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-extension/issues).
 - If you encounter issues with the media in the file list, try clearing the application cache.
-- If you encounter issues with authentication, try clearing the application data (will reset all settings and log you out).
+- If you encounter issues with authentication, try clearing the application data (resets settings and auth).
 - If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
+
+If you are having trouble using the app, please reach out to us on [Discord](https://discord.gg/wXy6m2X8wY) or via [GitHub](#support).
+We will be more than happy to assist.
 
 ## Screenshots
 

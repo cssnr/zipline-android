@@ -169,7 +169,7 @@ class FilesViewAdapter(
                 target: Target<Drawable>,
                 isFirstResource: Boolean
             ): Boolean {
-                //Log.d("Glide", "onLoadFailed: ${data.name}")
+                Log.d("Glide", "onLoadFailed: ${data.name}")
                 viewHolder.loadingSpinner.visibility = View.GONE
                 viewHolder.fileImage.setImageResource(getGenericIcon(data.type))
                 return true

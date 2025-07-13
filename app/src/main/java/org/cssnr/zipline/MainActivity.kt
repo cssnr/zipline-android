@@ -179,7 +179,7 @@ class MainActivity : AppCompatActivity() {
                     showPreview(uris[0])
                 } else {
                     Log.w("filePickerLauncher", "No Files Selected!")
-                    Toast.makeText(this, "No Files Selected!", Toast.LENGTH_SHORT).show()
+                    //Toast.makeText(this, "No Files Selected!", Toast.LENGTH_SHORT).show()
                 }
             }
 
