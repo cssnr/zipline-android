@@ -342,12 +342,12 @@ class FilesPreviewFragment : Fragment() {
 
     override fun onStop() {
         Log.d("Files[onStop]", "1 - ON STOP")
-        super.onStop()
         if (::player.isInitialized) {
             Log.d("Files[onStop]", "player.isPlaying: ${player.isPlaying}")
             isPlaying = player.isPlaying
             player.pause()
         }
+        super.onStop()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

@@ -21,6 +21,8 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.get
+import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
@@ -32,6 +34,7 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
+import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
@@ -61,10 +64,61 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // NOTE: This is used over findNavController to use androidx.fragment.app.FragmentContainerView
-        navController =
-            (supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment).navController
-        NavigationUI.setupWithNavController(binding.navView, navController)
+        val navHostFragment =
+            supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
+        navController = navHostFragment.navController
+        val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
+        // TODO: SET DYNAMIC START DESTINATION HERE
+        //  https://developer.android.com/guide/navigation/use-graph/programmatic
+        navGraph.setStartDestination(R.id.nav_item_home)
+        navController.graph = navGraph
+
+        val bottomNav = binding.appBarMain.contentMain.bottomNav
+        bottomNav.setupWithNavController(navController)
+
+        binding.navView.setupWithNavController(navController)
+
+        // TODO: Update all the: .setPopUpTo(R.id.nav_item_home
+        //  R.id.nav_item_home -> navController.graph.startDestinationId
+        //  navController.graph.startDestinationId
+        //  NOTE: Determine if this should be Start Destination or Current Destination
+
+        // TODO: Navigation...
+        val destinationToBottomNavItem = mapOf(
+            R.id.nav_item_file_preview to R.id.nav_item_files,
+            R.id.nav_item_settings_widget to R.id.nav_item_settings
+        )
+
+        val hiddenDestinations = setOf(
+            R.id.nav_item_upload,
+            R.id.nav_item_upload_multi,
+            R.id.nav_item_short,
+            R.id.nav_item_text
+        )
+
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            Log.d("addOnDestinationChangedListener", "destination: ${destination.label}")
+            binding.drawerLayout.closeDrawer(GravityCompat.START)
+
+            val destinationId = destination.id
+
+            if (destinationId in hiddenDestinations) {
+                Log.d("addOnDestinationChangedListener", "Set bottomNav to Hidden Item")
+                bottomNav.menu.findItem(R.id.nav_wtf).isChecked = true
+                return@addOnDestinationChangedListener
+            }
+
+            val matchedItem = destinationToBottomNavItem[destinationId]
+            if (matchedItem != null) {
+                Log.d("addOnDestinationChangedListener", "matched nav item: $matchedItem")
+                bottomNav.menu.findItem(matchedItem).isChecked = true
+                val menu = binding.navView.menu
+                for (i in 0 until menu.size) {
+                    val item = menu[i]
+                    item.isChecked = item.itemId == matchedItem
+                }
+            }
+        }
 
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
@@ -157,10 +211,11 @@ class MainActivity : AppCompatActivity() {
 
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.w("onNewIntent", "Missing Zipline URL or Token...")
-
+            val dst = navController.currentDestination?.id ?: navController.graph.startDestinationId
+            Log.w("onNewIntent", "navigate: nav_item_login - desPopUpTo: $dst")
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_home, true)
+                    .setPopUpTo(dst, true)
                     .build()
             )
             return
@@ -239,8 +294,8 @@ class MainActivity : AppCompatActivity() {
                     navController.popBackStack(R.id.nav_graph, true)
                     navController.navigate(
                         R.id.nav_item_short, bundle, NavOptions.Builder()
-                            .setPopUpTo(R.id.nav_item_home, true)
-                            .setLaunchSingleTop(true)
+                            .setPopUpTo(navController.graph.startDestinationId, true)
+                            //.setLaunchSingleTop(true)
                             .build()
                     )
                 } else {
@@ -252,8 +307,8 @@ class MainActivity : AppCompatActivity() {
                     navController.popBackStack(R.id.nav_graph, true)
                     navController.navigate(
                         R.id.nav_item_text, bundle, NavOptions.Builder()
-                            .setPopUpTo(R.id.nav_item_home, true)
-                            .setLaunchSingleTop(true)
+                            .setPopUpTo(navController.graph.startDestinationId, true)
+                            //.setLaunchSingleTop(true)
                             .build()
                     )
                 }
@@ -298,13 +353,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onStop() {
-        super.onStop()
         Log.d("Main[onStop]", "MainActivity - onStop")
         // Update Widget
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val componentName = ComponentName(this, WidgetProvider::class.java)
         val ids = appWidgetManager.getAppWidgetIds(componentName)
         WidgetProvider().onUpdate(this, appWidgetManager, ids)
+        super.onStop()
     }
 
     private fun isURL(url: String): Boolean {
@@ -328,8 +383,8 @@ class MainActivity : AppCompatActivity() {
         navController.popBackStack(R.id.nav_graph, true)
         navController.navigate(
             R.id.nav_item_upload, bundle, NavOptions.Builder()
-                .setPopUpTo(R.id.nav_item_home, true)
-                .setLaunchSingleTop(true)
+                .setPopUpTo(navController.graph.startDestinationId, true)
+                //.setLaunchSingleTop(true)
                 .build()
         )
     }
@@ -342,8 +397,8 @@ class MainActivity : AppCompatActivity() {
         navController.popBackStack(R.id.nav_graph, true)
         navController.navigate(
             R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
-                .setPopUpTo(R.id.nav_item_home, true)
-                .setLaunchSingleTop(true)
+                .setPopUpTo(navController.graph.startDestinationId, true)
+                //.setLaunchSingleTop(true)
                 .build()
         )
     }

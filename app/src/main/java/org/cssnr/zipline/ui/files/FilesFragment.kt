@@ -584,19 +584,6 @@ class FilesFragment : Fragment() {
         }
     }
 
-    //override fun onStart() {
-    //    Log.d("File[onStart]", "ON START")
-    //    super.onStart()
-    //    val request = NetworkRequest.Builder().build()
-    //    connectivityManager.registerNetworkCallback(request, networkCallback)
-    //}
-
-    //override fun onStop() {
-    //    Log.d("File[onStop]", "ON STOP")
-    //    super.onStop()
-    //    connectivityManager.unregisterNetworkCallback(networkCallback)
-    //}
-
     override fun onPause() {
         Log.d("File[onPause]", "ON PAUSE")
         super.onPause()

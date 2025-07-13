@@ -21,6 +21,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
@@ -162,6 +163,19 @@ class UploadMultiFragment : Fragment() {
             Log.d("optionsButton", "setOnClickListener: navigate: nav_item_settings")
             navController.navigate(R.id.nav_item_settings)
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Multi[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Multi[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
     }
 
     private fun processMultiUpload(fileUris: Set<Uri>) {

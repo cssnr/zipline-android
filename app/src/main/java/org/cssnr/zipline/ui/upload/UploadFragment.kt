@@ -32,6 +32,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
@@ -307,9 +308,14 @@ class UploadFragment : Fragment() {
         }
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Upload[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
     override fun onStop() {
         Log.d("Upload[onStop]", "1 - ON STOP")
-        super.onStop()
         if (::player.isInitialized) {
             Log.d("Upload[onStop]", "player.isPlaying: ${player.isPlaying}")
             if (player.isPlaying) {
@@ -317,6 +323,10 @@ class UploadFragment : Fragment() {
                 player.pause()
             }
         }
+        Log.d("Upload[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
     }
 }
 

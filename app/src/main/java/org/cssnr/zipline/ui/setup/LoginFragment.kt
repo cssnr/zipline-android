@@ -21,6 +21,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
@@ -57,9 +58,6 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
-
-        // Lock Navigation Drawer
-        (requireActivity() as MainActivity).setDrawerLockMode(false)
 
         // TODO: Determine if this is necessary...
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -174,8 +172,6 @@ class LoginFragment : Fragment() {
                                 .build()
                         )
                     } else {
-                        // Unlock Drawer
-                        (requireActivity() as MainActivity).setDrawerLockMode(true)
                         findNavController().navigate(
                             R.id.nav_action_login_home, null, NavOptions.Builder()
                                 .setPopUpTo(R.id.nav_item_login, true)
@@ -187,6 +183,21 @@ class LoginFragment : Fragment() {
                 Log.d("loginButton", "lifecycleScope: DONE")
             }
         }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Login[onStart]", "onStart - Hide UI and Lock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        (activity as? MainActivity)?.setDrawerLockMode(false)
+    }
+
+    override fun onStop() {
+        Log.d("Login[onStop]", "onStop - Show UI and Unlock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        (activity as? MainActivity)?.setDrawerLockMode(true)
+        super.onStop()
     }
 
     private fun parseHost(urlString: String): String {

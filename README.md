@@ -92,20 +92,22 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ## Features
 
-- Share or Open any file or URL to your Zipline server.
-- Single file previews most media with custom name option.
-- Multiple file upload previews, options and file selector.
-- Native file list with thumbnails, previews, and mass selection.
-- Widget with stats, custom update interval, upload button.
+- Share or Open any File, Media, Text or URL
+- Preview, Edit and set Options before Uploading
+- Native File List with Multi-Select, Favorite and Delete
+- Home Screen Widget with File Stats and App Shortcuts
 
 ### Planned
 
-- Add More Options to File List
-- Improve [Django Files](https://github.com/django-files).
+- Add URL Management Page
+- Add Default Upload Options
+- Add Per-Upload Options Overrides
+- Add File Edit Options to File List
 
 ### Known Issues
 
-- Not [Django Files](https://github.com/django-files).
+- Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues).
+
 
 ## Screenshots
 
