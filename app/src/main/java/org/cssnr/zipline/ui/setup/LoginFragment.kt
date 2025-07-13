@@ -10,7 +10,6 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
@@ -73,13 +72,13 @@ class LoginFragment : Fragment() {
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
         binding.appVersion.text = ctx.getString(R.string.version_string, versionName)
 
-        val link: TextView = binding.githubLink
         val linkText = getString(R.string.github_link, "github.com/cssnr/zipline-android")
-        link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
-        link.movementMethod = LinkMovementMethod.getInstance()
+        binding.githubLink.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
+        binding.githubLink.movementMethod = LinkMovementMethod.getInstance()
 
         binding.serverText.text =
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
+        binding.serverText.movementMethod = LinkMovementMethod.getInstance()
 
         if (arguments?.getString("url") != null) {
             Log.i(LOG_TAG, "url: ${arguments?.getString("url")}")
