@@ -281,13 +281,7 @@ class FilesFragment : Fragment() {
                 Log.d("File[refreshLayout]", "onRefresh")
                 lifecycleScope.launch {
                     Log.d("File[refreshLayout]", "START")
-
-                    //Log.d("File[refreshLayout]", "Get Albums in the Background...")
-                    //launch(Dispatchers.IO) {
-                    //    ctx.getAlbums(savedUrl)
-                    //}
-
-                    //viewModel.selected.value?.clear()
+                    // TODO: Update binding as it can become null if the user navigates away...
                     viewModel.selected.value = mutableSetOf<Int>()
                     filesAdapter.selected.clear()
                     Log.i("File[refreshLayout]", "3 - getFiles: ON REFRESH")
@@ -573,7 +567,7 @@ class FilesFragment : Fragment() {
             }
         }
         Log.d("loadingSpinner", "loadingSpinner: View.GONE")
-        binding.loadingSpinner.visibility = View.GONE
+        _binding?.loadingSpinner?.visibility = View.GONE
         if (errorCount > 5) {
             atEnd = true
             viewModel.atEnd.value = atEnd
