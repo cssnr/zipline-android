@@ -25,6 +25,7 @@ import androidx.preference.SwitchPreferenceCompat
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.ktx.analytics
@@ -142,6 +143,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //Log.d("SettingsFragment", "showPreview: $showPreview")
         //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Settings[onStart]", "onStart: $arguments")
+        if (arguments?.getBoolean("hide_bottom_nav") == true) {
+            Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        }
     }
 
     fun Context.updateWorkManager(listPref: ListPreference, newValue: Any): Boolean {

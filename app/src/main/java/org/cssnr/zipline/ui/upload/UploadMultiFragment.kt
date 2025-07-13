@@ -160,8 +160,8 @@ class UploadMultiFragment : Fragment() {
 
         // Options Button
         binding.optionsButton.setOnClickListener {
-            Log.d("optionsButton", "setOnClickListener: navigate: nav_item_settings")
-            navController.navigate(R.id.nav_item_settings)
+            Log.d("optionsButton", "setOnClickListener")
+            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
     }
 

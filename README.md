@@ -25,6 +25,7 @@
 - [Features](#Features)
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
+  - [Troubleshooting](#troubleshooting)
 - [Screenshots](#Screenshots)
 - [Development](#Development)
   - [Building](#Building)
@@ -109,6 +110,14 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 - After deleting files and then scrolling down in the file list it will skip the number of files deleted when loading more.
   - To work around this for now, after deleting files, scroll to the top and pull down to refresh.
 - Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
+
+### Troubleshooting
+
+- Most navigation and display issues can be fixed by fully closing the app and restarting it.
+  - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-extension/issues).
+- If you encounter issues with the media in the file list, try clearing the application cache.
+- If you encounter issues with authentication, try clearing the application data (will reset all settings and log you out).
+- If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
 
 ## Screenshots
 
