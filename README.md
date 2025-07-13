@@ -120,7 +120,6 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 - If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
 
 If you are having trouble using the app, please reach out to us on [Discord](https://discord.gg/wXy6m2X8wY) or via [GitHub](#support).
-We will be more than happy to assist.
 
 ## Screenshots
 
