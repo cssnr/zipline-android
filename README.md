@@ -106,8 +106,9 @@ Additionally, the URL is copied to the clipboard and the preview is show in the 
 
 ### Known Issues
 
-- Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues).
-
+- After deleting files and then scrolling down in the file list it will skip the number of files deleted when loading more.
+  - To work around this for now, after deleting files, scroll to the top and pull down to refresh.
+- Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
 
 ## Screenshots
 
