@@ -77,7 +77,7 @@ class UploadMultiFragment : Fragment() {
                 .show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_upload_multi, true)
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
             return
@@ -255,11 +255,10 @@ class UploadMultiFragment : Fragment() {
                 }
                 startActivity(Intent.createChooser(shareIntent, null))
             }
+            val bundle = bundleOf("url" to "${savedUrl}/dashboard/files/")
             navController.navigate(
-                R.id.nav_item_home,
-                bundleOf("url" to "${savedUrl}/dashboard/files/"),
-                NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_upload_multi, true)
+                R.id.nav_item_home, bundle, NavOptions.Builder()
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
         }

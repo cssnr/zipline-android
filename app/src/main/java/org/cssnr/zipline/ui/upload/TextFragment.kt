@@ -67,7 +67,7 @@ class TextFragment : Fragment() {
                 .show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_text, true)
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
             return
@@ -169,11 +169,10 @@ class TextFragment : Fragment() {
                             val params = Bundle().apply { putString("text", "true") }
                             Firebase.analytics.logEvent("upload_file", params)
                             copyToClipboard(requireContext(), uploadResponse.files.first().url)
+                            val bundle = bundleOf("url" to uploadResponse.files.first().url)
                             navController.navigate(
-                                R.id.nav_item_home,
-                                bundleOf("url" to uploadResponse.files.first().url),
-                                NavOptions.Builder()
-                                    .setPopUpTo(R.id.nav_item_text, true)
+                                R.id.nav_item_home, bundle, NavOptions.Builder()
+                                    .setPopUpTo(navController.graph.id, true)
                                     .build()
                             )
                         } else {

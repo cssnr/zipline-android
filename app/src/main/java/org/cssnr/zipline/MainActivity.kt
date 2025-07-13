@@ -212,11 +212,11 @@ class MainActivity : AppCompatActivity() {
 
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.w("onNewIntent", "Missing Zipline URL or Token...")
-            val dst = navController.currentDestination?.id ?: navController.graph.startDestinationId
-            Log.w("onNewIntent", "navigate: nav_item_login - desPopUpTo: $dst")
+            //val dst = navController.currentDestination?.id ?: navController.graph.startDestinationId
+            //Log.w("onNewIntent", "navigate: nav_item_login - desPopUpTo: $dst")
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(dst, true)
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
             return
@@ -244,12 +244,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("onNewIntent", "fromShortcut: $fromShortcut")
 
             when (currentDestinationId) {
-                R.id.nav_item_upload, R.id.nav_item_short, R.id.nav_item_text -> {
+                R.id.nav_item_upload, R.id.nav_item_upload_multi, R.id.nav_item_short, R.id.nav_item_text -> {
                     Log.i("onNewIntent", "Navigating away from preview page...")
-                    // TODO: Determine the correct navigation call here...
-                    //navController.navigate(R.id.nav_item_home)
                     navController.navigate(
-                        R.id.nav_item_home, null, NavOptions.Builder()
+                        navController.graph.startDestinationId, null, NavOptions.Builder()
                             .setPopUpTo(navController.graph.id, true)
                             .build()
                     )
@@ -280,27 +278,19 @@ class MainActivity : AppCompatActivity() {
                 if (isURL(extraText)) {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
-                    val bundle = Bundle().apply {
-                        putString("url", extraText)
-                    }
-                    // TODO: Determine how to better pop navigation history...
-                    navController.popBackStack(R.id.nav_graph, true)
+                    val bundle = Bundle().apply { putString("url", extraText) }
                     navController.navigate(
                         R.id.nav_item_short, bundle, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.startDestinationId, true)
+                            .setPopUpTo(navController.graph.id, true)
                             .setLaunchSingleTop(true)
                             .build()
                     )
                 } else {
                     Log.i("handleIntent", "PLAIN TEXT DETECTED")
-                    val bundle = Bundle().apply {
-                        putString("text", extraText)
-                    }
-                    // TODO: Determine how to properly navigate on new intent...
-                    navController.popBackStack(R.id.nav_graph, true)
+                    val bundle = Bundle().apply { putString("text", extraText) }
                     navController.navigate(
                         R.id.nav_item_text, bundle, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.startDestinationId, true)
+                            .setPopUpTo(navController.graph.id, true)
                             .setLaunchSingleTop(true)
                             .build()
                     )
@@ -368,15 +358,11 @@ class MainActivity : AppCompatActivity() {
 
     private fun showPreview(uri: Uri?) {
         Log.d("Main[showPreview]", "uri: $uri")
-        val bundle = Bundle().apply {
-            putString("uri", uri.toString())
-        }
         binding.drawerLayout.closeDrawers()
-        // TODO: This destroys the home fragment making restore from state impossible
-        navController.popBackStack(R.id.nav_graph, true)
+        val bundle = Bundle().apply { putString("uri", uri.toString()) }
         navController.navigate(
             R.id.nav_item_upload, bundle, NavOptions.Builder()
-                .setPopUpTo(navController.graph.startDestinationId, true)
+                .setPopUpTo(navController.graph.id, true)
                 .setLaunchSingleTop(true)
                 .build()
         )
@@ -387,23 +373,22 @@ class MainActivity : AppCompatActivity() {
         //fileUris.sort()
         binding.drawerLayout.closeDrawers()
         val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
-        navController.popBackStack(R.id.nav_graph, true)
         navController.navigate(
             R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
-                .setPopUpTo(navController.graph.startDestinationId, true)
+                .setPopUpTo(navController.graph.id, true)
                 .setLaunchSingleTop(true)
                 .build()
         )
     }
 
-    fun toggleDrawer(open: Boolean = true) {
-        if (open) {
-            binding.drawerLayout.openDrawer(GravityCompat.START)
-        } else {
-
-            binding.drawerLayout.closeDrawers()
-        }
-    }
+    //// NOTE: This was used by the home FAB to toggle the navigation drawer
+    //fun toggleDrawer(open: Boolean = true) {
+    //    if (open) {
+    //        binding.drawerLayout.openDrawer(GravityCompat.START)
+    //    } else {
+    //        binding.drawerLayout.closeDrawers()
+    //    }
+    //}
 
     fun setDrawerLockMode(enabled: Boolean) {
         val lockMode =

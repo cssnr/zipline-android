@@ -150,7 +150,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
         Log.d("Settings[onStart]", "onStart: $arguments")
         if (arguments?.getBoolean("hide_bottom_nav") == true) {
             Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+                View.GONE
         }
     }
 

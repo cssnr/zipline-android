@@ -98,7 +98,7 @@ class UploadFragment : Fragment() {
                 .show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_upload, true)
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
             return
@@ -292,11 +292,10 @@ class UploadFragment : Fragment() {
                                 }
                                 startActivity(Intent.createChooser(shareIntent, null))
                             }
+                            val bundle = bundleOf("url" to "${savedUrl}/dashboard/files/")
                             navController.navigate(
-                                R.id.nav_item_home,
-                                bundleOf("url" to "${savedUrl}/dashboard/files/"),
-                                NavOptions.Builder()
-                                    .setPopUpTo(R.id.nav_item_upload, true)
+                                R.id.nav_item_home, bundle, NavOptions.Builder()
+                                    .setPopUpTo(navController.graph.id, true)
                                     .build()
                             )
                         } else {

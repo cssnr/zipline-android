@@ -66,7 +66,7 @@ class ShortFragment : Fragment() {
                 .show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_short, true)
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
             return
@@ -134,22 +134,8 @@ class ShortFragment : Fragment() {
 
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processShort", "savedUrl: $savedUrl")
-        val authToken = preferences.getString("ziplineToken", null)
-        Log.d("processShort", "authToken: $authToken")
         val shareUrl = preferences.getBoolean("share_after_short", true)
         Log.d("processShort", "shareUrl: $shareUrl")
-
-        if (savedUrl == null || authToken == null) {
-            Log.e("processShort", "ziplineUrl || ziplineToken is null")
-            Toast.makeText(requireContext(), "Missing Zipline Authentication!", Toast.LENGTH_LONG)
-                .show()
-            navController.navigate(
-                R.id.nav_item_login, null, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_short, true)
-                    .build()
-            )
-            return
-        }
 
         val api = ServerApi(requireContext())
         lifecycleScope.launch {
@@ -167,11 +153,10 @@ class ShortFragment : Fragment() {
                         }
                         startActivity(Intent.createChooser(shareIntent, null))
                     }
+                    val bundle = bundleOf("url" to "${savedUrl}/dashboard/urls")
                     navController.navigate(
-                        R.id.nav_item_home,
-                        bundleOf("url" to "${savedUrl}/dashboard/urls"),
-                        NavOptions.Builder()
-                            .setPopUpTo(R.id.nav_item_short, true)
+                        R.id.nav_item_home, bundle, NavOptions.Builder()
+                            .setPopUpTo(navController.graph.id, true)
                             .build()
                     )
                     Log.d("processShort", "DONE")
