@@ -281,35 +281,36 @@ class FilesFragment : Fragment() {
                 Log.d("File[refreshLayout]", "onRefresh")
                 lifecycleScope.launch {
                     Log.d("File[refreshLayout]", "START")
-                    // TODO: Update binding as it can become null if the user navigates away...
-                    viewModel.selected.value = mutableSetOf<Int>()
-                    filesAdapter.selected.clear()
-                    Log.i("File[refreshLayout]", "3 - getFiles: ON REFRESH")
-                    getFiles(perPage, true)
-                    binding.refreshLayout.isRefreshing = false
-                    //binding.refreshLayout.isEnabled = false
-                    Log.d("File[refreshLayout]", "DONE")
-                    // Fade In
-                    binding.refreshBanner.post {
-                        binding.refreshBanner.translationY = -binding.refreshBanner.height.toFloat()
-                        binding.refreshBanner.visibility = View.VISIBLE
-                        binding.refreshBanner.animate()
-                            .alpha(1f)
-                            .translationY(0f)
-                            .setDuration(400)
-                            .start()
+
+                    _binding?.let {
+                        Log.d("File[refreshLayout]", "Binding is valid, starting refresh logic")
+                        viewModel.selected.value = mutableSetOf<Int>()
+                        filesAdapter.selected.clear()
+                        Log.i("File[refreshLayout]", "Fetching files on refresh")
+                        getFiles(perPage, true)
+                        it.refreshLayout.isRefreshing = false
+
+                        it.refreshBanner.post {
+                            Log.d("File[refreshLayout]", "Animating refresh banner fade-in")
+                            it.refreshBanner.translationY = -it.refreshBanner.height.toFloat()
+                            it.refreshBanner.visibility = View.VISIBLE
+                            it.refreshBanner.animate()
+                                .alpha(1f)
+                                .translationY(0f)
+                                .setDuration(400)
+                                .start()
+                        }
+
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            Log.d("File[refreshLayout]", "Animating refresh banner fade-out")
+                            it.refreshBanner.animate()
+                                .alpha(0f)
+                                .translationY(-it.refreshBanner.height.toFloat())
+                                .setDuration(400)
+                                .withEndAction { it.refreshBanner.visibility = View.GONE }
+                                .start()
+                        }, 1600)
                     }
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        // Fade Out
-                        binding.refreshBanner.animate()
-                            .alpha(0f)
-                            .translationY(-binding.refreshBanner.height.toFloat())
-                            .setDuration(400)
-                            .withEndAction {
-                                binding.refreshBanner.visibility = View.GONE
-                            }
-                            .start()
-                    }, 1600)
                 }
             }
         })
@@ -580,6 +581,7 @@ class FilesFragment : Fragment() {
 
     override fun onPause() {
         Log.d("File[onPause]", "ON PAUSE")
+        _binding?.refreshLayout?.isRefreshing = false
         super.onPause()
     }
 
