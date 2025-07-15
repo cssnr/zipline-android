@@ -50,6 +50,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityMainBinding
+
     private lateinit var navController: NavController
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         // NavHostFragment
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
@@ -120,6 +122,11 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Set Default Preferences
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
+
+        // Setup Nav Drawer Header
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
@@ -129,10 +136,6 @@ class MainActivity : AppCompatActivity() {
         versionTextView.text = "v${versionName}"
 
         binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
-
-        // Set Default Preferences
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
 
         // TODO: Improve initialization of the WorkRequest
         val workInterval = preferences.getString("work_interval", null) ?: "0"
@@ -202,9 +205,7 @@ class MainActivity : AppCompatActivity() {
         val data = intent.data
         Log.d("onNewIntent", "${action}: $data")
 
-        val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
-        Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
-
+        // Check Auth First
         val savedUrl = preferences.getString("ziplineUrl", null)
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("onNewIntent", "savedUrl: $savedUrl")
@@ -222,6 +223,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        // Reject Calendar URI due to permissions
         val isCalendarUri = data != null &&
                 data.authority?.contains("calendar") == true &&
                 listOf("/events", "/calendars", "/time").any { data.path?.contains(it) == true }
@@ -270,6 +272,9 @@ class MainActivity : AppCompatActivity() {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
             Log.d("onNewIntent", "File URI: $fileUri")
+
+            val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
+            Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
 
             if (fileUri == null && !extraText.isNullOrEmpty()) {
                 Log.d("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
@@ -391,8 +396,10 @@ class MainActivity : AppCompatActivity() {
     //}
 
     fun setDrawerLockMode(enabled: Boolean) {
+        Log.d("setDrawerLockMode", "enabled: $enabled")
         val lockMode =
             if (enabled) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+        Log.d("setDrawerLockMode", "setDrawerLockMode: $lockMode")
         binding.drawerLayout.setDrawerLockMode(lockMode)
     }
 }

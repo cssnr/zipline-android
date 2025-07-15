@@ -80,6 +80,27 @@ class UploadFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Upload[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Upload[onStop]", "1 - ON STOP")
+        if (::player.isInitialized) {
+            Log.d("Upload[onStop]", "player.isPlaying: ${player.isPlaying}")
+            if (player.isPlaying) {
+                Log.d("Upload[onStop]", "player.pause")
+                player.pause()
+            }
+        }
+        Log.d("Upload[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -323,27 +344,6 @@ class UploadFragment : Fragment() {
                 }
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Upload[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Upload[onStop]", "1 - ON STOP")
-        if (::player.isInitialized) {
-            Log.d("Upload[onStop]", "player.isPlaying: ${player.isPlaying}")
-            if (player.isPlaying) {
-                Log.d("Upload[onStop]", "player.pause")
-                player.pause()
-            }
-        }
-        Log.d("Upload[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
     }
 }
 

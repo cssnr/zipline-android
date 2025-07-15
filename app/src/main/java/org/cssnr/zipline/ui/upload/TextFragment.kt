@@ -51,6 +51,19 @@ class TextFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Text[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Text[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Text[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Text[onViewCreated]", "arguments: $arguments")
@@ -112,19 +125,6 @@ class TextFragment : Fragment() {
             Log.d("uploadButton", "fileName: $fileName")
             processUpload(finalText, fileName)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Text[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Text[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
     }
 
     // TODO: DUPLICATION: UploadFragment.processUpload

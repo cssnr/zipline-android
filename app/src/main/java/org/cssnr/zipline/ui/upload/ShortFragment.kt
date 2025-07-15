@@ -50,6 +50,19 @@ class ShortFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Short[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Short[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Short[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Short[onViewCreated]", "arguments: $arguments")
@@ -113,19 +126,6 @@ class ShortFragment : Fragment() {
             Log.d("uploadButton", "vanityName: $vanityName")
             processShort(longUrl, vanityName)
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Short[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Short[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
     }
 
     private fun processShort(longUrl: String, vanityName: String?) {

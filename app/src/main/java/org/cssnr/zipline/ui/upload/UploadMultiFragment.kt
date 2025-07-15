@@ -61,6 +61,19 @@ class UploadMultiFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Multi[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Multi[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Multi[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
         Log.d("Multi[onViewCreated]", "arguments: $arguments")
@@ -163,19 +176,6 @@ class UploadMultiFragment : Fragment() {
             Log.d("optionsButton", "setOnClickListener")
             navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Multi[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Multi[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
     }
 
     private fun processMultiUpload(fileUris: Set<Uri>) {

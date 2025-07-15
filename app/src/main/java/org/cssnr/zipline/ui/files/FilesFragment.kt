@@ -9,7 +9,6 @@ import android.os.Environment
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,7 +24,6 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
-import androidx.transition.Slide
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
@@ -66,7 +64,7 @@ class FilesFragment : Fragment() {
         Log.d("File[onCreateView]", "savedInstanceState: ${savedInstanceState?.size()}")
 
         //enterTransition = Slide(Gravity.END)
-        returnTransition = Slide(Gravity.END)
+        //returnTransition = Slide(Gravity.END)
 
         _binding = FragmentFilesBinding.inflate(inflater, container, false)
         val root: View = binding.root
@@ -77,6 +75,18 @@ class FilesFragment : Fragment() {
         Log.d("File[onDestroyView]", "ON DESTROY")
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onPause() {
+        Log.d("File[onPause]", "ON PAUSE")
+        _binding?.refreshLayout?.isRefreshing = false
+        super.onPause()
+    }
+
+    override fun onResume() {
+        Log.d("File[onResume]", "ON RESUME")
+        super.onResume()
+        checkMetered()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -577,18 +587,6 @@ class FilesFragment : Fragment() {
                 Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
             }
         }
-    }
-
-    override fun onPause() {
-        Log.d("File[onPause]", "ON PAUSE")
-        _binding?.refreshLayout?.isRefreshing = false
-        super.onPause()
-    }
-
-    override fun onResume() {
-        Log.d("File[onResume]", "ON RESUME")
-        super.onResume()
-        checkMetered()
     }
 
     private fun checkMetered(metered: Boolean? = null) {
