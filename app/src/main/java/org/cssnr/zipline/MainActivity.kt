@@ -2,11 +2,8 @@ package org.cssnr.zipline
 
 import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -457,13 +454,4 @@ object MediaCache {
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
         }
     }
-}
-
-
-fun copyToClipboard(context: Context, url: String) {
-    Log.d("copyToClipboard", "url: $url")
-    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-    val clip = ClipData.newPlainText("URL", url)
-    clipboard.setPrimaryClip(clip)
-    Toast.makeText(context, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
 }

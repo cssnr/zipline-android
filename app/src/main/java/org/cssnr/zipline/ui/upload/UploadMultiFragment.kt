@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.upload
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Rect
@@ -86,8 +87,7 @@ class UploadMultiFragment : Fragment() {
         Log.d("Multi[onViewCreated]", "authToken: $authToken")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Multi[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -168,7 +168,7 @@ class UploadMultiFragment : Fragment() {
                 Toast.makeText(requireContext(), "No Files Selected!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            processMultiUpload(selectedUris)
+            requireContext().processMultiUpload(selectedUris)
         }
 
         // Options Button
@@ -178,10 +178,10 @@ class UploadMultiFragment : Fragment() {
         }
     }
 
-    private fun processMultiUpload(fileUris: Set<Uri>) {
+    private fun Context.processMultiUpload(fileUris: Set<Uri>) {
         Log.d("processMultiUpload", "fileUris: $fileUris")
         Log.d("processMultiUpload", "fileUris.size: ${fileUris.size}")
-        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processMultiUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
@@ -192,25 +192,23 @@ class UploadMultiFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
-            Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this, getString(R.string.tst_no_url), Toast.LENGTH_SHORT).show()
             logFileUpload(false, "URL or Token is null", true)
             return
         }
         val msg = "Uploading ${fileUris.size} Files..."
-        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
 
-        val api = ServerApi(requireContext())
+        val api = ServerApi(this)
         Log.d("processMultiUpload", "api: $api")
         val results: MutableList<UploadedFiles> = mutableListOf()
-        val currentContext = requireContext()
         lifecycleScope.launch {
             for (fileUri in fileUris) {
                 Log.d("processMultiUpload", "fileUri: $fileUri")
-                val fileName = getFileNameFromUri(currentContext, fileUri)
+                val fileName = getFileNameFromUri(this@processMultiUpload, fileUri)
                 Log.d("processMultiUpload", "fileName: $fileName")
                 try {
-                    val inputStream = currentContext.contentResolver.openInputStream(fileUri)
+                    val inputStream = contentResolver.openInputStream(fileUri)
                     if (inputStream == null) {
                         Log.w("processMultiUpload", "inputStream is null")
                         continue
@@ -235,27 +233,33 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "results.size: ${results.size}")
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
-                Toast.makeText(requireContext(), "All Uploads Failed!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@processMultiUpload, "All Uploads Failed!", Toast.LENGTH_SHORT)
+                    .show()
                 logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
             //val destUrl =
             //    if (results.size != 1) "${savedUrl}/dashboard/files/" else results.first().files.first().url
             //Log.d("processMultiUpload", "destUrl: $destUrl")
+
+            val urls = results.flatMap { it.files }.joinToString("\n") { it.url }
+            Log.d("processMultiUpload", "urls: \"${urls}\"")
+            if (!urls.isEmpty()) {
+                copyToClipboard(urls)
+            }
+
             val msg = "Uploaded ${results.size} Files."
-            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@processMultiUpload, msg, Toast.LENGTH_SHORT).show()
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
-            if (shareUrl && results.size == 1) {
-                val url = results.first().files.first().url
-                Log.d("processMultiUpload", "url: $url")
+            if (shareUrl && !urls.isEmpty()) {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, url)
+                    putExtra(Intent.EXTRA_TEXT, urls)
                 }
                 startActivity(Intent.createChooser(shareIntent, null))
             }
-            val bundle = bundleOf("url" to "${savedUrl}/dashboard/files/")
+            val bundle = bundleOf("url" to "${savedUrl}/dashboard/files")
             navController.navigate(
                 R.id.nav_item_home, bundle, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)

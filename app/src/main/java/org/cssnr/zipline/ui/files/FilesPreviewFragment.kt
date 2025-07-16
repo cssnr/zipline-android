@@ -38,7 +38,7 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.cssnr.zipline.MediaCache
 import org.cssnr.zipline.R
-import org.cssnr.zipline.copyToClipboard
+import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import org.json.JSONObject
 import java.io.File
@@ -260,7 +260,7 @@ class FilesPreviewFragment : Fragment() {
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
-                    copyToClipboard(ctx, content)
+                    ctx.copyToClipboard(content)
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)
