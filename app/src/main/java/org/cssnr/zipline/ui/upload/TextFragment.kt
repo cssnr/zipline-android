@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.upload
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -22,7 +23,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentTextBinding
 
 class TextFragment : Fragment() {
@@ -51,6 +51,19 @@ class TextFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Text[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Text[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Text[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Text[onViewCreated]", "arguments: $arguments")
@@ -63,8 +76,7 @@ class TextFragment : Fragment() {
         Log.d("Text[onViewCreated]", "authToken: $authToken")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Text[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -110,28 +122,12 @@ class TextFragment : Fragment() {
                 else -> fileNameInput
             }
             Log.d("uploadButton", "fileName: $fileName")
-            processUpload(finalText, fileName)
+            requireContext().processUpload(finalText, fileName)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("Text[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Text[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
-    }
-
     // TODO: DUPLICATION: UploadFragment.processUpload
-    private fun processUpload(
-        textContent: String,
-        fileName: String,
-    ) {
+    private fun Context.processUpload(textContent: String, fileName: String) {
         Log.d("processUpload", "textContent: $textContent")
         Log.d("processUpload", "fileName: $fileName")
 
@@ -168,7 +164,7 @@ class TextFragment : Fragment() {
                         if (uploadResponse != null) {
                             val params = Bundle().apply { putString("text", "true") }
                             Firebase.analytics.logEvent("upload_file", params)
-                            copyToClipboard(requireContext(), uploadResponse.files.first().url)
+                            requireContext().copyToClipboard(uploadResponse.files.first().url)
                             val bundle = bundleOf("url" to uploadResponse.files.first().url)
                             navController.navigate(
                                 R.id.nav_item_home, bundle, NavOptions.Builder()

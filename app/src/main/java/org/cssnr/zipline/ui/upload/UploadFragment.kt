@@ -1,7 +1,10 @@
 package org.cssnr.zipline.ui.upload
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.PorterDuff
 import android.net.Uri
@@ -27,7 +30,6 @@ import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.ProgressiveMediaSource
-import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
@@ -40,7 +42,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentUploadBinding
 import org.json.JSONObject
 
@@ -49,10 +50,10 @@ class UploadFragment : Fragment() {
     private var _binding: FragmentUploadBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var navController: NavController
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
 
+    private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
     override fun onCreateView(
@@ -80,13 +81,32 @@ class UploadFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Upload[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Upload[onStop]", "1 - ON STOP")
+        if (::player.isInitialized) {
+            Log.d("Upload[onStop]", "player.isPlaying: ${player.isPlaying}")
+            if (player.isPlaying) {
+                Log.d("Upload[onStop]", "player.pause")
+                player.pause()
+            }
+        }
+        Log.d("Upload[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     @SuppressLint("SetJavaScriptEnabled")
     @OptIn(UnstableApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Upload[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
-
-        navController = findNavController()
 
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Upload[onViewCreated]", "savedUrl: $savedUrl")
@@ -94,8 +114,7 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "authToken: $authToken")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Upload[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -224,14 +243,14 @@ class UploadFragment : Fragment() {
         binding.uploadButton.setOnClickListener {
             val fileName = binding.fileName.text.toString().trim()
             Log.d("uploadButton", "fileName: $fileName")
-            processUpload(uri, fileName)
+            requireContext().processUpload(uri, fileName)
         }
     }
 
     // TODO: DUPLICATION: ShortFragment.processShort
-    private fun processUpload(fileUri: Uri, fileName: String?) {
+    private fun Context.processUpload(fileUri: Uri, fileName: String?) {
         Log.d("processUpload", "fileUri: $fileUri")
-        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
@@ -242,36 +261,33 @@ class UploadFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
-            Toast.makeText(requireContext(), getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this, getString(R.string.tst_no_url), Toast.LENGTH_SHORT).show()
             logFileUpload(false, "URL or Token is null")
             return
         }
-        val fileName = fileName ?: getFileNameFromUri(requireContext(), fileUri)
+        val fileName = fileName ?: getFileNameFromUri(this, fileUri)
         Log.d("processUpload", "fileName: $fileName")
         if (fileName == null) {
             Log.w("processUpload", "Unable to parse fileName from URI")
-            Toast.makeText(requireContext(), "Unable to Parse File Name", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(this, "Unable to Parse File Name", Toast.LENGTH_SHORT).show()
             logFileUpload(false, "File Name is null")
             return
         }
         //val contentType = URLConnection.guessContentTypeFromName(fileName)
         //Log.d("processUpload", "contentType: $contentType")
-        val inputStream = requireContext().contentResolver.openInputStream(fileUri)
+        val inputStream = contentResolver.openInputStream(fileUri)
         if (inputStream == null) {
             Log.w("processUpload", "inputStream is null")
             val msg = getString(R.string.tst_upload_error)
-            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
             logFileUpload(false, "Input Stream is null")
             return
         }
         Log.d("processUpload", "DEBUG 1")
-        val api = ServerApi(requireContext())
+        val api = ServerApi(this)
         Log.d("processUpload", "DEBUG 2")
         Log.d("processUpload", "api: $api")
-        Toast.makeText(requireContext(), getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
-            .show()
+        Toast.makeText(this, getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT).show()
         lifecycleScope.launch {
             try {
                 val response = api.upload(fileName, inputStream)
@@ -284,7 +300,7 @@ class UploadFragment : Fragment() {
                             logFileUpload()
                             val url = uploadResponse.files.first().url
                             Log.d("processUpload", "url: $url")
-                            copyToClipboard(requireContext(), url)
+                            copyToClipboard(url)
                             if (shareUrl) {
                                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                     type = "text/plain"
@@ -301,7 +317,7 @@ class UploadFragment : Fragment() {
                         } else {
                             Log.w("processUpload", "uploadResponse is null")
                             val msg = "Unknown Response!"
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                            Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
                             logFileUpload(false, "Upload Response is null")
                         }
                     }
@@ -310,7 +326,7 @@ class UploadFragment : Fragment() {
                     Log.w("processUpload", "Error: $msg")
                     logFileUpload(false, "Error: $msg")
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
@@ -319,33 +335,13 @@ class UploadFragment : Fragment() {
                 Log.i("processUpload", "msg: $msg")
                 logFileUpload(false, "Exception: $msg")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
                 }
             }
         }
     }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Upload[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Upload[onStop]", "1 - ON STOP")
-        if (::player.isInitialized) {
-            Log.d("Upload[onStop]", "player.isPlaying: ${player.isPlaying}")
-            if (player.isPlaying) {
-                Log.d("Upload[onStop]", "player.pause")
-                player.pause()
-            }
-        }
-        Log.d("Upload[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
-    }
 }
+
 
 fun logFileUpload(status: Boolean = true, message: String? = null, multiple: Boolean = false) {
     val event = if (status) "upload_success" else "upload_failed"
@@ -370,6 +366,14 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
         }
     }
     return fileName
+}
+
+fun Context.copyToClipboard(url: String) {
+    Log.d("copyToClipboard", "url: $url")
+    val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+    val clip = ClipData.newPlainText("URL", url)
+    clipboard.setPrimaryClip(clip)
+    Toast.makeText(this, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
 }
 
 //fun openUrl(context: Context, url: String) {

@@ -2,11 +2,8 @@ package org.cssnr.zipline
 
 import android.annotation.SuppressLint
 import android.appwidget.AppWidgetManager
-import android.content.ClipData
-import android.content.ClipboardManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -18,6 +15,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -40,6 +38,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import org.cssnr.zipline.databinding.ActivityMainBinding
+import org.cssnr.zipline.ui.home.HomeViewModel
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
@@ -50,6 +49,7 @@ import java.util.concurrent.TimeUnit
 class MainActivity : AppCompatActivity() {
 
     internal lateinit var binding: ActivityMainBinding
+
     private lateinit var navController: NavController
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
@@ -64,6 +64,7 @@ class MainActivity : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         // NavHostFragment
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
@@ -120,6 +121,55 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Handle Custom Navigation Items
+        val itemPathMap = mapOf(
+            R.id.nav_site_home to "dashboard",
+            R.id.nav_site_files to "dashboard/files",
+            R.id.nav_site_folders to "dashboard/folders",
+            R.id.nav_site_urls to "dashboard/urls",
+            R.id.nav_site_metrics to "dashboard/metrics",
+            R.id.nav_site_settings to "dashboard/settings",
+        )
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
+            binding.drawerLayout.closeDrawers()
+            val path = itemPathMap[menuItem.itemId]
+            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem - path: $path")
+            if (path != null) {
+                val savedUrl = preferences.getString("ziplineUrl", null)
+                Log.d("setNavigationItemSelectedListener", "ziplineUrl: $savedUrl")
+                val url = "${savedUrl}/${path}"
+                Log.d("setNavigationItemSelectedListener", "Click URL: $url")
+                val viewModel: HomeViewModel by viewModels()
+                val webViewUrl = viewModel.webViewUrl.value
+                Log.d("setNavigationItemSelectedListener", "webViewUrl: $webViewUrl")
+                if (webViewUrl != url) {
+                    Log.i("Drawer", "WEB VIEW - viewModel.navigateTo: $url")
+                    viewModel.navigateTo(url)
+                }
+                if (navController.currentDestination?.id != R.id.nav_item_home) {
+                    Log.d("Drawer", "NAVIGATE: nav_item_home")
+                    // NOTE: This is the correct navigation call...
+                    val homeMenuItem = binding.navView.menu.findItem(R.id.nav_item_home)
+                    NavigationUI.onNavDestinationSelected(homeMenuItem, navController)
+                }
+                true
+            } else if (menuItem.itemId == R.id.nav_item_upload) {
+                Log.d("Drawer", "nav_item_upload")
+                filePickerLauncher.launch(arrayOf("*/*"))
+                true
+            } else {
+                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                Log.d("Drawer", "ELSE - handled: $handled")
+                handled
+            }
+        }
+
+        // Set Default Preferences
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
+        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
+
+        // Setup Nav Drawer Header
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
@@ -129,10 +179,6 @@ class MainActivity : AppCompatActivity() {
         versionTextView.text = "v${versionName}"
 
         binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
-
-        // Set Default Preferences
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
-        PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
 
         // TODO: Improve initialization of the WorkRequest
         val workInterval = preferences.getString("work_interval", null) ?: "0"
@@ -152,19 +198,6 @@ class MainActivity : AppCompatActivity() {
             // TODO: Confirm this is necessary...
             Log.i("Main[onCreate]", "Ensuring Work is Disabled")
             WorkManager.getInstance(this).cancelUniqueWork("app_worker")
-        }
-
-        // Handle Custom Navigation Items
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
-            binding.drawerLayout.closeDrawers()
-            if (menuItem.itemId == R.id.nav_item_upload) {
-                Log.d("setNavigationItemSelectedListener", "nav_item_upload")
-                filePickerLauncher.launch(arrayOf("*/*"))
-                true
-            } else {
-                NavigationUI.onNavDestinationSelected(menuItem, navController)
-            }
         }
 
         // File Picker for UPLOAD_FILE Intent and Shortcut
@@ -202,9 +235,7 @@ class MainActivity : AppCompatActivity() {
         val data = intent.data
         Log.d("onNewIntent", "${action}: $data")
 
-        val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
-        Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
-
+        // Check Auth First
         val savedUrl = preferences.getString("ziplineUrl", null)
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("onNewIntent", "savedUrl: $savedUrl")
@@ -222,6 +253,7 @@ class MainActivity : AppCompatActivity() {
             return
         }
 
+        // Reject Calendar URI due to permissions
         val isCalendarUri = data != null &&
                 data.authority?.contains("calendar") == true &&
                 listOf("/events", "/calendars", "/time").any { data.path?.contains(it) == true }
@@ -270,6 +302,9 @@ class MainActivity : AppCompatActivity() {
                 intent.getParcelableExtra(Intent.EXTRA_STREAM)
             }
             Log.d("onNewIntent", "File URI: $fileUri")
+
+            val extraText = intent.getStringExtra(Intent.EXTRA_TEXT)
+            Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
 
             if (fileUri == null && !extraText.isNullOrEmpty()) {
                 Log.d("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
@@ -391,8 +426,10 @@ class MainActivity : AppCompatActivity() {
     //}
 
     fun setDrawerLockMode(enabled: Boolean) {
+        Log.d("setDrawerLockMode", "enabled: $enabled")
         val lockMode =
             if (enabled) DrawerLayout.LOCK_MODE_UNLOCKED else DrawerLayout.LOCK_MODE_LOCKED_CLOSED
+        Log.d("setDrawerLockMode", "setDrawerLockMode: $lockMode")
         binding.drawerLayout.setDrawerLockMode(lockMode)
     }
 }
@@ -417,13 +454,4 @@ object MediaCache {
                 .setFlags(CacheDataSource.FLAG_IGNORE_CACHE_ON_ERROR)
         }
     }
-}
-
-
-fun copyToClipboard(context: Context, url: String) {
-    Log.d("copyToClipboard", "url: $url")
-    val clipboard = context.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-    val clip = ClipData.newPlainText("URL", url)
-    clipboard.setPrimaryClip(clip)
-    Toast.makeText(context, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
 }

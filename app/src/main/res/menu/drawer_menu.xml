@@ -17,19 +17,45 @@
             android:icon="@drawable/md_settings_24px"
             android:title="@string/settings"
             android:checkable="true" />
-    </group>
-
-    <group android:id="@+id/nav_other">
         <item
             android:id="@+id/nav_item_upload"
             android:icon="@drawable/md_upload_24px"
             android:title="@string/upload" />
     </group>
 
-    <item
-        android:id="@+id/nav_item_none"
-        android:title=""
-        android:enabled="false"
-        android:visible="false"
-        android:checkable="true" />
+    <item android:title="Site Navigation">
+        <menu>
+            <item
+                android:id="@+id/nav_site_home"
+                android:icon="@drawable/md_house_24px"
+                android:title="Dashboard" />
+            <item
+                android:id="@+id/nav_site_files"
+                android:icon="@drawable/md_file_copy_24px"
+                android:title="Files" />
+            <item
+                android:id="@+id/nav_site_folders"
+                android:icon="@drawable/md_folder_24px"
+                android:title="Folders" />
+            <item
+                android:id="@+id/nav_site_urls"
+                android:icon="@drawable/md_link_24px"
+                android:title="URLs" />
+            <item
+                android:id="@+id/nav_site_metrics"
+                android:icon="@drawable/md_chart_data_24px"
+                android:title="Metrics" />
+            <item
+                android:id="@+id/nav_site_settings"
+                android:icon="@drawable/md_settings_account_box_24px"
+                android:title="Settings" />
+        </menu>
+    </item>
+
+    <!--<item-->
+    <!--    android:id="@+id/nav_item_none"-->
+    <!--    android:title=""-->
+    <!--    android:enabled="false"-->
+    <!--    android:visible="false"-->
+    <!--    android:checkable="true" />-->
 </menu>

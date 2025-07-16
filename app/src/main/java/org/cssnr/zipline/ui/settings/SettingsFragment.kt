@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    // TODO: Determine why I put this here...
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -51,6 +52,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val color = MaterialColors.getColor(view, android.R.attr.colorBackground)
         view.setBackgroundColor(color)
         return view
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Settings[onStart]", "onStart: $arguments")
+        if (arguments?.getBoolean("hide_bottom_nav") == true) {
+            Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+                View.GONE
+        }
     }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
@@ -87,7 +98,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Widget Settings
         findPreference<Preference>("open_widget_settings")?.setOnPreferenceClickListener {
             Log.d("open_widget_settings", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_action_settings_widget)
+            findNavController().navigate(R.id.nav_action_settings_widget, arguments)
             false
         }
 
@@ -143,16 +154,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //Log.d("SettingsFragment", "showPreview: $showPreview")
         //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Settings[onStart]", "onStart: $arguments")
-        if (arguments?.getBoolean("hide_bottom_nav") == true) {
-            Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
-            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-                View.GONE
-        }
     }
 
     fun Context.updateWorkManager(listPref: ListPreference, newValue: Any): Boolean {

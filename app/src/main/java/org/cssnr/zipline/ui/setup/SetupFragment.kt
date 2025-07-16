@@ -37,6 +37,7 @@ class SetupFragment : Fragment() {
 
     private val viewModel: SetupViewModel by activityViewModels()
 
+    private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
     companion object {
@@ -57,6 +58,21 @@ class SetupFragment : Fragment() {
         super.onDestroyView()
         Log.d(LOG_TAG, "onDestroyView")
         _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Setup[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        (activity as? MainActivity)?.setDrawerLockMode(false)
+    }
+
+    override fun onStop() {
+        Log.d("Setup[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        (activity as? MainActivity)?.setDrawerLockMode(true)
+        super.onStop()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -160,9 +176,10 @@ class SetupFragment : Fragment() {
             (requireActivity() as MainActivity).setDrawerLockMode(true)
 
             // Navigate Home
-            findNavController().navigate(
-                R.id.nav_action_setup_home, bundle, NavOptions.Builder()
-                    .setPopUpTo(R.id.nav_item_setup, true)
+            // TODO: Allow configuring custom start destination in Setup...
+            navController.navigate(
+                navController.graph.startDestinationId, bundle, NavOptions.Builder()
+                    .setPopUpTo(navController.graph.id, true)
                     .build()
             )
         }
@@ -173,21 +190,6 @@ class SetupFragment : Fragment() {
             viewModel.confettiShown.value = true
             hitEmWithConfetti()
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Setup[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-        (activity as? MainActivity)?.setDrawerLockMode(false)
-    }
-
-    override fun onStop() {
-        Log.d("Setup[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        (activity as? MainActivity)?.setDrawerLockMode(true)
-        super.onStop()
     }
 
     fun hitEmWithConfetti() {

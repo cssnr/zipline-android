@@ -38,8 +38,8 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.cssnr.zipline.MediaCache
 import org.cssnr.zipline.R
-import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
+import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.json.JSONObject
 import java.io.File
 
@@ -55,6 +55,8 @@ class FilesPreviewFragment : Fragment() {
 
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
+
+    private val navController by lazy { findNavController() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -117,7 +119,7 @@ class FilesPreviewFragment : Fragment() {
 
         binding.goBack.setOnClickListener {
             Log.d("FilesPreviewFragment", "GO BACK")
-            findNavController().navigateUp()
+            navController.navigateUp()
         }
 
         binding.playerView.transitionName = viewModel.activeFile.value?.id
@@ -128,8 +130,8 @@ class FilesPreviewFragment : Fragment() {
             binding.previewImageView.visibility = View.VISIBLE
             binding.previewImageView.setImageResource(R.drawable.md_encrypted_24px)
             binding.previewImageView.setOnClickListener {
-                //findNavController().popBackStack()
-                findNavController().navigateUp()
+                //navController.popBackStack()
+                navController.navigateUp()
             }
         } else if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
             Log.d("FilesPreviewFragment", "EXOPLAYER")
@@ -230,8 +232,8 @@ class FilesPreviewFragment : Fragment() {
                 .into(binding.previewImageView)
             //binding.previewImageView.setOnClickListener {
             //    Log.d("FilesPreviewFragment", "IMAGE BACK")
-            //    //findNavController().popBackStack()
-            //    findNavController().navigateUp()
+            //    //navController.popBackStack()
+            //    navController.navigateUp()
             //}
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
@@ -258,7 +260,7 @@ class FilesPreviewFragment : Fragment() {
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
-                    copyToClipboard(ctx, content)
+                    ctx.copyToClipboard(content)
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)
@@ -284,8 +286,8 @@ class FilesPreviewFragment : Fragment() {
             binding.previewImageView.visibility = View.VISIBLE
             binding.previewImageView.setImageResource(getGenericIcon(mimeType.toString()))
             binding.previewImageView.setOnClickListener {
-                //findNavController().popBackStack()
-                findNavController().navigateUp()
+                //navController.popBackStack()
+                navController.navigateUp()
             }
         }
     }

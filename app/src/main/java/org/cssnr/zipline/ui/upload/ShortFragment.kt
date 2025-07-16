@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.upload
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -21,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentShortBinding
 
 class ShortFragment : Fragment() {
@@ -50,6 +50,19 @@ class ShortFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("Short[onStart]", "onStart - Hide UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+    }
+
+    override fun onStop() {
+        Log.d("Short[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Short[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Short[onViewCreated]", "arguments: $arguments")
@@ -62,8 +75,7 @@ class ShortFragment : Fragment() {
         Log.d("Short[onViewCreated]", "authToken: $authToken")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Short[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG)
-                .show()
+            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -111,24 +123,11 @@ class ShortFragment : Fragment() {
             Log.d("uploadButton", "longUrl: $longUrl")
             val vanityName = binding.vanityName.text.toString().trim()
             Log.d("uploadButton", "vanityName: $vanityName")
-            processShort(longUrl, vanityName)
+            requireContext().processShort(longUrl, vanityName)
         }
     }
 
-    override fun onStart() {
-        super.onStart()
-        Log.d("Short[onStart]", "onStart - Hide UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-    }
-
-    override fun onStop() {
-        Log.d("Short[onStop]", "onStop - Show UI")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        super.onStop()
-    }
-
-    private fun processShort(longUrl: String, vanityName: String?) {
+    private fun Context.processShort(longUrl: String, vanityName: String?) {
         Log.d("processShort", "URL: $longUrl")
         Log.d("processShort", "Vanity: $vanityName")
 
@@ -137,7 +136,7 @@ class ShortFragment : Fragment() {
         val shareUrl = preferences.getBoolean("share_after_short", true)
         Log.d("processShort", "shareUrl: $shareUrl")
 
-        val api = ServerApi(requireContext())
+        val api = ServerApi(this)
         lifecycleScope.launch {
             val response = api.shorten(longUrl, vanityName)
             Log.d("processShort", "response: $response")
@@ -145,7 +144,7 @@ class ShortFragment : Fragment() {
                 val shortResponse = response.body()
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
-                    copyToClipboard(requireContext(), shortResponse.url)
+                    this@processShort.copyToClipboard(shortResponse.url)
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"
@@ -165,8 +164,7 @@ class ShortFragment : Fragment() {
             }
             Log.e("processShort", "response/shortResponse is null")
             withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), "File Upload Failed!", Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(this@processShort, "File Upload Failed!", Toast.LENGTH_LONG).show()
             }
         }
     }
