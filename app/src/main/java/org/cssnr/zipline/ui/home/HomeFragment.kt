@@ -37,7 +37,7 @@ import org.cssnr.zipline.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
 
-    var currentUrl: String = ""
+    //var currentUrl: String = ""
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
@@ -158,6 +158,12 @@ class HomeFragment : Fragment() {
         requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, callback)
 
         //binding.toggleMenu.apply { animate().alpha(1f).setDuration(1500).start() }
+        viewModel.urlToLoad.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { url ->
+                Log.i("Home[viewModel]", "TO THE MOON BABY: $url")
+                binding.webView.loadUrl(url)
+            }
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -307,7 +313,7 @@ class HomeFragment : Fragment() {
 
         override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
             Log.d("doUpdateVisitedHistory", "url: $url")
-            currentUrl = url
+            //currentUrl = url
             if (url.endsWith("/auth/login") == true) {
                 Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 
@@ -321,9 +327,10 @@ class HomeFragment : Fragment() {
                 //view.destroy()
                 val bundle = bundleOf("url" to ziplineUrl)
                 Log.i("doUpdateVisitedHistory", "bundle: $bundle")
-                findNavController().navigate(
+                val navController = findNavController()
+                navController.navigate(
                     R.id.nav_item_login, bundle, NavOptions.Builder()
-                        .setPopUpTo(R.id.nav_item_home, true)
+                        .setPopUpTo(navController.graph.id, true)
                         .build()
                 )
             }
@@ -345,11 +352,12 @@ class HomeFragment : Fragment() {
             Log.d("onReceivedHttpError", "HTTP ERROR: ${errorResponse.statusCode}")
         }
 
-        // // private val onPageLoaded: (() -> Unit)? = null
-        //override fun onPageFinished(view: WebView?, url: String?) {
-        //    Log.d("MyWebViewClient", "Page finished loading: $url")
-        //    onPageLoaded?.invoke()
-        //}
+        //private val onPageLoaded: (() -> Unit)? = null
+        override fun onPageFinished(view: WebView?, url: String?) {
+            Log.d("onPageFinished", "Set: viewModel.webViewUrl.value: $url")
+            viewModel.webViewUrl.value = url
+            //onPageLoaded?.invoke()
+        }
     }
 
     inner class MyWebChromeClient : WebChromeClient() {

@@ -35,6 +35,8 @@ class LoginFragment : Fragment() {
     private var _binding: FragmentLoginBinding? = null
     private val binding get() = _binding!!
 
+    private val navController by lazy { findNavController() }
+
     companion object {
         const val LOG_TAG = "LoginFragment"
     }
@@ -53,6 +55,21 @@ class LoginFragment : Fragment() {
         Log.d(LOG_TAG, "onDestroyView")
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Login[onStart]", "onStart - Hide UI and Lock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        (activity as? MainActivity)?.setDrawerLockMode(false)
+    }
+
+    override fun onStop() {
+        Log.d("Login[onStop]", "onStop - Show UI and Unlock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        (activity as? MainActivity)?.setDrawerLockMode(true)
+        super.onStop()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -165,15 +182,15 @@ class LoginFragment : Fragment() {
                     // TODO: Consider managing first run logic in MainActivity...
                     if (!preferences.getBoolean("first_run_shown", false)) {
                         preferences?.edit { putBoolean("first_run_shown", true) }
-                        findNavController().navigate(
+                        navController.navigate(
                             R.id.nav_action_login_setup, null, NavOptions.Builder()
-                                .setPopUpTo(R.id.nav_item_login, true)
+                                .setPopUpTo(navController.graph.id, true)
                                 .build()
                         )
                     } else {
-                        findNavController().navigate(
-                            R.id.nav_action_login_home, null, NavOptions.Builder()
-                                .setPopUpTo(R.id.nav_item_login, true)
+                        navController.navigate(
+                            navController.graph.startDestinationId, null, NavOptions.Builder()
+                                .setPopUpTo(navController.graph.id, true)
                                 .build()
                         )
                     }
@@ -182,21 +199,6 @@ class LoginFragment : Fragment() {
                 Log.d("loginButton", "lifecycleScope: DONE")
             }
         }
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("Login[onStart]", "onStart - Hide UI and Lock Drawer")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
-        (activity as? MainActivity)?.setDrawerLockMode(false)
-    }
-
-    override fun onStop() {
-        Log.d("Login[onStop]", "onStop - Show UI and Unlock Drawer")
-        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
-            View.VISIBLE
-        (activity as? MainActivity)?.setDrawerLockMode(true)
-        super.onStop()
     }
 
     private fun parseHost(urlString: String): String {

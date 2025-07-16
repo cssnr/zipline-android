@@ -56,6 +56,8 @@ class FilesPreviewFragment : Fragment() {
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
 
+    private val navController by lazy { findNavController() }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("FilesPre[onCreate]", "savedInstanceState: ${savedInstanceState?.size()}")
@@ -117,7 +119,7 @@ class FilesPreviewFragment : Fragment() {
 
         binding.goBack.setOnClickListener {
             Log.d("FilesPreviewFragment", "GO BACK")
-            findNavController().navigateUp()
+            navController.navigateUp()
         }
 
         binding.playerView.transitionName = viewModel.activeFile.value?.id
@@ -128,8 +130,8 @@ class FilesPreviewFragment : Fragment() {
             binding.previewImageView.visibility = View.VISIBLE
             binding.previewImageView.setImageResource(R.drawable.md_encrypted_24px)
             binding.previewImageView.setOnClickListener {
-                //findNavController().popBackStack()
-                findNavController().navigateUp()
+                //navController.popBackStack()
+                navController.navigateUp()
             }
         } else if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
             Log.d("FilesPreviewFragment", "EXOPLAYER")
@@ -230,8 +232,8 @@ class FilesPreviewFragment : Fragment() {
                 .into(binding.previewImageView)
             //binding.previewImageView.setOnClickListener {
             //    Log.d("FilesPreviewFragment", "IMAGE BACK")
-            //    //findNavController().popBackStack()
-            //    findNavController().navigateUp()
+            //    //navController.popBackStack()
+            //    navController.navigateUp()
             //}
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
@@ -284,8 +286,8 @@ class FilesPreviewFragment : Fragment() {
             binding.previewImageView.visibility = View.VISIBLE
             binding.previewImageView.setImageResource(getGenericIcon(mimeType.toString()))
             binding.previewImageView.setOnClickListener {
-                //findNavController().popBackStack()
-                findNavController().navigateUp()
+                //navController.popBackStack()
+                navController.navigateUp()
             }
         }
     }

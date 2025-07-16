@@ -18,6 +18,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
@@ -40,6 +41,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import org.cssnr.zipline.databinding.ActivityMainBinding
+import org.cssnr.zipline.ui.home.HomeViewModel
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
@@ -122,6 +124,50 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Handle Custom Navigation Items
+        val itemPathMap = mapOf(
+            R.id.nav_site_home to "dashboard",
+            R.id.nav_site_files to "dashboard/files",
+            R.id.nav_site_folders to "dashboard/folders",
+            R.id.nav_site_urls to "dashboard/urls",
+            R.id.nav_site_metrics to "dashboard/metrics",
+            R.id.nav_site_settings to "dashboard/settings",
+        )
+        binding.navView.setNavigationItemSelectedListener { menuItem ->
+            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
+            binding.drawerLayout.closeDrawers()
+            val path = itemPathMap[menuItem.itemId]
+            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem - path: $path")
+            if (path != null) {
+                val savedUrl = preferences.getString("ziplineUrl", null)
+                Log.d("setNavigationItemSelectedListener", "ziplineUrl: $savedUrl")
+                val url = "${savedUrl}/${path}"
+                Log.d("setNavigationItemSelectedListener", "Click URL: $url")
+                val viewModel: HomeViewModel by viewModels()
+                val webViewUrl = viewModel.webViewUrl.value
+                Log.d("setNavigationItemSelectedListener", "webViewUrl: $webViewUrl")
+                if (webViewUrl != url) {
+                    Log.i("Drawer", "WEB VIEW - viewModel.navigateTo: $url")
+                    viewModel.navigateTo(url)
+                }
+                if (navController.currentDestination?.id != R.id.nav_item_home) {
+                    Log.d("Drawer", "NAVIGATE: nav_item_home")
+                    // NOTE: This is the correct navigation call...
+                    val homeMenuItem = binding.navView.menu.findItem(R.id.nav_item_home)
+                    NavigationUI.onNavDestinationSelected(homeMenuItem, navController)
+                }
+                true
+            } else if (menuItem.itemId == R.id.nav_item_upload) {
+                Log.d("Drawer", "nav_item_upload")
+                filePickerLauncher.launch(arrayOf("*/*"))
+                true
+            } else {
+                val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
+                Log.d("Drawer", "ELSE - handled: $handled")
+                handled
+            }
+        }
+
         // Set Default Preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
@@ -155,19 +201,6 @@ class MainActivity : AppCompatActivity() {
             // TODO: Confirm this is necessary...
             Log.i("Main[onCreate]", "Ensuring Work is Disabled")
             WorkManager.getInstance(this).cancelUniqueWork("app_worker")
-        }
-
-        // Handle Custom Navigation Items
-        binding.navView.setNavigationItemSelectedListener { menuItem ->
-            Log.d("setNavigationItemSelectedListener", "menuItem: $menuItem")
-            binding.drawerLayout.closeDrawers()
-            if (menuItem.itemId == R.id.nav_item_upload) {
-                Log.d("setNavigationItemSelectedListener", "nav_item_upload")
-                filePickerLauncher.launch(arrayOf("*/*"))
-                true
-            } else {
-                NavigationUI.onNavDestinationSelected(menuItem, navController)
-            }
         }
 
         // File Picker for UPLOAD_FILE Intent and Shortcut

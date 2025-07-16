@@ -176,8 +176,8 @@ class FilesFragment : Fragment() {
                     override fun onPreview(file: FileResponse) {
                         Log.d("OnFileItemClickListener", "onPreview: $file")
                         viewModel.activeFile.value = file
-                        //findNavController().navigate(R.id.nav_item_files_action_preview)
                         val navController = findNavController()
+                        // NOTE: Prevent double navigation
                         if (navController.currentDestination?.id == R.id.nav_item_files) {
                             navController.navigate(R.id.nav_item_files_action_preview)
                         }

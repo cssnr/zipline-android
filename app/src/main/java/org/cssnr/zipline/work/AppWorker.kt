@@ -55,6 +55,10 @@ suspend fun Context.updateStats(): Boolean {
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val savedUrl = preferences.getString("ziplineUrl", null).toString()
     Log.d("updateStats", "savedUrl: $savedUrl")
+    if (preferences.getString("ziplineToken", null).isNullOrEmpty()) {
+        Log.i("updateStats", "ziplineToken: isNullOrEmpty")
+        return false
+    }
     val api = ServerApi(this, savedUrl)
     val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
