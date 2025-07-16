@@ -30,8 +30,8 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
-import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.cssnr.zipline.databinding.FragmentFilesBottomBinding
+import org.cssnr.zipline.ui.upload.copyToClipboard
 
 class FilesBottomSheet : BottomSheetDialogFragment() {
 
