@@ -112,14 +112,53 @@ class SetupFragment : Fragment() {
         //Log.i(LOG_TAG, "notificationsEnabled: $notificationsEnabled")
         //binding.notificationsSwitch.isChecked = notificationsEnabled
 
+        // Start Destination Radio
+        binding.startDestinationRadio.check(R.id.start_radio_home)
+        binding.startDestinationRadio.setOnCheckedChangeListener { group, id ->
+            Log.d(LOG_TAG, "id: $id")
+            Log.d(LOG_TAG, "group: $group")
+            val value = when (id) {
+                R.id.start_radio_home -> "home"
+                R.id.start_radio_files -> "files"
+                else -> "home"
+            }
+            Log.d(LOG_TAG, "value: $value")
+            preferences.edit { putString("start_destination", value) }
+        }
+        //// Start Destination Spinner
+        //val launchEntries = resources.getStringArray(R.array.launcher_entries)
+        //val launchValues = resources.getStringArray(R.array.launcher_values)
+        //val launchAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_item, launchEntries)
+        //launchAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        //binding.workIntervalSpinner.adapter = launchAdapter
+        //val currentStartDestination = preferences.getString("start_destination", null) ?: "0"
+        //binding.workIntervalSpinner.setSelection(launchValues.indexOf(currentStartDestination))
+        //binding.workIntervalSpinner.onItemSelectedListener =
+        //    object : AdapterView.OnItemSelectedListener {
+        //        override fun onItemSelected(
+        //            parent: AdapterView<*>,
+        //            view: View?,
+        //            position: Int,
+        //            id: Long
+        //        ) {
+        //            val selectedValue = launchValues[position]
+        //            Log.d(LOG_TAG, "workIntervalSpinner: value: $selectedValue")
+        //            preferences.edit { putString("start_destination", selectedValue) }
+        //        }
+        //
+        //        override fun onNothingSelected(parent: AdapterView<*>) {
+        //            Log.w(LOG_TAG, "workIntervalSpinner: No Item Selected")
+        //        }
+        //    }
+
         // Update Interval Spinner
-        val entries = resources.getStringArray(R.array.work_interval_entries)
-        val values = resources.getStringArray(R.array.work_interval_values)
-        val adapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_item, entries)
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        binding.workIntervalSpinner.adapter = adapter
+        val workEntries = resources.getStringArray(R.array.work_interval_entries)
+        val workValues = resources.getStringArray(R.array.work_interval_values)
+        val workAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_item, workEntries)
+        workAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        binding.workIntervalSpinner.adapter = workAdapter
         val currentWorkInterval = preferences.getString("work_interval", null) ?: "0"
-        binding.workIntervalSpinner.setSelection(values.indexOf(currentWorkInterval))
+        binding.workIntervalSpinner.setSelection(workValues.indexOf(currentWorkInterval))
         binding.workIntervalSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -128,7 +167,7 @@ class SetupFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    val selectedValue = values[position]
+                    val selectedValue = workValues[position]
                     Log.d(LOG_TAG, "workIntervalSpinner: value: $selectedValue")
                     preferences.edit { putString("work_interval", selectedValue) }
                 }
@@ -177,6 +216,10 @@ class SetupFragment : Fragment() {
 
             // Navigate Home
             // TODO: Allow configuring custom start destination in Setup...
+            if (preferences.getString("start_destination", null) == "files") {
+                Log.i(LOG_TAG, "startAppListener: setStartDestination: ${R.id.nav_item_files}")
+                navController.graph.setStartDestination(R.id.nav_item_files)
+            }
             navController.navigate(
                 navController.graph.startDestinationId, bundle, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)

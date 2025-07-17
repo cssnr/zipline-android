@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Zipline"
-    tools:context=".ui.setup.SetupFragment">
+    tools:context=".ui.setup.SetupFragment"
+    tools:ignore="HardcodedText">
 
     <ScrollView
         android:id="@+id/scroll_view"
@@ -78,14 +79,16 @@
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="Share or Open any File or URL"
                         android:drawablePadding="6dp"
-                        app:drawableStartCompat="@drawable/md_task_alt_24px" />
+                        app:drawableStartCompat="@drawable/md_task_alt_24px"
+                        app:drawableTint="@android:color/holo_green_light" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="Automatically Copy File URL"
+                        android:text="View, Edit and Dowload Files"
                         android:drawablePadding="6dp"
-                        app:drawableStartCompat="@drawable/md_task_alt_24px" />
+                        app:drawableStartCompat="@drawable/md_task_alt_24px"
+                        app:drawableTint="@android:color/holo_green_light" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -95,7 +98,58 @@
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
                     <TextView
-                        android:id="@+id/notifications_label"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:labelFor="@+id/start_destination_radio"
+                        android:textColor="?attr/colorPrimary"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                        android:text="Start Destination on Launching App" />
+                    <!--<Spinner-->
+                    <!--    android:id="@+id/start_destination"-->
+                    <!--    android:layout_width="match_parent"-->
+                    <!--    android:layout_height="48dp"-->
+                    <!--    android:paddingHorizontal="8dp"-->
+                    <!--    android:entries="@array/launcher_entries" />-->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:contentDescription="Start Destination"
+                            android:src="@drawable/md_flight_takeoff_24px" />
+                        <RadioGroup
+                            android:id="@+id/start_destination_radio"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:orientation="horizontal">
+                            <RadioButton
+                                android:id="@+id/start_radio_home"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Web View"
+                                tools:checked="true" />
+                            <RadioButton
+                                android:id="@+id/start_radio_files"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="24dp"
+                                android:text="File List" />
+                        </RadioGroup>
+                    </LinearLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:labelFor="@+id/notifications_switch"
