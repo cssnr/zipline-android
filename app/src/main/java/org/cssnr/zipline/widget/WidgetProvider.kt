@@ -13,9 +13,8 @@ import android.widget.RemoteViews
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
 import androidx.preference.PreferenceManager
-import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
@@ -26,7 +25,6 @@ import java.util.Date
 
 class WidgetProvider : AppWidgetProvider() {
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         Log.i("Widget[onReceive]", "intent: $intent")
@@ -39,17 +37,16 @@ class WidgetProvider : AppWidgetProvider() {
             if (appWidgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
                 return
             }
-            Log.d("Widget[onReceive]", "GlobalScope.launch: START")
-            GlobalScope.launch(Dispatchers.IO) {
+            Log.i("Widget[onReceive]", "CoroutineScope.launch: START")
+            CoroutineScope(Dispatchers.IO).launch {
                 context.updateStats()
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))
-                Log.d("Widget[onReceive]", "GlobalScope.launch: DONE")
+                Log.i("Widget[onReceive]", "CoroutineScope.launch: DONE")
             }
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onUpdate(
         context: Context,
         appWidgetManager: AppWidgetManager,
@@ -86,7 +83,7 @@ class WidgetProvider : AppWidgetProvider() {
         Log.d("Widget[onUpdate]", "finalBgColor: $finalBgColor")
 
         appWidgetIds.forEach { appWidgetId ->
-            Log.i("Widget[onUpdate]", "START appWidgetId: $appWidgetId")
+            Log.d("Widget[onUpdate]", "START - appWidgetId: $appWidgetId")
 
             // Widget Root
             val views = RemoteViews(context.packageName, R.layout.widget_layout)
@@ -146,7 +143,7 @@ class WidgetProvider : AppWidgetProvider() {
             //views.setOnClickPendingIntent(R.id.widget_recent_button, pendingIntent3)
 
             // Room Data
-            GlobalScope.launch(Dispatchers.IO) {
+            CoroutineScope(Dispatchers.IO).launch {
                 val dao: ServerDao =
                     ServerDatabase.Companion.getInstance(context.applicationContext).serverDao()
                 Log.d("Widget[onUpdate]", "dao: $dao")
@@ -174,14 +171,14 @@ class WidgetProvider : AppWidgetProvider() {
                     Log.d("Widget[onUpdate]", "time: $time")
                     views.setTextViewText(R.id.update_time, time)
                 }
-                Log.i("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
+                Log.d("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
                 appWidgetManager.updateAppWidget(appWidgetId, views)
             }
 
             // This is done at the end of the GlobalScope above
             //appWidgetManager.updateAppWidget(appWidgetId, views)
-            Log.i("Widget[onUpdate]", "DONE appWidgetId: $appWidgetId")
+            Log.d("Widget[onUpdate]", "DONE - appWidgetId: $appWidgetId")
         }
-        Log.i("Widget[onUpdate]", "END - all done")
+        Log.i("Widget[onUpdate]", "END - onUpdate FINISHED")
     }
 }

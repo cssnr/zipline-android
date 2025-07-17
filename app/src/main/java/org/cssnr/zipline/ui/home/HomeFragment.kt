@@ -92,7 +92,7 @@ class HomeFragment : Fragment() {
         val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
         ziplineUrl = preferences.getString("ziplineUrl", "").toString()
         Log.d("Home[onViewCreated]", "ziplineUrl: $ziplineUrl")
-        //val ziplineToken = preferences?.getString("ziplineToken", null)
+        //val ziplineToken = preferences.getString("ziplineToken", null)
         //Log.d("Home[onViewCreated]", "ziplineToken: $ziplineToken")
 
         if (arguments?.getBoolean("isFirstRun", false) == true) {

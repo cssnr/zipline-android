@@ -150,9 +150,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         //    true
         //}
 
-        //var showPreview = preferences?.getBoolean("show_preview", false)
+        //var showPreview = preferences.getBoolean("show_preview", false)
         //Log.d("SettingsFragment", "showPreview: $showPreview")
-        //var enableBiometrics = preferences?.getBoolean("biometrics_enabled", false)
+        //var enableBiometrics = preferences.getBoolean("biometrics_enabled", false)
         //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
     }
 

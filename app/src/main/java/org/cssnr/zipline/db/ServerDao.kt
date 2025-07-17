@@ -3,7 +3,6 @@ package org.cssnr.zipline.db
 import android.content.Context
 import androidx.room.Dao
 import androidx.room.Database
-import androidx.room.Delete
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import androidx.room.Query
@@ -19,17 +18,17 @@ interface ServerDao {
     @Query("SELECT * FROM servers WHERE url = :url LIMIT 1")
     fun get(url: String): ServerEntity?
 
-    @Query("SELECT * FROM servers ORDER BY ROWID")
-    fun getAll(): List<ServerEntity>
+    //@Query("SELECT * FROM servers ORDER BY ROWID")
+    //fun getAll(): List<ServerEntity>
 
-    @Query("UPDATE servers SET token = :token WHERE url = :url")
-    fun setToken(url: String, token: String)
+    //@Query("UPDATE servers SET token = :token WHERE url = :url")
+    //fun setToken(url: String, token: String)
 
-    @Query("UPDATE servers SET active = 1 WHERE url = :url")
-    fun activate(url: String)
+    //@Query("UPDATE servers SET active = 1 WHERE url = :url")
+    //fun activate(url: String)
 
-    @Delete
-    fun delete(server: ServerEntity)
+    //@Delete
+    //fun delete(server: ServerEntity)
 }
 
 
