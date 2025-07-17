@@ -23,16 +23,12 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.databinding.FragmentLoginBinding
-import org.cssnr.zipline.work.updateStats
 
 class LoginFragment : Fragment() {
 
@@ -76,7 +72,6 @@ class LoginFragment : Fragment() {
         super.onStop()
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
 
@@ -185,7 +180,7 @@ class LoginFragment : Fragment() {
                     Log.d("loginButton", "ziplineUrl: $host")
                     Log.d("loginButton", "ziplineToken: $token")
                     Firebase.analytics.logEvent("login_success", null)
-                    GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
+                    //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
                     // TODO: Consider managing first run logic in MainActivity...
                     if (!preferences.getBoolean("first_run_shown", false)) {
                         preferences.edit { putBoolean("first_run_shown", true) }
