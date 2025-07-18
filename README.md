@@ -36,10 +36,10 @@
 
 Native Kotlin Android Application for [Zipline v4](https://github.com/diced/zipline).
 
-Allows you to Share or Open any file and Shorten URLs with your Zipline server.
-Shows a preview with custom options and copies the URL to the clipboard after upload.
+Allows you to Share or Open files and Shorten URLs to a self-hosted Zipline server.
+Includes a Native File List for Viewing, Editing and Downloading files locally.
 
-- Supports Android 8 (API 26) 2017 +
+We are also developing a browser addon [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme).
 
 ## Install
 
@@ -49,6 +49,8 @@ Shows a preview with custom options and copies the URL to the clipboard after up
 [![Get on GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
+
+- Supports Android 8 (API 26) 2017 +
 
 <details><summary>📲 Click to View QR Codes 📸</summary>
 
@@ -296,10 +298,16 @@ and [additional](https://cssnr.com/) open source projects.
 
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/cssnr)
 
-You can also star this project on GitHub and support other related projects:
+### Zipline Web Extension
 
 - [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
-- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme)
+
+[![Screenshot](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/extension/screenshot.jpg)](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
+
+- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme) _Only Supports v3_
+
+You can also star this project on GitHub and support other related projects:
+
 - [Django Files Server](https://github.com/django-files/django-files?tab=readme-ov-file#readme)
 - [Django Files iOS App](https://github.com/django-files/ios-client?tab=readme-ov-file#readme)
 - [Django Files Android App](https://github.com/django-files/android-client?tab=readme-ov-file#readme)
