@@ -52,13 +52,23 @@
         app:layout_goneMarginTop="0dp"
         tools:visibility="visible">
         <ImageView
+            android:id="@+id/upload_files"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:layout_marginEnd="12dp"
+            android:padding="6dp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Upload Files"
+            android:src="@drawable/md_upload_24px" />
+        <ImageView
             android:id="@+id/download_manager"
             android:layout_width="48dp"
             android:layout_height="match_parent"
             android:padding="6dp"
             android:gravity="center"
             android:background="?attr/selectableItemBackground"
-            android:contentDescription="Delete All"
+            android:contentDescription="Downloaded Files"
             android:src="@drawable/md_drive_file_move_24px" />
     </LinearLayout>
 
@@ -145,7 +155,7 @@
             android:layout_height="match_parent"
             android:padding="6dp"
             android:background="?attr/selectableItemBackground"
-            android:contentDescription="Delete All"
+            android:contentDescription="Download All"
             android:src="@drawable/md_download_24px" />
 
     </LinearLayout>

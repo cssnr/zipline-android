@@ -150,8 +150,8 @@ class MainActivity : AppCompatActivity() {
                 if (navController.currentDestination?.id != R.id.nav_item_home) {
                     Log.d("Drawer", "NAVIGATE: nav_item_home")
                     // NOTE: This is the correct navigation call...
-                    val homeMenuItem = binding.navView.menu.findItem(R.id.nav_item_home)
-                    NavigationUI.onNavDestinationSelected(homeMenuItem, navController)
+                    val menuItem = binding.navView.menu.findItem(R.id.nav_item_home)
+                    NavigationUI.onNavDestinationSelected(menuItem, navController)
                 }
                 true
             } else if (menuItem.itemId == R.id.nav_item_upload) {
@@ -416,14 +416,18 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    //// NOTE: This was used by the home FAB to toggle the navigation drawer
-    //fun toggleDrawer(open: Boolean = true) {
-    //    if (open) {
-    //        binding.drawerLayout.openDrawer(GravityCompat.START)
-    //    } else {
-    //        binding.drawerLayout.closeDrawers()
-    //    }
-    //}
+    // NOTE: This is used by SetupTapTargets showTapTargets
+    fun toggleDrawer(open: Boolean = true) {
+        if (open) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        } else {
+            binding.drawerLayout.closeDrawers()
+        }
+    }
+
+    fun launchFilePicker() {
+        filePickerLauncher.launch(arrayOf("*/*"))
+    }
 
     fun setDrawerLockMode(enabled: Boolean) {
         Log.d("setDrawerLockMode", "enabled: $enabled")

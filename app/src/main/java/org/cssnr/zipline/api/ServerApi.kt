@@ -401,6 +401,20 @@ class ServerApi(private val context: Context, url: String? = null) {
         val url: String,
     )
 
+    //@JsonClass(generateAdapter = true)
+    //data class UserResponse(
+    //    @Json(name = "user") val user: User
+    //)
+    //
+    //@JsonClass(generateAdapter = true)
+    //data class User(
+    //    @Json(name = "id") val id: String,
+    //    @Json(name = "username") val username: String,
+    //    @Json(name = "createdAt") val createdAt: String,
+    //    @Json(name = "updatedAt") val updatedAt: String,
+    //    @Json(name = "role") val role: String,
+    //)
+
     @JsonClass(generateAdapter = true)
     data class StatsResponse(
         @Json(name = "filesUploaded") val filesUploaded: Int,

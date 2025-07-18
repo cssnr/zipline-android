@@ -172,16 +172,18 @@ class LoginFragment : Fragment() {
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
                     Log.d("loginButton", "LOGIN SUCCESS")
-                    val preferences =
-                        PreferenceManager.getDefaultSharedPreferences(ctx)
-                    preferences?.edit { putString("ziplineUrl", host) }
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
+                    preferences.edit {
+                        putString("ziplineUrl", host)
+                        putString("ziplineToken", token)
+                    }
                     Log.d("loginButton", "ziplineUrl: $host")
-                    preferences?.edit { putString("ziplineToken", token) }
                     Log.d("loginButton", "ziplineToken: $token")
                     Firebase.analytics.logEvent("login_success", null)
+                    //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
                     // TODO: Consider managing first run logic in MainActivity...
                     if (!preferences.getBoolean("first_run_shown", false)) {
-                        preferences?.edit { putBoolean("first_run_shown", true) }
+                        preferences.edit { putBoolean("first_run_shown", true) }
                         navController.navigate(
                             R.id.nav_action_login_setup, null, NavOptions.Builder()
                                 .setPopUpTo(navController.graph.id, true)

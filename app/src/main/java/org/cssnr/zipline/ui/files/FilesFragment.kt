@@ -34,11 +34,13 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.api.ServerApi.FilesTransaction
 import org.cssnr.zipline.databinding.FragmentFilesBinding
+import org.cssnr.zipline.ui.setup.showTapTargets
 import java.io.InputStream
 
 class FilesFragment : Fragment() {
@@ -118,13 +120,19 @@ class FilesFragment : Fragment() {
         val previewMetered = preferences.getBoolean("file_preview_metered", false)
         //Log.d("File[checkMetered]", "previewMetered: $previewMetered")
 
-        viewModel.setUrl(savedUrl)
-
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
             Toast.makeText(ctx, "Missing Auth Token!", Toast.LENGTH_LONG).show()
             return
         }
+
+        if (arguments?.getBoolean("isFirstRun", false) == true) {
+            Log.i("onStart", "FIRST RUN ARGUMENT DETECTED")
+            arguments?.remove("isFirstRun")
+            requireActivity().showTapTargets(view)
+        }
+
+        viewModel.setUrl(savedUrl)
 
         api = ServerApi(ctx, savedUrl)
         checkMetered(previewMetered) // Set isMetered
@@ -521,7 +529,17 @@ class FilesFragment : Fragment() {
         //    }
         //}
 
+        binding.uploadFiles.setOnClickListener {
+            Log.d("uploadFiles", "setOnClickListener")
+            startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS), null)
+            (requireActivity() as MainActivity).launchFilePicker()
+            //val navView = requireActivity().findViewById<NavigationView>(R.id.nav_view)
+            //val menuItem = navView.menu.findItem(R.id.nav_item_upload)
+            //NavigationUI.onNavDestinationSelected(menuItem, findNavController())
+        }
+
         binding.downloadManager.setOnClickListener {
+            Log.d("downloadManager", "setOnClickListener")
             startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS), null)
         }
 
@@ -532,8 +550,6 @@ class FilesFragment : Fragment() {
                 viewModel.snackbarShown()
             }
         }
-
-
     }
 
     //fun getFileIds(positions: List<Int>): List<Int> {
@@ -830,6 +846,7 @@ private fun Context.handleFavoriteUpdate(
 //        }
 //        .show()
 //}
+
 
 fun Context.openUrl(url: String) {
     val openIntent = Intent(Intent.ACTION_VIEW).apply {
