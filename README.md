@@ -50,8 +50,6 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 [![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
-- Supports Android 8 (API 26) 2017 +
-
 <details><summary>📲 Click to View QR Codes 📸</summary>
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
@@ -61,6 +59,8 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 [![QR Code Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
 </details>
+
+- Supports Android 8 (API 26) 2017 +
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
 
@@ -298,13 +298,15 @@ and [additional](https://cssnr.com/) open source projects.
 
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/cssnr)
 
-### Zipline Web Extension
+### Zipline Projects
 
 - [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
 
 [![Screenshot](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/extension/screenshot.jpg)](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
 
-- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme) _Only Supports v3_
+- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme) - _Only Supports v3_
+
+### Related Projects
 
 You can also star this project on GitHub and support other related projects:
 
