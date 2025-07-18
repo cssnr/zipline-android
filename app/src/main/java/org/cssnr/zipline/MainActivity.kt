@@ -416,14 +416,14 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    //// NOTE: This was used by the home FAB to toggle the navigation drawer
-    //fun toggleDrawer(open: Boolean = true) {
-    //    if (open) {
-    //        binding.drawerLayout.openDrawer(GravityCompat.START)
-    //    } else {
-    //        binding.drawerLayout.closeDrawers()
-    //    }
-    //}
+    // NOTE: This is used by SetupTapTargets showTapTargets
+    fun toggleDrawer(open: Boolean = true) {
+        if (open) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+        } else {
+            binding.drawerLayout.closeDrawers()
+        }
+    }
 
     fun setDrawerLockMode(enabled: Boolean) {
         Log.d("setDrawerLockMode", "enabled: $enabled")

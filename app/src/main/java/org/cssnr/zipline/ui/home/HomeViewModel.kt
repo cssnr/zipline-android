@@ -5,8 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class HomeViewModel : ViewModel() {
-    val tapTargetStep = MutableLiveData<Int>(0)
-
     private val _urlToLoad = MutableLiveData<Event<String>>()
     val urlToLoad: LiveData<Event<String>> = _urlToLoad
     val webViewUrl = MutableLiveData<String>()

@@ -2,8 +2,6 @@ package org.cssnr.zipline.ui.home
 
 import android.annotation.SuppressLint
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.Typeface
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -20,7 +18,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.edit
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -29,11 +26,9 @@ import androidx.fragment.app.activityViewModels
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import com.getkeepsafe.taptargetview.TapTarget
-import com.getkeepsafe.taptargetview.TapTargetSequence
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding
+import org.cssnr.zipline.ui.setup.showTapTargets
 
 class HomeFragment : Fragment() {
 
@@ -97,9 +92,8 @@ class HomeFragment : Fragment() {
 
         if (arguments?.getBoolean("isFirstRun", false) == true) {
             Log.i("onStart", "FIRST RUN ARGUMENT DETECTED")
-            Log.i("onStart", "tapTargetStep: ${viewModel.tapTargetStep.value}")
             arguments?.remove("isFirstRun")
-            viewModel.tapTargetStep.value = 1
+            requireActivity().showTapTargets(view)
         }
 
         val url = arguments?.getString("url")
@@ -193,105 +187,6 @@ class HomeFragment : Fragment() {
         Log.d("Home[onResume]", "webView. onResume() / resumeTimers()")
         binding.webView.onResume()
         binding.webView.resumeTimers()
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("onStart", "onStart")
-
-        viewModel.tapTargetStep.value?.let {
-            if (it > 0) {
-                showTapTargets()
-            }
-        }
-    }
-
-    private fun showTapTargets() {
-        Log.d("showTapTargets", "start")
-        val bottomNav = requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav)
-        val navItemHome = bottomNav.getChildAt(0).findViewById<View>(R.id.nav_item_home)
-        val navItemFiles = bottomNav.getChildAt(0).findViewById<View>(R.id.nav_item_files)
-        val navItemSettings = bottomNav.getChildAt(0).findViewById<View>(R.id.nav_item_settings)
-        // NOTE: I believe this icon has to be set because its in a highlighted state
-        val icon = AppCompatResources.getDrawable(requireContext(), R.drawable.md_dashboard_24px)
-
-        val target1 = TapTarget.forView(
-            navItemHome,
-            "Web View",
-            "Home Button takes you to the Full Website in the Application."
-        )
-            .titleTextSize(32)
-            .descriptionTextSize(18)
-            .textTypeface(Typeface.SANS_SERIF)
-            .textColorInt(Color.WHITE)
-            .dimColorInt(Color.TRANSPARENT)
-            .outerCircleColor(R.color.tap_target_background)
-            .outerCircleAlpha(0.96f)
-            .icon(icon, true)
-            .drawShadow(true)
-            .transparentTarget(true)
-            .targetRadius(56)
-
-        val target2 = TapTarget.forView(
-            navItemFiles,
-            "File List",
-            "The File List lets you View and Manage your Files."
-        )
-            .titleTextSize(32)
-            .descriptionTextSize(18)
-            .textTypeface(Typeface.SANS_SERIF)
-            .textColorInt(Color.WHITE)
-            .dimColorInt(Color.TRANSPARENT)
-            .outerCircleColor(R.color.tap_target_background)
-            .outerCircleAlpha(0.96f)
-            .drawShadow(true)
-            .transparentTarget(true)
-            .targetRadius(56)
-
-        val target3 = TapTarget.forView(
-            navItemSettings,
-            "App Settings",
-            "Settings lets you Customize the Application Options."
-        )
-            .titleTextSize(32)
-            .descriptionTextSize(18)
-            .textTypeface(Typeface.SANS_SERIF)
-            .textColorInt(Color.WHITE)
-            .dimColorInt(Color.TRANSPARENT)
-            .outerCircleColor(R.color.tap_target_background)
-            .outerCircleAlpha(0.96f)
-            .drawShadow(true)
-            .transparentTarget(true)
-            .targetRadius(56)
-
-        val allTargets = listOf<TapTarget>(target1, target2, target3)
-        val step = viewModel.tapTargetStep.value ?: 1
-        val tapTargets = allTargets.drop(step - 1)
-
-        // Note: using sequence to detect a done condition by combining finish and cancelled
-        //  This allows re-showing targets on screen rotation, etc...
-        val sequenceListener = object : TapTargetSequence.Listener {
-            override fun onSequenceFinish() {
-                Log.d("onSequenceFinish", "TapTargetSequence Done.")
-                viewModel.tapTargetStep.value = 0
-            }
-
-            override fun onSequenceStep(lastTarget: TapTarget?, targetClicked: Boolean) {
-                Log.d("onSequenceStep", "lastTarget: $lastTarget - clicked: $targetClicked")
-                viewModel.tapTargetStep.value = viewModel.tapTargetStep.value?.plus(1)
-                Log.d("onSequenceStep", "tapTargetStep: ${viewModel.tapTargetStep.value}")
-            }
-
-            override fun onSequenceCanceled(lastTarget: TapTarget?) {
-                Log.d("onSequenceCanceled", "lastTarget: $lastTarget")
-                viewModel.tapTargetStep.value = 0
-            }
-        }
-
-        TapTargetSequence(requireActivity())
-            .targets(tapTargets)
-            .listener(sequenceListener)
-            .start()
     }
 
     inner class MyWebViewClient() : WebViewClient() {

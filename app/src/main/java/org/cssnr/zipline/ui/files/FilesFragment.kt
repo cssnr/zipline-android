@@ -39,6 +39,7 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.api.ServerApi.FilesTransaction
 import org.cssnr.zipline.databinding.FragmentFilesBinding
+import org.cssnr.zipline.ui.setup.showTapTargets
 import java.io.InputStream
 
 class FilesFragment : Fragment() {
@@ -118,13 +119,19 @@ class FilesFragment : Fragment() {
         val previewMetered = preferences.getBoolean("file_preview_metered", false)
         //Log.d("File[checkMetered]", "previewMetered: $previewMetered")
 
-        viewModel.setUrl(savedUrl)
-
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
             Toast.makeText(ctx, "Missing Auth Token!", Toast.LENGTH_LONG).show()
             return
         }
+
+        if (arguments?.getBoolean("isFirstRun", false) == true) {
+            Log.i("onStart", "FIRST RUN ARGUMENT DETECTED")
+            arguments?.remove("isFirstRun")
+            requireActivity().showTapTargets(view)
+        }
+
+        viewModel.setUrl(savedUrl)
 
         api = ServerApi(ctx, savedUrl)
         checkMetered(previewMetered) // Set isMetered
@@ -830,6 +837,7 @@ private fun Context.handleFavoriteUpdate(
 //        }
 //        .show()
 //}
+
 
 fun Context.openUrl(url: String) {
     val openIntent = Intent(Intent.ACTION_VIEW).apply {
