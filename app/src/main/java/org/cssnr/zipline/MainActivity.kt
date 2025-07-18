@@ -150,8 +150,8 @@ class MainActivity : AppCompatActivity() {
                 if (navController.currentDestination?.id != R.id.nav_item_home) {
                     Log.d("Drawer", "NAVIGATE: nav_item_home")
                     // NOTE: This is the correct navigation call...
-                    val homeMenuItem = binding.navView.menu.findItem(R.id.nav_item_home)
-                    NavigationUI.onNavDestinationSelected(homeMenuItem, navController)
+                    val menuItem = binding.navView.menu.findItem(R.id.nav_item_home)
+                    NavigationUI.onNavDestinationSelected(menuItem, navController)
                 }
                 true
             } else if (menuItem.itemId == R.id.nav_item_upload) {
@@ -423,6 +423,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             binding.drawerLayout.closeDrawers()
         }
+    }
+
+    fun launchFilePicker() {
+        filePickerLauncher.launch(arrayOf("*/*"))
     }
 
     fun setDrawerLockMode(enabled: Boolean) {

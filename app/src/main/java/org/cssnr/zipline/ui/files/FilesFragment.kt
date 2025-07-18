@@ -34,6 +34,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileResponse
@@ -528,7 +529,17 @@ class FilesFragment : Fragment() {
         //    }
         //}
 
+        binding.uploadFiles.setOnClickListener {
+            Log.d("uploadFiles", "setOnClickListener")
+            startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS), null)
+            (requireActivity() as MainActivity).launchFilePicker()
+            //val navView = requireActivity().findViewById<NavigationView>(R.id.nav_view)
+            //val menuItem = navView.menu.findItem(R.id.nav_item_upload)
+            //NavigationUI.onNavDestinationSelected(menuItem, findNavController())
+        }
+
         binding.downloadManager.setOnClickListener {
+            Log.d("downloadManager", "setOnClickListener")
             startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS), null)
         }
 
@@ -539,8 +550,6 @@ class FilesFragment : Fragment() {
                 viewModel.snackbarShown()
             }
         }
-
-
     }
 
     //fun getFileIds(positions: List<Int>): List<Int> {
