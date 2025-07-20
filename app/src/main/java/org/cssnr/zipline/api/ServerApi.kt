@@ -104,17 +104,26 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun upload(fileName: String, inputStream: InputStream): Response<UploadedFiles> {
         Log.d("Api[upload]", "fileName: $fileName")
-        val fileNameFormat = preferences.getString("file_name_format", null) ?: "random"
-        Log.d("Api[upload]", "fileNameFormat: $fileNameFormat")
-        val fileNameOriginal = preferences.getBoolean("file_name_original", true)
-        Log.d("Api[upload]", "fileNameOriginal: $fileNameOriginal")
-        val multiPart: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        val response = api.postUpload(fileNameFormat.toString(), multiPart, fileNameOriginal)
+        // TODO: Create an Object that inherits in this order:
+        //  Hard Coded Defaults > User Defaults > Per Upload Arguments
+        val format = preferences.getString("file_name_format", null) ?: "random"
+        Log.d("Api[upload]", "format: $format")
+        val originalName = preferences.getBoolean("file_name_original", true)
+        Log.d("Api[upload]", "originalName: $originalName")
+        val compression = preferences.getInt("file_name_compression", 100)
+        Log.d("Api[upload]", "compression: $compression")
+        val deletesAt = preferences.getString("file_deletes_at", null)
+        Log.d("Api[upload]", "deletesAt: $deletesAt")
+        val folder = preferences.getString("file_folder", null)
+        Log.d("Api[upload]", "folder: $folder")
+
+        val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
+        val response = api.postUpload(part, format, originalName, compression, deletesAt, folder)
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.postUpload(fileNameFormat, multiPart, fileNameOriginal)
+                return api.postUpload(part, format, originalName, compression, deletesAt, folder)
             }
         }
         return response
@@ -318,9 +327,12 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Multipart
         @POST("upload")
         suspend fun postUpload(
-            @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
+            @Header("x-zipline-format") format: String,
             @Header("x-zipline-original-name") originalName: Boolean = true,
+            @Header("x-zipline-image-compression-percent") compression: Int? = 100,
+            @Header("x-zipline-deletes-at") deletesAt: String? = null,
+            @Header("x-zipline-folder") folder: String? = null,
         ): Response<UploadedFiles>
 
         @POST("user/urls")

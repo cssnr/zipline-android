@@ -78,7 +78,6 @@ class FilesPreviewFragment : Fragment() {
 
     override fun onDestroyView() {
         Log.d("FilesPreviewFragment", "onDestroyView")
-        super.onDestroyView()
         if (::player.isInitialized) {
             Log.d("FilesPreviewFragment", "player.release")
             player.release()
@@ -87,6 +86,7 @@ class FilesPreviewFragment : Fragment() {
             Log.d("FilesPreviewFragment", "webView.destroy")
             webView.destroy()
         }
+        super.onDestroyView()
         _binding = null
     }
 
