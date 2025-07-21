@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <PreferenceCategory android:title="Application Settings">
-
         <ListPreference
             android:key="start_destination"
             android:title="Start Destination on Launch"
@@ -25,10 +24,9 @@
             android:title="Show Share after Shorten"
             android:icon="@drawable/md_add_link_24px"
             android:defaultValue="true" />
-
     </PreferenceCategory>
-    <PreferenceCategory android:title="Upload Settings">
 
+    <PreferenceCategory android:title="Upload Settings">
         <SwitchPreferenceCompat
             android:key="file_name_original"
             android:title="Save Original Filename"
@@ -68,8 +66,8 @@
             app:selectable="false"
             tools:summary="Compression Level: 0%" />
     </PreferenceCategory>
-    <PreferenceCategory android:title="File List">
 
+    <PreferenceCategory android:title="File List">
         <SwitchPreferenceCompat
             android:key="file_preview_autoplay"
             android:title="Auto Play Media"
@@ -94,10 +92,9 @@
             android:icon="@drawable/md_signal_cellular_alt_24"
             android:summary="For File List Only"
             android:defaultValue="false"/>
-
     </PreferenceCategory>
-    <PreferenceCategory android:title="Widget Settings">
 
+    <PreferenceCategory android:title="Widget Settings">
         <Preference
             android:key="open_widget_settings"
             android:title="Edit Widget Settings"
@@ -112,10 +109,9 @@
             android:entries="@array/work_interval_entries"
             android:entryValues="@array/work_interval_values"
             tools:summary="1 Hour" />
-
     </PreferenceCategory>
-    <PreferenceCategory android:title="Application Information">
 
+    <PreferenceCategory android:title="Application Information">
         <SwitchPreferenceCompat
             android:key="analytics_enabled"
             android:title="Enable Analytics"
@@ -140,21 +136,5 @@
             android:title="Android Settings"
             android:icon="@drawable/md_mobile_gear_24px"
             android:summary="Edit Android Settings" />
-
-        <!--<SwitchPreferenceCompat-->
-        <!--    android:key="show_preview"-->
-        <!--    android:title="Show Preview Screen"-->
-        <!--    android:icon="@drawable/md_preview_24px"-->
-        <!--    android:defaultValue="true"-->
-        <!--    android:enabled="false" />-->
-
-        <!--<SwitchPreferenceCompat-->
-        <!--    android:key="biometrics_enabled"-->
-        <!--    android:title="Enable Biometrics"-->
-        <!--    android:icon="@drawable/md_fingerprint_24px"-->
-        <!--    android:defaultValue="false"-->
-        <!--    android:enabled="false" />-->
-
     </PreferenceCategory>
-
 </PreferenceScreen>
