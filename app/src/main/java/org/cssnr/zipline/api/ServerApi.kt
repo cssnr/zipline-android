@@ -104,17 +104,26 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun upload(fileName: String, inputStream: InputStream): Response<UploadedFiles> {
         Log.d("Api[upload]", "fileName: $fileName")
-        val fileNameFormat = preferences.getString("file_name_format", null) ?: "random"
-        Log.d("Api[upload]", "fileNameFormat: $fileNameFormat")
-        val fileNameOriginal = preferences.getBoolean("file_name_original", true)
-        Log.d("Api[upload]", "fileNameOriginal: $fileNameOriginal")
-        val multiPart: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        val response = api.postUpload(fileNameFormat.toString(), multiPart, fileNameOriginal)
+        // TODO: Create an Object that inherits in this order:
+        //  Hard Coded Defaults > User Defaults > Per Upload Arguments
+        val format = preferences.getString("file_name_format", null) ?: "random"
+        Log.d("Api[upload]", "format: $format")
+        val originalName = preferences.getBoolean("file_name_original", true)
+        Log.d("Api[upload]", "originalName: $originalName")
+        val compression = preferences.getInt("file_name_compression", 0).takeIf { it != 0 }
+        Log.d("Api[upload]", "compression: $compression")
+        val deletesAt = preferences.getString("file_deletes_at", null)
+        Log.d("Api[upload]", "deletesAt: $deletesAt")
+        val folder = preferences.getString("file_folder", null)
+        Log.d("Api[upload]", "folder: $folder")
+
+        val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
+        val response = api.postUpload(part, format, originalName, compression, deletesAt, folder)
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.postUpload(fileNameFormat, multiPart, fileNameOriginal)
+                return api.postUpload(part, format, originalName, compression, deletesAt, folder)
             }
         }
         return response
@@ -133,17 +142,36 @@ class ServerApi(private val context: Context, url: String? = null) {
         return response
     }
 
-    suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
-        Log.d("Api[stats]", "stats")
-        val response = api.getRecent(take)
+    //suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
+    //    Log.d("Api[stats]", "stats")
+    //    val response = api.getRecent(take)
+    //    if (response.code() == 401) {
+    //        val token = reAuthenticate(api, ziplineUrl)
+    //        Log.d("Api[upload]", "reAuthenticate: token: $token")
+    //        if (token != null) {
+    //            return api.getRecent()
+    //        }
+    //    }
+    //    return response
+    //}
+
+    suspend fun folders(noincl: Boolean = false): List<FolderResponse>? {
+        Log.d("Api[folders]", "noincl: $noincl")
+        var response = api.getFolders(noincl)
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.getRecent()
+                response = api.getFolders(noincl)
             }
         }
-        return response
+        Log.d("Api[files]", "code: ${response.code()}")
+        Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body
+        }
+        return null
     }
 
     suspend fun files(page: Int, perpage: Int = 25): List<FileResponse>? {
@@ -318,9 +346,12 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Multipart
         @POST("upload")
         suspend fun postUpload(
-            @Header("x-zipline-format") format: String,
             @Part file: MultipartBody.Part,
+            @Header("x-zipline-format") format: String,
             @Header("x-zipline-original-name") originalName: Boolean = true,
+            @Header("x-zipline-image-compression-percent") compression: Int? = 100,
+            @Header("x-zipline-deletes-at") deletesAt: String? = null,
+            @Header("x-zipline-folder") folder: String? = null,
         ): Response<UploadedFiles>
 
         @POST("user/urls")
@@ -354,6 +385,11 @@ class ServerApi(private val context: Context, url: String? = null) {
         suspend fun deleteFiles(
             @Body request: FilesTransaction,
         ): Response<CountResponse>
+
+        @GET("user/folders")
+        suspend fun getFolders(
+            @Query("noincl") noincl: Boolean = false,
+        ): Response<List<FolderResponse>>
     }
 
     @JsonClass(generateAdapter = true)
@@ -457,6 +493,14 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "page") val page: List<FileResponse>,
         @Json(name = "total") val total: Int?,
         @Json(name = "pages") val pages: Int?,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class FolderResponse(
+        @Json(name = "id") val id: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "public") val public: Boolean,
+        @Json(name = "allowUploads") val allowUploads: Boolean,
     )
 
     @JsonClass(generateAdapter = true)

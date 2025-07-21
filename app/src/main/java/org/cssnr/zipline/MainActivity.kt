@@ -69,6 +69,7 @@ class MainActivity : AppCompatActivity() {
         navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
         navController = navHostFragment.navController
+
         // Start Destination
         if (savedInstanceState == null) {
             val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
@@ -79,11 +80,14 @@ class MainActivity : AppCompatActivity() {
             navGraph.setStartDestination(startDestination)
             navController.graph = navGraph
         }
+
         // Bottom Navigation
         val bottomNav = binding.appBarMain.contentMain.bottomNav
         bottomNav.setupWithNavController(navController)
+
         // Navigation Drawer
         binding.navView.setupWithNavController(navController)
+
         // Destinations w/ a Parent Item
         val destinationToBottomNavItem = mapOf(
             R.id.nav_item_file_preview to R.id.nav_item_files,

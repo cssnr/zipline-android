@@ -8,21 +8,21 @@
         <ListPreference
             android:key="start_destination"
             android:title="Start Destination on Launch"
+            android:icon="@drawable/md_flight_takeoff_24px"
             android:defaultValue="home"
             android:entries="@array/launcher_entries"
             android:entryValues="@array/launcher_values"
-            android:icon="@drawable/md_flight_takeoff_24px"
             tools:summary="Home Web View" />
 
         <SwitchPreferenceCompat
-            android:title="Show Share after Upload"
             android:key="share_after_upload"
+            android:title="Show Share after Upload"
             android:icon="@drawable/md_attach_file_add_24px"
             android:defaultValue="true" />
 
         <SwitchPreferenceCompat
-            android:title="Show Share after Shorten"
             android:key="share_after_short"
+            android:title="Show Share after Shorten"
             android:icon="@drawable/md_add_link_24px"
             android:defaultValue="true" />
 
@@ -30,29 +30,52 @@
     <PreferenceCategory android:title="Upload Settings">
 
         <SwitchPreferenceCompat
-            android:title="Save Original Filename"
             android:key="file_name_original"
+            android:title="Save Original Filename"
             android:icon="@drawable/md_abc_24px"
             android:defaultValue="true" />
 
         <ListPreference
             android:key="file_name_format"
             android:title="File Name Option"
+            android:icon="@drawable/md_text_format_24px"
             android:defaultValue="random"
             android:entries="@array/file_name_format_entries"
             android:entryValues="@array/file_name_format_values"
-            android:icon="@drawable/md_text_format_24px"
             tools:summary="Random" />
 
+        <EditTextPreference
+            android:key="file_deletes_at"
+            android:title="Default Delete At"
+            android:icon="@drawable/md_auto_delete_24px"
+            android:dialogTitle="Delete At Header Value"
+            tools:summary="Not set" />
+
+        <!--<Preference-->
+        <!--    android:key="file_folder"-->
+        <!--    android:title="Default File Folder"-->
+        <!--    android:icon="@drawable/md_folder_24px"-->
+        <!--    tools:summary="Not set" />-->
+
+        <androidx.preference.SeekBarPreference
+            android:key="file_compression"
+            android:title="Image Compression Precent"
+            android:icon="@drawable/md_heap_snapshot_large_24px"
+            android:defaultValue="0"
+            android:max="100"
+            app:min="0"
+            app:showSeekBarValue="true"
+            app:selectable="false"
+            tools:summary="Compression Level: 0%" />
     </PreferenceCategory>
     <PreferenceCategory android:title="File List">
 
         <SwitchPreferenceCompat
-            android:defaultValue="true"
-            android:icon="@drawable/md_auto_read_play_24px"
             android:key="file_preview_autoplay"
             android:title="Auto Play Media"
-            android:summary="When Viewing a File Preview"/>
+            android:icon="@drawable/md_auto_read_play_24px"
+            android:summary="When Viewing a File Preview"
+            android:defaultValue="true"/>
 
         <androidx.preference.SeekBarPreference
             android:key="files_per_page"
@@ -66,11 +89,11 @@
             tools:summary="Current value: 30" />
 
         <SwitchPreferenceCompat
-            android:defaultValue="false"
-            android:icon="@drawable/md_signal_cellular_alt_24"
             android:key="file_preview_metered"
             android:title="Load Images on Metered Connection"
-            android:summary="For File List Only"/>
+            android:icon="@drawable/md_signal_cellular_alt_24"
+            android:summary="For File List Only"
+            android:defaultValue="false"/>
 
     </PreferenceCategory>
     <PreferenceCategory android:title="Widget Settings">
@@ -78,14 +101,14 @@
         <Preference
             android:key="open_widget_settings"
             android:title="Edit Widget Settings"
-            android:summary="Text and Background Color"
-            android:icon="@drawable/md_widgets_24px" />
+            android:icon="@drawable/md_widgets_24px"
+            android:summary="Text and Background Color" />
 
         <ListPreference
             android:key="work_interval"
             android:title="Update Interval"
-            android:defaultValue="0"
             android:icon="@drawable/md_timer_play_24px"
+            android:defaultValue="0"
             android:entries="@array/work_interval_entries"
             android:entryValues="@array/work_interval_values"
             tools:summary="1 Hour" />
@@ -96,27 +119,27 @@
         <SwitchPreferenceCompat
             android:key="analytics_enabled"
             android:title="Enable Analytics"
-            android:summary="Help Fix Bugs"
             android:icon="@drawable/md_monitoring_24px"
+            android:summary="Help Fix Bugs"
             android:defaultValue="true" />
 
         <Preference
             android:key="send_feedback"
             android:title="Send Feedback"
-            android:summary="Submit Suggestions or Bugs"
-            android:icon="@drawable/md_thumb_up_24px" />
+            android:icon="@drawable/md_thumb_up_24px"
+            android:summary="Submit Suggestions or Bugs" />
 
         <Preference
             android:key="app_info"
             android:title="Application Information"
-            android:summary="View Mobile App Details"
-            android:icon="@drawable/md_mobile_info_24px" />
+            android:icon="@drawable/md_mobile_info_24px"
+            android:summary="View Mobile App Details" />
 
         <Preference
             android:key="android_settings"
             android:title="Android Settings"
-            android:summary="Edit Android Settings"
-            android:icon="@drawable/md_mobile_gear_24px" />
+            android:icon="@drawable/md_mobile_gear_24px"
+            android:summary="Edit Android Settings" />
 
         <!--<SwitchPreferenceCompat-->
         <!--    android:key="show_preview"-->

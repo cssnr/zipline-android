@@ -17,6 +17,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.preference.EditTextPreference
 import androidx.preference.ListPreference
 import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
@@ -40,6 +41,8 @@ import org.cssnr.zipline.work.AppWorker
 import java.util.concurrent.TimeUnit
 
 class SettingsFragment : PreferenceFragmentCompat() {
+
+    //private val foldersFragment by lazy { FoldersFragment() }
 
     // TODO: Determine why I put this here...
     override fun onCreateView(
@@ -74,9 +77,49 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val startDestination = findPreference<ListPreference>("start_destination")
         startDestination?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
-        // File Name Option
+        // File Name Format
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
+
+        // File Deletes At
+        // TODO: Use a custom dialog with examples and link to docs...
+        val fileDeletesAt = findPreference<EditTextPreference>("file_deletes_at")
+        fileDeletesAt?.summaryProvider = EditTextPreference.SimpleSummaryProvider.getInstance()
+        fileDeletesAt?.setOnPreferenceChangeListener { preference, newValue ->
+            Log.d("setOnPreferenceChangeListener", "fileDeletesAt: \"${(newValue as String)}\"")
+            val normalized = newValue.filter { it.isLetterOrDigit() }
+            if (normalized.isNotEmpty()) {
+                val pattern = Regex(
+                    "^\\d+(ms|msec|msecs|millisecond|milliseconds|s|sec|secs|second|seconds|m|min|mins|minute|minutes|h|hr|hrs|hour|hours|d|day|days|w|week|weeks|y|yr|yrs|year|years)$",
+                    RegexOption.IGNORE_CASE
+                )
+                if (pattern.matches(normalized)) {
+                    (preference as EditTextPreference).text = normalized
+                }
+            } else {
+                (preference as EditTextPreference).text = null
+            }
+            false
+        }
+
+        //// File Folder
+        //findPreference<Preference>("file_folder")?.setOnPreferenceClickListener {
+        //    Log.d("file_folder", "showAppInfoDialog")
+        //    foldersFragment.show(parentFragmentManager, "FoldersFragment")
+        //    false
+        //}
+
+        // File Compression
+        val fileCompression = preferenceManager.sharedPreferences?.getInt("file_compression", 0)
+        Log.d("onCreatePreferences", "fileCompression: $fileCompression")
+        val fileCompressionBar = findPreference<SeekBarPreference>("file_compression")
+        fileCompressionBar?.summary = "Current Value: ${fileCompression}%"
+        fileCompressionBar?.apply {
+            setOnPreferenceChangeListener { pref, newValue ->
+                pref.summary = "Current Value: ${newValue}%"
+                true
+            }
+        }
 
         // Files Per Page
         val filesPerPage = preferenceManager.sharedPreferences?.getInt("files_per_page", 25)

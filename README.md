@@ -12,7 +12,7 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
-# Zipline Android App
+# Zipline Android Application
 
 [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -27,30 +27,28 @@
   - [Known Issues](#Known-Issues)
   - [Troubleshooting](#troubleshooting)
 - [Screenshots](#Screenshots)
+- [Support](#Support)
 - [Development](#Development)
   - [Building](#Building)
   - [Android Studio](#Android-Studio)
   - [Command Line](#Command-Line)
-- [Support](#Support)
 - [Contributing](#Contributing)
 
-Native Kotlin Android Application for [Zipline v4](https://github.com/diced/zipline).
+Android Application to Upload, Share and Manage your Files and URLs for a Self-Hosted [Zipline v4 Server](https://github.com/diced/zipline).
 
-Allows you to Share or Open files and Shorten URLs to a self-hosted Zipline server.
+Allows you to Share or Open files and Shorten URLs directly to a Zipline v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
 
 We are also developing a browser addon [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme).
 
 ## Install
 
-> [!TIP]  
+> [!NOTE]  
 > Google Play is in Closed Testing. To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
 
 [![Get on GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
-
-Supports Android 8 (API 26) 2017 or Newer +
 
 <details><summary>📲 Click to View QR Codes 📸</summary>
 
@@ -63,6 +61,8 @@ Supports Android 8 (API 26) 2017 or Newer +
 </details>
 
 _Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
+
+- Supports Android 8 (API 26) 2017 +
 
 Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled.
@@ -92,6 +92,11 @@ For more information, see [Release through a website](https://developer.android.
 To use, share or open any file and choose the Zipline app.
 The app will then be upload the file to your Zipline server.
 Additionally, the URL is copied to the clipboard and the preview is show in the app.
+
+The Files List can be used to view, edit, download, or delete any file.
+This supports multi-select and infinite scroll.
+You can choose how many fies to load each time.
+Lastly you can set this as your start destination if preferred over the web view.
 
 ## Features
 
@@ -150,6 +155,19 @@ If you are having trouble using the app, please reach out to us on [Discord](htt
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/11.jpg"></a>
 <a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/12.jpg">
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/12.jpg"></a>
+
+## Support
+
+For general help or to request a feature, see:
+
+- Q&A Discussion: https://github.com/cssnr/zipline-android/discussions/categories/q-a
+- Request a Feature: https://github.com/cssnr/zipline-android/discussions/categories/feature-requests
+
+If you are experiencing an issue/bug or getting unexpected results, you can:
+
+- Report an Issue: https://github.com/cssnr/zipline-android/issues
+- Chat with us on Discord: https://discord.gg/wXy6m2X8wY
+- Provide General Feedback: [https://cssnr.github.io/feedback/](https://cssnr.github.io/feedback/?app=Zipline%20Android%20App)
 
 # Development
 
@@ -277,19 +295,6 @@ Only 1 app can be in debug mode at a time and this must be set every restart.
 
 Note: Firebase is disabled in debug builds.
 See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) file debug config.
-
-# Support
-
-For general help or to request a feature, see:
-
-- Q&A Discussion: https://github.com/cssnr/zipline-android/discussions/categories/q-a
-- Request a Feature: https://github.com/cssnr/zipline-android/discussions/categories/feature-requests
-
-If you are experiencing an issue/bug or getting unexpected results, you can:
-
-- Report an Issue: https://github.com/cssnr/zipline-android/issues
-- Chat with us on Discord: https://discord.gg/wXy6m2X8wY
-- Provide General Feedback: [https://cssnr.github.io/feedback/](https://cssnr.github.io/feedback/?app=Zipline%20Android%20App)
 
 # Contributing
 
