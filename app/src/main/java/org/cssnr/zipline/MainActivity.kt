@@ -182,7 +182,7 @@ class MainActivity : AppCompatActivity() {
         ViewCompat.setOnApplyWindowInsetsListener(headerView) { view, insets ->
             val paddingTop = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
             if (paddingTop > 0) {
-                Log.i("ViewCompat", "paddingTop: $paddingTop")
+                Log.i("ViewCompat", "headerView: paddingTop: $paddingTop")
                 view.setPadding(view.paddingLeft, paddingTop, view.paddingRight, view.paddingBottom)
             }
             insets

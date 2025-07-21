@@ -44,9 +44,10 @@
 
         <EditTextPreference
             android:key="file_deletes_at"
-            android:title="Default Delete At"
+            android:title="File Delete At"
             android:icon="@drawable/md_auto_delete_24px"
             android:dialogTitle="Delete At Header Value"
+            android:dialogMessage="x-zipline-deletes-at"
             tools:summary="Not set" />
 
         <!--<Preference-->
