@@ -19,6 +19,8 @@ import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
 import androidx.core.view.size
 import androidx.drawerlayout.widget.DrawerLayout
@@ -173,16 +175,24 @@ class MainActivity : AppCompatActivity() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
 
-        // Setup Nav Drawer Header
+        // Setup UI
+        binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
+
+        val headerView = binding.navView.getHeaderView(0)
+        ViewCompat.setOnApplyWindowInsetsListener(headerView) { view, insets ->
+            val paddingTop = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
+            if (paddingTop > 0) {
+                Log.i("ViewCompat", "headerView: paddingTop: $paddingTop")
+                view.setPadding(view.paddingLeft, paddingTop, view.paddingRight, view.paddingBottom)
+            }
+            insets
+        }
+
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
-
-        val headerView = binding.navView.getHeaderView(0)
         val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
         versionTextView.text = "v${versionName}"
-
-        binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
         // TODO: Improve initialization of the WorkRequest
         val workInterval = preferences.getString("work_interval", null) ?: "0"

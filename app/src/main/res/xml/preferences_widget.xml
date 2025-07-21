@@ -6,7 +6,6 @@
     <PreferenceCategory
         android:key="widget_settings"
         android:title="Widget Settings">
-
         <ListPreference
             android:key="widget_text_color"
             android:title="Text Color"
@@ -33,7 +32,5 @@
             android:max="100"
             app:min="0"
             app:showSeekBarValue="true" />
-
     </PreferenceCategory>
-
 </PreferenceScreen>
