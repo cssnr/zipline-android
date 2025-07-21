@@ -51,6 +51,12 @@
             android:dialogTitle="Delete At Header Value"
             tools:summary="Not set" />
 
+        <!--<Preference-->
+        <!--    android:key="file_folder"-->
+        <!--    android:title="Default File Folder"-->
+        <!--    android:icon="@drawable/md_folder_24px"-->
+        <!--    tools:summary="Not set" />-->
+
         <androidx.preference.SeekBarPreference
             android:key="file_compression"
             android:title="Image Compression Precent"

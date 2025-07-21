@@ -42,6 +42,8 @@ import java.util.concurrent.TimeUnit
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    //private val foldersFragment by lazy { FoldersFragment() }
+
     // TODO: Determine why I put this here...
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -79,18 +81,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val fileNameFormat = findPreference<ListPreference>("file_name_format")
         fileNameFormat?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
 
-        // File Compression
-        val fileCompression = preferenceManager.sharedPreferences?.getInt("file_compression", 0)
-        Log.d("onCreatePreferences", "fileCompression: $fileCompression")
-        val fileCompressionBar = findPreference<SeekBarPreference>("file_compression")
-        fileCompressionBar?.summary = "Current Value: ${fileCompression}%"
-        fileCompressionBar?.apply {
-            setOnPreferenceChangeListener { pref, newValue ->
-                pref.summary = "Current Value: ${newValue}%"
-                true
-            }
-        }
-
         // File Deletes At
         // TODO: Use a custom dialog with examples and link to docs...
         val fileDeletesAt = findPreference<EditTextPreference>("file_deletes_at")
@@ -110,6 +100,25 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 (preference as EditTextPreference).text = null
             }
             false
+        }
+
+        //// File Folder
+        //findPreference<Preference>("file_folder")?.setOnPreferenceClickListener {
+        //    Log.d("file_folder", "showAppInfoDialog")
+        //    foldersFragment.show(parentFragmentManager, "FoldersFragment")
+        //    false
+        //}
+
+        // File Compression
+        val fileCompression = preferenceManager.sharedPreferences?.getInt("file_compression", 0)
+        Log.d("onCreatePreferences", "fileCompression: $fileCompression")
+        val fileCompressionBar = findPreference<SeekBarPreference>("file_compression")
+        fileCompressionBar?.summary = "Current Value: ${fileCompression}%"
+        fileCompressionBar?.apply {
+            setOnPreferenceChangeListener { pref, newValue ->
+                pref.summary = "Current Value: ${newValue}%"
+                true
+            }
         }
 
         // Files Per Page

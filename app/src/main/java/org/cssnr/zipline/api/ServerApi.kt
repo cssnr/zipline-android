@@ -142,17 +142,36 @@ class ServerApi(private val context: Context, url: String? = null) {
         return response
     }
 
-    suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
-        Log.d("Api[stats]", "stats")
-        val response = api.getRecent(take)
+    //suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
+    //    Log.d("Api[stats]", "stats")
+    //    val response = api.getRecent(take)
+    //    if (response.code() == 401) {
+    //        val token = reAuthenticate(api, ziplineUrl)
+    //        Log.d("Api[upload]", "reAuthenticate: token: $token")
+    //        if (token != null) {
+    //            return api.getRecent()
+    //        }
+    //    }
+    //    return response
+    //}
+
+    suspend fun folders(noincl: Boolean = false): List<FolderResponse>? {
+        Log.d("Api[folders]", "noincl: $noincl")
+        var response = api.getFolders(noincl)
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.getRecent()
+                response = api.getFolders(noincl)
             }
         }
-        return response
+        Log.d("Api[files]", "code: ${response.code()}")
+        Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
+        if (response.isSuccessful) {
+            val body = response.body()
+            return body
+        }
+        return null
     }
 
     suspend fun files(page: Int, perpage: Int = 25): List<FileResponse>? {
@@ -366,6 +385,11 @@ class ServerApi(private val context: Context, url: String? = null) {
         suspend fun deleteFiles(
             @Body request: FilesTransaction,
         ): Response<CountResponse>
+
+        @GET("user/folders")
+        suspend fun getFolders(
+            @Query("noincl") noincl: Boolean = false,
+        ): Response<List<FolderResponse>>
     }
 
     @JsonClass(generateAdapter = true)
@@ -469,6 +493,14 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "page") val page: List<FileResponse>,
         @Json(name = "total") val total: Int?,
         @Json(name = "pages") val pages: Int?,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class FolderResponse(
+        @Json(name = "id") val id: String,
+        @Json(name = "name") val name: String,
+        @Json(name = "public") val public: Boolean,
+        @Json(name = "allowUploads") val allowUploads: Boolean,
     )
 
     @JsonClass(generateAdapter = true)
