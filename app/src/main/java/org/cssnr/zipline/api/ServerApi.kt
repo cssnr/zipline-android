@@ -110,7 +110,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[upload]", "format: $format")
         val originalName = preferences.getBoolean("file_name_original", true)
         Log.d("Api[upload]", "originalName: $originalName")
-        val compression = preferences.getInt("file_name_compression", 0).takeIf { it != 0 }
+        val compression = preferences.getInt("file_compression", 0).takeIf { it != 0 }
         Log.d("Api[upload]", "compression: $compression")
         val deletesAt = preferences.getString("file_deletes_at", null)
         Log.d("Api[upload]", "deletesAt: $deletesAt")
