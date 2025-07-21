@@ -34,7 +34,7 @@
   - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
-Native Application for a Self-Hosted [Zipline v4 Server](https://github.com/diced/zipline) to Upload, Share and Manage Files and URLs.
+Android Application to Upload, Share and Manage your Files and URLs for a Self-Hosted [Zipline v4 Server](https://github.com/diced/zipline).
 
 Allows you to Share or Open files and Shorten URLs directly to a Zipline v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
@@ -43,7 +43,7 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 
 ## Install
 
-> [!TIP]  
+> [!NOTE]  
 > Google Play is in Closed Testing. To be included see [this discussion](https://github.com/cssnr/zipline-android/discussions/25).
 
 [![Get on GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
@@ -92,6 +92,11 @@ For more information, see [Release through a website](https://developer.android.
 To use, share or open any file and choose the Zipline app.
 The app will then be upload the file to your Zipline server.
 Additionally, the URL is copied to the clipboard and the preview is show in the app.
+
+The Files List can be used to view, edit, download, or delete any file.
+This supports multi-select and infinite scroll.
+You can choose how many fies to load each time.
+Lastly you can set this as your start destination if preferred over the web view.
 
 ## Features
 
