@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Bottom Navigation
-        val bottomNav = binding.appBarMain.contentMain.bottomNav
+        val bottomNav = binding.contentMain.bottomNav
         bottomNav.setupWithNavController(navController)
 
         // Navigation Drawer
