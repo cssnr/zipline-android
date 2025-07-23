@@ -202,24 +202,22 @@ jobs:
           path: ${{ env.aab_path }}
 
       - name: "Parse Release Notes"
-        if: ${{ !github.event.release.prerelease }}
+        if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         id: notes
         run: |
-          body="$(jq -r .release.body "$GITHUB_EVENT_PATH")"
-          #summary="$(printf '%s\n' "$body" | awk 'NF==0{exit} /^\-/')"
-          summary="$(echo -n "${body%%#*}" | sed ':a;N;$!ba;s/\n*$//')"
-          echo "summary<<EOF" >> $GITHUB_OUTPUT
-          echo "$summary" >> $GITHUB_OUTPUT
-          echo "EOF" >> $GITHUB_OUTPUT
+          body="${{ github.event.release.body }}"
+          summary="$(echo "${body%%#*}" | tr -d '\r' | sed ':a;N;$!ba;s/\n*$//')"
+          echo "summary<<EOF" >> "$GITHUB_OUTPUT"
+          echo "$summary" >> "$GITHUB_OUTPUT"
+          echo "EOF" >> "$GITHUB_OUTPUT"
 
       - name: "Generate Whats New"
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}
         run: |
           mkdir -p whatsNew
-          echo "${{ steps.notes.outputs.summary }}" > whatsNew/whatsnew-en-US
+          echo -n "${{ steps.notes.outputs.summary }}" > whatsNew/whatsnew-en-US
           echo "--------------------"
-          cat whatsNew/whatsnew-en-US
-          echo "--------------------"
+          cat whatsNew/whatsnew-en-US | od -c
 
       - name: "Upload Google Play"
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}

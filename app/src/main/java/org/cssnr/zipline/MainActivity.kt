@@ -23,6 +23,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
@@ -106,15 +107,12 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d("addOnDestinationChangedListener", "destination: ${destination.label}")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
-
             val destinationId = destination.id
-
             if (destinationId in hiddenDestinations) {
                 Log.d("addOnDestinationChangedListener", "Set bottomNav to Hidden Item")
                 bottomNav.menu.findItem(R.id.nav_wtf).isChecked = true
                 return@addOnDestinationChangedListener
             }
-
             val matchedItem = destinationToBottomNavItem[destinationId]
             if (matchedItem != null) {
                 Log.d("addOnDestinationChangedListener", "matched nav item: $matchedItem")
@@ -179,12 +177,10 @@ class MainActivity : AppCompatActivity() {
         binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
         val headerView = binding.navView.getHeaderView(0)
-        ViewCompat.setOnApplyWindowInsetsListener(headerView) { view, insets ->
-            val paddingTop = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            if (paddingTop > 0) {
-                Log.i("ViewCompat", "headerView: paddingTop: $paddingTop")
-                view.setPadding(view.paddingLeft, paddingTop, view.paddingRight, view.paddingBottom)
-            }
+        ViewCompat.setOnApplyWindowInsetsListener(headerView) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            Log.d("ViewCompat", "top: ${bars.top}")
+            v.updatePadding(top = bars.top)
             insets
         }
 
