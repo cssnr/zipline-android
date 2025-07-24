@@ -116,7 +116,7 @@ Lastly you can set this as your start destination if preferred over the web view
 
 - After deleting files and then scrolling in the file list it skips the number of files deleted when loading.
   - To work around, after deleting files, scroll to the top and pull down to refresh.
-- The File List does not work properly if you have 0 files uploaded.
+- The File List does not work properly if you have 0 files or there is an error fetching files.
 - Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
 
 ### Troubleshooting
@@ -155,6 +155,12 @@ If you are having trouble using the app, please reach out to us on [Discord](htt
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/11.jpg"></a>
 <a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/12.jpg">
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/12.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/13.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/13.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/14.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/14.jpg"></a>
+<a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/15.jpg">
+    <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/15.jpg"></a>
 
 ## Support
 

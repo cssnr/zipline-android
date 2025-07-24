@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -23,6 +22,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.get
 import androidx.core.view.size
+import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
@@ -84,7 +84,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Bottom Navigation
-        val bottomNav = binding.appBarMain.contentMain.bottomNav
+        val bottomNav = binding.contentMain.bottomNav
         bottomNav.setupWithNavController(navController)
 
         // Navigation Drawer
@@ -106,15 +106,12 @@ class MainActivity : AppCompatActivity() {
         navController.addOnDestinationChangedListener { _, destination, _ ->
             Log.d("addOnDestinationChangedListener", "destination: ${destination.label}")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
-
             val destinationId = destination.id
-
             if (destinationId in hiddenDestinations) {
                 Log.d("addOnDestinationChangedListener", "Set bottomNav to Hidden Item")
                 bottomNav.menu.findItem(R.id.nav_wtf).isChecked = true
                 return@addOnDestinationChangedListener
             }
-
             val matchedItem = destinationToBottomNavItem[destinationId]
             if (matchedItem != null) {
                 Log.d("addOnDestinationChangedListener", "matched nav item: $matchedItem")
@@ -175,19 +172,22 @@ class MainActivity : AppCompatActivity() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
 
-        // Setup UI
-        binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
+        // Update Status Bar
+        //window.statusBarColor = Color.TRANSPARENT
+        //binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
+        // Set Nav Header Top Padding
         val headerView = binding.navView.getHeaderView(0)
-        ViewCompat.setOnApplyWindowInsetsListener(headerView) { view, insets ->
-            val paddingTop = insets.getInsets(WindowInsetsCompat.Type.statusBars()).top
-            if (paddingTop > 0) {
-                Log.i("ViewCompat", "headerView: paddingTop: $paddingTop")
-                view.setPadding(view.paddingLeft, paddingTop, view.paddingRight, view.paddingBottom)
+        ViewCompat.setOnApplyWindowInsetsListener(headerView) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            if (bars.top > 0) {
+                Log.d("ViewCompat", "getHeaderView: top: ${bars.top}")
+                v.updatePadding(top = bars.top)
             }
             insets
         }
 
+        // Update Header Text
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")

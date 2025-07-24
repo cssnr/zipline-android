@@ -21,7 +21,6 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
 import org.cssnr.zipline.work.updateStats
-import java.util.Date
 
 class WidgetProvider : AppWidgetProvider() {
 
@@ -166,10 +165,12 @@ class WidgetProvider : AppWidgetProvider() {
 
                 if (workInterval == "0") {
                     views.setTextViewText(R.id.update_time, "Disabled")
-                } else {
-                    val time = DateFormat.getTimeFormat(context).format(Date())
+                } else if (server != null) {
+                    val time = DateFormat.getTimeFormat(context).format(server.updatedAt)
                     Log.d("Widget[onUpdate]", "time: $time")
                     views.setTextViewText(R.id.update_time, time)
+                } else {
+                    views.setTextViewText(R.id.update_time, "Refresh Data")
                 }
                 Log.d("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
                 appWidgetManager.updateAppWidget(appWidgetId, views)

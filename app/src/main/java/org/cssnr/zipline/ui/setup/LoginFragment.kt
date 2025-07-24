@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
@@ -75,14 +74,15 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
 
-        // TODO: Determine if this is necessary...
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            binding.root.setOnApplyWindowInsetsListener { _, insets ->
-                val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
-                binding.root.setPadding(0, 0, 0, imeInsets.bottom)
-                insets
-            }
-        }
+        //// TODO: Determine if this is necessary...
+        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+        //    binding.root.setOnApplyWindowInsetsListener { _, insets ->
+        //        Log.i("setOnApplyWindowInsetsListener", "insets: $insets")
+        //        val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
+        //        binding.root.setPadding(0, 0, 0, imeInsets.bottom)
+        //        insets
+        //    }
+        //}
 
         val ctx = requireContext()
 
