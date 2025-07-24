@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -173,17 +172,22 @@ class MainActivity : AppCompatActivity() {
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
         PreferenceManager.setDefaultValues(this, R.xml.preferences_widget, false)
 
-        // Setup UI
-        binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
+        // Update Status Bar
+        //window.statusBarColor = Color.TRANSPARENT
+        //binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
+        // Set Nav Header Top Padding
         val headerView = binding.navView.getHeaderView(0)
         ViewCompat.setOnApplyWindowInsetsListener(headerView) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            Log.d("ViewCompat", "top: ${bars.top}")
-            v.updatePadding(top = bars.top)
+            if (bars.top > 0) {
+                Log.d("ViewCompat", "getHeaderView: top: ${bars.top}")
+                v.updatePadding(top = bars.top)
+            }
             insets
         }
 
+        // Update Header Text
         val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
