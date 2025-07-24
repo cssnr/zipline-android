@@ -78,6 +78,7 @@ suspend fun Context.updateStats(): Boolean {
                     avgStorageUsed = stats.avgStorageUsed,
                     urlsCreated = stats.urlsCreated,
                     urlViews = stats.urlViews,
+                    updatedAt = System.currentTimeMillis(),
                 )
             )
             Log.d("updateStats", "dao.upsert: DONE")

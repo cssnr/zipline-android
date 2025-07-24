@@ -31,7 +31,7 @@ interface ServerDao {
     //fun delete(server: ServerEntity)
 }
 
-
+// NOTE: Currently this is only used for stats
 @Entity(tableName = "servers")
 data class ServerEntity(
     @PrimaryKey val url: String,
@@ -45,10 +45,11 @@ data class ServerEntity(
     val avgStorageUsed: Double? = null,
     val urlsCreated: Int? = null,
     val urlViews: Int,
+    val updatedAt: Long,
 )
 
 
-@Database(entities = [ServerEntity::class], version = 1)
+@Database(entities = [ServerEntity::class], version = 2)
 abstract class ServerDatabase : RoomDatabase() {
     abstract fun serverDao(): ServerDao
 
