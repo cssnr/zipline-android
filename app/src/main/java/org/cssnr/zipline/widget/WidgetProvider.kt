@@ -21,7 +21,6 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
 import org.cssnr.zipline.work.updateStats
-import java.util.Date
 
 class WidgetProvider : AppWidgetProvider() {
 
