@@ -72,6 +72,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         val ctx = requireContext()
+        val preferences = preferenceManager.sharedPreferences
 
         // Start Destination
         val startDestination = findPreference<ListPreference>("start_destination")
@@ -104,13 +105,35 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         //// File Folder
         //findPreference<Preference>("file_folder")?.setOnPreferenceClickListener {
-        //    Log.d("file_folder", "showAppInfoDialog")
-        //    foldersFragment.show(parentFragmentManager, "FoldersFragment")
+        //    setFragmentResultListener("folder_fragment_result") { _, bundle ->
+        //        val folderId = bundle.getString("folderId")
+        //        val folderName = bundle.getString("folderName")
+        //        Log.d("Settings", "folderId: $folderId")
+        //        Log.d("Settings", "folderName: $folderName")
+        //        preferences?.edit {
+        //            putString("file_folder_id", folderId)
+        //            putString("file_folder_name", folderName)
+        //        }
+        //    }
+        //
+        //    val savedUrl = preferences?.getString("ziplineUrl", null)
+        //    Log.d("Settings", "savedUrl: $savedUrl")
+        //    val selectedId = preferences?.getString("file_folder_id", null)
+        //    Log.d("Settings", "file_folder_id: selectedId: $selectedId")
+        //
+        //    CoroutineScope(Dispatchers.IO).launch {
+        //        val api = ServerApi(ctx, savedUrl)
+        //        val folders =  api.folders()
+        //        Log.d("Settings", "folders: $folders")
+        //        val folderFragment = FolderFragment()
+        //        folderFragment.setFolderData(folders!!, selectedId)
+        //        folderFragment.show(parentFragmentManager, "FolderFragment")
+        //    }
         //    false
         //}
 
         // File Compression
-        val fileCompression = preferenceManager.sharedPreferences?.getInt("file_compression", 0)
+        val fileCompression = preferences?.getInt("file_compression", 0)
         Log.d("onCreatePreferences", "fileCompression: $fileCompression")
         val fileCompressionBar = findPreference<SeekBarPreference>("file_compression")
         fileCompressionBar?.summary = "Current Value: ${fileCompression}%"
@@ -122,7 +145,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // Files Per Page
-        val filesPerPage = preferenceManager.sharedPreferences?.getInt("files_per_page", 25)
+        val filesPerPage = preferences?.getInt("files_per_page", 25)
         Log.d("onCreatePreferences", "filesPerPage: $filesPerPage")
         val filesSeekBar = findPreference<SeekBarPreference>("files_per_page")
         filesSeekBar?.summary = "Current Value: $filesPerPage"

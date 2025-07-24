@@ -24,6 +24,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -43,12 +44,15 @@ import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.databinding.FragmentUploadBinding
+import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.json.JSONObject
 
 class UploadFragment : Fragment() {
 
     private var _binding: FragmentUploadBinding? = null
     private val binding get() = _binding!!
+
+    private var uploadFolderId: String? = null
 
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
@@ -108,13 +112,15 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
 
+        val ctx = requireContext()
+
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Upload[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("Upload[onViewCreated]", "authToken: $authToken")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Upload[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
+            Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -129,14 +135,14 @@ class UploadFragment : Fragment() {
         if (uri == null) {
             // TODO: Better Handle this Error
             Log.e("Upload[onViewCreated]", "URI is null")
-            Toast.makeText(requireContext(), "No URI to Process!", Toast.LENGTH_LONG).show()
+            Toast.makeText(ctx, "No URI to Process!", Toast.LENGTH_LONG).show()
             return
         }
 
-        val mimeType = requireContext().contentResolver.getType(uri)
+        val mimeType = ctx.contentResolver.getType(uri)
         Log.d("Upload[onViewCreated]", "mimeType: $mimeType")
 
-        val fileName = getFileNameFromUri(requireContext(), uri)
+        val fileName = getFileNameFromUri(ctx, uri)
         Log.d("Upload[onViewCreated]", "fileName: $fileName")
         binding.fileName.setText(fileName)
 
@@ -145,12 +151,12 @@ class UploadFragment : Fragment() {
             Log.d("Upload[onViewCreated]", "EXOPLAYER")
             binding.playerView.visibility = View.VISIBLE
 
-            player = ExoPlayer.Builder(requireContext()).build()
+            player = ExoPlayer.Builder(ctx).build()
             binding.playerView.player = player
             binding.playerView.controllerShowTimeoutMs = 1000
             binding.playerView.setShowNextButton(false)
             binding.playerView.setShowPreviousButton(false)
-            val dataSourceFactory = DefaultDataSource.Factory(requireContext())
+            val dataSourceFactory = DefaultDataSource.Factory(ctx)
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(uri))
             player.setMediaSource(mediaSource)
@@ -164,13 +170,13 @@ class UploadFragment : Fragment() {
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
             Log.d("Upload[onViewCreated]", "WEBVIEW")
-            webView = WebView(requireContext())
+            webView = WebView(ctx)
             binding.contentLayout.addView(webView)
 
             val url = "file:///android_asset/preview/preview.html"
             Log.d("Upload[onViewCreated]", "url: $url")
 
-            val content = requireContext().contentResolver.openInputStream(uri)?.bufferedReader()
+            val content = ctx.contentResolver.openInputStream(uri)?.bufferedReader()
                 ?.use { it.readText() }
             if (content == null) {
                 // TODO: Handle null content error...
@@ -231,6 +237,32 @@ class UploadFragment : Fragment() {
             navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
 
+        binding.folderButton.setOnClickListener {
+            Log.d("folderButton", "setOnClickListener")
+            setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                val folderId = bundle.getString("folderId")
+                val folderName = bundle.getString("folderName")
+                Log.d("folderButton", "folderId: $folderId")
+                Log.d("folderButton", "folderName: $folderName")
+                uploadFolderId = folderId
+            }
+
+            Log.d("folderButton", "uploadFolderId: $uploadFolderId")
+
+            lifecycleScope.launch {
+                val api = ServerApi(ctx, savedUrl)
+                val folders = withContext(Dispatchers.IO) { api.folders() }
+                Log.d("Settings", "folders: $folders")
+                if (folders != null) {
+                    val folderFragment = FolderFragment()
+                    folderFragment.setFolderData(folders, uploadFolderId)
+                    folderFragment.show(parentFragmentManager, "FolderFragment")
+                } else {
+                    Toast.makeText(ctx, "Error Getting Folders!", Toast.LENGTH_LONG).show()
+                }
+            }
+        }
+
         binding.openButton.setOnClickListener {
             Log.d("openButton", "setOnClickListener")
             val openIntent = Intent(Intent.ACTION_VIEW).apply {
@@ -243,7 +275,7 @@ class UploadFragment : Fragment() {
         binding.uploadButton.setOnClickListener {
             val fileName = binding.fileName.text.toString().trim()
             Log.d("uploadButton", "fileName: $fileName")
-            requireContext().processUpload(uri, fileName)
+            ctx.processUpload(uri, fileName)
         }
     }
 
