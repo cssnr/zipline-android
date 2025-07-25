@@ -15,6 +15,7 @@ import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -27,7 +28,9 @@ import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.UploadedFiles
+import org.cssnr.zipline.api.UploadOptions
 import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
+import org.cssnr.zipline.ui.dialogs.FolderFragment
 
 class UploadMultiFragment : Fragment() {
 
@@ -35,6 +38,8 @@ class UploadMultiFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: UploadViewModel by activityViewModels()
+
+    private val uploadOptions = UploadOptions()
 
     private lateinit var navController: NavController
     private lateinit var adapter: UploadMultiAdapter
@@ -107,6 +112,11 @@ class UploadMultiFragment : Fragment() {
             return
         }
 
+        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
+        val fileFolderId = preferences.getString("file_folder_id", null)
+        uploadOptions.fileFolderId = fileFolderId
+        Log.i("Upload[onViewCreated]", "uploadOptions: $uploadOptions")
+
         if (viewModel.selectedUris.value == null) {
             Log.i("Multi[onCreate]", "RESET SELECTED URIS TO ALL")
             viewModel.selectedUris.value = fileUris.toSet()
@@ -158,6 +168,32 @@ class UploadMultiFragment : Fragment() {
             binding.previewRecycler.adapter = adapter
         }
 
+        // Options Button
+        binding.optionsButton.setOnClickListener {
+            Log.d("optionsButton", "setOnClickListener")
+            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
+        }
+
+        // Folder Button
+        binding.folderButton.setOnClickListener {
+            Log.d("folderButton", "setOnClickListener")
+            setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                val folderId = bundle.getString("folderId")
+                val folderName = bundle.getString("folderName")
+                Log.d("folderButton", "folderId: $folderId")
+                Log.d("folderButton", "folderName: $folderName")
+                uploadOptions.fileFolderId = folderId
+            }
+
+            Log.d("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+
+            lifecycleScope.launch {
+                val folderFragment = FolderFragment()
+                uploadOptions.fileFolderId = folderFragment.setFolderData(requireContext())
+                folderFragment.show(parentFragmentManager, "FolderFragment")
+            }
+        }
+
         // Upload Button
         binding.uploadButton.text = getString(R.string.upload_multi, selectedUris.size)
         binding.uploadButton.setOnClickListener {
@@ -169,12 +205,6 @@ class UploadMultiFragment : Fragment() {
                 return@setOnClickListener
             }
             requireContext().processMultiUpload(selectedUris)
-        }
-
-        // Options Button
-        binding.optionsButton.setOnClickListener {
-            Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
     }
 
@@ -213,7 +243,7 @@ class UploadMultiFragment : Fragment() {
                         Log.w("processMultiUpload", "inputStream is null")
                         continue
                     }
-                    val response = api.upload(fileName!!, inputStream)
+                    val response = api.upload(fileName!!, inputStream, uploadOptions)
                     Log.d("processMultiUpload", "response: $response")
                     if (response.isSuccessful) {
                         val uploadedFiles = response.body()

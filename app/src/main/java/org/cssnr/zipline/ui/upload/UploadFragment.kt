@@ -24,6 +24,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -42,13 +43,18 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.UploadOptions
+import org.cssnr.zipline.api.parseErrorBody
 import org.cssnr.zipline.databinding.FragmentUploadBinding
+import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.json.JSONObject
 
 class UploadFragment : Fragment() {
 
     private var _binding: FragmentUploadBinding? = null
     private val binding get() = _binding!!
+
+    private val uploadOptions = UploadOptions()
 
     private lateinit var player: ExoPlayer
     private lateinit var webView: WebView
@@ -108,13 +114,15 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
 
+        val ctx = requireContext()
+
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Upload[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("Upload[onViewCreated]", "authToken: $authToken")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Upload[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
+            Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -129,14 +137,19 @@ class UploadFragment : Fragment() {
         if (uri == null) {
             // TODO: Better Handle this Error
             Log.e("Upload[onViewCreated]", "URI is null")
-            Toast.makeText(requireContext(), "No URI to Process!", Toast.LENGTH_LONG).show()
+            Toast.makeText(ctx, "No URI to Process!", Toast.LENGTH_LONG).show()
             return
         }
 
-        val mimeType = requireContext().contentResolver.getType(uri)
+        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
+        val fileFolderId = preferences.getString("file_folder_id", null)
+        uploadOptions.fileFolderId = fileFolderId
+        Log.i("Upload[onViewCreated]", "uploadOptions: $uploadOptions")
+
+        val mimeType = ctx.contentResolver.getType(uri)
         Log.d("Upload[onViewCreated]", "mimeType: $mimeType")
 
-        val fileName = getFileNameFromUri(requireContext(), uri)
+        val fileName = getFileNameFromUri(ctx, uri)
         Log.d("Upload[onViewCreated]", "fileName: $fileName")
         binding.fileName.setText(fileName)
 
@@ -145,12 +158,12 @@ class UploadFragment : Fragment() {
             Log.d("Upload[onViewCreated]", "EXOPLAYER")
             binding.playerView.visibility = View.VISIBLE
 
-            player = ExoPlayer.Builder(requireContext()).build()
+            player = ExoPlayer.Builder(ctx).build()
             binding.playerView.player = player
             binding.playerView.controllerShowTimeoutMs = 1000
             binding.playerView.setShowNextButton(false)
             binding.playerView.setShowPreviousButton(false)
-            val dataSourceFactory = DefaultDataSource.Factory(requireContext())
+            val dataSourceFactory = DefaultDataSource.Factory(ctx)
             val mediaSource = ProgressiveMediaSource.Factory(dataSourceFactory)
                 .createMediaSource(MediaItem.fromUri(uri))
             player.setMediaSource(mediaSource)
@@ -164,13 +177,13 @@ class UploadFragment : Fragment() {
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
             Log.d("Upload[onViewCreated]", "WEBVIEW")
-            webView = WebView(requireContext())
+            webView = WebView(ctx)
             binding.contentLayout.addView(webView)
 
             val url = "file:///android_asset/preview/preview.html"
             Log.d("Upload[onViewCreated]", "url: $url")
 
-            val content = requireContext().contentResolver.openInputStream(uri)?.bufferedReader()
+            val content = ctx.contentResolver.openInputStream(uri)?.bufferedReader()
                 ?.use { it.readText() }
             if (content == null) {
                 // TODO: Handle null content error...
@@ -216,6 +229,7 @@ class UploadFragment : Fragment() {
             binding.imagePreview.setImageResource(getGenericIcon(mimeType.toString()))
         }
 
+        // Share Button
         binding.shareButton.setOnClickListener {
             Log.d("shareButton", "setOnClickListener")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
@@ -226,11 +240,33 @@ class UploadFragment : Fragment() {
             startActivity(Intent.createChooser(shareIntent, null))
         }
 
+        // Options Button
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
             navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
 
+        // Folder Button
+        binding.folderButton.setOnClickListener {
+            Log.d("folderButton", "setOnClickListener")
+            setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                val folderId = bundle.getString("folderId")
+                val folderName = bundle.getString("folderName")
+                Log.d("folderButton", "folderId: $folderId")
+                Log.d("folderButton", "folderName: $folderName")
+                uploadOptions.fileFolderId = folderId
+            }
+
+            Log.d("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+
+            lifecycleScope.launch {
+                val folderFragment = FolderFragment()
+                uploadOptions.fileFolderId = folderFragment.setFolderData(ctx)
+                folderFragment.show(parentFragmentManager, "FolderFragment")
+            }
+        }
+
+        // Open Button
         binding.openButton.setOnClickListener {
             Log.d("openButton", "setOnClickListener")
             val openIntent = Intent(Intent.ACTION_VIEW).apply {
@@ -240,14 +276,15 @@ class UploadFragment : Fragment() {
             startActivity(Intent.createChooser(openIntent, null))
         }
 
+        // Upload Button
         binding.uploadButton.setOnClickListener {
             val fileName = binding.fileName.text.toString().trim()
             Log.d("uploadButton", "fileName: $fileName")
-            requireContext().processUpload(uri, fileName)
+            ctx.processUpload(uri, fileName) // NOTE: This is only called here...
         }
     }
 
-    // TODO: DUPLICATION: ShortFragment.processShort
+    // TODO: NOTE: This was duplicated but is being cleaned up...
     private fun Context.processUpload(fileUri: Uri, fileName: String?) {
         Log.d("processUpload", "fileUri: $fileUri")
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -283,55 +320,47 @@ class UploadFragment : Fragment() {
             logFileUpload(false, "Input Stream is null")
             return
         }
-        Log.d("processUpload", "DEBUG 1")
         val api = ServerApi(this)
-        Log.d("processUpload", "DEBUG 2")
         Log.d("processUpload", "api: $api")
         Toast.makeText(this, getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT).show()
         lifecycleScope.launch {
             try {
-                val response = api.upload(fileName, inputStream)
+                val response = api.upload(fileName, inputStream, uploadOptions)
                 Log.d("processUpload", "response: $response")
                 if (response.isSuccessful) {
-                    val uploadResponse = response.body()
+                    val uploadResponse = response.body() ?: throw Error("Empty Server Response")
                     Log.d("processUpload", "uploadResponse: $uploadResponse")
+                    logFileUpload()
+                    val url = uploadResponse.files.first().url
+                    Log.d("processUpload", "url: $url")
                     withContext(Dispatchers.Main) {
-                        if (uploadResponse != null) {
-                            logFileUpload()
-                            val url = uploadResponse.files.first().url
-                            Log.d("processUpload", "url: $url")
-                            copyToClipboard(url)
-                            if (shareUrl) {
-                                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, url)
-                                }
-                                startActivity(Intent.createChooser(shareIntent, null))
+                        copyToClipboard(url)
+                        if (shareUrl) {
+                            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                                type = "text/plain"
+                                putExtra(Intent.EXTRA_TEXT, url)
                             }
-                            val bundle = bundleOf("url" to "${savedUrl}/dashboard/files/")
-                            navController.navigate(
-                                R.id.nav_item_home, bundle, NavOptions.Builder()
-                                    .setPopUpTo(navController.graph.id, true)
-                                    .build()
-                            )
-                        } else {
-                            Log.w("processUpload", "uploadResponse is null")
-                            val msg = "Unknown Response!"
-                            Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
-                            logFileUpload(false, "Upload Response is null")
+                            startActivity(Intent.createChooser(shareIntent, null))
                         }
+                        val bundle = bundleOf("url" to "${savedUrl}/dashboard/files/")
+                        navController.navigate(
+                            R.id.nav_item_home, bundle, NavOptions.Builder()
+                                .setPopUpTo(navController.graph.id, true)
+                                .build()
+                        )
                     }
                 } else {
-                    val msg = "Error: ${response.code()}: ${response.message()}"
-                    Log.w("processUpload", "Error: $msg")
-                    logFileUpload(false, "Error: $msg")
+                    val errorResponse = response.parseErrorBody()
+                    Log.i("processCode", "errorResponse - $errorResponse")
+                    val message = errorResponse ?: "Unknown Error: ${response.code()}"
+                    Log.i("processCode", "message - $message")
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
+                        Toast.makeText(this@processUpload, message, Toast.LENGTH_LONG).show()
                     }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                val msg = e.message ?: "Unknown Error!"
+                val msg = e.message ?: "Unknown Error"
                 Log.i("processUpload", "msg: $msg")
                 logFileUpload(false, "Exception: $msg")
                 withContext(Dispatchers.Main) {
@@ -341,7 +370,6 @@ class UploadFragment : Fragment() {
         }
     }
 }
-
 
 fun logFileUpload(status: Boolean = true, message: String? = null, multiple: Boolean = false) {
     val event = if (status) "upload_success" else "upload_failed"

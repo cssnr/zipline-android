@@ -21,16 +21,25 @@
         <Button
             android:id="@+id/options_button"
             android:layout_width="48dp"
-            android:layout_height="96dp"
+            android:layout_height="64dp"
             android:contentDescription="@string/settings"
             app:icon="@drawable/md_settings_24px"
             app:iconSize="24dp"
             app:iconGravity="textStart"
             app:iconPadding="0dp" />
         <Button
+            android:id="@+id/folder_button"
+            android:layout_width="48dp"
+            android:layout_height="64dp"
+            android:contentDescription="@string/open"
+            app:icon="@drawable/md_folder_24px"
+            app:iconSize="24dp"
+            app:iconGravity="textStart"
+            app:iconPadding="0dp" />
+        <Button
             android:id="@+id/open_button"
             android:layout_width="48dp"
-            android:layout_height="96dp"
+            android:layout_height="64dp"
             android:contentDescription="@string/open"
             app:icon="@drawable/md_open_in_new_24px"
             app:iconSize="24dp"
@@ -39,7 +48,7 @@
         <Button
             android:id="@+id/share_button"
             android:layout_width="48dp"
-            android:layout_height="96dp"
+            android:layout_height="64dp"
             android:contentDescription="@string/share"
             app:icon="@drawable/md_share_24px"
             app:iconSize="24dp"

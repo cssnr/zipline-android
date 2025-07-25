@@ -55,10 +55,19 @@
             <!--    app:iconGravity="textStart"-->
             <!--    app:iconPadding="0dp" />-->
             <Button
-                android:id="@+id/options_button"
-                android:layout_width="wrap_content"
+                android:id="@+id/folder_button"
+                android:layout_width="64dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="12dp"
+                app:icon="@drawable/md_folder_24px"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+            <Button
+                android:id="@+id/options_button"
+                android:layout_width="64dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
                 app:icon="@drawable/md_settings_24px"
                 app:iconSize="24dp"
                 app:iconGravity="textStart"

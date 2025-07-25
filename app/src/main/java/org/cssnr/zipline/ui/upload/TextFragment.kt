@@ -10,25 +10,28 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.analytics.ktx.analytics
-import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.UploadOptions
 import org.cssnr.zipline.databinding.FragmentTextBinding
+import org.cssnr.zipline.ui.dialogs.FolderFragment
 
 class TextFragment : Fragment() {
 
     private var _binding: FragmentTextBinding? = null
     private val binding get() = _binding!!
+
+    private val uploadOptions = UploadOptions()
 
     private lateinit var navController: NavController
 
@@ -95,8 +98,14 @@ class TextFragment : Fragment() {
             //return
         }
 
+        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
+        val fileFolderId = preferences.getString("file_folder_id", null)
+        uploadOptions.fileFolderId = fileFolderId
+        Log.i("Upload[onViewCreated]", "uploadOptions: $uploadOptions")
+
         binding.textContent.setText(extraText)
 
+        // Share Button
         binding.shareButton.setOnClickListener {
             Log.d("shareButton", "setOnClickListener")
             val shareIntent = Intent(Intent.ACTION_SEND).apply {
@@ -106,11 +115,33 @@ class TextFragment : Fragment() {
             startActivity(Intent.createChooser(shareIntent, null))
         }
 
+        // Options Button
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
             navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
 
+        // Folder Button
+        binding.folderButton.setOnClickListener {
+            Log.d("folderButton", "setOnClickListener")
+            setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                val folderId = bundle.getString("folderId")
+                val folderName = bundle.getString("folderName")
+                Log.d("folderButton", "folderId: $folderId")
+                Log.d("folderButton", "folderName: $folderName")
+                uploadOptions.fileFolderId = folderId
+            }
+
+            Log.d("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+
+            lifecycleScope.launch {
+                val folderFragment = FolderFragment()
+                uploadOptions.fileFolderId = folderFragment.setFolderData(requireContext())
+                folderFragment.show(parentFragmentManager, "FolderFragment")
+            }
+        }
+
+        // Upload Button
         binding.uploadButton.setOnClickListener {
             val finalText = binding.textContent.text.toString().trim()
             Log.d("uploadButton", "finalText: $finalText")
@@ -151,19 +182,17 @@ class TextFragment : Fragment() {
         Log.d("processUpload", "api: $api")
         Toast.makeText(requireContext(), getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
             .show()
-        Firebase.analytics.logEvent("upload_file", null)
         lifecycleScope.launch {
             try {
                 // TODO: Implement editRequest
-                val response = api.upload(fileName, inputStream)
+                val response = api.upload(fileName, inputStream, uploadOptions)
                 Log.d("processUpload", "response: $response")
                 if (response.isSuccessful) {
                     val uploadResponse = response.body()
                     Log.d("processUpload", "uploadResponse: $uploadResponse")
                     withContext(Dispatchers.Main) {
                         if (uploadResponse != null) {
-                            val params = Bundle().apply { putString("text", "true") }
-                            Firebase.analytics.logEvent("upload_file", params)
+                            logFileUpload(true, "Text Upload")
                             requireContext().copyToClipboard(uploadResponse.files.first().url)
                             val bundle = bundleOf("url" to uploadResponse.files.first().url)
                             navController.navigate(

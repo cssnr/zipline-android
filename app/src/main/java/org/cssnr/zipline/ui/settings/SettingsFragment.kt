@@ -15,6 +15,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.edit
+import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.EditTextPreference
@@ -36,6 +38,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
+import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
 import java.util.concurrent.TimeUnit
@@ -72,6 +75,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         val ctx = requireContext()
+        val preferences = preferenceManager.sharedPreferences
 
         // Start Destination
         val startDestination = findPreference<ListPreference>("start_destination")
@@ -102,15 +106,34 @@ class SettingsFragment : PreferenceFragmentCompat() {
             false
         }
 
-        //// File Folder
-        //findPreference<Preference>("file_folder")?.setOnPreferenceClickListener {
-        //    Log.d("file_folder", "showAppInfoDialog")
-        //    foldersFragment.show(parentFragmentManager, "FoldersFragment")
-        //    false
-        //}
+        // File Folder
+        //val fileFolderId = preferences?.getString("file_folder_id", null)
+        val fileFolderName = preferences?.getString("file_folder_name", null)
+        val fileFolderId = findPreference<Preference>("file_folder_id")
+        fileFolderId?.setSummary(fileFolderName ?: "Not Set")
+        fileFolderId?.setOnPreferenceClickListener {
+            setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                val folderId = bundle.getString("folderId")
+                val folderName = bundle.getString("folderName")
+                Log.d("Settings", "folderId: $folderId")
+                Log.d("Settings", "folderName: $folderName")
+                preferences?.edit {
+                    putString("file_folder_id", folderId)
+                    putString("file_folder_name", folderName)
+                }
+                fileFolderId.setSummary(folderName ?: "Not Set")
+            }
+
+            lifecycleScope.launch {
+                val folderFragment = FolderFragment()
+                folderFragment.setFolderData(ctx)
+                folderFragment.show(parentFragmentManager, "FolderFragment")
+            }
+            false
+        }
 
         // File Compression
-        val fileCompression = preferenceManager.sharedPreferences?.getInt("file_compression", 0)
+        val fileCompression = preferences?.getInt("file_compression", 0)
         Log.d("onCreatePreferences", "fileCompression: $fileCompression")
         val fileCompressionBar = findPreference<SeekBarPreference>("file_compression")
         fileCompressionBar?.summary = "Current Value: ${fileCompression}%"
@@ -122,7 +145,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // Files Per Page
-        val filesPerPage = preferenceManager.sharedPreferences?.getInt("files_per_page", 25)
+        val filesPerPage = preferences?.getInt("files_per_page", 25)
         Log.d("onCreatePreferences", "filesPerPage: $filesPerPage")
         val filesSeekBar = findPreference<SeekBarPreference>("files_per_page")
         filesSeekBar?.summary = "Current Value: $filesPerPage"
