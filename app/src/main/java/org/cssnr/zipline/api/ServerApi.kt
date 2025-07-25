@@ -40,6 +40,8 @@ import java.net.URLConnection
 class ServerApi(private val context: Context, url: String? = null) {
 
     val api: ApiService
+    var retrofit: Retrofit
+
     private var ziplineUrl: String
     private var ziplineToken: String
 
@@ -52,7 +54,8 @@ class ServerApi(private val context: Context, url: String? = null) {
         ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("ServerApi[init]", "ziplineUrl: $ziplineUrl")
         Log.d("ServerApi[init]", "ziplineToken: $ziplineToken")
-        api = createRetrofit().create(ApiService::class.java)
+        retrofit = createRetrofit()
+        api = retrofit.create(ApiService::class.java)
     }
 
     suspend fun login(host: String, user: String, pass: String): String? {
@@ -102,7 +105,11 @@ class ServerApi(private val context: Context, url: String? = null) {
         return response
     }
 
-    suspend fun upload(fileName: String, inputStream: InputStream): Response<UploadedFiles> {
+    suspend fun upload(
+        fileName: String,
+        inputStream: InputStream,
+        uploadOptions: UploadOptions
+    ): Response<UploadedFiles> {
         Log.d("Api[upload]", "fileName: $fileName")
         // TODO: Create an Object that inherits in this order:
         //  Hard Coded Defaults > User Defaults > Per Upload Arguments
@@ -114,16 +121,30 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[upload]", "compression: $compression")
         val deletesAt = preferences.getString("file_deletes_at", null)
         Log.d("Api[upload]", "deletesAt: $deletesAt")
-        val folder = preferences.getString("file_folder", null)
-        Log.d("Api[upload]", "folder: $folder")
-
+        // TODO: Implement uploadOptions for: format, originalName, compression, deletesAt
+        //val folder = preferences.getString("file_folder_id", null) ?: uploadOptions.fileFolderId
+        Log.i("Api[upload]", "uploadOptions.fileFolderId: ${uploadOptions.fileFolderId}")
         val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        val response = api.postUpload(part, format, originalName, compression, deletesAt, folder)
+        val response = api.postUpload(
+            part,
+            format,
+            originalName,
+            compression,
+            deletesAt,
+            uploadOptions.fileFolderId
+        )
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[upload]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.postUpload(part, format, originalName, compression, deletesAt, folder)
+                return api.postUpload(
+                    part,
+                    format,
+                    originalName,
+                    compression,
+                    deletesAt,
+                    uploadOptions.fileFolderId
+                )
             }
         }
         return response
@@ -544,5 +565,24 @@ class ServerApi(private val context: Context, url: String? = null) {
         //fun getCookie(host: String, name: String): Cookie? {
         //    return cookieStore[host]?.find { it.name == name }
         //}
+    }
+}
+
+
+@JsonClass(generateAdapter = true)
+data class ErrorResponse(val error: String)
+
+
+fun Response<*>.parseErrorBody(): String? {
+    val errorBody = errorBody() ?: return null
+    val moshi = Moshi.Builder().build()
+    val adapter = moshi.adapter(ErrorResponse::class.java)
+    return errorBody.source().use { source ->
+        try {
+            adapter.fromJson(source)?.error
+        } catch (e: Exception) {
+            Log.e("ResponseExt", "Failed to parse error body", e)
+            null
+        }
     }
 }

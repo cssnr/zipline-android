@@ -50,11 +50,11 @@
             android:dialogMessage="x-zipline-deletes-at"
             tools:summary="Not set" />
 
-        <!--<Preference-->
-        <!--    android:key="file_folder"-->
-        <!--    android:title="Default File Folder"-->
-        <!--    android:icon="@drawable/md_folder_24px"-->
-        <!--    tools:summary="Not set" />-->
+        <Preference
+            android:key="file_folder_id"
+            android:title="File Folder"
+            android:icon="@drawable/md_folder_24px"
+            tools:summary="Not set" />
 
         <androidx.preference.SeekBarPreference
             android:key="file_compression"
