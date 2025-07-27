@@ -20,10 +20,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHeadersBinding
-
-const val LOG_TAG = "HeadersFragment"
 
 class HeadersFragment : Fragment() {
 
@@ -34,6 +33,10 @@ class HeadersFragment : Fragment() {
 
     private lateinit var preferences: SharedPreferences
     private lateinit var adapter: CustomAdapter
+
+    companion object {
+        const val LOG_TAG = "HeadersFragment"
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -53,14 +56,16 @@ class HeadersFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        Log.d(LOG_TAG, "onStart - Hide UI")
+        Log.d(LOG_TAG, "onStart - Hide UI and Lock Drawer")
         requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        (activity as? MainActivity)?.setDrawerLockMode(false)
     }
 
     override fun onStop() {
-        Log.d(LOG_TAG, "onStop - Show UI")
+        Log.d(LOG_TAG, "onStop - Show UI and Unlock Drawer")
         requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
             View.VISIBLE
+        (activity as? MainActivity)?.setDrawerLockMode(true)
         super.onStop()
     }
 
@@ -212,12 +217,12 @@ class HeadersFragment : Fragment() {
     private fun Context.deleteConfirmDialog(data: Pair<String, String>) {
         Log.d(LOG_TAG, "deleteConfirmDialog: ${data.first}")
         MaterialAlertDialogBuilder(this, R.style.AlertDialogTheme)
-            .setTitle("Delete Custom Header")
+            .setTitle(data.first)
             .setIcon(R.drawable.md_delete_24px)
-            .setMessage(data.first)
+            .setMessage(data.second)
             .setNegativeButton("Cancel", null)
             .setPositiveButton("Delete Header") { _, _ ->
-                Log.d(LOG_TAG, "Delete Confirm: ${data.first}")
+                Log.d(LOG_TAG, "Delete: $data")
                 preferences.edit { remove(data.first) }
                 val items =
                     preferences.all.map { it.key to it.value.toString() }.sortedBy { it.first }

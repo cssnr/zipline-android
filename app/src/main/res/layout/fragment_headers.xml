@@ -27,12 +27,20 @@
             android:contentDescription="Go Back"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/md_arrow_back_24px" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-            android:text="Custom Headers" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                android:text="Custom Headers" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Headers are added to every request." />
+        </LinearLayout>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
