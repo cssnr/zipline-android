@@ -340,7 +340,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     .header("authorization", ziplineToken)
                 for ((key, value) in headerPreferences.all) {
                     Log.d("createRetrofit", "Custom Header: $key - $value")
-                    if (value is String) requestBuilder.header(key, value)
+                    requestBuilder.header(key, value.toString())
                 }
                 chain.proceed(requestBuilder.build())
             }
