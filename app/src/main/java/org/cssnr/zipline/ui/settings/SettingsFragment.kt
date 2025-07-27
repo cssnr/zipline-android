@@ -146,7 +146,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Custom Headers
         findPreference<Preference>("custom_headers")?.setOnPreferenceClickListener {
-            Log.d("open_widget_settings", "setOnPreferenceClickListener")
+            Log.d("custom_headers", "setOnPreferenceClickListener")
             findNavController().navigate(R.id.nav_item_headers)
             false
         }
