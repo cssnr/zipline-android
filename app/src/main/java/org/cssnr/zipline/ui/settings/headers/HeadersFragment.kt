@@ -78,7 +78,7 @@ class HeadersFragment : Fragment() {
             ctx.getSharedPreferences("org.cssnr.zipline_custom_headers", Context.MODE_PRIVATE)
         Log.d(LOG_TAG, "preferences.all: ${preferences.all}")
 
-        val items = preferences.all.map { it.key to it.value.toString() }
+        val items = preferences.all.map { it.key to it.value.toString() }.sortedBy { it.first }
         Log.d(LOG_TAG, "items: $items")
 
         val listener = object : OnHeaderItemClick {
@@ -112,6 +112,11 @@ class HeadersFragment : Fragment() {
 
         binding.recyclerView.layoutManager = LinearLayoutManager(ctx)
         binding.recyclerView.adapter = adapter
+
+        if (items.isEmpty()) {
+            Log.d(LOG_TAG, "items.isEmpty: showHeadersDialog")
+            ctx.showHeadersDialog()
+        }
 
         binding.addHeaderButton.setOnClickListener {
             Log.d(LOG_TAG, "addHeaderButton: showHeadersDialog")
@@ -187,7 +192,8 @@ class HeadersFragment : Fragment() {
                         putString(key, value)
                         apply()
                     }
-                    val items = preferences.all.map { it.key to it.value.toString() }
+                    val items =
+                        preferences.all.map { it.key to it.value.toString() }.sortedBy { it.first }
                     adapter.updateData(items)
                     dialog.dismiss()
                 }
@@ -207,7 +213,9 @@ class HeadersFragment : Fragment() {
             .setPositiveButton("Delete Header") { _, _ ->
                 Log.d(LOG_TAG, "Delete Confirm: ${data.first}")
                 preferences.edit { remove(data.first) }
-                val items = preferences.all.map { it.key to it.value.toString() }
+                val items =
+                    preferences.all.map { it.key to it.value.toString() }.sortedBy { it.first }
+
                 adapter.updateData(items)
             }
             .show()
