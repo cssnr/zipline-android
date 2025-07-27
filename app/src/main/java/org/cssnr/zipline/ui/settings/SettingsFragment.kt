@@ -144,6 +144,13 @@ class SettingsFragment : PreferenceFragmentCompat() {
             }
         }
 
+        // Custom Headers
+        findPreference<Preference>("custom_headers")?.setOnPreferenceClickListener {
+            Log.d("open_widget_settings", "setOnPreferenceClickListener")
+            findNavController().navigate(R.id.nav_item_headers)
+            false
+        }
+
         // Files Per Page
         val filesPerPage = preferences?.getInt("files_per_page", 25)
         Log.d("onCreatePreferences", "filesPerPage: $filesPerPage")

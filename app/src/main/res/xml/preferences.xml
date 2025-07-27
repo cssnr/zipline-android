@@ -66,6 +66,12 @@
             app:showSeekBarValue="true"
             app:selectable="false"
             tools:summary="Compression Level: 0%" />
+
+        <Preference
+            android:key="custom_headers"
+            android:title="Custom Headers"
+            android:icon="@drawable/md_credit_card_gear_24px"
+            android:summary="Added to Every Request" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="File List">

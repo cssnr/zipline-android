@@ -48,7 +48,7 @@
                 android:id="@+id/header_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxLines="2"
+                android:maxLines="3"
                 android:ellipsize="end"
                 android:text="Header value here that is really long for no apparent reas except to be long" />
         </LinearLayout>
