@@ -170,6 +170,12 @@ class HeadersFragment : Fragment() {
                     inputKey.setSelection(inputKey.text.length)
                     success = false
                 }
+                if (key.lowercase() == "authorization") {
+                    inputKey.error = "Not Allowed"
+                    inputKey.requestFocus()
+                    inputKey.setSelection(inputKey.text.length)
+                    success = false
+                }
 
                 val value = inputValue.text.toString().replace(Regex("[\\r\\n]"), "").trim()
                 Log.d(LOG_TAG, "value: \"${value}\"")
@@ -234,9 +240,8 @@ class HeadersFragment : Fragment() {
         }
 
         override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-            val view =
-                LayoutInflater.from(viewGroup.context)
-                    .inflate(R.layout.header_item, viewGroup, false)
+            val view = LayoutInflater.from(viewGroup.context)
+                .inflate(R.layout.header_item, viewGroup, false)
             return ViewHolder(view)
         }
 
