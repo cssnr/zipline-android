@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="28dp"
+    android:paddingHorizontal="20dp">
+
+    <TextView
+        android:id="@+id/feedback_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text="Custom Header" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:padding="6dp"
+        android:orientation="vertical"
+        android:background="@drawable/edit_text_border4dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/header_key"
+            android:text="Header Key/Name" />
+        <EditText
+            android:id="@+id/header_key"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Header Key"
+            android:hint="Header Key"
+            android:inputType="text"
+            android:maxLines="1"
+            tools:text="" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="6dp"
+        android:orientation="vertical"
+        android:background="@drawable/edit_text_border4dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:labelFor="@id/header_value"
+            android:text="Value" />
+        <EditText
+            android:id="@+id/header_value"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="Header Value"
+            android:hint="Header Value"
+            android:inputType="textMultiLine"
+            android:maxLines="5"
+            tools:text="" />
+    </LinearLayout>
+
+</LinearLayout>

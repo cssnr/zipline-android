@@ -1,6 +1,7 @@
 package org.cssnr.zipline.ui.home
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -79,12 +80,14 @@ class HomeFragment : Fragment() {
             Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
         }
 
+        val ctx = requireContext()
+
         //binding.toggleMenu.setOnClickListener {
         //    Log.i("Home[onViewCreated]", "toggleMenu.setOnClickListener")
         //    (requireActivity() as MainActivity).toggleDrawer()
         //}
 
-        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
         ziplineUrl = preferences.getString("ziplineUrl", "").toString()
         Log.d("Home[onViewCreated]", "ziplineUrl: $ziplineUrl")
         //val ziplineToken = preferences.getString("ziplineToken", null)
@@ -95,6 +98,16 @@ class HomeFragment : Fragment() {
             arguments?.remove("isFirstRun")
             requireActivity().showTapTargets(view)
         }
+
+        val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
+        val userAgent =
+            "${binding.webView.settings.userAgentString} ${ctx.getString(R.string.app_name)}/${versionName}"
+        Log.d("Home[onViewCreated]", "UA: $userAgent")
+
+        val headerPreferences =
+            ctx.getSharedPreferences("org.cssnr.zipline_custom_headers", Context.MODE_PRIVATE)
+        val customHeaders = headerPreferences.all.mapValues { it.value.toString() }
+        Log.i("Home[webView]", "customHeaders: $customHeaders")
 
         val url = arguments?.getString("url")
         Log.d("Home[onViewCreated]", "arguments: url: $url")
@@ -121,16 +134,18 @@ class HomeFragment : Fragment() {
             settings.loadWithOverviewMode = true // prevent loading images zoomed in
             settings.useWideViewPort = true // prevent loading images zoomed in
 
+            settings.userAgentString = userAgent
+
             if (url != null) {
                 Log.i("Home[webView]", "ARGUMENT URL: $url")
                 arguments?.remove("url")
-                loadUrl(url)
+                loadUrl(url, customHeaders)
             } else if (webViewState.size() > 0) {
                 Log.i("Home[webView]", "RESTORE STATE")
                 restoreState(webViewState)
             } else if (ziplineUrl.isNotBlank()) {
                 Log.i("Home[webView]", "LOAD ziplineUrl: $ziplineUrl")
-                loadUrl(ziplineUrl)
+                loadUrl(ziplineUrl, customHeaders)
             } else {
                 Log.i("Home[webView]", "NO ZIPLINE URL - DOING NOTHING")
             }
@@ -155,7 +170,7 @@ class HomeFragment : Fragment() {
         viewModel.urlToLoad.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let { url ->
                 Log.i("Home[viewModel]", "TO THE MOON BABY: $url")
-                binding.webView.loadUrl(url)
+                binding.webView.loadUrl(url, customHeaders)
             }
         }
     }

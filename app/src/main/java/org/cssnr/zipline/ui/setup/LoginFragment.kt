@@ -106,6 +106,10 @@ class LoginFragment : Fragment() {
             binding.loginHostname.requestFocus()
         }
 
+        binding.headersButton.setOnClickListener {
+            navController.navigate(R.id.nav_item_headers)
+        }
+
         binding.loginButton.setOnClickListener {
             it.isEnabled = false
             binding.loginError.visibility = View.INVISIBLE

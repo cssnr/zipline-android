@@ -93,14 +93,14 @@ class MainActivity : AppCompatActivity() {
         // Destinations w/ a Parent Item
         val destinationToBottomNavItem = mapOf(
             R.id.nav_item_file_preview to R.id.nav_item_files,
-            R.id.nav_item_settings_widget to R.id.nav_item_settings
+            R.id.nav_item_settings_widget to R.id.nav_item_settings,
         )
         // Destination w/ No Parent
         val hiddenDestinations = setOf(
             R.id.nav_item_upload,
             R.id.nav_item_upload_multi,
             R.id.nav_item_short,
-            R.id.nav_item_text
+            R.id.nav_item_text,
         )
         // Implement Navigation Hacks Because.......Android?
         navController.addOnDestinationChangedListener { _, destination, _ ->
@@ -206,7 +206,7 @@ class MainActivity : AppCompatActivity() {
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "app_worker",
                 ExistingPeriodicWorkPolicy.KEEP,
-                workRequest
+                workRequest,
             )
         } else {
             // TODO: Confirm this is necessary...

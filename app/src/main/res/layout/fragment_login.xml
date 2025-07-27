@@ -93,8 +93,7 @@
             android:layout_height="56dp"
             android:layout_marginTop="24dp"
             android:layout_marginHorizontal="12dp"
-            android:paddingEnd="36dp"
-            android:paddingStart="36dp"
+            android:paddingHorizontal="36dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
             android:text="@string/login"
             app:icon="@drawable/md_login_24px"
@@ -111,6 +110,20 @@
             android:text="Login Failed"
             android:visibility="invisible"
             tools:visibility="visible" />
+
+        <Button
+            android:id="@+id/headers_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="12dp"
+            android:paddingHorizontal="36dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Custom Headers"
+            app:icon="@drawable/md_credit_card_gear_24px"
+            app:iconGravity="end"
+            app:iconPadding="-18dp"
+            app:iconSize="18dp" />
 
         <TextView
             android:layout_width="wrap_content"
