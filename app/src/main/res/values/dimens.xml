@@ -3,6 +3,8 @@
 
     <dimen name="dialog_vertical_margin">8dp</dimen>
 
+    <dimen name="headers_bottom_padding">86dp</dimen>
+
     <dimen name="recycler_bottom_port">100dp</dimen>
     <dimen name="recycler_bottom_land">48dp</dimen>
 
