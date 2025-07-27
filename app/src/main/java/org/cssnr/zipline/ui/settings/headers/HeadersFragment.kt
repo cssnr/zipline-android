@@ -24,7 +24,6 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHeadersBinding
 
 const val LOG_TAG = "HeadersFragment"
-const val PREFS_KEY = "org.cssnr.zipline_custom_headers"
 
 class HeadersFragment : Fragment() {
 
@@ -75,7 +74,8 @@ class HeadersFragment : Fragment() {
             navController.navigateUp()
         }
 
-        preferences = ctx.getSharedPreferences(PREFS_KEY, Context.MODE_PRIVATE)
+        preferences =
+            ctx.getSharedPreferences("org.cssnr.zipline_custom_headers", Context.MODE_PRIVATE)
         Log.d(LOG_TAG, "preferences.all: ${preferences.all}")
 
         val items = preferences.all.map { it.key to it.value.toString() }
@@ -149,13 +149,37 @@ class HeadersFragment : Fragment() {
             }
             val sendButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             sendButton.setOnClickListener {
-                //sendButton.isEnabled = false
+                sendButton.isEnabled = false
+                var success = true
+
                 val key = inputKey.text.toString().trim()
                 Log.d(LOG_TAG, "key: \"${key}\"")
-                val value = inputValue.text.toString().trim()
+                inputKey.setText(key)
+                if (key.isEmpty()) {
+                    inputKey.error = "Required"
+                    success = false
+                }
+                if (!key.matches(Regex("^[!#$%&'*+\\-.^_`|~0-9a-zA-Z]+$"))) {
+                    inputKey.error = "Invalid Key Name"
+                    inputKey.requestFocus()
+                    inputKey.setSelection(inputKey.text.length)
+                    success = false
+                }
+
+                val value = inputValue.text.toString().replace(Regex("[\\r\\n]"), "").trim()
                 Log.d(LOG_TAG, "value: \"${value}\"")
-                if (key.isNotEmpty() && value.isNotEmpty()) {
-                    Log.d(LOG_TAG, "putString: ${key}: $value")
+                inputValue.setText(value)
+                if (value.isEmpty()) {
+                    inputValue.error = "Required"
+                    if (success) {
+                        inputValue.requestFocus()
+                        inputValue.setSelection(inputKey.text.length)
+                    }
+                    success = false
+                }
+
+                if (success) {
+                    Log.d(LOG_TAG, "Add Header: ${key}: $value")
                     preferences.edit().apply {
                         if (data != null && key != data.first) {
                             remove(data.first)
@@ -166,10 +190,8 @@ class HeadersFragment : Fragment() {
                     val items = preferences.all.map { it.key to it.value.toString() }
                     adapter.updateData(items)
                     dialog.dismiss()
-                } else {
-                    if (key.isEmpty()) inputKey.error = "Required"
-                    if (value.isEmpty()) inputValue.error = "Required"
                 }
+                sendButton.isEnabled = true
             }
         }
         dialog.show()

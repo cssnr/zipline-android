@@ -1,6 +1,7 @@
 package org.cssnr.zipline.api
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import android.webkit.CookieManager
 import androidx.core.content.edit
@@ -54,7 +55,9 @@ class ServerApi(private val context: Context, url: String? = null) {
         ziplineToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("ServerApi[init]", "ziplineUrl: $ziplineUrl")
         Log.d("ServerApi[init]", "ziplineToken: $ziplineToken")
-        retrofit = createRetrofit()
+        val headerPreferences =
+            context.getSharedPreferences("org.cssnr.zipline_custom_headers", Context.MODE_PRIVATE)
+        retrofit = createRetrofit(headerPreferences)
         api = retrofit.create(ApiService::class.java)
     }
 
@@ -322,7 +325,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         return MultipartBody.Part.createFormData("file", fileName, requestBody)
     }
 
-    private fun createRetrofit(): Retrofit {
+    private fun createRetrofit(headerPreferences: SharedPreferences): Retrofit {
         val baseUrl = "${ziplineUrl}/api/"
         Log.d("createRetrofit", "baseUrl: $baseUrl")
         val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
@@ -332,11 +335,14 @@ class ServerApi(private val context: Context, url: String? = null) {
         val client = OkHttpClient.Builder()
             .cookieJar(cookieJar)
             .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
+                val requestBuilder = chain.request().newBuilder()
                     .header("User-Agent", userAgent)
                     .header("authorization", ziplineToken)
-                    .build()
-                chain.proceed(request)
+                for ((key, value) in headerPreferences.all) {
+                    Log.d("createRetrofit", "Custom Header: $key - $value")
+                    if (value is String) requestBuilder.header(key, value)
+                }
+                chain.proceed(requestBuilder.build())
             }
             .build()
         val moshi = Moshi.Builder().build()
