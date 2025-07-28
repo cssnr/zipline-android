@@ -61,35 +61,41 @@ class ServerApi(private val context: Context, url: String? = null) {
         api = retrofit.create(ApiService::class.java)
     }
 
-    suspend fun login(host: String, user: String, pass: String): String? {
+    suspend fun login(host: String, user: String, pass: String, code: String?): LoginData {
         Log.d("Api[login]", "host: $host")
-        Log.d("Api[login]", "user/pass: ${user}/${pass}")
+        Log.d("Api[login]", "$user - $pass - $code")
 
         return try {
-            val loginResponse = api.postLogin(LoginRequest(user, pass))
+            val loginResponse = api.postLogin(LoginRequest(user, pass, code))
             Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
+                val loginData = loginResponse.body() ?: throw Error("Empty Server Response")
+                Log.i("Api[login]", "loginData: $loginData")
+                if (loginData.totp == true) {
+                    return LoginData(error = "Two Factor Code Required")
+                }
+                if (loginData.user == null) {
+                    return LoginData(error = "Unknown Error Occurred")
+                }
+                // TODO: While this should not fail, it could and will throw when it does...
                 val tokenResponse = api.getToken()
                 val cookies = cookieJar.loadForRequest(host.toHttpUrl())
                 val cookieManager = CookieManager.getInstance()
                 for (cookie in cookies) {
                     Log.d("Api[login]", "setCookie: $cookie")
-                    //cookieManager.setCookie(host, cookie.toString())
                     cookieManager.setCookie(host, cookie.toString()) {
                         cookieManager.flush()
                     }
                 }
-                tokenResponse.token
+                return LoginData(token = tokenResponse.token)
             } else {
-                //loginResponse.errorBody()?.string()?.take(200)?.let {
-                //    Log.i("Api[login]", "errorBody: $it")
-                //}
-                Log.i("Api[login]", "errorBody: ${loginResponse.errorBody()?.string()?.take(255)}")
-                null
+                val errorResponse = loginResponse.parseErrorBody() ?: "Unknown Error"
+                Log.d("Api[login]", "errorResponse: $errorResponse")
+                LoginData(error = errorResponse)
             }
         } catch (e: Exception) {
             Log.e("Api[login]", "Exception: ${e.message}")
-            null
+            LoginData(error = e.message)
         }
     }
 
@@ -357,7 +363,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         @POST("auth/login")
         suspend fun postLogin(
             @Body request: LoginRequest,
-        ): Response<Unit>
+        ): Response<LoginResponse>
 
         @GET("user/token")
         suspend fun getToken(): TokenResponse
@@ -365,10 +371,10 @@ class ServerApi(private val context: Context, url: String? = null) {
         @GET("user/stats")
         suspend fun getStats(): Response<StatsResponse>
 
-        @GET("user/recent")
-        suspend fun getRecent(
-            @Query("take") take: String = "3"
-        ): Response<List<FileResponse>>
+        //@GET("user/recent")
+        //suspend fun getRecent(
+        //    @Query("take") take: String = "3"
+        //): Response<List<FileResponse>>
 
         @Multipart
         @POST("upload")
@@ -419,15 +425,41 @@ class ServerApi(private val context: Context, url: String? = null) {
         ): Response<List<FolderResponse>>
     }
 
+    data class LoginData(
+        val token: String? = null,
+        val error: String? = null,
+    )
+
     @JsonClass(generateAdapter = true)
     data class LoginRequest(
         val username: String,
         val password: String,
+        val code: String?,
     )
 
     @JsonClass(generateAdapter = true)
     data class TokenResponse(
         val token: String,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class LoginResponse(
+        @Json(name = "user") val user: User?,
+        @Json(name = "totp") val totp: Boolean?,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class User(
+        @Json(name = "id") val id: String,
+        @Json(name = "username") val username: String,
+        @Json(name = "createdAt") val createdAt: String,
+        @Json(name = "updatedAt") val updatedAt: String,
+        @Json(name = "role") val role: String,
+        //@Json(name = "view") val view: UserViewSettings,
+        @Json(name = "sessions") val sessions: List<String>,
+        //@Json(name = "oauthProviders") val oauthProviders: List<String>,
+        @Json(name = "totpSecret") val totpSecret: String?,
+        //@Json(name = "quota") val quota: String?,
     )
 
     @JsonClass(generateAdapter = true)
@@ -467,15 +499,6 @@ class ServerApi(private val context: Context, url: String? = null) {
     //@JsonClass(generateAdapter = true)
     //data class UserResponse(
     //    @Json(name = "user") val user: User
-    //)
-    //
-    //@JsonClass(generateAdapter = true)
-    //data class User(
-    //    @Json(name = "id") val id: String,
-    //    @Json(name = "username") val username: String,
-    //    @Json(name = "createdAt") val createdAt: String,
-    //    @Json(name = "updatedAt") val updatedAt: String,
-    //    @Json(name = "role") val role: String,
     //)
 
     @JsonClass(generateAdapter = true)

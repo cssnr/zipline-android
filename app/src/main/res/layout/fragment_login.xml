@@ -52,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-            android:text="Enter your Zipline v4 Server Details to Proceed." />
+            android:text="Enter your Zipline v4 Server Details." />
 
         <EditText
             android:id="@+id/login_hostname"
@@ -87,6 +87,18 @@
             android:drawableEnd="@drawable/md_key_24px"
             android:drawableTint="?android:attr/textColorTertiary" />
 
+        <EditText
+            android:id="@+id/login_code"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints=""
+            android:hint="Code (Two-Factor Auth)"
+            android:inputType="number"
+            android:maxLength="6"
+            android:drawableEnd="@drawable/md_password_2_24px"
+            android:drawableTint="?android:attr/textColorTertiary" />
+
         <Button
             android:id="@+id/login_button"
             android:layout_width="match_parent"
@@ -104,6 +116,7 @@
             android:id="@+id/login_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:gravity="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/holo_red_light"
@@ -115,7 +128,7 @@
             android:id="@+id/headers_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:layout_marginTop="4dp"
             android:layout_marginHorizontal="12dp"
             android:paddingHorizontal="36dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -136,7 +149,6 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="@string/github_link"
             android:drawablePadding="12dp"
             app:drawableStartCompat="@drawable/fa_github"
