@@ -104,6 +104,7 @@ Lastly you can set this as your start destination if preferred over the web view
 - Preview, Edit and set Options before Uploading
 - Native File List with Multi-Select, Favorite and Delete
 - Home Screen Widget with File Stats and App Shortcuts
+- Supports Two-Factor Authentication and Custom Headers
 
 ### Planned
 
