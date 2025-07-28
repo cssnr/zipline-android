@@ -216,8 +216,6 @@ jobs:
         run: |
           mkdir -p whatsNew
           echo -n "${{ steps.notes.outputs.summary }}" > whatsNew/whatsnew-en-US
-          echo "--------------------"
-          cat whatsNew/whatsnew-en-US | od -c
 
       - name: "Upload Google Play"
         if: ${{ github.event_name == 'release' && !github.event.release.prerelease }}

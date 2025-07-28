@@ -10,7 +10,6 @@ import android.view.HapticFeedbackConstants
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
 import androidx.fragment.app.Fragment
@@ -27,6 +26,7 @@ import kotlinx.coroutines.launch
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
 
 class LoginFragment : Fragment() {
@@ -121,9 +121,11 @@ class LoginFragment : Fragment() {
             }
             Log.d("loginButton", "host: $host")
             val user = binding.loginUsername.text.toString().trim()
-            Log.d("loginButton", "User: $user")
+            Log.d("loginButton", "user: $user")
             val pass = binding.loginPassword.text.toString().trim()
-            Log.d("loginButton", "Pass: $pass")
+            Log.d("loginButton", "pass: $pass")
+            val code = binding.loginCode.text.toString().trim()
+            Log.d("loginButton", "code: $code")
 
             var valid = true
             if (host.isEmpty() || host == "https://") {
@@ -146,12 +148,13 @@ class LoginFragment : Fragment() {
             Log.d("loginButton", "lifecycleScope.launch")
             lifecycleScope.launch {
                 val api = ServerApi(ctx, host)
-                val token = api.login(host, user, pass)
-                Log.d("loginButton", "token: $token")
-                if (token.isNullOrEmpty()) {
+                val auth: LoginData = api.login(host, user, pass, code)
+                Log.d("loginButton", "auth: $auth")
+                if (auth.error != null) {
                     Log.d("loginButton", "LOGIN FAILED")
                     binding.loginError.visibility = View.VISIBLE
-                    Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
+                    binding.loginError.text = auth.error
+                    //Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
                     val shake = ObjectAnimator.ofFloat(
                         binding.loginButton, "translationX",
                         0f, 25f, -25f, 20f, -20f, 15f, -15f, 6f, -6f, 0f
@@ -179,10 +182,10 @@ class LoginFragment : Fragment() {
                     val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
                     preferences.edit {
                         putString("ziplineUrl", host)
-                        putString("ziplineToken", token)
+                        putString("ziplineToken", auth.token)
                     }
                     Log.d("loginButton", "ziplineUrl: $host")
-                    Log.d("loginButton", "ziplineToken: $token")
+                    Log.d("loginButton", "ziplineToken: ${auth.token}")
                     Firebase.analytics.logEvent("login_success", null)
                     //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
                     // TODO: Consider managing first run logic in MainActivity...
