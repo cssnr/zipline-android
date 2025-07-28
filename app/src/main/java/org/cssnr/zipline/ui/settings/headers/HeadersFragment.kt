@@ -189,7 +189,7 @@ class HeadersFragment : Fragment() {
                     inputValue.error = "Required"
                     if (success) {
                         inputValue.requestFocus()
-                        inputValue.setSelection(inputKey.text.length)
+                        inputValue.setSelection(inputValue.text.length)
                     }
                     success = false
                 }
