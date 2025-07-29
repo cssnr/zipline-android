@@ -153,7 +153,7 @@ class LoginFragment : Fragment() {
                 binding.loginHostname.error = "Required"
                 valid = false
             }
-            if (valid && !isURL(host)) {
+            if (valid && host.toHttpUrlOrNull() == null) {
                 binding.loginHostname.error = "Invalid Host"
                 valid = false
             }
@@ -177,11 +177,10 @@ class LoginFragment : Fragment() {
                 Log.d("loginButton", "auth: $auth")
                 if (auth.error != null) {
                     Log.d("loginButton", "LOGIN FAILED")
-                    binding.loginError.visibility = View.VISIBLE
-                    binding.loginError.text = auth.error
-                    //Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
+                    _binding?.loginError?.visibility = View.VISIBLE
+                    _binding?.loginError?.text = auth.error
                     val shake = ObjectAnimator.ofFloat(
-                        binding.loginButton, "translationX",
+                        _binding?.loginButton, "translationX",
                         0f, 25f, -25f, 20f, -20f, 15f, -15f, 6f, -6f, 0f
                     )
                     shake.duration = 800
@@ -189,17 +188,17 @@ class LoginFragment : Fragment() {
                     val red =
                         ContextCompat.getColor(requireContext(), android.R.color.holo_red_dark)
                     val original = ContextCompat.getColor(requireContext(), R.color.button_color)
-                    binding.loginButton.setBackgroundColor(red)
+                    _binding?.loginButton?.setBackgroundColor(red)
                     viewLifecycleOwner.lifecycleScope.launch {
                         delay(700)
                         if (viewLifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-                            binding.loginButton.setBackgroundColor(original)
+                            _binding?.loginButton?.setBackgroundColor(original)
                         }
                     }
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-                        binding.loginButton.performHapticFeedback(HapticFeedbackConstants.REJECT)
+                        _binding?.loginButton?.performHapticFeedback(HapticFeedbackConstants.REJECT)
                     } else {
-                        binding.loginButton.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
+                        _binding?.loginButton?.performHapticFeedback(HapticFeedbackConstants.KEYBOARD_TAP)
                     }
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
@@ -248,17 +247,6 @@ class LoginFragment : Fragment() {
         if (url.endsWith("/")) {
             url = url.substring(0, url.length - 1)
         }
-        //if (!Patterns.WEB_URL.matcher(url).matches()) {
-        //    Log.d("parseHost", "Patterns.WEB_URL.matcher Failed")
-        //    return ""
-        //}
         return url
     }
-
-    fun isURL(url: String): Boolean {
-        val result = url.toHttpUrlOrNull() != null
-        Log.d("isURL", "${if (result) "TRUE" else "FALSE"}: $url")
-        return result
-    }
-
 }
