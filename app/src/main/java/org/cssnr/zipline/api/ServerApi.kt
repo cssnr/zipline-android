@@ -20,7 +20,9 @@ import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
 import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.ResponseBody
 import org.cssnr.zipline.R
+import org.cssnr.zipline.log.debugLog
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -69,7 +71,20 @@ class ServerApi(private val context: Context, url: String? = null) {
             val loginResponse = api.postLogin(LoginRequest(user, pass, code))
             Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
-                val loginData = loginResponse.body() ?: throw Error("Empty Server Response")
+                val rawJson = loginResponse.body()?.string() ?: throw Error("Empty Login Response.")
+                Log.i("Api[login]", "loginResponse: ${loginResponse.code()}: ${rawJson.take(2048)}")
+                context.debugLog("API: login: ${loginResponse.code()}: ${rawJson.take(2048)}")
+
+                val loginData = try {
+                    val moshi = Moshi.Builder().build()
+                    val adapter = moshi.adapter(LoginResponse::class.java)
+                    adapter.fromJson(rawJson)
+                } catch (e: Exception) {
+                    Log.i("Api[login]", "Parsing exception: $e")
+                    context.debugLog("API: login: Exception Parsing Body: $e")
+                    null
+                } ?: throw Error("Error Parsing Response Body")
+
                 Log.i("Api[login]", "loginData: $loginData")
                 if (loginData.totp == true) {
                     return LoginData(error = "Two Factor Code Required")
@@ -91,10 +106,12 @@ class ServerApi(private val context: Context, url: String? = null) {
             } else {
                 val errorResponse = loginResponse.parseErrorBody() ?: "Unknown Error"
                 Log.d("Api[login]", "errorResponse: $errorResponse")
+                context.debugLog("API: login: ${loginResponse.code()}: $errorResponse")
                 LoginData(error = errorResponse)
             }
         } catch (e: Exception) {
             Log.e("Api[login]", "Exception: ${e.message}")
+            context.debugLog("API: login: Exception: ${e.message}")
             LoginData(error = e.message)
         }
     }
@@ -363,7 +380,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         @POST("auth/login")
         suspend fun postLogin(
             @Body request: LoginRequest,
-        ): Response<LoginResponse>
+        ): Response<ResponseBody>
 
         @GET("user/token")
         suspend fun getToken(): TokenResponse

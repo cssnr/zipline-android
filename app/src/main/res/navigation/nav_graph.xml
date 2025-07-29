@@ -14,6 +14,7 @@
         android:id="@+id/nav_item_settings"
         android:name="org.cssnr.zipline.ui.settings.SettingsFragment"
         android:label="Settings">
+        <!-- Widget Action -->
         <action
             android:id="@+id/nav_action_settings_widget"
             app:destination="@id/nav_item_settings_widget"
@@ -21,11 +22,23 @@
             app:enterAnim="@anim/slide_in_left"
             app:popEnterAnim="@anim/slide_in_right"
             app:popExitAnim="@anim/slide_out_right" />
+        <!-- Debug Action -->
+        <!--<action-->
+        <!--    android:id="@+id/nav_action_settings_debug"-->
+        <!--    app:destination="@id/nav_item_settings_debug"-->
+        <!--    app:exitAnim="@anim/slide_out_left"-->
+        <!--    app:enterAnim="@anim/slide_in_left"-->
+        <!--    app:popEnterAnim="@anim/slide_in_right"-->
+        <!--    app:popExitAnim="@anim/slide_out_right" />-->
     </fragment>
     <fragment
         android:id="@+id/nav_item_settings_widget"
         android:name="org.cssnr.zipline.ui.settings.WidgetSettingsFragment"
         android:label="Widget Settings" />
+    <fragment
+        android:id="@+id/nav_item_settings_debug"
+        android:name="org.cssnr.zipline.ui.settings.DebugFragment"
+        android:label="Debug Logs" />
     <fragment
         android:id="@+id/nav_item_headers"
         android:name="org.cssnr.zipline.ui.settings.headers.HeadersFragment"
