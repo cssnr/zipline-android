@@ -17,6 +17,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -58,6 +59,10 @@ class MainActivity : AppCompatActivity() {
 
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
+    companion object {
+        const val LOG_TAG = "MainActivity"
+    }
+
     @OptIn(UnstableApi::class)
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -94,6 +99,7 @@ class MainActivity : AppCompatActivity() {
         val destinationToBottomNavItem = mapOf(
             R.id.nav_item_file_preview to R.id.nav_item_files,
             R.id.nav_item_settings_widget to R.id.nav_item_settings,
+            R.id.nav_item_settings_debug to R.id.nav_item_settings,
         )
         // Destination w/ No Parent
         val hiddenDestinations = setOf(
@@ -165,6 +171,18 @@ class MainActivity : AppCompatActivity() {
                 val handled = NavigationUI.onNavDestinationSelected(menuItem, navController)
                 Log.d("Drawer", "ELSE - handled: $handled")
                 handled
+            }
+        }
+
+        // Set Debug Preferences
+        Log.d(LOG_TAG, "Set Debug Preferences")
+        if (BuildConfig.DEBUG) {
+            Log.i(LOG_TAG, "DEBUG BUILD DETECTED!")
+            if (!preferences.contains("enable_debug_logs")) {
+                Log.i(LOG_TAG, "ENABLING DEBUG LOGGING...")
+                preferences.edit {
+                    putBoolean("enable_debug_logs", true)
+                }
             }
         }
 

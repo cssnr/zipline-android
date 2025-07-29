@@ -33,4 +33,10 @@
     <style name="BottomNavigation.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
         <item name="android:height">28dp</item>
     </style>
+
+    <style name="CustomOutlinedStyle" parent="Widget.Material3.Button.OutlinedButton">
+        <item name="backgroundTint">@color/button_color</item>
+        <item name="android:textColor">?attr/colorPrimaryFixed</item>
+        <item name="iconTint">?attr/colorPrimaryFixed</item>
+    </style>
 </resources>

@@ -350,7 +350,7 @@ class UploadFragment : Fragment() {
                         )
                     }
                 } else {
-                    val errorResponse = response.parseErrorBody()
+                    val errorResponse = response.parseErrorBody(this@processUpload)
                     Log.i("processCode", "errorResponse - $errorResponse")
                     val message = errorResponse ?: "Unknown Error: ${response.code()}"
                     Log.i("processCode", "message - $message")

@@ -216,6 +216,23 @@ class SettingsFragment : PreferenceFragmentCompat() {
             false
         }
 
+        // Debugging
+        val enableDebugLogs = findPreference<SwitchPreferenceCompat>("enable_debug_logs")
+        val viewDebugLogs = findPreference<Preference>("view_debug_logs")
+        enableDebugLogs?.setOnPreferenceChangeListener { _, newValue ->
+            Log.d("enableDebugLogs", "enable_debug_logs: $newValue")
+            val value = newValue as? Boolean == true
+            Log.d("enableDebugLogs", "Boolean value: $value")
+            viewDebugLogs?.isEnabled = value
+            true
+        }
+        viewDebugLogs?.isEnabled = enableDebugLogs?.isChecked == true
+        viewDebugLogs?.setOnPreferenceClickListener {
+            Log.d("viewDebugLogs", "setOnPreferenceClickListener")
+            findNavController().navigate(R.id.nav_item_settings_debug)
+            false
+        }
+
         //val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
         //showPreviewPref?.setOnPreferenceChangeListener { _, newValue ->
         //    val newBool = newValue as Boolean

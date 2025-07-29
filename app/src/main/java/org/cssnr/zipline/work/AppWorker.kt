@@ -12,6 +12,7 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
 import org.cssnr.zipline.db.ServerEntity
+import org.cssnr.zipline.log.debugLog
 import org.cssnr.zipline.widget.WidgetProvider
 
 class AppWorker(appContext: Context, workerParams: WorkerParameters) :
@@ -27,6 +28,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
             applicationContext.updateStats()
         } catch (e: Exception) {
             Log.e("DailyWorker", "updateStats: Exception: $e")
+            applicationContext.debugLog("AppWorker: doWork: Exception: $e")
         }
 
         // Update Widget
@@ -62,6 +64,7 @@ suspend fun Context.updateStats(): Boolean {
     val api = ServerApi(this, savedUrl)
     val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
+    applicationContext.debugLog("AppWorker: updateStats: response code: ${statsResponse.code()}")
     if (statsResponse.isSuccessful) {
         val stats = statsResponse.body()
         Log.d("updateStats", "stats: $stats")

@@ -112,12 +112,14 @@
             app:iconGravity="end"
             app:iconPadding="-24dp"
             app:iconSize="24dp" />
+
         <TextView
             android:id="@+id/login_error"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
             android:gravity="center"
+            android:maxLines="4"
+            android:ellipsize="end"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@android:color/holo_red_light"
             android:text="Login Failed"
@@ -137,6 +139,31 @@
             app:iconGravity="end"
             app:iconPadding="-18dp"
             app:iconSize="18dp" />
+
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/toggle_debug_logs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:drawablePadding="12dp"
+            android:drawableStart="@drawable/md_bug_report_24px"
+            android:text="Debug Logging" />
+
+        <Button
+            android:id="@+id/debug_logging"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginHorizontal="12dp"
+            android:paddingHorizontal="36dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Debug Logs"
+            android:visibility="gone"
+            app:icon="@drawable/md_manage_search_24px"
+            app:iconGravity="end"
+            app:iconPadding="-18dp"
+            app:iconSize="18dp"
+            tools:visibility="visible" />
 
         <TextView
             android:layout_width="wrap_content"
