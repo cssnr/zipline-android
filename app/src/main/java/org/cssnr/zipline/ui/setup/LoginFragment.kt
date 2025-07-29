@@ -153,7 +153,7 @@ class LoginFragment : Fragment() {
                 binding.loginHostname.error = "Required"
                 valid = false
             }
-            if (valid && !isURL(host)) {
+            if (valid && host.toHttpUrlOrNull() == null) {
                 binding.loginHostname.error = "Invalid Host"
                 valid = false
             }
@@ -179,7 +179,6 @@ class LoginFragment : Fragment() {
                     Log.d("loginButton", "LOGIN FAILED")
                     _binding?.loginError?.visibility = View.VISIBLE
                     _binding?.loginError?.text = auth.error
-                    //Toast.makeText(ctx, "Login Failed!", Toast.LENGTH_SHORT).show()
                     val shake = ObjectAnimator.ofFloat(
                         _binding?.loginButton, "translationX",
                         0f, 25f, -25f, 20f, -20f, 15f, -15f, 6f, -6f, 0f
@@ -248,17 +247,6 @@ class LoginFragment : Fragment() {
         if (url.endsWith("/")) {
             url = url.substring(0, url.length - 1)
         }
-        //if (!Patterns.WEB_URL.matcher(url).matches()) {
-        //    Log.d("parseHost", "Patterns.WEB_URL.matcher Failed")
-        //    return ""
-        //}
         return url
     }
-
-    fun isURL(url: String): Boolean {
-        val result = url.toHttpUrlOrNull() != null
-        Log.d("isURL", "${if (result) "TRUE" else "FALSE"}: $url")
-        return result
-    }
-
 }
