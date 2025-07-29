@@ -78,7 +78,7 @@
             android:key="file_preview_autoplay"
             android:title="Auto Play Media"
             android:icon="@drawable/md_auto_read_play_24px"
-            android:summary="When Viewing a File Preview"
+            android:summary="When Viewing a Preview"
             android:defaultValue="true"/>
 
         <androidx.preference.SeekBarPreference
