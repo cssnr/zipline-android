@@ -23,6 +23,7 @@ import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
@@ -35,6 +36,7 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val navController by lazy { findNavController() }
+    private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
     companion object {
         const val LOG_TAG = "LoginFragment"
@@ -97,6 +99,11 @@ class LoginFragment : Fragment() {
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
         binding.serverText.movementMethod = LinkMovementMethod.getInstance()
 
+        val enableDebugLogs = preferences.getBoolean("enable_debug_logs", false)
+        Log.d(LOG_TAG, "enableDebugLogs: $enableDebugLogs")
+        binding.debugLogging.visibility = if (enableDebugLogs) View.VISIBLE else View.GONE
+        binding.toggleDebugLogs.isChecked = enableDebugLogs
+
         if (arguments?.getString("url") != null) {
             Log.i(LOG_TAG, "url: ${arguments?.getString("url")}")
             binding.loginHostname.setText(arguments?.getString("url").toString())
@@ -108,6 +115,20 @@ class LoginFragment : Fragment() {
 
         binding.headersButton.setOnClickListener {
             navController.navigate(R.id.nav_item_headers)
+        }
+
+        binding.toggleDebugLogs.setOnClickListener {
+            Log.d("toggleDebugLogs", "setOnClickListener")
+            val result = !preferences.getBoolean("enable_debug_logs", false)
+            Log.d("toggleDebugLogs", "result: $result")
+            preferences.edit {
+                putBoolean("enable_debug_logs", result)
+            }
+            binding.debugLogging.visibility = if (result) View.VISIBLE else View.GONE
+        }
+        binding.debugLogging.setOnClickListener {
+            Log.d("debugLogging", "setOnClickListener: navigate(R.id.nav_item_settings_debug)")
+            navController.navigate(R.id.nav_item_settings_debug)
         }
 
         binding.loginButton.setOnClickListener {
@@ -130,6 +151,10 @@ class LoginFragment : Fragment() {
             var valid = true
             if (host.isEmpty() || host == "https://") {
                 binding.loginHostname.error = "Required"
+                valid = false
+            }
+            if (valid && !isURL(host)) {
+                binding.loginHostname.error = "Invalid Host"
                 valid = false
             }
             if (user.isEmpty()) {
@@ -179,7 +204,6 @@ class LoginFragment : Fragment() {
                     Firebase.analytics.logEvent("login_failed", null)
                 } else {
                     Log.d("loginButton", "LOGIN SUCCESS")
-                    val preferences = PreferenceManager.getDefaultSharedPreferences(ctx)
                     preferences.edit {
                         putString("ziplineUrl", host)
                         putString("ziplineToken", auth.token)
@@ -230,4 +254,11 @@ class LoginFragment : Fragment() {
         //}
         return url
     }
+
+    fun isURL(url: String): Boolean {
+        val result = url.toHttpUrlOrNull() != null
+        Log.d("isURL", "${if (result) "TRUE" else "FALSE"}: $url")
+        return result
+    }
+
 }

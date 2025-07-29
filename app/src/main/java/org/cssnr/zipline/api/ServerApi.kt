@@ -104,7 +104,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                 }
                 return LoginData(token = tokenResponse.token)
             } else {
-                val errorResponse = loginResponse.parseErrorBody() ?: "Unknown Error"
+                val errorResponse = loginResponse.parseErrorBody(context) ?: "Unknown Error"
                 Log.d("Api[login]", "errorResponse: $errorResponse")
                 context.debugLog("API: login: ${loginResponse.code()}: $errorResponse")
                 LoginData(error = errorResponse)
@@ -619,7 +619,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 data class ErrorResponse(val error: String)
 
 
-fun Response<*>.parseErrorBody(): String? {
+fun Response<*>.parseErrorBody(context: Context): String? {
     val errorBody = errorBody() ?: return null
     val moshi = Moshi.Builder().build()
     val adapter = moshi.adapter(ErrorResponse::class.java)
@@ -627,6 +627,7 @@ fun Response<*>.parseErrorBody(): String? {
         try {
             adapter.fromJson(source)?.error
         } catch (e: Exception) {
+            context.debugLog("API: parseErrorBody: ${e.message}")
             Log.e("ResponseExt", "Failed to parse error body", e)
             null
         }
