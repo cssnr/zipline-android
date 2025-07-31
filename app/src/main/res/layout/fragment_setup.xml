@@ -76,6 +76,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="Share or Open any File or URL"
                         android:drawablePadding="6dp"
@@ -84,6 +86,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="View, Edit and Dowload Files"
                         android:drawablePadding="6dp"
@@ -101,6 +105,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:labelFor="@+id/start_destination_radio"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textColor="?attr/colorPrimary"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:text="Start Destination on Launching App" />
@@ -153,6 +159,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:labelFor="@+id/notifications_switch"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textColor="?attr/colorPrimary"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:text="Automatically Show Share Dialog After" />
@@ -187,6 +195,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:labelFor="@id/work_interval_spinner"
+                        android:maxLines="1"
+                        android:ellipsize="end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                         android:textColor="?attr/colorPrimary"
                         android:text="Stats Widget Background Update Interval" />
@@ -223,7 +233,7 @@
             android:id="@+id/btn_continue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Continue to App" />
+            android:text="Continue" />
         <Button
             android:id="@+id/btn_skip"
             android:layout_width="wrap_content"
