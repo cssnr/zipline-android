@@ -35,11 +35,15 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                 android:text="Debug Logs" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
                 android:text="To debug worker and server actions." />
         </LinearLayout>
     </LinearLayout>
@@ -59,7 +63,6 @@
                 android:id="@+id/text_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="56dp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="14sp"
                 tools:text="@tools:sample/lorem/random"/>
@@ -67,14 +70,15 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.button.MaterialButtonToggleGroup
+        android:id="@+id/button_group"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:paddingVertical="4dp"
         android:paddingHorizontal="16dp"
+        android:paddingBottom="12dp"
         android:background="@android:color/transparent"
         android:orientation="horizontal">
         <Button

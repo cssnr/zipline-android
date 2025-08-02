@@ -40,13 +40,13 @@ import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.ui.home.HomeViewModel
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
 import java.io.File
-import java.net.URL
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
@@ -342,7 +342,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
                 //if (extraText.lowercase().startsWith("http")) {
                 //if (Patterns.WEB_URL.matcher(extraText).matches()) {
-                if (isURL(extraText)) {
+                if (extraText.toHttpUrlOrNull() == null) {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply { putString("url", extraText) }
@@ -410,17 +410,6 @@ class MainActivity : AppCompatActivity() {
         val ids = appWidgetManager.getAppWidgetIds(componentName)
         WidgetProvider().onUpdate(this, appWidgetManager, ids)
         super.onStop()
-    }
-
-    private fun isURL(url: String): Boolean {
-        return try {
-            URL(url)
-            Log.d("isURL", "TRUE")
-            true
-        } catch (_: Exception) {
-            Log.d("isURL", "FALSE")
-            false
-        }
     }
 
     private fun showPreview(uri: Uri?) {

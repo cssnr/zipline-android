@@ -87,7 +87,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 
                 Log.i("Api[login]", "loginData: $loginData")
                 if (loginData.totp == true) {
-                    return LoginData(error = "Two Factor Code Required")
+                    return LoginData(error = "Two Factor Code Required", totp = true)
                 }
                 if (loginData.user == null) {
                     return LoginData(error = "Unknown Error Occurred")
@@ -445,6 +445,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     data class LoginData(
         val token: String? = null,
         val error: String? = null,
+        val totp: Boolean = false,
     )
 
     @JsonClass(generateAdapter = true)

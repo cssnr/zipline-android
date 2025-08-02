@@ -12,7 +12,7 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
-# Zipline Android Application
+# Zipline Upload Android Application
 
 [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -34,9 +34,9 @@
   - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
-Android Application to Upload, Share and Manage your Files and URLs for a Self-Hosted [Zipline v4 Server](https://github.com/diced/zipline).
+Zipline Upload Android Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
 
-Allows you to Share or Open files and Shorten URLs directly to a Zipline v4 server.
+Allows you to Share or Open files and Shorten URLs directly to a [diced/zipline](https://github.com/diced/zipline) v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
 
 We are also developing a browser addon [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme).
@@ -89,34 +89,36 @@ For more information, see [Release through a website](https://developer.android.
 3. Done! You can now share and open files with Zipline.
 4. Optionally add a Stats Widget to your Home Screen.
 
-To use, share or open any file and choose the Zipline app.
-The app will then be upload the file to your Zipline server.
-Additionally, the URL is copied to the clipboard and the preview is show in the app.
+To use, share or open any file, text, or URL and choose the Zipline app.
+Preview the items, set upload options, verify and submit.
+The results will be shown and copied to the clipboard.
 
-The Files List can be used to view, edit, download, or delete any file.
-This supports multi-select and infinite scroll.
-You can choose how many fies to load each time.
-Lastly you can set this as your start destination if preferred over the web view.
+The Files List can be used to view, edit, download, or delete any file or files.
 
 ## Features
 
 - Share or Open any File, Media, Text or URL
 - Preview, Edit and set Options before Uploading
-- Native File List with Multi-Select, Favorite and Delete
+- Native File List with Multi-Select, Edit and Delete
 - Home Screen Widget with File Stats and App Shortcuts
 - Supports Two-Factor Authentication and Custom Headers
 
 ### Planned
 
-- Add URL Management Page
-- Add Default Upload Options
-- Add Per-Upload Options Overrides
-- Add File Edit Options to File List
+- Add User Avatar and Management
+- Add Short URL Management
+- Add AppBar to Replace Bottom Navigation
+- Add Remaining Upload Options [upload-options](https://zipline.diced.sh/docs/guides/upload-options)
+- Improve File List
+  - Add Grid View Selector
+  - Add Remaining File Options [file](https://zipline.diced.sh/docs/api/models/file)
 
 ### Known Issues
 
 - After deleting files and then scrolling in the file list it skips the number of files deleted when loading.
-  - To work around, after deleting files, scroll to the top and pull down to refresh.
+  - After deleting files, scroll to the top and pull down to refresh.
+- If your sessions get deleted you are logged out of the WebView (Home).
+  - The WebView is being deprecated and future updates will rely less on this.
 - The File List does not work properly if you have 0 files or there is an error fetching files.
 - Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
 

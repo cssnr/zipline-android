@@ -11,6 +11,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.doOnLayout
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -71,12 +73,16 @@ class DebugFragment : Fragment() {
 
         val ctx = requireContext()
 
+        lifecycleScope.launch { binding.textView.text = ctx.readLogFile() }
+
+        binding.buttonGroup.doOnLayout {
+            binding.textView.updatePadding(bottom = it.height + 24)
+        }
+
         binding.goBack.setOnClickListener {
             Log.d(HeadersFragment.Companion.LOG_TAG, "binding.goBack: navController.navigateUp()")
             findNavController().navigateUp()
         }
-
-        lifecycleScope.launch { binding.textView.text = ctx.readLogFile() }
 
         binding.copyLogs.setOnClickListener {
             Log.d(LOG_TAG, "copyLogs")
