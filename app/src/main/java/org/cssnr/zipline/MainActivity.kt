@@ -9,6 +9,7 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -25,6 +26,7 @@ import androidx.core.view.get
 import androidx.core.view.size
 import androidx.core.view.updatePadding
 import androidx.drawerlayout.widget.DrawerLayout
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.database.StandaloneDatabaseProvider
 import androidx.media3.datasource.DefaultHttpDataSource
@@ -40,8 +42,13 @@ import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.signature.ObjectKey
+import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.cssnr.zipline.databinding.ActivityMainBinding
+import org.cssnr.zipline.db.UserDao
+import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.ui.home.HomeViewModel
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
@@ -206,11 +213,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Update Header Text
-        val packageInfo = packageManager.getPackageInfo(this.packageName, 0)
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
         val versionName = packageInfo.versionName
         Log.d("Main[onCreate]", "versionName: $versionName")
-        val versionTextView = headerView.findViewById<TextView>(R.id.header_version)
-        versionTextView.text = "v${versionName}"
+        val headerVersionText = headerView.findViewById<TextView>(R.id.header_version)
+        headerVersionText.text = "v${versionName}"
+
+        val savedUrl = preferences.getString("ziplineUrl", null)
+        if (savedUrl != null) {
+            val dao: UserDao = UserDatabase.getInstance(this).userDao()
+            lifecycleScope.launch {
+                val user = dao.getUserByUrl(savedUrl)
+                Log.d("Main[onCreate]", "user: $user")
+                val headerUsername = headerView.findViewById<TextView>(R.id.header_username)
+                if (user != null) {
+                    headerUsername?.text = user.username
+                }
+            }
+        }
+
+        val file = File(filesDir, "avatar.png")
+        if (file.exists()) {
+            val headerImage = headerView.findViewById<ImageView>(R.id.header_image)
+            Log.i("Main[onCreate]", "GLIDE LOAD - MainActivity - file.name: ${file.name}")
+            Glide.with(headerImage).load(file).signature(ObjectKey(file.lastModified()))
+                .into(headerImage)
+        }
 
         // TODO: Improve initialization of the WorkRequest
         val workInterval = preferences.getString("work_interval", null) ?: "0"

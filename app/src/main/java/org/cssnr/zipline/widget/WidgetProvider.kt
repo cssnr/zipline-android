@@ -144,7 +144,7 @@ class WidgetProvider : AppWidgetProvider() {
             // Room Data
             CoroutineScope(Dispatchers.IO).launch {
                 val dao: ServerDao =
-                    ServerDatabase.Companion.getInstance(context.applicationContext).serverDao()
+                    ServerDatabase.getInstance(context.applicationContext).serverDao()
                 Log.d("Widget[onUpdate]", "dao: $dao")
                 val server = dao.get(savedUrl)
                 Log.d("Widget[onUpdate]", "server: $server")

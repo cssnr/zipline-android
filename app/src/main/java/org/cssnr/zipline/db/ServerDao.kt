@@ -10,6 +10,23 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.Upsert
 
+// NOTE: Currently this is only used for stats
+@Entity(tableName = "servers")
+data class ServerEntity(
+    @PrimaryKey val url: String,
+    val token: String = "",
+    val active: Boolean = false,
+    val filesUploaded: Int? = null,
+    val favoriteFiles: Int? = null,
+    val views: Int? = null,
+    val avgViews: Double? = null,
+    val storageUsed: Long? = null,
+    val avgStorageUsed: Double? = null,
+    val urlsCreated: Int? = null,
+    val urlViews: Int,
+    val updatedAt: Long,
+)
+
 @Dao
 interface ServerDao {
     @Upsert
@@ -31,23 +48,6 @@ interface ServerDao {
     //fun delete(server: ServerEntity)
 }
 
-// NOTE: Currently this is only used for stats
-@Entity(tableName = "servers")
-data class ServerEntity(
-    @PrimaryKey val url: String,
-    val token: String = "",
-    val active: Boolean = false,
-    val filesUploaded: Int? = null,
-    val favoriteFiles: Int? = null,
-    val views: Int? = null,
-    val avgViews: Double? = null,
-    val storageUsed: Long? = null,
-    val avgStorageUsed: Double? = null,
-    val urlsCreated: Int? = null,
-    val urlViews: Int,
-    val updatedAt: Long,
-)
-
 
 @Database(entities = [ServerEntity::class], version = 2)
 abstract class ServerDatabase : RoomDatabase() {
@@ -57,8 +57,8 @@ abstract class ServerDatabase : RoomDatabase() {
         @Volatile
         private var instance: ServerDatabase? = null
 
-        fun getInstance(context: Context): ServerDatabase =
-            instance ?: synchronized(this) {
+        fun getInstance(context: Context): ServerDatabase {
+            return instance ?: synchronized(this) {
                 instance ?: Room.databaseBuilder(
                     context.applicationContext,
                     ServerDatabase::class.java,
@@ -67,5 +67,6 @@ abstract class ServerDatabase : RoomDatabase() {
                     .fallbackToDestructiveMigration(true)
                     .build().also { instance = it }
             }
+        }
     }
 }

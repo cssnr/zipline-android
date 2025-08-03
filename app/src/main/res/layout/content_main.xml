@@ -24,6 +24,7 @@
         app:itemIconSize="22dp"
         app:itemPaddingTop="8dp"
         app:itemPaddingBottom="10dp"
+        app:labelVisibilityMode="labeled"
         app:itemTextAppearanceActiveBoldEnabled="false"
         app:itemActiveIndicatorStyle="@style/BottomNavigation.Indicator"
         app:layout_constraintBottom_toBottomOf="parent"

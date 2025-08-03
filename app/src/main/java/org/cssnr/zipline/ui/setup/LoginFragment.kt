@@ -26,6 +26,9 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.async
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
@@ -34,6 +37,8 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
+import org.cssnr.zipline.ui.user.getAvatar
+import org.cssnr.zipline.ui.user.getUser
 
 class LoginFragment : Fragment() {
 
@@ -155,17 +160,18 @@ class LoginFragment : Fragment() {
             override fun afterTextChanged(s: Editable?) {
                 Log.d("afterTextChanged", "${s?.length} - $s")
                 if (s?.length == 6) {
-                    lifecycleScope.launch { ctx.processLogin() }
+                    lifecycleScope.launch { processLogin(ctx) }
                 }
             }
         })
 
         binding.loginButton.setOnClickListener {
-            lifecycleScope.launch { ctx.processLogin() }
+            lifecycleScope.launch { processLogin(ctx) }
         }
     }
 
-    private suspend fun Context.processLogin() {
+    @OptIn(DelicateCoroutinesApi::class)
+    private suspend fun processLogin(context: Context) {
         _binding?.loginButton?.isEnabled = false
         _binding?.loginError?.visibility = View.INVISIBLE
         val inputHost = _binding?.loginHostname?.text.toString().trim()
@@ -204,7 +210,7 @@ class LoginFragment : Fragment() {
             return
         }
 
-        val api = ServerApi(this, host)
+        val api = ServerApi(context, host)
         val auth: LoginData = api.login(host, user, pass, code)
         Log.d("loginButton", "auth: $auth")
         if (auth.totp == true) {
@@ -226,6 +232,24 @@ class LoginFragment : Fragment() {
             Log.d("loginButton", "ziplineToken: ${auth.token}")
             Firebase.analytics.logEvent("login_success", null)
             //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
+            //GlobalScope.launch(Dispatchers.IO) { requireActivity().getAvatar() }
+
+            //// NOTE: This updates in the background and does not block
+            //CoroutineScope(Dispatchers.IO).launch {
+            //    requireActivity().getAvatar()
+            //}
+
+            //// NOTE: This is blocking
+            //requireActivity().getAvatar()
+
+            // NOTE: This runs both tasks simultaneously and blocks the current scope
+            coroutineScope {
+                val task1 = async { requireActivity().getAvatar() }
+                val task2 = async { requireContext().getUser() }
+                task1.await()
+                task2.await()
+            }
+
             // TODO: Consider managing first run logic in MainActivity...
             if (!preferences.getBoolean("first_run_shown", false)) {
                 preferences.edit { putBoolean("first_run_shown", true) }

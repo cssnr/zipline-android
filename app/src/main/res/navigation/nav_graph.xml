@@ -11,6 +11,12 @@
         android:label="Home" />
 
     <fragment
+        android:id="@+id/nav_item_user"
+        android:name="org.cssnr.zipline.ui.user.UserFragment"
+        android:label="User">
+    </fragment>
+
+    <fragment
         android:id="@+id/nav_item_settings"
         android:name="org.cssnr.zipline.ui.settings.SettingsFragment"
         android:label="Settings">
