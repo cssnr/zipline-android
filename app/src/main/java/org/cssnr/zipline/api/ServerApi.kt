@@ -221,6 +221,19 @@ class ServerApi(private val context: Context, url: String? = null) {
         return if (response.isSuccessful) response.body()?.user else null
     }
 
+    suspend fun editUser(patchUser: PatchUser): User? {
+        Log.d("Api[editUser]", "patchUser: ${patchUser.toString().take(100)}")
+        var response = api.patchUser(patchUser)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[editUser]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.patchUser(patchUser)
+            }
+        }
+        return if (response.isSuccessful) response.body()?.user else null
+    }
+
     //suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
     //    Log.d("Api[stats]", "stats")
     //    val response = api.getRecent(take)
@@ -426,6 +439,11 @@ class ServerApi(private val context: Context, url: String? = null) {
         @GET("user")
         suspend fun getUser(): Response<UserResponse>
 
+        @PATCH("user")
+        suspend fun patchUser(
+            @Body request: PatchUser,
+        ): Response<UserResponse>
+
         //@GET("user/recent")
         //suspend fun getRecent(
         //    @Query("take") take: String = "3"
@@ -522,6 +540,13 @@ class ServerApi(private val context: Context, url: String? = null) {
         //@Json(name = "oauthProviders") val oauthProviders: List<String>,
         @Json(name = "totpSecret") val totpSecret: String?,
         //@Json(name = "quota") val quota: String?,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class PatchUser(
+        @Json(name = "username") val username: String? = null,
+        @Json(name = "password") val password: String? = null,
+        @Json(name = "avatar") val avatar: String? = null,
     )
 
     @JsonClass(generateAdapter = true)

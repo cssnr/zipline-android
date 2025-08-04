@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -136,5 +140,17 @@
             app:iconPadding="12dp"
             app:iconSize="18dp" />
 
+        <Button
+            android:id="@+id/test_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Testing Button"
+            app:icon="@drawable/md_bug_report_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp"
+            app:iconSize="18dp" />
+
     </LinearLayout>
 </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

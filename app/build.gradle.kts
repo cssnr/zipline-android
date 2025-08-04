@@ -82,6 +82,7 @@ dependencies {
     implementation(libs.taptargetview)
     implementation(libs.konfetti.xml)
     implementation(libs.photoview)
+    implementation(libs.android.image.cropper)
     ksp(libs.androidx.room.compiler)
     ksp(libs.moshi.kotlin.codegen)
     testImplementation(libs.junit)
