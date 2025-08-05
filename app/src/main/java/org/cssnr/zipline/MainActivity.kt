@@ -45,12 +45,15 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.ui.home.HomeViewModel
+import org.cssnr.zipline.ui.user.updateAvatar
+import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
@@ -284,6 +287,23 @@ class MainActivity : AppCompatActivity() {
             }
 
         MediaCache.initialize(this)
+
+        // Check Update Version
+        lifecycleScope.launch {
+            val previousVersion = preferences.getInt("previousVersion", 0)
+            Log.d(LOG_TAG, "previousVersion $previousVersion")
+            Log.d(LOG_TAG, "packageInfo.versionCode ${packageInfo.versionCode}")
+            //preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
+            val authToken = preferences.getString("ziplineToken", null)
+            Log.d("Multi[onViewCreated]", "authToken: $authToken")
+            if (!authToken.isNullOrEmpty() && previousVersion < packageInfo.versionCode) {
+                Log.i(LOG_TAG, "Upgrading from $previousVersion -> ${packageInfo.versionCode}")
+                val task1 = async { updateAvatar() }
+                val task2 = async { updateUserActivity() }
+                task1.await()
+                task2.await()
+            }
+        }
 
         // Only Handel Intent Once Here after App Start
         if (savedInstanceState?.getBoolean("intentHandled") != true) {
