@@ -20,7 +20,7 @@ import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
-import org.cssnr.zipline.work.updateStats
+import org.cssnr.zipline.ui.user.updateStats
 
 class WidgetProvider : AppWidgetProvider() {
 

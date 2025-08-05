@@ -90,7 +90,7 @@
                     android:contentDescription="Share"
                     android:padding="@dimen/bottom_sheet_icon_padding"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/md_share_24" />
+                    android:src="@drawable/md_share_24px" />
                 <ImageView
                     android:id="@+id/copy_button"
                     android:layout_width="@dimen/bottom_sheet_icon_size"

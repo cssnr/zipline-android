@@ -26,7 +26,9 @@ import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
@@ -39,6 +41,7 @@ import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
 import org.cssnr.zipline.ui.user.getAvatar
 import org.cssnr.zipline.ui.user.getUser
+import org.cssnr.zipline.ui.user.updateStats
 
 class LoginFragment : Fragment() {
 
@@ -234,13 +237,10 @@ class LoginFragment : Fragment() {
             //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
             //GlobalScope.launch(Dispatchers.IO) { requireActivity().getAvatar() }
 
-            //// NOTE: This updates in the background and does not block
-            //CoroutineScope(Dispatchers.IO).launch {
-            //    requireActivity().getAvatar()
-            //}
-
-            //// NOTE: This is blocking
-            //requireActivity().getAvatar()
+            // NOTE: This updates in the background and does not block
+            CoroutineScope(Dispatchers.IO).launch {
+                requireContext().updateStats()
+            }
 
             // NOTE: This runs both tasks simultaneously and blocks the current scope
             coroutineScope {

@@ -44,6 +44,8 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
+import com.google.android.material.imageview.ShapeableImageView
+import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.launch
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.cssnr.zipline.databinding.ActivityMainBinding
@@ -232,9 +234,17 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
+        // Update Header Image
+        val headerImage = headerView.findViewById<ShapeableImageView>(R.id.header_image)
+
+        val radius = resources.getDimension(R.dimen.user_page_avatar)
+        headerImage.setShapeAppearanceModel(
+            headerImage.shapeAppearanceModel.toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED, radius).build()
+        )
+
         val file = File(filesDir, "avatar.png")
         if (file.exists()) {
-            val headerImage = headerView.findViewById<ImageView>(R.id.header_image)
             Log.i("Main[onCreate]", "GLIDE LOAD - MainActivity - file.name: ${file.name}")
             Glide.with(headerImage).load(file).signature(ObjectKey(file.lastModified()))
                 .into(headerImage)

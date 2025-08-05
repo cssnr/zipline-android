@@ -24,16 +24,17 @@ data class ServerEntity(
     val avgStorageUsed: Double? = null,
     val urlsCreated: Int? = null,
     val urlViews: Int,
+    // TODO: This is the client updatedAt time and not the stats updatedAt time...
     val updatedAt: Long,
 )
 
 @Dao
 interface ServerDao {
     @Upsert
-    fun upsert(stats: ServerEntity)
+    suspend fun upsert(stats: ServerEntity)
 
     @Query("SELECT * FROM servers WHERE url = :url LIMIT 1")
-    fun get(url: String): ServerEntity?
+    suspend fun get(url: String): ServerEntity?
 
     //@Query("SELECT * FROM servers ORDER BY ROWID")
     //fun getAll(): List<ServerEntity>

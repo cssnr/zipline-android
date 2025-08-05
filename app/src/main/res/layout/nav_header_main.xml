@@ -14,7 +14,7 @@
         android:layout_marginStart="12dp"
         android:gravity="center_vertical"
         tools:ignore="UselessParent">
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/header_image"
             android:layout_width="72dp"
             android:layout_height="72dp"
