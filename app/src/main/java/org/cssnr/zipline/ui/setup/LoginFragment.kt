@@ -39,8 +39,8 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
-import org.cssnr.zipline.ui.user.getAvatar
-import org.cssnr.zipline.ui.user.getUser
+import org.cssnr.zipline.ui.user.updateAvatar
+import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.ui.user.updateStats
 
 class LoginFragment : Fragment() {
@@ -235,7 +235,7 @@ class LoginFragment : Fragment() {
             Log.d("loginButton", "ziplineToken: ${auth.token}")
             Firebase.analytics.logEvent("login_success", null)
             //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
-            //GlobalScope.launch(Dispatchers.IO) { requireActivity().getAvatar() }
+            //GlobalScope.launch(Dispatchers.IO) { requireActivity().updateAvatar() }
 
             // NOTE: This updates in the background and does not block
             CoroutineScope(Dispatchers.IO).launch {
@@ -244,8 +244,8 @@ class LoginFragment : Fragment() {
 
             // NOTE: This runs both tasks simultaneously and blocks the current scope
             coroutineScope {
-                val task1 = async { requireActivity().getAvatar() }
-                val task2 = async { requireActivity().getUser() }
+                val task1 = async { requireActivity().updateAvatar() }
+                val task2 = async { requireActivity().updateUserActivity() }
                 task1.await()
                 task2.await()
             }

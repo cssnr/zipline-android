@@ -10,6 +10,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import org.cssnr.zipline.log.debugLog
 import org.cssnr.zipline.ui.user.updateStats
+import org.cssnr.zipline.ui.user.updateUser
 import org.cssnr.zipline.widget.WidgetProvider
 
 class AppWorker(appContext: Context, workerParams: WorkerParameters) :
@@ -25,7 +26,15 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
             applicationContext.updateStats()
         } catch (e: Exception) {
             Log.e("DailyWorker", "updateStats: Exception: $e")
-            applicationContext.debugLog("AppWorker: doWork: Exception: $e")
+            applicationContext.debugLog("updateStats: Exception: $e")
+        }
+
+        Log.d("DailyWorker", "--- Update User")
+        try {
+            applicationContext.updateUser()
+        } catch (e: Exception) {
+            Log.e("DailyWorker", "updateUser: Exception: $e")
+            applicationContext.debugLog("updateUser: Exception: $e")
         }
 
         // Update Widget

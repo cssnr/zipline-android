@@ -15,6 +15,7 @@ import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
+import androidx.core.content.edit
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -22,10 +23,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
@@ -229,7 +232,7 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.updateProfile.setOnClickListener")
             binding.updateProfile.isEnabled = false
             lifecycleScope.launch {
-                val user = requireActivity().getUser()
+                val user = requireActivity().updateUserActivity()
                 Log.d(LOG_TAG, "binding.updateProfile - user: $user")
                 viewModel.user.value = user
                 _binding?.updateProfile?.isEnabled = true
@@ -253,7 +256,7 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.updateAvatar.setOnClickListener")
             binding.updateAvatar.isEnabled = false
             lifecycleScope.launch {
-                val file = requireActivity().getAvatar()
+                val file = requireActivity().updateAvatar()
                 Log.d(LOG_TAG, "binding.updateAvatar: file: $file")
                 _binding?.let {
                     if (file?.exists() == true) {
@@ -295,6 +298,28 @@ class UserFragment : Fragment() {
             }
         }
 
+        binding.logOutBtn.setOnClickListener {
+            Log.d(LOG_TAG, "binding.logOutBtn.setOnClickListener")
+
+            MaterialAlertDialogBuilder(ctx)
+                .setTitle("Log Out")
+                .setIcon(R.drawable.md_logout_24px)
+                .setMessage("Log out of the application?")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Log Out") { _, _ ->
+                    Log.d(LOG_TAG, "LOG OUT")
+                    preferences.edit { remove("ziplineToken") }
+                    val bundle = bundleOf("url" to savedUrl)
+                    Log.d(LOG_TAG, "bundle: $bundle")
+                    navController.navigate(
+                        R.id.nav_item_login, bundle, NavOptions.Builder()
+                            .setPopUpTo(navController.graph.id, true)
+                            .build()
+                    )
+                }
+                .show()
+        }
+
         class MyOnClickListener : View.OnClickListener {
             override fun onClick(v: View) {
                 Log.d(LOG_TAG, "MyOnClickListener: $v")
@@ -322,7 +347,7 @@ suspend fun Context.updateStats(): ServerEntity? {
     val api = ServerApi(this, savedUrl)
     val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
-    debugLog("updateStats: response code: ${statsResponse.code()}")
+    debugLog("updateStats: response: ${statsResponse.code()}")
     if (statsResponse.isSuccessful) {
         val stats = statsResponse.body()
         Log.d("updateStats", "stats: $stats")
@@ -349,64 +374,72 @@ suspend fun Context.updateStats(): ServerEntity? {
 }
 
 
-suspend fun Activity.getAvatar(): File? {
+suspend fun Context.updateUser(): UserEntity? {
+    Log.d("updateUser", "updateUser")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val savedUrl = preferences.getString("ziplineUrl", null).toString()
-    Log.d("getAvatar", "savedUrl: $savedUrl")
+    Log.d("updateUser", "savedUrl: $savedUrl")
+    if (preferences.getString("ziplineToken", null).isNullOrEmpty()) {
+        Log.d("updateUser", "ziplineToken: isNullOrEmpty")
+        return null
+    }
+    val api = ServerApi(this, savedUrl)
+    val user = api.user() ?: return null
+    Log.d("updateUser", "user: $user")
+    debugLog("updateUser: $user")
+    val repo = UserRepository(UserDatabase.getInstance(this).userDao())
+    val userEntity: UserEntity = repo.updateUser(savedUrl, user)
+    Log.d("updateUser", "repo.updateUser: DONE")
+    return userEntity
+}
+
+suspend fun Activity.updateUserActivity(): UserEntity? {
+    Log.d("updateUserActivity", "calling: updateUser()")
+    val user = updateUser()
+    if (user != null) {
+        withContext(Dispatchers.Main) {
+            Log.d("updateUserActivity", "Dispatchers.Main")
+            val headerUsername = findViewById<TextView>(R.id.header_username)
+            headerUsername?.text = user.username
+        }
+    }
+    return user
+}
+
+
+suspend fun Activity.updateAvatar(): File? {
+    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+    val savedUrl = preferences.getString("ziplineUrl", null).toString()
+    Log.d("updateAvatar", "savedUrl: $savedUrl")
 
     val api = ServerApi(this, savedUrl)
     val avatar = api.avatar()
-    Log.d("getAvatar", "avatar: ${avatar?.take(100)}")
+    Log.d("updateAvatar", "avatar: ${avatar?.take(100)}")
 
     val file = File(filesDir, "avatar.png")
     if (avatar == null) {
-        Log.d("getAvatar", "No Avatar Returned! Deleting File: $file")
+        Log.d("updateAvatar", "No Avatar Returned! Deleting File: $file")
         file.delete()
     } else {
         val base64Data = avatar.substringAfter("base64,", "")
         val imageBytes = Base64.decode(base64Data, Base64.DEFAULT)
         file.outputStream().use { it.write(imageBytes) }
-        Log.d("getAvatar", "Saving Avatar to File: $file")
+        Log.d("updateAvatar", "Saving Avatar to File: $file")
     }
 
     withContext(Dispatchers.Main) {
-        Log.d("getAvatar", "Dispatchers.Main")
+        Log.d("updateAvatar", "Dispatchers.Main")
         val headerImage = findViewById<ImageView>(R.id.header_image)
         headerImage.let {
             if (file.exists()) {
-                Log.i("getAvatar", "GLIDE LOAD - headerImage: $file")
+                Log.i("updateAvatar", "GLIDE LOAD - headerImage: $file")
                 Glide.with(it).load(file).signature(ObjectKey(file.lastModified())).into(it)
             } else {
-                Log.d("getAvatar", "Set Header Image: Default Drawable")
+                Log.d("updateAvatar", "Set Header Image: Default Drawable")
                 Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
             }
         }
     }
-    Log.d("getAvatar", "DONE - file: $file")
+    Log.d("updateAvatar", "DONE - file: $file")
     return file
-}
-
-
-suspend fun Activity.getUser(): UserEntity? {
-    Log.d("getUser", "getUser")
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val savedUrl = preferences.getString("ziplineUrl", null).toString()
-    Log.d("getUser", "savedUrl: $savedUrl")
-    if (preferences.getString("ziplineToken", null).isNullOrEmpty()) {
-        Log.d("getUser", "ziplineToken: isNullOrEmpty")
-        return null
-    }
-    val api = ServerApi(this, savedUrl)
-    val user = api.user() ?: return null
-    Log.d("getUser", "user: $user")
-    debugLog("getUser: user: $user")
-    val repo = UserRepository(UserDatabase.getInstance(this).userDao())
-    val userEntity: UserEntity = repo.updateUser(savedUrl, user)
-    withContext(Dispatchers.Main) {
-        Log.d("getUser", "Dispatchers.Main")
-        val headerImage = findViewById<TextView>(R.id.header_username)
-        headerImage?.text = user.username
-    }
-    Log.d("getUser", "repo.getUser: DONE")
-    return userEntity
 }

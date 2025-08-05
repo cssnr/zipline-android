@@ -81,7 +81,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     adapter.fromJson(rawJson)
                 } catch (e: Exception) {
                     Log.i("Api[login]", "Parsing exception: $e")
-                    context.debugLog("API: login: Exception Parsing Body: $e")
+                    context.debugLog("API: login: Exception: $e")
                     null
                 } ?: throw Error("Error Parsing Response Body")
 

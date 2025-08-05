@@ -236,7 +236,7 @@ class HomeFragment : Fragment() {
                 view.loadUrl("about:blank")
                 //view.destroy()
                 val bundle = bundleOf("url" to ziplineUrl)
-                Log.i("doUpdateVisitedHistory", "bundle: $bundle")
+                Log.d("doUpdateVisitedHistory", "bundle: $bundle")
                 val navController = findNavController()
                 navController.navigate(
                     R.id.nav_item_login, bundle, NavOptions.Builder()

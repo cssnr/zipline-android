@@ -60,15 +60,15 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 
 </details>
 
-_Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
+_Note: If not using GitHub, you may need to allow installation of apps from unknown sources.
+For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 - Supports Android 8 (API 26) 2017 +
 
-Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-should take you to the settings area to allow installation if not already enabled.
-For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website).
-
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
+
+Note: Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+should take you to the settings area to allow installation if not already enabled. Otherwise:
 
 1. Go to your device settings.
 2. Search for "Install unknown apps" or similar.
