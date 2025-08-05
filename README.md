@@ -12,7 +12,7 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
-# Zipline Upload Android Application
+# Zipline Upload
 
 [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -50,9 +50,7 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 [![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
-- Supports Android 8 (API 26) 2017 +
-
-<details><summary>📲 Click to View QR Codes 📸</summary>
+<details><summary>📲 Click to View QR Codes 📸 Supports Android 8 (API 26) 2017 +</summary>
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -62,7 +60,7 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 
 </details>
 
-_Note: If not using GitHub, you may need to allow installation of apps from unknown sources.
+_Note: If not using GitHub, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
@@ -311,6 +309,10 @@ Note: Firebase is disabled in debug builds.
 See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) file debug config.
 
 # Contributing
+
+All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-extension/issues),
+[feature requests](https://github.com/cssnr/zipline-android/discussions/categories/feature-requests),
+or pull requests (I suggest starting a [Discussion](https://github.com/diced/zipline/discussions) before creating a PR).
 
 Please consider making a donation to support the development of this project
 and [additional](https://cssnr.com/) open source projects.
