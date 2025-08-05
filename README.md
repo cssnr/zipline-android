@@ -34,7 +34,7 @@
   - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
-Zipline Upload Android Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
+Zipline Upload Android Client Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
 
 Allows you to Share or Open files and Shorten URLs directly to a [diced/zipline](https://github.com/diced/zipline) v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
@@ -95,6 +95,11 @@ The results will be shown and copied to the clipboard.
 
 The Files List can be used to view, edit, download, or delete any file or files.
 
+> [!TIP]
+> Please [let us know](#support) if you run into any
+> [issues](https://github.com/cssnr/zipline-extension/issues).  
+> **All bugs** that can be reproduced, **will be fixed!**
+
 ## Features
 
 - Share or Open any File, Media, Text or URL
@@ -108,10 +113,10 @@ The Files List can be used to view, edit, download, or delete any file or files.
 - Add User Avatar and Management
 - Add Short URL Management
 - Add AppBar to Replace Bottom Navigation
-- Add Remaining Upload Options [upload-options](https://zipline.diced.sh/docs/guides/upload-options)
+- Add Remaining Upload Options (ref: [upload-options](https://zipline.diced.sh/docs/guides/upload-options))
 - Improve File List
   - Add Grid View Selector
-  - Add Remaining File Options [file](https://zipline.diced.sh/docs/api/models/file)
+  - Add Remaining File Options (ref: [file](https://zipline.diced.sh/docs/api/models/file))
 
 ### Known Issues
 
