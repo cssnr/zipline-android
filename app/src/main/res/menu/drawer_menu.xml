@@ -13,6 +13,11 @@
             android:title="Files"
             android:checkable="true" />
         <item
+            android:id="@+id/nav_item_user"
+            android:icon="@drawable/md_account_circle_24px"
+            android:title="User"
+            android:checkable="true" />
+        <item
             android:id="@+id/nav_item_settings"
             android:icon="@drawable/md_settings_24px"
             android:title="@string/settings"

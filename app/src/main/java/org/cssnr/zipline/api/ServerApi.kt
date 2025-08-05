@@ -81,7 +81,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     adapter.fromJson(rawJson)
                 } catch (e: Exception) {
                     Log.i("Api[login]", "Parsing exception: $e")
-                    context.debugLog("API: login: Exception Parsing Body: $e")
+                    context.debugLog("API: login: Exception: $e")
                     null
                 } ?: throw Error("Error Parsing Response Body")
 
@@ -102,7 +102,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                         cookieManager.flush()
                     }
                 }
-                return LoginData(token = tokenResponse.token)
+                return LoginData(token = tokenResponse.token, user = loginData.user)
             } else {
                 val errorResponse = loginResponse.parseErrorBody(context) ?: "Unknown Error"
                 Log.d("Api[login]", "errorResponse: $errorResponse")
@@ -117,13 +117,13 @@ class ServerApi(private val context: Context, url: String? = null) {
     }
 
     suspend fun shorten(url: String, vanity: String?): Response<ShortResponse> {
-        Log.d("Api[upload]", "url: $url")
-        Log.d("Api[upload]", "vanity: $vanity")
+        Log.d("Api[shorten]", "url: $url")
+        Log.d("Api[shorten]", "vanity: $vanity")
 
         val response = api.postShort(ShortRequest(url, vanity, true))
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            Log.d("Api[shorten]", "reAuthenticate: token: $token")
             if (token != null) {
                 return api.postShort(ShortRequest(url, vanity, true))
             }
@@ -181,12 +181,57 @@ class ServerApi(private val context: Context, url: String? = null) {
         val response = api.getStats()
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
+            Log.d("Api[stats]", "reAuthenticate: token: $token")
             if (token != null) {
                 return api.getStats()
             }
         }
         return response
+    }
+
+    suspend fun avatar(): String? {
+        Log.d("Api[avatar]", "avatar")
+        var response = api.getAvatar()
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[avatar]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.getAvatar()
+            }
+        }
+        if (response.isSuccessful) {
+            val data = response.body()
+            if (data != null) {
+                return data.string()
+            }
+        }
+        return null
+    }
+
+    suspend fun user(): User? {
+        Log.d("Api[user]", "user")
+        var response = api.getUser()
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[user]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.getUser()
+            }
+        }
+        return if (response.isSuccessful) response.body()?.user else null
+    }
+
+    suspend fun editUser(patchUser: PatchUser): User? {
+        Log.d("Api[editUser]", "patchUser: ${patchUser.toString().take(100)}")
+        var response = api.patchUser(patchUser)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[editUser]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.patchUser(patchUser)
+            }
+        }
+        return if (response.isSuccessful) response.body()?.user else null
     }
 
     //suspend fun recent(take: String = "3"): Response<List<FileResponse>> {
@@ -388,6 +433,17 @@ class ServerApi(private val context: Context, url: String? = null) {
         @GET("user/stats")
         suspend fun getStats(): Response<StatsResponse>
 
+        @GET("user/avatar")
+        suspend fun getAvatar(): Response<ResponseBody>
+
+        @GET("user")
+        suspend fun getUser(): Response<UserResponse>
+
+        @PATCH("user")
+        suspend fun patchUser(
+            @Body request: PatchUser,
+        ): Response<UserResponse>
+
         //@GET("user/recent")
         //suspend fun getRecent(
         //    @Query("take") take: String = "3"
@@ -445,6 +501,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     data class LoginData(
         val token: String? = null,
         val error: String? = null,
+        val user: User? = null,
         val totp: Boolean = false,
     )
 
@@ -467,6 +524,11 @@ class ServerApi(private val context: Context, url: String? = null) {
     )
 
     @JsonClass(generateAdapter = true)
+    data class UserResponse(
+        @Json(name = "user") val user: User
+    )
+
+    @JsonClass(generateAdapter = true)
     data class User(
         @Json(name = "id") val id: String,
         @Json(name = "username") val username: String,
@@ -478,6 +540,13 @@ class ServerApi(private val context: Context, url: String? = null) {
         //@Json(name = "oauthProviders") val oauthProviders: List<String>,
         @Json(name = "totpSecret") val totpSecret: String?,
         //@Json(name = "quota") val quota: String?,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class PatchUser(
+        @Json(name = "username") val username: String? = null,
+        @Json(name = "password") val password: String? = null,
+        @Json(name = "avatar") val avatar: String? = null,
     )
 
     @JsonClass(generateAdapter = true)
@@ -513,11 +582,6 @@ class ServerApi(private val context: Context, url: String? = null) {
         val userId: String,
         val url: String,
     )
-
-    //@JsonClass(generateAdapter = true)
-    //data class UserResponse(
-    //    @Json(name = "user") val user: User
-    //)
 
     @JsonClass(generateAdapter = true)
     data class StatsResponse(

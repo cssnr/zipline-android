@@ -20,7 +20,7 @@ import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
-import org.cssnr.zipline.work.updateStats
+import org.cssnr.zipline.ui.user.updateStats
 
 class WidgetProvider : AppWidgetProvider() {
 
@@ -144,7 +144,7 @@ class WidgetProvider : AppWidgetProvider() {
             // Room Data
             CoroutineScope(Dispatchers.IO).launch {
                 val dao: ServerDao =
-                    ServerDatabase.Companion.getInstance(context.applicationContext).serverDao()
+                    ServerDatabase.getInstance(context.applicationContext).serverDao()
                 Log.d("Widget[onUpdate]", "dao: $dao")
                 val server = dao.get(savedUrl)
                 Log.d("Widget[onUpdate]", "server: $server")

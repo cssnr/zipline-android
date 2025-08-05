@@ -8,11 +8,9 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.db.ServerDao
-import org.cssnr.zipline.db.ServerDatabase
-import org.cssnr.zipline.db.ServerEntity
 import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.ui.user.updateStats
+import org.cssnr.zipline.ui.user.updateUser
 import org.cssnr.zipline.widget.WidgetProvider
 
 class AppWorker(appContext: Context, workerParams: WorkerParameters) :
@@ -28,7 +26,15 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
             applicationContext.updateStats()
         } catch (e: Exception) {
             Log.e("DailyWorker", "updateStats: Exception: $e")
-            applicationContext.debugLog("AppWorker: doWork: Exception: $e")
+            applicationContext.debugLog("updateStats: Exception: $e")
+        }
+
+        Log.d("DailyWorker", "--- Update User")
+        try {
+            applicationContext.updateUser()
+        } catch (e: Exception) {
+            Log.e("DailyWorker", "updateUser: Exception: $e")
+            applicationContext.debugLog("updateUser: Exception: $e")
         }
 
         // Update Widget
@@ -50,43 +56,4 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
 
         return Result.success()
     }
-}
-
-suspend fun Context.updateStats(): Boolean {
-    Log.d("updateStats", "updateStats")
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val savedUrl = preferences.getString("ziplineUrl", null).toString()
-    Log.d("updateStats", "savedUrl: $savedUrl")
-    if (preferences.getString("ziplineToken", null).isNullOrEmpty()) {
-        Log.i("updateStats", "ziplineToken: isNullOrEmpty")
-        return false
-    }
-    val api = ServerApi(this, savedUrl)
-    val statsResponse = api.stats()
-    Log.d("updateStats", "statsResponse: $statsResponse")
-    applicationContext.debugLog("AppWorker: updateStats: response code: ${statsResponse.code()}")
-    if (statsResponse.isSuccessful) {
-        val stats = statsResponse.body()
-        Log.d("updateStats", "stats: $stats")
-        if (stats != null) {
-            val dao: ServerDao = ServerDatabase.getInstance(this).serverDao()
-            dao.upsert(
-                ServerEntity(
-                    url = savedUrl,
-                    filesUploaded = stats.filesUploaded,
-                    favoriteFiles = stats.favoriteFiles,
-                    views = stats.views,
-                    avgViews = stats.avgViews,
-                    storageUsed = stats.storageUsed,
-                    avgStorageUsed = stats.avgStorageUsed,
-                    urlsCreated = stats.urlsCreated,
-                    urlViews = stats.urlViews,
-                    updatedAt = System.currentTimeMillis(),
-                )
-            )
-            Log.d("updateStats", "dao.upsert: DONE")
-            return true
-        }
-    }
-    return false
 }

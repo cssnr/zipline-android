@@ -31,6 +31,7 @@ media3 = "1.8.0"
 taptargetview = "1.15.0"
 konfettiXml = "2.1.0-beta01"
 photoview = "1.0.3"
+androidImageCropper = "4.6.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -69,6 +70,7 @@ media3-ui = { group = "androidx.media3", name = "media3-ui", version.ref = "medi
 taptargetview = { group = "com.getkeepsafe.taptargetview", name = "taptargetview", version.ref = "taptargetview" }
 konfetti-xml = { group = "nl.dionsegijn", name = "konfetti-xml", version.ref = "konfettiXml" }
 photoview = { group = "io.getstream", name = "photoview", version.ref = "photoview" }
+android-image-cropper = { group = "com.vanniktech", name = "android-image-cropper", version.ref = "androidImageCropper" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

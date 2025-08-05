@@ -12,7 +12,7 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 
-# Zipline Upload Android Application
+# Zipline Upload
 
 [![GitHub Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=android&label=Download%20Android%20APK&color=A4C639)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -34,7 +34,7 @@
   - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
-Zipline Upload Android Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
+Zipline Upload Android Client Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
 
 Allows you to Share or Open files and Shorten URLs directly to a [diced/zipline](https://github.com/diced/zipline) v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
@@ -50,7 +50,7 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 [![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
-<details><summary>📲 Click to View QR Codes 📸</summary>
+<details><summary>📲 Click to View QR Codes 📸 Supports Android 8 (API 26) 2017 +</summary>
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -60,15 +60,13 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 
 </details>
 
-_Note: Until published on the play store, you may need to allow installation of apps from unknown sources._
-
-- Supports Android 8 (API 26) 2017 +
-
-Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-should take you to the settings area to allow installation if not already enabled.
-For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website).
+_Note: If not using GitHub, you may need to allow installation of apps from unknown sources.  
+For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
+
+Note: Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+should take you to the settings area to allow installation if not already enabled. Otherwise:
 
 1. Go to your device settings.
 2. Search for "Install unknown apps" or similar.
@@ -95,6 +93,11 @@ The results will be shown and copied to the clipboard.
 
 The Files List can be used to view, edit, download, or delete any file or files.
 
+> [!TIP]
+> Please [let us know](#support) if you run into any
+> [issues](https://github.com/cssnr/zipline-extension/issues).  
+> **All bugs** that can be reproduced, **will be fixed!**
+
 ## Features
 
 - Share or Open any File, Media, Text or URL
@@ -108,10 +111,10 @@ The Files List can be used to view, edit, download, or delete any file or files.
 - Add User Avatar and Management
 - Add Short URL Management
 - Add AppBar to Replace Bottom Navigation
-- Add Remaining Upload Options [upload-options](https://zipline.diced.sh/docs/guides/upload-options)
+- Add Remaining Upload Options (ref: [upload-options](https://zipline.diced.sh/docs/guides/upload-options))
 - Improve File List
   - Add Grid View Selector
-  - Add Remaining File Options [file](https://zipline.diced.sh/docs/api/models/file)
+  - Add Remaining File Options (ref: [file](https://zipline.diced.sh/docs/api/models/file))
 
 ### Known Issues
 
@@ -306,6 +309,10 @@ Note: Firebase is disabled in debug builds.
 See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) file debug config.
 
 # Contributing
+
+All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-extension/issues),
+[feature requests](https://github.com/cssnr/zipline-android/discussions/categories/feature-requests),
+or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
 
 Please consider making a donation to support the development of this project
 and [additional](https://cssnr.com/) open source projects.
