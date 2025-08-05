@@ -227,9 +227,7 @@ class MainActivity : AppCompatActivity() {
                 val user = dao.getUserByUrl(savedUrl)
                 Log.d("Main[onCreate]", "user: $user")
                 val headerUsername = headerView.findViewById<TextView>(R.id.header_username)
-                if (user != null) {
-                    headerUsername?.text = user.username
-                }
+                headerUsername?.text = user?.username ?: getString(R.string.app_name)
             }
         }
 

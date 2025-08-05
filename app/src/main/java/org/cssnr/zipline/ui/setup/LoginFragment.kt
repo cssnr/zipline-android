@@ -245,7 +245,7 @@ class LoginFragment : Fragment() {
             // NOTE: This runs both tasks simultaneously and blocks the current scope
             coroutineScope {
                 val task1 = async { requireActivity().getAvatar() }
-                val task2 = async { requireContext().getUser() }
+                val task2 = async { requireActivity().getUser() }
                 task1.await()
                 task2.await()
             }

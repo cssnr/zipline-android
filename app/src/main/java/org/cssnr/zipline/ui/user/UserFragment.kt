@@ -11,6 +11,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
@@ -321,7 +322,7 @@ suspend fun Context.updateStats(): ServerEntity? {
     val api = ServerApi(this, savedUrl)
     val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
-    debugLog("AppWorker: updateStats: response code: ${statsResponse.code()}")
+    debugLog("updateStats: response code: ${statsResponse.code()}")
     if (statsResponse.isSuccessful) {
         val stats = statsResponse.body()
         Log.d("updateStats", "stats: $stats")
@@ -386,7 +387,7 @@ suspend fun Activity.getAvatar(): File? {
 }
 
 
-suspend fun Context.getUser(): UserEntity? {
+suspend fun Activity.getUser(): UserEntity? {
     Log.d("getUser", "getUser")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val savedUrl = preferences.getString("ziplineUrl", null).toString()
@@ -396,14 +397,16 @@ suspend fun Context.getUser(): UserEntity? {
         return null
     }
     val api = ServerApi(this, savedUrl)
-    val user = api.user()
+    val user = api.user() ?: return null
     Log.d("getUser", "user: $user")
-    debugLog("AppWorker: getUser: user: $user")
-    if (user != null) {
-        val repo = UserRepository(UserDatabase.getInstance(this).userDao())
-        val userEntity: UserEntity = repo.updateUser(savedUrl, user)
-        Log.d("getUser", "repo.getUser: DONE")
-        return userEntity
+    debugLog("getUser: user: $user")
+    val repo = UserRepository(UserDatabase.getInstance(this).userDao())
+    val userEntity: UserEntity = repo.updateUser(savedUrl, user)
+    withContext(Dispatchers.Main) {
+        Log.d("getUser", "Dispatchers.Main")
+        val headerImage = findViewById<TextView>(R.id.header_username)
+        headerImage?.text = user.username
     }
-    return null
+    Log.d("getUser", "repo.getUser: DONE")
+    return userEntity
 }
