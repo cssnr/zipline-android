@@ -234,7 +234,7 @@ class MainActivity : AppCompatActivity() {
         // Update Header Image
         val headerImage = headerView.findViewById<ShapeableImageView>(R.id.header_image)
 
-        val radius = resources.getDimension(R.dimen.user_page_avatar)
+        val radius = resources.getDimension(R.dimen.avatar_radius)
         headerImage.setShapeAppearanceModel(
             headerImage.shapeAppearanceModel.toBuilder()
                 .setAllCorners(CornerFamily.ROUNDED, radius).build()

@@ -135,6 +135,7 @@ class UserFragment : Fragment() {
                 Formatter.formatShortFileSize(context, server.avgStorageUsed?.toLong() ?: 0)
 
             binding.statsFileFav.text = server.favoriteFiles.toString()
+            binding.statsFileViews.text = server.views.toString()
 
             val avgViews = server.avgViews ?: 0.0
             val viewsRounded = avgViews.toBigDecimal().setScale(4, RoundingMode.HALF_UP).toDouble()
@@ -168,13 +169,14 @@ class UserFragment : Fragment() {
             }
         }
 
-        val radius = ctx.resources.getDimension(R.dimen.user_page_avatar)
+        val radius = ctx.resources.getDimension(R.dimen.avatar_radius)
         binding.appIcon.setShapeAppearanceModel(
             binding.appIcon.shapeAppearanceModel.toBuilder()
                 .setAllCorners(CornerFamily.ROUNDED, radius).build()
         )
 
         val avatarFile = File(ctx.filesDir, "avatar.png")
+        Log.d(LOG_TAG, "avatarFile: $avatarFile")
         if (avatarFile.exists()) {
             Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $avatarFile")
             Glide.with(binding.appIcon).load(avatarFile)
@@ -283,9 +285,32 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.shareAvatar.setOnClickListener")
             // TODO: Cleanup this logic...
             val dir = File(ctx.filesDir, "share")
-            dir.mkdirs()
+            Log.d(LOG_TAG, "dir: $dir")
+
+            //if (dir.exists()) {
+            //    dir.listFiles()?.forEach { it.delete() }
+            //}
+            //dir.mkdirs()
+            //if (dir.exists()) {
+            //    dir.deleteRecursively()
+            //}
+            if (!dir.exists()) {
+                dir.mkdirs()
+            }
+
+            // TODO: The shared file is getting cached by destination applications...
             val shareFile = File(dir, "avatar.png")
+            //val shareFile = File(dir, "avatar_${System.currentTimeMillis()}.png")
+            Log.d(LOG_TAG, "shareFile: $shareFile")
+
             avatarFile.copyTo(shareFile, true)
+            //shareFile.outputStream().use { out ->
+            //    avatarFile.inputStream().use { it.copyTo(out) }
+            //}
+
+            shareFile.setLastModified(System.currentTimeMillis())
+            Log.d(LOG_TAG, "avatarFile: $avatarFile")
+
             if (shareFile.exists()) {
                 val uri =
                     FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
@@ -295,6 +320,9 @@ class UserFragment : Fragment() {
                     addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 }
                 ctx.startActivity(Intent.createChooser(intent, "Share avatar"))
+            } else {
+                Snackbar.make(view, "Avatar File Not Found!", Snackbar.LENGTH_LONG)
+                    .setTextColor("#D32F2F".toColorInt()).show()
             }
         }
 

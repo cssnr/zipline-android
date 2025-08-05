@@ -14,5 +14,5 @@
     <dimen name="bottom_sheet_icon_size">64dp</dimen>
     <dimen name="bottom_sheet_icon_padding">12dp</dimen>
 
-    <dimen name="user_page_avatar">8dp</dimen>
+    <dimen name="avatar_radius">8dp</dimen>
 </resources>

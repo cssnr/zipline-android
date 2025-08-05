@@ -50,6 +50,8 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 [![Get on Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
+- Supports Android 8 (API 26) 2017 +
+
 <details><summary>📲 Click to View QR Codes 📸</summary>
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
@@ -62,8 +64,6 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 
 _Note: If not using GitHub, you may need to allow installation of apps from unknown sources.
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
-
-- Supports Android 8 (API 26) 2017 +
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
 
