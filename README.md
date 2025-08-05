@@ -312,7 +312,7 @@ See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) f
 
 All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-extension/issues),
 [feature requests](https://github.com/cssnr/zipline-android/discussions/categories/feature-requests),
-or pull requests (I suggest starting a [Discussion](https://github.com/diced/zipline/discussions) before creating a PR).
+or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
 
 Please consider making a donation to support the development of this project
 and [additional](https://cssnr.com/) open source projects.
