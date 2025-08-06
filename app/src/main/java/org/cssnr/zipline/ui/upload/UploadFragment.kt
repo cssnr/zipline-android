@@ -173,6 +173,8 @@ class UploadFragment : Fragment() {
             Log.d("Upload[onViewCreated]", "GLIDE")
             binding.imageHolder.visibility = View.VISIBLE
 
+            // TODO: Determine how to deal with caching...
+            // .diskCacheStrategy(DiskCacheStrategy.NONE)
             Glide.with(binding.imagePreview).load(uri).into(binding.imagePreview)
 
         } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {

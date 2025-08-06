@@ -295,47 +295,29 @@ class UserFragment : Fragment() {
 
         binding.shareAvatar.setOnClickListener {
             Log.d(LOG_TAG, "binding.shareAvatar.setOnClickListener")
-            // TODO: Cleanup this logic...
-            val dir = File(ctx.filesDir, "share")
-            Log.d(LOG_TAG, "dir: $dir")
 
-            //if (dir.exists()) {
-            //    dir.listFiles()?.forEach { it.delete() }
-            //}
-            //dir.mkdirs()
-            //if (dir.exists()) {
-            //    dir.deleteRecursively()
-            //}
-            if (!dir.exists()) {
-                dir.mkdirs()
-            }
-
-            // TODO: The shared file is getting cached by destination applications...
-            val shareFile = File(dir, "avatar.png")
-            //val shareFile = File(dir, "avatar_${System.currentTimeMillis()}.png")
-            Log.d(LOG_TAG, "shareFile: $shareFile")
-
-            avatarFile.copyTo(shareFile, true)
-            //shareFile.outputStream().use { out ->
-            //    avatarFile.inputStream().use { it.copyTo(out) }
-            //}
-
-            shareFile.setLastModified(System.currentTimeMillis())
-            Log.d(LOG_TAG, "avatarFile: $avatarFile")
-
-            if (shareFile.exists()) {
-                val uri =
-                    FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "image/png"
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-                ctx.startActivity(Intent.createChooser(intent, "Share avatar"))
-            } else {
+            if (!avatarFile.exists()) {
                 Snackbar.make(view, "Avatar File Not Found!", Snackbar.LENGTH_LONG)
                     .setTextColor("#D32F2F".toColorInt()).show()
+                return@setOnClickListener
             }
+
+            // TODO: Determine how to deal with caching...
+            //val timestamp = System.currentTimeMillis()
+            //val shareFile = File(ctx.cacheDir, "avatar_$timestamp.png")
+            val shareFile = File(ctx.cacheDir, "avatar.png")
+            Log.d(LOG_TAG, "shareFile: $shareFile")
+            avatarFile.copyTo(shareFile, true)
+
+            val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/png"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                //putExtra(Intent.EXTRA_TITLE, "avatar.png")
+                //putExtra(Intent.EXTRA_SUBJECT, "avatar.png")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            ctx.startActivity(Intent.createChooser(shareIntent, "Share Avatar"))
         }
 
         binding.logOutBtn.setOnClickListener {
