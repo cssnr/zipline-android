@@ -68,7 +68,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[login]", "$user - $pass - $code")
 
         return try {
-            val loginResponse = api.postLogin(LoginRequest(user, pass, code))
+            val loginResponse = api.postAuthLogin(LoginRequest(user, pass, code))
             Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
                 val rawJson = loginResponse.body()?.string() ?: throw Error("Empty Login Response.")
@@ -93,7 +93,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     return LoginData(error = "Unknown Error Occurred")
                 }
                 // TODO: While this should not fail, it could and will throw when it does...
-                val tokenResponse = api.getToken()
+                val tokenResponse = api.getUserToken()
                 val cookies = cookieJar.loadForRequest(host.toHttpUrl())
                 val cookieManager = CookieManager.getInstance()
                 for (cookie in cookies) {
@@ -191,12 +191,12 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun avatar(): String? {
         Log.d("Api[avatar]", "avatar")
-        var response = api.getAvatar()
+        var response = api.getUserAvatar()
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
             Log.d("Api[avatar]", "reAuthenticate: token: $token")
             if (token != null) {
-                response = api.getAvatar()
+                response = api.getUserAvatar()
             }
         }
         if (response.isSuccessful) {
@@ -360,6 +360,46 @@ class ServerApi(private val context: Context, url: String? = null) {
         return null
     }
 
+
+    suspend fun clearTemp(): Response<StatusResponse> {
+        Log.d("Api[clearTemp]", "clearTemp")
+        val response = api.serverClearTemp()
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[clearTemp]", "reAuthenticate: token: $token")
+            if (token != null) {
+                return api.serverClearTemp()
+            }
+        }
+        return response
+    }
+
+    suspend fun clearZeros(): Response<StatusResponse> {
+        Log.d("Api[clearZeros]", "clearZeros")
+        val response = api.serverClearZeros()
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[clearZeros]", "reAuthenticate: token: $token")
+            if (token != null) {
+                return api.serverClearZeros()
+            }
+        }
+        return response
+    }
+
+    suspend fun thumbnails(reRun: Boolean = false): Response<StatusResponse> {
+        Log.d("Api[clearZeros]", "clearZeros")
+        val response = api.serverThumbnails(ThumbnailsRequest(rerun = reRun))
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[clearZeros]", "reAuthenticate: token: $token")
+            if (token != null) {
+                return api.serverThumbnails(ThumbnailsRequest(rerun = reRun))
+            }
+        }
+        return response
+    }
+
     private suspend fun reAuthenticate(api: ApiService, ziplineUrl: String): String? {
         return try {
             val cookies = CookieManager.getInstance().getCookie(ziplineUrl)
@@ -367,7 +407,7 @@ class ServerApi(private val context: Context, url: String? = null) {
             val httpUrl = ziplineUrl.toHttpUrl()
             cookieJar.setCookie(httpUrl, cookies)
 
-            val tokenResponse = api.getToken()
+            val tokenResponse = api.getUserToken()
             Log.d("reAuthenticate", "tokenResponse: $tokenResponse")
 
             preferences.edit { putString("ziplineToken", tokenResponse.token) }
@@ -423,18 +463,18 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     interface ApiService {
         @POST("auth/login")
-        suspend fun postLogin(
+        suspend fun postAuthLogin(
             @Body request: LoginRequest,
         ): Response<ResponseBody>
 
         @GET("user/token")
-        suspend fun getToken(): TokenResponse
+        suspend fun getUserToken(): TokenResponse
 
         @GET("user/stats")
         suspend fun getStats(): Response<StatsResponse>
 
         @GET("user/avatar")
-        suspend fun getAvatar(): Response<ResponseBody>
+        suspend fun getUserAvatar(): Response<ResponseBody>
 
         @GET("user")
         suspend fun getUser(): Response<UserResponse>
@@ -448,17 +488,6 @@ class ServerApi(private val context: Context, url: String? = null) {
         //suspend fun getRecent(
         //    @Query("take") take: String = "3"
         //): Response<List<FileResponse>>
-
-        @Multipart
-        @POST("upload")
-        suspend fun postUpload(
-            @Part file: MultipartBody.Part,
-            @Header("x-zipline-format") format: String,
-            @Header("x-zipline-original-name") originalName: Boolean = true,
-            @Header("x-zipline-image-compression-percent") compression: Int? = 100,
-            @Header("x-zipline-deletes-at") deletesAt: String? = null,
-            @Header("x-zipline-folder") folder: String? = null,
-        ): Response<UploadedFiles>
 
         @POST("user/urls")
         suspend fun postShort(
@@ -496,6 +525,28 @@ class ServerApi(private val context: Context, url: String? = null) {
         suspend fun getFolders(
             @Query("noincl") noincl: Boolean = false,
         ): Response<List<FolderResponse>>
+
+        @Multipart
+        @POST("upload")
+        suspend fun postUpload(
+            @Part file: MultipartBody.Part,
+            @Header("x-zipline-format") format: String,
+            @Header("x-zipline-original-name") originalName: Boolean = true,
+            @Header("x-zipline-image-compression-percent") compression: Int? = 100,
+            @Header("x-zipline-deletes-at") deletesAt: String? = null,
+            @Header("x-zipline-folder") folder: String? = null,
+        ): Response<UploadedFiles>
+
+        @DELETE("server/clear_temp")
+        suspend fun serverClearTemp(): Response<StatusResponse>
+
+        @DELETE("server/clear_zeros")
+        suspend fun serverClearZeros(): Response<StatusResponse>
+
+        @POST("server/thumbnails")
+        suspend fun serverThumbnails(
+            @Body request: ThumbnailsRequest,
+        ): Response<StatusResponse>
     }
 
     data class LoginData(
@@ -655,7 +706,13 @@ class ServerApi(private val context: Context, url: String? = null) {
     )
 
     @JsonClass(generateAdapter = true)
+    data class ThumbnailsRequest(val rerun: Boolean = false)
+
+    @JsonClass(generateAdapter = true)
     data class CountResponse(val count: Int)
+
+    @JsonClass(generateAdapter = true)
+    data class StatusResponse(val status: String)
 
     inner class SimpleCookieJar : CookieJar {
         private val cookieStore = mutableMapOf<String, List<Cookie>>()

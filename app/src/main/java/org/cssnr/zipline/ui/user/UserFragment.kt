@@ -1,7 +1,10 @@
 package org.cssnr.zipline.ui.user
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
+import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
 import android.os.Bundle
 import android.text.format.Formatter
@@ -39,6 +42,7 @@ import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.PatchUser
+import org.cssnr.zipline.api.parseErrorBody
 import org.cssnr.zipline.databinding.FragmentUserBinding
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
@@ -104,24 +108,28 @@ class UserFragment : Fragment() {
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             Log.i(LOG_TAG, "viewModel.user.observe - user: $user")
-            _binding?.headingName?.text = user.username
-            _binding?.helloText?.text = ctx.getString(R.string.user_welcome_text, user.username)
-            _binding?.userId?.text = user.id
 
-            //_binding?.userCreatedAt?.text =
+            binding.serverSettings.visibility =
+                if (user.role == "ADMIN" || user.role == "SUPERADMIN") View.VISIBLE else View.GONE
+
+            binding.headingName.text = user.username
+            binding.helloText.text = ctx.getString(R.string.user_welcome_text, user.username)
+            binding.userId.text = user.id
+
+            //binding.userCreatedAt.text =
             //    DateFormat.getTimeFormat(ctx).format(Date.from(Instant.parse(user.createdAt)))
 
             //val updatedAt = Date.from(Instant.parse(user.updatedAt))
-            //_binding?.userUpdatedAt?.text =
+            //binding.userUpdatedAt.text =
             //    "${dateFormat.format(updatedAt)} ${timeFormat.format(updatedAt)}"
 
-            //_binding?.userUpdatedAt?.text =
+            //binding.userUpdatedAt.text =
             //    customFormat.format(Date.from(Instant.parse(user.updatedAt)))
 
-            _binding?.userCreatedAt?.text =
+            binding.userCreatedAt.text =
                 ZonedDateTime.parse(user.createdAt).withZoneSameInstant(ZoneId.systemDefault())
                     .format(dateTimeFormat)
-            _binding?.userUpdatedAt?.text =
+            binding.userUpdatedAt.text =
                 ZonedDateTime.parse(user.updatedAt).withZoneSameInstant(ZoneId.systemDefault())
                     .format(dateTimeFormat)
         }
@@ -150,7 +158,7 @@ class UserFragment : Fragment() {
             binding.statsUrls.text = server.urlsCreated.toString()
 
             //// TODO: Need to save stat updatedAt from server response and not Long...
-            //_binding?.statsUpdatedAt?.text =
+            //binding.statsUpdatedAt.text =
             //    ZonedDateTime.parse(server.updatedAt).withZoneSameInstant(ZoneId.systemDefault())
             //        .format(dateTimeFormat)
         }
@@ -254,6 +262,20 @@ class UserFragment : Fragment() {
             ctx.changePasswordDialog(view)
         }
 
+        binding.copyToken.setOnClickListener {
+            Log.d(LOG_TAG, "binding.copyToken.setOnClickListener")
+            val authToken = preferences.getString("ziplineToken", null)
+            Log.d(LOG_TAG, "authToken: $authToken")
+            if (authToken != null) {
+                val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText("Token", authToken))
+                Snackbar.make(view, "Token Copied to Clipboard.", Snackbar.LENGTH_SHORT).show()
+            } else {
+                Snackbar.make(view, "Token is null! This is a Problem!", Snackbar.LENGTH_LONG)
+                    .setTextColor("#D32F2F".toColorInt()).show()
+            }
+        }
+
         binding.updateStats.setOnClickListener {
             Log.d(LOG_TAG, "binding.updateStats.setOnClickListener")
             binding.updateStats.isEnabled = false
@@ -346,6 +368,90 @@ class UserFragment : Fragment() {
             override fun onClick(v: View) {
                 Log.d(LOG_TAG, "MyOnClickListener: $v")
             }
+        }
+
+        binding.clearTemp.setOnClickListener {
+            Log.d(LOG_TAG, "binding.clearTemp.setOnClickListener")
+            MaterialAlertDialogBuilder(ctx)
+                .setTitle("Clear Temporary Files")
+                .setIcon(R.drawable.md_delete_sweep_24px)
+                .setMessage("Delete temporary files in your temp directory.")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Confirm") { _, _ ->
+                    Log.d(LOG_TAG, "Confirm")
+                    lifecycleScope.launch {
+                        val api = ServerApi(ctx)
+                        val response = api.clearTemp()
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            val status = body?.status.toString()
+                            Log.d(LOG_TAG, "status: $status")
+                            Snackbar.make(view, status, Snackbar.LENGTH_SHORT).show()
+                        } else {
+                            val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
+                            Log.d(LOG_TAG, "errorResponse: $errorResponse")
+                            Snackbar.make(view, errorResponse, Snackbar.LENGTH_LONG)
+                                .setTextColor("#D32F2F".toColorInt()).show()
+                        }
+                    }
+                }
+                .show()
+        }
+
+        binding.clearZeros.setOnClickListener {
+            Log.d(LOG_TAG, "binding.clearZeros.setOnClickListener")
+            MaterialAlertDialogBuilder(ctx)
+                .setTitle("Clear Zero Byte Files")
+                .setIcon(R.drawable.md_delete_sweep_24px)
+                .setMessage("Delete files with zero-byte size from your storage/database.")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Confirm") { _, _ ->
+                    Log.d(LOG_TAG, "Confirm")
+                    lifecycleScope.launch {
+                        val api = ServerApi(ctx)
+                        val response = api.clearZeros()
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            val status = body?.status.toString()
+                            Log.d(LOG_TAG, "status: $status")
+                            Snackbar.make(view, status, Snackbar.LENGTH_SHORT).show()
+                        } else {
+                            val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
+                            Log.d(LOG_TAG, "errorResponse: $errorResponse")
+                            Snackbar.make(view, errorResponse, Snackbar.LENGTH_LONG)
+                                .setTextColor("#D32F2F".toColorInt()).show()
+                        }
+                    }
+                }
+                .show()
+        }
+
+        binding.genThumbnails.setOnClickListener {
+            Log.d(LOG_TAG, "binding.genThumbnails.setOnClickListener")
+            MaterialAlertDialogBuilder(ctx)
+                .setTitle("Thumbnail Generation")
+                .setIcon(R.drawable.md_videocam_24px)
+                .setMessage("Trigger the video thumbnail generation task.")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Confirm") { _, _ ->
+                    Log.d(LOG_TAG, "Confirm")
+                    lifecycleScope.launch {
+                        val api = ServerApi(ctx)
+                        val response = api.thumbnails()
+                        if (response.isSuccessful) {
+                            val body = response.body()
+                            val status = body?.status.toString()
+                            Log.d(LOG_TAG, "status: $status")
+                            Snackbar.make(view, status, Snackbar.LENGTH_SHORT).show()
+                        } else {
+                            val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
+                            Log.d(LOG_TAG, "errorResponse: $errorResponse")
+                            Snackbar.make(view, errorResponse, Snackbar.LENGTH_LONG)
+                                .setTextColor("#D32F2F".toColorInt()).show()
+                        }
+                    }
+                }
+                .show()
         }
 
         binding.testBtn.setOnClickListener {
@@ -583,3 +689,9 @@ suspend fun Activity.updateAvatar(): File? {
     Log.d("updateAvatar", "DONE - file: $file")
     return file
 }
+
+//fun Context.copyToClipboard(text: String, label: String = "Text") {
+//    Log.d("copyToClipboard", "text: $text")
+//    val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+//    clipboard.setPrimaryClip(ClipData.newPlainText(label, text))
+//}

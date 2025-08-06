@@ -364,17 +364,16 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_app_info, null)
         val appId = view.findViewById<TextView>(R.id.app_identifier)
-        val appVersion = view.findViewById<TextView>(R.id.app_version)
+        val versionName = view.findViewById<TextView>(R.id.version_name)
+        val versionCode = view.findViewById<TextView>(R.id.version_code)
         val sourceLink = view.findViewById<TextView>(R.id.source_link)
 
         val sourceText = getString(R.string.github_link, sourceLink.tag)
         Log.d("showAppInfoDialog", "sourceText: $sourceText")
 
         val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
-        val versionName = packageInfo.versionName
-        Log.d("showAppInfoDialog", "versionName: $versionName")
 
-        val formattedVersion = getString(R.string.version_string, versionName)
+        val formattedVersion = getString(R.string.version_string, packageInfo.versionName)
         Log.d("showAppInfoDialog", "formattedVersion: $formattedVersion")
 
         val dialog = MaterialAlertDialogBuilder(this)
@@ -384,7 +383,8 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         dialog.setOnShowListener {
             appId.text = this.packageName
-            appVersion.text = formattedVersion
+            versionName.text = formattedVersion
+            versionCode.text = packageInfo.versionCode.toString()
 
             sourceLink.text = Html.fromHtml(sourceText, Html.FROM_HTML_MODE_LEGACY)
             sourceLink.movementMethod = LinkMovementMethod.getInstance()

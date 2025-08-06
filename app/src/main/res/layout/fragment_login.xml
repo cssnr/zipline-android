@@ -59,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:padding="10dp"
-            android:autofillHints="url"
+            android:autofillHints=""
             android:hint="@string/hostname"
             android:inputType="textUri"
             android:drawableEnd="@drawable/md_http_24px"
