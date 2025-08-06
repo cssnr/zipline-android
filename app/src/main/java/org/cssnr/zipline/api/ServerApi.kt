@@ -361,6 +361,48 @@ class ServerApi(private val context: Context, url: String? = null) {
     }
 
 
+    suspend fun getTotpSecret(): TotpResponse? {
+        Log.d("Api[getTotpSecret]", "getTotpSecret")
+        var response = api.getUserMfaTotp()
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[getTotpSecret]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.getUserMfaTotp()
+            }
+        }
+        return response.body()
+    }
+
+    suspend fun enableTotp(secret: String, code: String): User? {
+        Log.d("Api[enableTotp]", "enableTotp")
+        val request = TotpRequest(secret = secret, code = code)
+        var response = api.postUserMfaTotp(request)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[enableTotp]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.postUserMfaTotp(request)
+            }
+        }
+        return response.body()
+    }
+
+    suspend fun disableTotp(code: String): User? {
+        Log.d("Api[disableTotp]", "disableTotp")
+        val request = TotpRequest(code = code)
+        var response = api.deleteUserMfaTotp(request)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[disableTotp]", "reAuthenticate: token: $token")
+            if (token != null) {
+                response = api.deleteUserMfaTotp(request)
+            }
+        }
+        return response.body()
+    }
+
+
     suspend fun clearTemp(): Response<StatusResponse> {
         Log.d("Api[clearTemp]", "clearTemp")
         val response = api.serverClearTemp()
@@ -525,6 +567,15 @@ class ServerApi(private val context: Context, url: String? = null) {
         suspend fun getFolders(
             @Query("noincl") noincl: Boolean = false,
         ): Response<List<FolderResponse>>
+
+        @GET("user/mfa/totp")
+        suspend fun getUserMfaTotp(): Response<TotpResponse>
+
+        @POST("user/mfa/totp")
+        suspend fun postUserMfaTotp(@Body request: TotpRequest): Response<User>
+
+        @HTTP(method = "DELETE", path = "user/mfa/totp", hasBody = true)
+        suspend fun deleteUserMfaTotp(@Body request: TotpRequest): Response<User>
 
         @Multipart
         @POST("upload")
@@ -703,6 +754,18 @@ class ServerApi(private val context: Context, url: String? = null) {
         @Json(name = "originalName") val originalName: String? = null,
         @Json(name = "type") val type: String? = null,
         @Json(name = "tags") val tags: List<String>? = null
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class TotpRequest(
+        @Json(name = "secret") val secret: String? = null,
+        @Json(name = "code") val code: String? = null,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class TotpResponse(
+        @Json(name = "secret") val secret: String? = null,
+        @Json(name = "qrcode") val qrcode: String? = null,
     )
 
     @JsonClass(generateAdapter = true)

@@ -14,6 +14,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -108,6 +109,11 @@ class UserFragment : Fragment() {
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             Log.i(LOG_TAG, "viewModel.user.observe - user: $user")
+
+            val totpEnabled = user.totpSecret?.isNotEmpty() == true
+            Log.i(LOG_TAG, "totpEnabled: $totpEnabled")
+            binding.enableTotp.visibility = if (totpEnabled) View.GONE else View.VISIBLE
+            binding.disableTotp.visibility = if (totpEnabled) View.VISIBLE else View.GONE
 
             binding.serverSettings.visibility =
                 if (user.role == "ADMIN" || user.role == "SUPERADMIN") View.VISIBLE else View.GONE
@@ -274,6 +280,28 @@ class UserFragment : Fragment() {
                 Snackbar.make(view, "Token is null! This is a Problem!", Snackbar.LENGTH_LONG)
                     .setTextColor("#D32F2F".toColorInt()).show()
             }
+        }
+
+        binding.enableTotp.setOnClickListener {
+            Log.d(LOG_TAG, "binding.enableTotp.setOnClickListener")
+            //Snackbar.make(view, "Not Yet Implemented!", Snackbar.LENGTH_SHORT).show()
+            lifecycleScope.launch {
+                val api = ServerApi(ctx)
+                val totpResponse = api.getTotpSecret()
+                Log.d(LOG_TAG, "totpResponse: $totpResponse")
+                if (totpResponse?.secret != null) {
+                    // TODO: Cache the totpResponse.secret in the viewModel...
+                    ctx.enableTotpDialog(view, totpResponse.secret)
+                } else {
+                    Snackbar.make(view, "Error Getting TOTP Secret!", Snackbar.LENGTH_LONG)
+                        .setTextColor("#D32F2F".toColorInt()).show()
+                }
+            }
+        }
+
+        binding.disableTotp.setOnClickListener {
+            Log.d(LOG_TAG, "binding.disableTotp.setOnClickListener")
+            ctx.disableTotpDialog(view)
         }
 
         binding.updateStats.setOnClickListener {
@@ -466,13 +494,13 @@ class UserFragment : Fragment() {
         val view = inflater.inflate(R.layout.dialog_username, null)
         val input = view.findViewById<EditText>(R.id.username_text)
 
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
+        Log.d("changeUsernameDialog", "savedUrl: $savedUrl")
+
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
             .create()
-
-        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
-        Log.d("changeUsernameDialog", "savedUrl: $savedUrl")
 
         dialog.setOnShowListener {
             val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
@@ -523,13 +551,13 @@ class UserFragment : Fragment() {
         val input = view.findViewById<EditText>(R.id.password_text)
         val input2 = view.findViewById<EditText>(R.id.password_text2)
 
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
+        Log.d("changePasswordDialog", "savedUrl: $savedUrl")
+
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
             .create()
-
-        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
-        Log.d("changePasswordDialog", "savedUrl: $savedUrl")
 
         dialog.setOnShowListener {
             val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
@@ -576,6 +604,143 @@ class UserFragment : Fragment() {
         }
 
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Change Password") { _, _ -> }
+        dialog.show()
+    }
+
+
+    private fun Context.disableTotpDialog(parentView: View) {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_totp_disable, null)
+        val input = view.findViewById<EditText>(R.id.totp_code)
+
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
+        Log.d("disableTotpDialog", "savedUrl: $savedUrl")
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.setOnShowListener {
+            val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            btnPositive.setOnClickListener {
+                btnPositive.isEnabled = false
+                val totpCode = input.text.toString()
+                Log.d("disableTotpDialog", "totpCode: $totpCode")
+                if (totpCode.isEmpty()) {
+                    input.error = "Required"
+                    input.requestFocus()
+                } else if (totpCode.length < 6) {
+                    input.error = "Must be 6 Digits"
+                    input.requestFocus()
+                } else {
+                    val api = ServerApi(this)
+                    val dao: UserDao = UserDatabase.getInstance(this).userDao()
+                    lifecycleScope.launch {
+                        val userResponse = api.disableTotp(totpCode)
+                        Log.d("disableTotpDialog", "userResponse: $userResponse")
+                        if (userResponse != null) {
+                            val userRepository = UserRepository(dao)
+                            val user = userRepository.updateUser(savedUrl, userResponse)
+                            Log.d("disableTotpDialog", "user: $user")
+                            viewModel.user.value = user
+                            val message = "TOTP Disabled!"
+                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } else {
+                            // TODO: Better Handle Errors here...
+                            input.error = "Error Disabling TOTP"
+                            input.requestFocus()
+                        }
+                    }
+                }
+                btnPositive.isEnabled = true
+            }
+            input.requestFocus()
+        }
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Disable TOTP") { _, _ -> }
+        dialog.show()
+    }
+
+
+    private fun Context.enableTotpDialog(parentView: View, totpSecret: String) {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_totp_enable, null)
+        val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
+        val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
+        val openAuthLink = view.findViewById<ImageView>(R.id.open_auth_link)
+        val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
+        val input = view.findViewById<EditText>(R.id.totp_code)
+
+        Log.d("enableTotpDialog", "totpSecret: $totpSecret")
+        secretTextView.text = totpSecret
+
+        openAuthLink.setOnClickListener {
+            Log.d("enableTotpDialog", "openAuthLink.setOnClickListener")
+            val username = viewModel.user.value?.username ?: "unknown"
+            val uri =
+                "otpauth://totp/Zipline:${username}?secret=${totpSecret}&issuer=Zipline".toUri()
+            Log.d("enableTotpDialog", "uri: $uri")
+            val intent = Intent(Intent.ACTION_VIEW, uri)
+            startActivity(intent)
+        }
+
+        copySecretBtn.setOnClickListener {
+            Log.d("enableTotpDialog", "copySecretBtn.setOnClickListener")
+            val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+            clipboard.setPrimaryClip(ClipData.newPlainText("Token", totpSecret))
+            Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT)
+                .setAnchorView(secretLayout).show()
+        }
+
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
+        Log.d("enableTotpDialog", "savedUrl: $savedUrl")
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        dialog.setOnShowListener {
+            val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            btnPositive.setOnClickListener {
+                btnPositive.isEnabled = false
+                val totpCode = input.text.toString()
+                Log.d("enableTotpDialog", "totpCode: $totpCode")
+                if (totpCode.isEmpty()) {
+                    input.error = "Required"
+                    input.requestFocus()
+                } else if (totpCode.length < 6) {
+                    input.error = "Must be 6 Digits"
+                    input.requestFocus()
+                } else {
+                    val api = ServerApi(this)
+                    val dao: UserDao = UserDatabase.getInstance(this).userDao()
+                    lifecycleScope.launch {
+                        val userResponse = api.enableTotp(totpSecret, totpCode)
+                        Log.d("enableTotpDialog", "userResponse: $userResponse")
+                        if (userResponse != null) {
+                            val userRepository = UserRepository(dao)
+                            val user = userRepository.updateUser(savedUrl, userResponse)
+                            Log.d("enableTotpDialog", "user: $user")
+                            viewModel.user.value = user
+                            val message = "TOTP Enabled!"
+                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } else {
+                            // TODO: Better Handle Errors here...
+                            input.error = "Error Enabling TOTP"
+                            input.requestFocus()
+                        }
+                    }
+                }
+                btnPositive.isEnabled = true
+            }
+            input.requestFocus()
+        }
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Enable TOTP") { _, _ -> }
         dialog.show()
     }
 }

@@ -25,7 +25,6 @@
         android:inputType="text"
         android:maxLines="1"
         android:maxLength="128"
-        android:gravity="top|start"
         android:background="?attr/colorSurfaceContainerLow"
         android:hint="Username" />
 
