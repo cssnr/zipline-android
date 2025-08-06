@@ -293,7 +293,7 @@ class MainActivity : AppCompatActivity() {
             val previousVersion = preferences.getInt("previousVersion", 0)
             Log.d(LOG_TAG, "previousVersion $previousVersion")
             Log.d(LOG_TAG, "packageInfo.versionCode ${packageInfo.versionCode}")
-            //preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
+            preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
             val authToken = preferences.getString("ziplineToken", null)
             Log.d("Multi[onViewCreated]", "authToken: $authToken")
             if (!authToken.isNullOrEmpty() && previousVersion < packageInfo.versionCode) {
