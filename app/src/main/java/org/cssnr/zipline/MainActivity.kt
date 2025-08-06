@@ -18,6 +18,7 @@ import androidx.activity.viewModels
 import androidx.annotation.OptIn
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -217,12 +218,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         // Update Header Text
-        val packageInfo = packageManager.getPackageInfo(packageName, 0)
-        val versionName = packageInfo.versionName
-        Log.d("Main[onCreate]", "versionName: $versionName")
-        val headerVersionText = headerView.findViewById<TextView>(R.id.header_version)
-        headerVersionText.text = "v${versionName}"
-
         val savedUrl = preferences.getString("ziplineUrl", null)
         if (savedUrl != null) {
             val dao: UserDao = UserDatabase.getInstance(this).userDao()
@@ -233,16 +228,16 @@ class MainActivity : AppCompatActivity() {
                 headerUsername?.text = user?.username ?: getString(R.string.app_name)
             }
         }
+        val headerUrl = headerView.findViewById<TextView>(R.id.header_url)
+        headerUrl.text = savedUrl?.toUri()?.host ?: getString(R.string.app_name)
 
         // Update Header Image
         val headerImage = headerView.findViewById<ShapeableImageView>(R.id.header_image)
-
         val radius = resources.getDimension(R.dimen.avatar_radius)
         headerImage.setShapeAppearanceModel(
             headerImage.shapeAppearanceModel.toBuilder()
                 .setAllCorners(CornerFamily.ROUNDED, radius).build()
         )
-
         val file = File(filesDir, "avatar.png")
         if (file.exists()) {
             Log.i("Main[onCreate]", "GLIDE LOAD - MainActivity - file.name: ${file.name}")
@@ -292,6 +287,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             val previousVersion = preferences.getInt("previousVersion", 0)
             Log.d(LOG_TAG, "previousVersion $previousVersion")
+            val packageInfo = packageManager.getPackageInfo(packageName, 0)
             Log.d(LOG_TAG, "packageInfo.versionCode ${packageInfo.versionCode}")
             preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
             val authToken = preferences.getString("ziplineToken", null)
