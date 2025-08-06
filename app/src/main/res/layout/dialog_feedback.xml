@@ -14,23 +14,23 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginBottom="8dp"
-        android:labelFor="@+id/feedback_input"
-        android:textAppearance="?attr/textAppearanceBody1"
-        android:text="Feedback, Suggetions, Issues" />
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        android:text="Send us Feedback" />
 
     <EditText
         android:id="@+id/feedback_input"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:autofillHints="Request Features, Report Issues, or Send Feedback."
+        android:autofillHints=""
         android:inputType="textMultiLine"
         android:minLines="5"
         android:maxLines="5"
         android:maxLength="800"
         android:gravity="top|start"
         android:background="?attr/colorSurfaceContainerLow"
-        tools:text="Please delete this application and the source code and all backups..." />
+        android:hint="Request Features, Report Issues, or Send General Feedback."
+        tools:text="" />
 
     <TextView
         android:id="@+id/github_link"

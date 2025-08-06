@@ -246,6 +246,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textSize="12sp"
+            android:text="User Profile" />
         <Button
             android:id="@+id/update_profile"
             android:layout_width="match_parent"
@@ -257,6 +263,32 @@
             app:iconPadding="12dp"
             app:iconSize="18dp" />
         <Button
+            android:id="@+id/change_username"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Change Username"
+            app:icon="@drawable/md_signature_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp"
+            app:iconSize="18dp" />
+        <Button
+            android:id="@+id/change_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Change Password"
+            app:icon="@drawable/md_password_2_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp"
+            app:iconSize="18dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textSize="12sp"
+            android:text="User Stats" />
+        <Button
             android:id="@+id/update_stats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -266,6 +298,12 @@
             app:iconGravity="end"
             app:iconPadding="12dp"
             app:iconSize="18dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textSize="12sp"
+            android:text="User Avatar" />
         <Button
             android:id="@+id/update_avatar"
             android:layout_width="match_parent"
@@ -291,11 +329,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Export Avatar"
+            android:text="Share Avatar"
             app:icon="@drawable/md_share_reviews_24px"
             app:iconGravity="end"
             app:iconPadding="12dp"
             app:iconSize="18dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textSize="12sp"
+            android:text="User Actions" />
         <Button
             android:id="@+id/log_out_btn"
             android:layout_width="match_parent"
@@ -312,7 +356,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Testing Button"
+            android:text="Test Button"
             app:icon="@drawable/md_bug_report_24px"
             app:iconGravity="end"
             app:iconPadding="12dp"

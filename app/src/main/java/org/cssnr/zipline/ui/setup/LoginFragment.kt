@@ -40,8 +40,8 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
 import org.cssnr.zipline.ui.user.updateAvatar
-import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.ui.user.updateStats
+import org.cssnr.zipline.ui.user.updateUserActivity
 
 class LoginFragment : Fragment() {
 
