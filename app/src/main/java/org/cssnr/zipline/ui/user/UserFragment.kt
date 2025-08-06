@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -511,6 +512,9 @@ class UserFragment : Fragment() {
                 if (newValue.isEmpty()) {
                     input.error = "Required"
                     input.requestFocus()
+                } else if (viewModel.user.value?.username == newValue) {
+                    input.error = "Not Changed"
+                    input.requestFocus()
                 } else {
                     val api = ServerApi(this)
                     val patchUser = PatchUser(username = newValue)
@@ -669,7 +673,7 @@ class UserFragment : Fragment() {
         val view = inflater.inflate(R.layout.dialog_totp_enable, null)
         val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
-        val openAuthLink = view.findViewById<ImageView>(R.id.open_auth_link)
+        val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
         val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
         val input = view.findViewById<EditText>(R.id.totp_code)
 
@@ -690,8 +694,9 @@ class UserFragment : Fragment() {
             Log.d("enableTotpDialog", "copySecretBtn.setOnClickListener")
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("Token", totpSecret))
-            Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT)
-                .setAnchorView(secretLayout).show()
+            // TODO: Snake Bar in an AlertDialog does does not drop to bottom due to panel constraint
+            //Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT)
+            //    .setAnchorView(secretLayout).show()
         }
 
         val savedUrl = preferences.getString("ziplineUrl", null) ?: return

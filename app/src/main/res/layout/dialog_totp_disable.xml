@@ -22,10 +22,14 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:autofillHints=""
-        android:inputType="text"
+        android:inputType="number"
         android:maxLines="1"
         android:maxLength="6"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:singleLine="true"
         android:background="?attr/colorSurfaceContainerLow"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:hint="Code" />
 
 </LinearLayout>
