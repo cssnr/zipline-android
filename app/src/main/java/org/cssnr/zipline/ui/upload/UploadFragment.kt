@@ -399,6 +399,7 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
 }
 
 fun Context.copyToClipboard(url: String) {
+    // TODO: Refactor this function and use Snackbar instead of Toast
     Log.d("copyToClipboard", "url: $url")
     val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("URL", url)

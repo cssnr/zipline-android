@@ -9,38 +9,23 @@
     android:orientation="vertical">
 
     <TextView
-        android:id="@+id/feedback_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
         android:layout_marginBottom="24dp"
+        android:layout_gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline5"
-        android:text="Send Feedback" />
+        android:text="Disable TOTP" />
 
     <EditText
-        android:id="@+id/feedback_input"
+        android:id="@+id/totp_code"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
         android:padding="8dp"
         android:autofillHints=""
-        android:inputType="textMultiLine"
-        android:minLines="5"
-        android:maxLines="5"
-        android:maxLength="800"
-        android:gravity="top|start"
+        android:inputType="text"
+        android:maxLines="1"
+        android:maxLength="6"
         android:background="?attr/colorSurfaceContainerLow"
-        android:hint="Request Features, Report Issues, or Send General Feedback."
-        tools:text="" />
-
-    <TextView
-        android:id="@+id/github_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawablePadding="8dp"
-        android:tag="More Info on GitHub"
-        android:text="More Info on GitHub"
-        app:drawableStartCompat="@drawable/fa_github" />
+        android:hint="Code" />
 
 </LinearLayout>

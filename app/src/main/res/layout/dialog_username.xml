@@ -4,14 +4,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:paddingTop="24dp"
-    android:paddingHorizontal="24dp">
+    android:paddingHorizontal="24dp"
+    android:orientation="vertical">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="24dp"
         android:layout_gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline5"
         android:text="Change Username" />
@@ -20,15 +20,12 @@
         android:id="@+id/username_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
         android:padding="8dp"
         android:autofillHints="username"
         android:inputType="text"
         android:maxLines="1"
         android:maxLength="128"
-        android:gravity="top|start"
         android:background="?attr/colorSurfaceContainerLow"
-        android:hint="Username"
-        tools:text="" />
+        android:hint="Username" />
 
 </LinearLayout>

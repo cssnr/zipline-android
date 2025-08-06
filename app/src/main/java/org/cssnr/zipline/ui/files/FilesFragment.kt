@@ -913,7 +913,7 @@ fun getGenericIcon(mimeType: String): Int = when {
     mimeType.startsWith("audio/") -> R.drawable.md_music_note_24
     mimeType.startsWith("image/") -> R.drawable.md_imagesmode_24
     mimeType.startsWith("text/") -> R.drawable.md_docs_24
-    mimeType.startsWith("video/") -> R.drawable.md_videocam_24
+    mimeType.startsWith("video/") -> R.drawable.md_videocam_24px
     else -> R.drawable.md_unknown_document_24
 }
 
