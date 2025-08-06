@@ -10,10 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
 import androidx.core.graphics.toColorInt
@@ -242,6 +244,16 @@ class UserFragment : Fragment() {
             }
         }
 
+        binding.changeUsername.setOnClickListener {
+            Log.d(LOG_TAG, "binding.changeUsername.setOnClickListener")
+            ctx.changeUsernameDialog(view)
+        }
+
+        binding.changePassword.setOnClickListener {
+            Log.d(LOG_TAG, "binding.changeUsername.setOnClickListener")
+            ctx.changePasswordDialog(view)
+        }
+
         binding.updateStats.setOnClickListener {
             Log.d(LOG_TAG, "binding.updateStats.setOnClickListener")
             binding.updateStats.isEnabled = false
@@ -283,47 +295,29 @@ class UserFragment : Fragment() {
 
         binding.shareAvatar.setOnClickListener {
             Log.d(LOG_TAG, "binding.shareAvatar.setOnClickListener")
-            // TODO: Cleanup this logic...
-            val dir = File(ctx.filesDir, "share")
-            Log.d(LOG_TAG, "dir: $dir")
 
-            //if (dir.exists()) {
-            //    dir.listFiles()?.forEach { it.delete() }
-            //}
-            //dir.mkdirs()
-            //if (dir.exists()) {
-            //    dir.deleteRecursively()
-            //}
-            if (!dir.exists()) {
-                dir.mkdirs()
-            }
-
-            // TODO: The shared file is getting cached by destination applications...
-            val shareFile = File(dir, "avatar.png")
-            //val shareFile = File(dir, "avatar_${System.currentTimeMillis()}.png")
-            Log.d(LOG_TAG, "shareFile: $shareFile")
-
-            avatarFile.copyTo(shareFile, true)
-            //shareFile.outputStream().use { out ->
-            //    avatarFile.inputStream().use { it.copyTo(out) }
-            //}
-
-            shareFile.setLastModified(System.currentTimeMillis())
-            Log.d(LOG_TAG, "avatarFile: $avatarFile")
-
-            if (shareFile.exists()) {
-                val uri =
-                    FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "image/png"
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-                }
-                ctx.startActivity(Intent.createChooser(intent, "Share avatar"))
-            } else {
+            if (!avatarFile.exists()) {
                 Snackbar.make(view, "Avatar File Not Found!", Snackbar.LENGTH_LONG)
                     .setTextColor("#D32F2F".toColorInt()).show()
+                return@setOnClickListener
             }
+
+            // TODO: Determine how to deal with caching...
+            //val timestamp = System.currentTimeMillis()
+            //val shareFile = File(ctx.cacheDir, "avatar_$timestamp.png")
+            val shareFile = File(ctx.cacheDir, "avatar.png")
+            Log.d(LOG_TAG, "shareFile: $shareFile")
+            avatarFile.copyTo(shareFile, true)
+
+            val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "image/png"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                //putExtra(Intent.EXTRA_TITLE, "avatar.png")
+                //putExtra(Intent.EXTRA_SUBJECT, "avatar.png")
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            ctx.startActivity(Intent.createChooser(shareIntent, "Share Avatar"))
         }
 
         binding.logOutBtn.setOnClickListener {
@@ -359,6 +353,124 @@ class UserFragment : Fragment() {
             Snackbar.make(view, "Test Snackbar Action Message.", Snackbar.LENGTH_LONG)
                 .setAction("Action", MyOnClickListener()).show()
         }
+    }
+
+    private fun Context.changeUsernameDialog(parentView: View) {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_username, null)
+        val input = view.findViewById<EditText>(R.id.username_text)
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
+        Log.d("changeUsernameDialog", "savedUrl: $savedUrl")
+
+        dialog.setOnShowListener {
+            val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            btnPositive.setOnClickListener {
+                btnPositive.isEnabled = false
+                val newValue = input.text.toString().trim()
+                Log.d("changeUsernameDialog", "newValue: $newValue")
+                if (newValue.isEmpty()) {
+                    input.error = "Required"
+                    input.requestFocus()
+                } else {
+                    val api = ServerApi(this)
+                    val patchUser = PatchUser(username = newValue)
+                    val dao: UserDao = UserDatabase.getInstance(this).userDao()
+                    lifecycleScope.launch {
+                        val newUser = api.editUser(patchUser)
+                        Log.d("changeUsernameDialog", "newUser: $newUser")
+                        if (newUser != null) {
+                            val userRepository = UserRepository(dao)
+                            val user = userRepository.updateUser(savedUrl, newUser)
+                            Log.d("changeUsernameDialog", "user: $user")
+                            viewModel.user.value = user
+                            val message = "Username Changed to ${user.username}"
+                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } else {
+                            // TODO: Better Handle Errors here...
+                            input.error = "Error Changing Username"
+                            input.requestFocus()
+                        }
+                    }
+                }
+                btnPositive.isEnabled = true
+            }
+            input.setText(viewModel.user.value?.username ?: "")
+            input.setSelection(input.text.length)
+            input.requestFocus()
+        }
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Change Username") { _, _ -> }
+        dialog.show()
+    }
+
+
+    private fun Context.changePasswordDialog(parentView: View) {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_password, null)
+        val input = view.findViewById<EditText>(R.id.password_text)
+        val input2 = view.findViewById<EditText>(R.id.password_text2)
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Cancel", null)
+            .create()
+
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: return
+        Log.d("changePasswordDialog", "savedUrl: $savedUrl")
+
+        dialog.setOnShowListener {
+            val btnPositive = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
+            btnPositive.setOnClickListener {
+                btnPositive.isEnabled = false
+                val newValue = input.text.toString()
+                Log.d("changePasswordDialog", "newValue: $newValue")
+                val newValue2 = input2.text.toString()
+                Log.d("changePasswordDialog", "newValue2: $newValue2")
+                if (newValue.isEmpty()) {
+                    input.error = "Required"
+                    input.requestFocus()
+                } else if (newValue.length < 2) {
+                    input.error = "Must be 2 Characters"
+                    input.requestFocus()
+                } else if (newValue != newValue2) {
+                    input2.error = "Does Not Match"
+                    input2.requestFocus()
+                } else {
+                    val api = ServerApi(this)
+                    val patchUser = PatchUser(password = newValue)
+                    val dao: UserDao = UserDatabase.getInstance(this).userDao()
+                    lifecycleScope.launch {
+                        val newUser = api.editUser(patchUser)
+                        Log.d("changePasswordDialog", "newUser: $newUser")
+                        if (newUser != null) {
+                            val userRepository = UserRepository(dao)
+                            val user = userRepository.updateUser(savedUrl, newUser)
+                            Log.d("changePasswordDialog", "user: $user")
+                            viewModel.user.value = user
+                            val message = "Password Changed."
+                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            dialog.dismiss()
+                        } else {
+                            // TODO: Better Handle Errors here...
+                            input.error = "Error Changing Password"
+                            input.requestFocus()
+                        }
+                    }
+                }
+                btnPositive.isEnabled = true
+            }
+            input.requestFocus()
+        }
+
+        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Change Password") { _, _ -> }
+        dialog.show()
     }
 }
 

@@ -39,7 +39,8 @@ Zipline Upload Android Client Application to Upload, Share and Manage Files and 
 Allows you to Share or Open files and Shorten URLs directly to a [diced/zipline](https://github.com/diced/zipline) v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
 
-We are also developing a browser addon [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme).
+We are also developing a browser addon for all major browsers plus Firefox Android:
+[Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
 
 ## Install
 
@@ -60,7 +61,7 @@ We are also developing a browser addon [Zipline Web Extension](https://github.co
 
 </details>
 
-_Note: If not using GitHub, you may need to allow installation of apps from unknown sources.  
+_Note: If not GitHub, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
@@ -95,7 +96,7 @@ The Files List can be used to view, edit, download, or delete any file or files.
 
 > [!TIP]
 > Please [let us know](#support) if you run into any
-> [issues](https://github.com/cssnr/zipline-extension/issues).  
+> [issues](https://github.com/cssnr/zipline-extension/issues).
 > **All bugs** that can be reproduced, **will be fixed!**
 
 ## Features
