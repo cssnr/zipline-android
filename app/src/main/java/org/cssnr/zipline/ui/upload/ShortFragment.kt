@@ -72,7 +72,7 @@ class ShortFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Short[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
-        Log.d("Short[onViewCreated]", "authToken: $authToken")
+        Log.d("Short[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Short[onViewCreated]", "savedUrl is null")
             Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()

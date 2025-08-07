@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/avatar_refresh"
+        android:icon="@drawable/md_refresh_24px"
+        android:title="Refresh Avatar" />
+    <item android:id="@+id/avatar_change"
+        android:icon="@drawable/md_frame_person_24px"
+        android:title="Change Avatar" />
+    <item android:id="@+id/avatar_share"
+        android:icon="@drawable/md_share_reviews_24px"
+        android:title="Share Avatar" />
+</menu>

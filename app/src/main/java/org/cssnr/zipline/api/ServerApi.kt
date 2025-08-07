@@ -46,7 +46,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     var retrofit: Retrofit
 
     private var ziplineUrl: String
-    private var ziplineToken: String
+    private var authToken: String
 
     private lateinit var cookieJar: SimpleCookieJar
 
@@ -54,9 +54,9 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     init {
         ziplineUrl = url ?: preferences.getString("ziplineUrl", null) ?: ""
-        ziplineToken = preferences.getString("ziplineToken", null) ?: ""
+        authToken = preferences.getString("ziplineToken", null) ?: ""
         Log.d("ServerApi[init]", "ziplineUrl: $ziplineUrl")
-        Log.d("ServerApi[init]", "ziplineToken: $ziplineToken")
+        Log.d("ServerApi[init]", "authToken: ${authToken.take(24)}...")
         val headerPreferences =
             context.getSharedPreferences("org.cssnr.zipline_custom_headers", Context.MODE_PRIVATE)
         retrofit = createRetrofit(headerPreferences)
@@ -453,8 +453,8 @@ class ServerApi(private val context: Context, url: String? = null) {
             Log.d("reAuthenticate", "tokenResponse: $tokenResponse")
 
             preferences.edit { putString("ziplineToken", tokenResponse.token) }
-            ziplineToken = tokenResponse.token
-            Log.d("reAuthenticate", "ziplineToken: ${tokenResponse.token}")
+            authToken = tokenResponse.token
+            Log.d("reAuthenticate", "authToken: ${tokenResponse.token}")
 
             tokenResponse.token
         } catch (e: Exception) {
@@ -487,7 +487,7 @@ class ServerApi(private val context: Context, url: String? = null) {
             .addInterceptor { chain ->
                 val requestBuilder = chain.request().newBuilder()
                     .header("User-Agent", userAgent)
-                    .header("authorization", ziplineToken)
+                    .header("authorization", authToken)
                 for ((key, value) in headerPreferences.all) {
                     Log.d("createRetrofit", "Custom Header: $key - $value")
                     requestBuilder.header(key, value.toString())

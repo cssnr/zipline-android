@@ -5,7 +5,7 @@
     <string name="zipline_link"><![CDATA[<a href="https://github.com/diced/zipline">%s</a>]]></string>
     <string name="setup_zipline_text">Enter your <![CDATA[<a href="https://github.com/diced/zipline">Zipline v4 Server</a>]]> Details.</string>
 
-    <string name="user_welcome_text">Hello %s and Welcome to Zipline Upload.</string>
+    <!--<string name="user_welcome_text">Hello %s and Welcome to Zipline Upload.</string>-->
 
     <string name="hostname">Hostname</string>
     <string name="username">Username</string>

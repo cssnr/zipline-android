@@ -15,21 +15,48 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="120dp"
         android:gravity="center_vertical">
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/app_icon"
             android:layout_width="96dp"
             android:layout_height="96dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:contentDescription="@string/app_name"
             android:src="@mipmap/ic_launcher" />
+        <!--<ImageView-->
+        <!--    android:id="@+id/change_avatar"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="48dp"-->
+        <!--    android:paddingEnd="12dp"-->
+        <!--    android:paddingBottom="12dp"-->
+        <!--    app:layout_constraintTop_toTopOf="parent"-->
+        <!--    app:layout_constraintStart_toEndOf="@id/app_icon"-->
+        <!--    android:background="?attr/selectionRequired"-->
+        <!--    android:src="@drawable/md_frame_person_24px"-->
+        <!--    android:contentDescription="Edit Avatar" />-->
+        <!--<ImageView-->
+        <!--    android:id="@+id/update_avatar"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="48dp"-->
+        <!--    android:paddingTop="12dp"-->
+        <!--    android:paddingEnd="12dp"-->
+        <!--    app:layout_constraintStart_toEndOf="@id/app_icon"-->
+        <!--    app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--    android:background="?attr/selectableItemBackground"-->
+        <!--    android:src="@drawable/md_refresh_24px"-->
+        <!--    android:contentDescription="Refresh Avatar"/>-->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toEndOf="@id/app_icon"
+            app:layout_constraintBottom_toBottomOf="parent"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/heading_name"
@@ -49,20 +76,38 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="Loading..." />
         </LinearLayout>
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/hello_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="6dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="Hello Shane and Welcome to Zipline Upload" />
+    <!--<LinearLayout-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content">-->
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/avatar_menu"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:src="@drawable/md_frame_person_24px"-->
+    <!--        android:contentDescription=""-->
+    <!--        style="?android:attr/borderlessButtonStyle" />-->
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/user_menu"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:src="@drawable/md_edit_note_24px"-->
+    <!--        android:contentDescription=""-->
+    <!--        style="?android:attr/borderlessButtonStyle" />-->
+    <!--    <ImageButton-->
+    <!--        android:id="@+id/stats_menu"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:src="@drawable/md_chart_data_24px"-->
+    <!--        android:contentDescription=""-->
+    <!--        style="?android:attr/borderlessButtonStyle" />-->
+    <!--</LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="12dp"
+        android:layout_marginBottom="12dp"
         android:baselineAligned="false"
         android:gravity="bottom">
         <LinearLayout
@@ -84,49 +129,8 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:textSize="18sp"
                 android:text="Updated At" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Total Files" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Total Size" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Avg. Size" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Favorites" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Total Views" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Avg. Views" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="18sp"
-                android:text="Short URLs" />
-            <!--<TextView-->
-            <!--    android:layout_width="wrap_content"-->
-            <!--    android:layout_height="wrap_content"-->
-            <!--    android:textSize="18sp"-->
-            <!--    android:text="Updated At" />-->
         </LinearLayout>
         <LinearLayout
             android:layout_width="wrap_content"
@@ -156,85 +160,23 @@
                 android:id="@+id/user_updated_at"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textSize="18sp"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 tools:text="January 1, 1969, 4:20 PM" />
-            <TextView
-                android:id="@+id/stats_files_count"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="420" />
-            <TextView
-                android:id="@+id/stats_files_size"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="13 MB" />
-            <TextView
-                android:id="@+id/stats_file_avg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="0.13 Kb" />
-            <TextView
-                android:id="@+id/stats_file_fav"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="99" />
-            <TextView
-                android:id="@+id/stats_file_views"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="0" />
-            <TextView
-                android:id="@+id/stats_file_avg_views"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="0.0" />
-            <TextView
-                android:id="@+id/stats_urls"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:textSize="18sp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                tools:text="123" />
-            <!--<TextView-->
-            <!--    android:id="@+id/stats_updated_at"-->
-            <!--    android:layout_width="wrap_content"-->
-            <!--    android:layout_height="wrap_content"-->
-            <!--    android:maxLines="1"-->
-            <!--    android:ellipsize="end"-->
-            <!--    android:textSize="18sp"-->
-            <!--    android:textAppearance="@style/TextAppearance.AppCompat.Body1"-->
-            <!--    tools:text="Unknown" />-->
         </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
+        <include
+            android:id="@+id/stats"
+            layout="@layout/include_file_stats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </LinearLayout>
 
     <LinearLayout
@@ -246,14 +188,23 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:textSize="12sp"
-            android:text="User Profile" />
+            android:text="Profile" />
         <Button
             android:id="@+id/update_profile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="Refresh Profile"
-            app:icon="@drawable/md_credit_card_gear_24px"
+            app:icon="@drawable/md_refresh_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
+        <Button
+            android:id="@+id/copy_token"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Copy Auth Token"
+            app:icon="@drawable/md_passkey_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
         <Button
@@ -274,16 +225,6 @@
             app:icon="@drawable/md_password_2_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
-        <Button
-            android:id="@+id/copy_token"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Copy Token"
-            app:icon="@drawable/md_passkey_24px"
-            app:iconGravity="end"
-            app:iconPadding="12dp" />
-
         <!--<Button-->
         <!--    android:id="@+id/enable_totp"-->
         <!--    android:layout_width="match_parent"-->
@@ -303,6 +244,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="Enable TOTP"
             android:backgroundTint="@android:color/holo_green_dark"
             app:icon="@drawable/md_encrypted_24px"
@@ -326,30 +268,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:textSize="12sp"
-            android:text="User Stats" />
-        <Button
-            android:id="@+id/update_stats"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Refresh Stats"
-            app:icon="@drawable/md_chart_data_24px"
-            app:iconGravity="end"
-            app:iconPadding="12dp" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="24dp"
-            android:textSize="12sp"
-            android:text="User Avatar" />
+            android:text="Avatar" />
         <Button
             android:id="@+id/update_avatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="Refresh Avatar"
-            app:icon="@drawable/md_account_box_24px"
+            app:icon="@drawable/md_refresh_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
         <Button
@@ -376,24 +302,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:textSize="12sp"
-            android:text="User Actions" />
+            android:text="Stats" />
         <Button
-            android:id="@+id/log_out_btn"
+            android:id="@+id/update_stats"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Log Out"
-            android:backgroundTint="@android:color/holo_red_dark"
-            app:icon="@drawable/md_logout_24px"
-            app:iconGravity="end"
-            app:iconPadding="12dp" />
-        <Button
-            android:id="@+id/test_btn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Test Button"
-            app:icon="@drawable/md_bug_report_24px"
+            android:text="Refresh Stats"
+            app:icon="@drawable/md_refresh_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
 
@@ -409,7 +325,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
                 android:textSize="12sp"
-                android:text="Server Actions" />
+                android:text="Server" />
             <Button
                 android:id="@+id/gen_thumbnails"
                 android:layout_width="match_parent"
@@ -443,6 +359,32 @@
                 app:iconPadding="12dp"
                 app:iconSize="18dp" />
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:textSize="12sp"
+            android:text="User" />
+        <Button
+            android:id="@+id/log_out_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Log Out"
+            android:backgroundTint="@android:color/holo_red_dark"
+            app:icon="@drawable/md_logout_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
+        <!--<Button-->
+        <!--    android:id="@+id/test_btn"-->
+        <!--    android:layout_width="match_parent"-->
+        <!--    android:layout_height="wrap_content"-->
+        <!--    android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+        <!--    android:text="Test Button"-->
+        <!--    app:icon="@drawable/md_bug_report_24px"-->
+        <!--    app:iconGravity="end"-->
+        <!--    app:iconPadding="12dp" />-->
     </LinearLayout>
 
 </LinearLayout>

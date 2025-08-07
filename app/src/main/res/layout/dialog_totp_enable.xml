@@ -4,7 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -15,7 +19,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="12dp"
         android:layout_gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline5"
         android:text="Enable TOTP" />
@@ -25,10 +29,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Open in Authenticator App"
+        android:text="Open Authenticator"
         app:icon="@drawable/md_open_in_new_24px"
         app:iconGravity="end"
         app:iconPadding="12dp" />
+
+    <!--<ImageView-->
+    <!--    android:id="@+id/qr_code"-->
+    <!--    android:layout_width="128dp"-->
+    <!--    android:layout_height="128dp"-->
+    <!--    android:layout_gravity="center"-->
+    <!--    android:contentDescription="QR Code"-->
+    <!--    tools:src="@tools:sample/avatars" />-->
 
     <FrameLayout
         android:id="@+id/secret_layout"
@@ -63,11 +75,12 @@
         <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
         <!--    android:src="@drawable/md_open_in_new_24px" />-->
     </FrameLayout>
+
     <TextView
         android:id="@+id/totp_secret"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="12dp"
         android:padding="8dp"
         android:background="?attr/colorSurfaceContainerLow"
         android:textColor="?attr/colorOutline"
@@ -91,4 +104,5 @@
         android:hint="Code" />
 
 </LinearLayout>
+</ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
