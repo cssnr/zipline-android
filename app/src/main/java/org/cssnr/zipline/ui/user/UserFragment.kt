@@ -384,6 +384,7 @@ class UserFragment : Fragment() {
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Log Out") { _, _ ->
                     Log.d(LOG_TAG, "LOG OUT")
+                    // TODO: Add logout function to ServerApi and actually log out...
                     preferences.edit { remove("ziplineToken") }
                     val bundle = bundleOf("url" to savedUrl)
                     Log.d(LOG_TAG, "bundle: $bundle")

@@ -284,16 +284,27 @@
             app:iconGravity="end"
             app:iconPadding="12dp" />
 
+        <!--<Button-->
+        <!--    android:id="@+id/enable_totp"-->
+        <!--    android:layout_width="match_parent"-->
+        <!--    android:layout_height="wrap_content"-->
+        <!--    android:layout_gravity="end"-->
+        <!--    android:textColor="?attr/colorPrimary"-->
+        <!--    android:text="Enable TOTP"-->
+        <!--    app:backgroundTint="@android:color/transparent"-->
+        <!--    app:strokeColor="?attr/colorPrimary"-->
+        <!--    app:strokeWidth="2dp"-->
+        <!--    app:icon="@drawable/md_encrypted_24px"-->
+        <!--    app:iconTint="?attr/colorPrimary"-->
+        <!--    app:iconGravity="end"-->
+        <!--    app:iconPadding="12dp" />-->
         <Button
             android:id="@+id/enable_totp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:textColor="?attr/colorPrimary"
             android:text="Enable TOTP"
-            app:backgroundTint="@android:color/transparent"
-            app:strokeColor="?attr/colorPrimary"
-            app:strokeWidth="2dp"
+            android:backgroundTint="@android:color/holo_green_dark"
             app:icon="@drawable/md_encrypted_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
@@ -307,7 +318,8 @@
             android:visibility="gone"
             app:icon="@drawable/md_encrypted_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp" />
+            app:iconPadding="12dp"
+            tools:visibility="visible" />
 
         <TextView
             android:layout_width="match_parent"
@@ -414,6 +426,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Clear Temp"
+                android:backgroundTint="@android:color/holo_orange_dark"
                 app:icon="@drawable/md_delete_sweep_24px"
                 app:iconGravity="end"
                 app:iconPadding="12dp"
@@ -424,6 +437,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Clear Zeros"
+                android:backgroundTint="@android:color/holo_orange_dark"
                 app:icon="@drawable/md_delete_sweep_24px"
                 app:iconGravity="end"
                 app:iconPadding="12dp"

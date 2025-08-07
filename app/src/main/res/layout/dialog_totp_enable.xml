@@ -40,6 +40,7 @@
             android:layout_marginBottom="4dp"
             android:layout_gravity="bottom"
             android:labelFor="@id/totp_secret"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="TOTP Secret" />
         <ImageView
             android:id="@+id/copy_secret_btn"
