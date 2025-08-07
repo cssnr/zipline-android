@@ -207,13 +207,16 @@ class UserFragment : Fragment() {
 
             val newFile = File(ctx.filesDir, fileName)
             Log.d(LOG_TAG, "newFile: $newFile")
+            Log.d(LOG_TAG, "newFile.length: ${newFile.length()}")
 
             val base64String = Base64.encodeToString(newFile.readBytes(), Base64.NO_WRAP)
-            Log.d(LOG_TAG, "base64String: ${base64String.take(100)}")
+            Log.d(LOG_TAG, "base64String.length: ${base64String.length}")
+            val avatar = "data:image/png;base64,$base64String"
+            Log.d(LOG_TAG, "base64String: ${avatar.take(100)}...")
 
             val api = ServerApi(ctx, savedUrl)
             lifecycleScope.launch {
-                val user = api.editUser(PatchUser(avatar = "data:image/png;base64,$base64String"))
+                val user = api.editUser(PatchUser(avatar = avatar))
                 Log.d(LOG_TAG, "user: $user")
                 if (user != null && newFile.exists()) {
                     // TODO: Verify result
