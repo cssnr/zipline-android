@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.content.edit
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
@@ -191,24 +192,27 @@ class LoginFragment : Fragment() {
         val code = _binding?.loginCode?.text.toString().trim()
         Log.d("loginButton", "code: $code")
 
-        var valid = true
         if (host.isEmpty() || host == "https://") {
             _binding?.loginHostname?.error = "Required"
-            valid = false
+            _binding?.loginHostname?.requestFocus()
+            _binding?.loginButton?.isEnabled = true
+            return
         }
-        if (valid && host.toHttpUrlOrNull() == null) {
+        if (host.toHttpUrlOrNull() == null) {
             _binding?.loginHostname?.error = "Invalid Host"
-            valid = false
+            _binding?.loginHostname?.requestFocus()
+            _binding?.loginButton?.isEnabled = true
+            return
         }
         if (user.isEmpty()) {
             _binding?.loginUsername?.error = "Required"
-            valid = false
+            _binding?.loginUsername?.requestFocus()
+            _binding?.loginButton?.isEnabled = true
+            return
         }
         if (pass.isEmpty()) {
             _binding?.loginPassword?.error = "Required"
-            valid = false
-        }
-        if (!valid) {
+            _binding?.loginPassword?.requestFocus()
             _binding?.loginButton?.isEnabled = true
             return
         }
@@ -216,7 +220,7 @@ class LoginFragment : Fragment() {
         val api = ServerApi(context, host)
         val auth: LoginData = api.login(host, user, pass, code)
         Log.d("loginButton", "auth: $auth")
-        if (auth.totp == true) {
+        if (auth.totp) {
             Log.d("loginButton", "TOTP REQUIRED")
             showErrorAnimation(_binding?.loginButton, _binding?.loginError, "Two-Factor Required")
             viewModel.totp.value = true
@@ -271,23 +275,39 @@ class LoginFragment : Fragment() {
     }
 
     private fun parseHost(urlString: String): String {
-        var url = urlString.trim()
-        if (url.isEmpty()) {
+        try {
+            var url = urlString.trim()
+            if (url.isEmpty()) {
+                return ""
+            }
+            if (!url.lowercase().startsWith("http")) {
+                url = "https://$url"
+            }
+            val uri = url.toUri()
+            Log.d("parseHost", "uri: $uri")
+            Log.d("parseHost", "uri.scheme: ${uri.scheme}")
+            if (uri.scheme.isNullOrEmpty()) {
+                return ""
+            }
+            Log.d("parseHost", "uri.host: ${uri.host}")
+            if (uri.host.isNullOrEmpty()) {
+                return "${uri.scheme}://"
+            }
+            Log.d("parseHost", "uri.path: ${uri.path}")
+            val result = "${uri.scheme}://${uri.host}${uri.path}"
+            Log.i("parseHost", "result: $result")
+            return if (result.endsWith("/")) {
+                result.dropLast(1)
+            } else {
+                result
+            }
+        } catch (e: Exception) {
+            Log.d("parseHost", "Exception: $e")
             return ""
         }
-        if (!url.lowercase().startsWith("http")) {
-            url = "https://$url"
-        }
-        if (url.length < 9) {
-            return "https://"
-        }
-        if (url.endsWith("/")) {
-            url = url.substring(0, url.length - 1)
-        }
-        return url
     }
 
-    fun showErrorAnimation(buttonView: View?, textView: TextView? = null, text: String? = null) {
+    private fun showErrorAnimation(buttonView: View?, textView: TextView? = null, text: String? = null) {
         Log.d("loginFailed", "Context.loginFailed")
         textView.let {
             it?.text = text
