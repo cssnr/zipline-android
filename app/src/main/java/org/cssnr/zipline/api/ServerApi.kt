@@ -71,7 +71,8 @@ class ServerApi(private val context: Context, url: String? = null) {
             val loginResponse = api.postAuthLogin(LoginRequest(user, pass, code))
             Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
-                val rawJson = loginResponse.body()?.string() ?: throw IllegalStateException("Empty Login Response.")
+                val rawJson = loginResponse.body()?.string()
+                    ?: return LoginData(error = "Login Response Malformed")
                 Log.i("Api[login]", "loginResponse: ${loginResponse.code()}: ${rawJson.take(2048)}")
                 context.debugLog("API: login: ${loginResponse.code()}: ${rawJson.take(2048)}")
 
@@ -83,7 +84,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     Log.i("Api[login]", "Parsing exception: $e")
                     context.debugLog("API: login: Exception: $e")
                     null
-                } ?: throw IllegalStateException("Error Parsing Response Body")
+                } ?: return LoginData(error = "Error Parsing Response Body")
 
                 Log.i("Api[login]", "loginData: $loginData")
                 if (loginData.totp == true) {
