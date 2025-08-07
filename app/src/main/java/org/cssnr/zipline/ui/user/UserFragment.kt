@@ -364,14 +364,14 @@ class UserFragment : Fragment() {
             avatarFile.copyTo(shareFile, true)
 
             val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, uri)
                 //putExtra(Intent.EXTRA_TITLE, "avatar.png")
                 //putExtra(Intent.EXTRA_SUBJECT, "avatar.png")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            ctx.startActivity(Intent.createChooser(shareIntent, "Share Avatar"))
+            ctx.startActivity(Intent.createChooser(intent, "Share Avatar"))
         }
 
         binding.logOutBtn.setOnClickListener {
