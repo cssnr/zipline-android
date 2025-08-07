@@ -76,7 +76,7 @@ class TextFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Text[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
-        Log.d("Text[onViewCreated]", "authToken: $authToken")
+        Log.d("Text[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Text[onViewCreated]", "savedUrl is null")
             Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
@@ -166,7 +166,7 @@ class TextFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
-        Log.d("processUpload", "authToken: $authToken")
+        Log.d("processUpload", "authToken: ${authToken?.take(24)}...")
         val shareUrl = preferences.getBoolean("share_after_upload", true)
         Log.d("processShort", "shareUrl: $shareUrl")
 

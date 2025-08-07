@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/refresh_user_profile"
+        android:icon="@drawable/md_refresh_24px"
+        android:title="Refresh Profile" />
+    <item android:id="@+id/copy_token"
+        android:icon="@drawable/md_passkey_24px"
+        android:title="Copy Token" />
+    <item android:id="@+id/change_username"
+        android:icon="@drawable/md_signature_24px"
+        android:title="Change Username" />
+    <item android:id="@+id/change_password"
+        android:icon="@drawable/md_password_24px"
+        android:title="Change Password" />
+</menu>

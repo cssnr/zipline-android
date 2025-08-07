@@ -68,6 +68,8 @@ class UserFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: UserViewModel by activityViewModels()
+
+    private val api by lazy { ServerApi(requireContext()) }
     private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
@@ -120,7 +122,7 @@ class UserFragment : Fragment() {
                 if (user.role == "ADMIN" || user.role == "SUPERADMIN") View.VISIBLE else View.GONE
 
             binding.headingName.text = user.username
-            binding.helloText.text = ctx.getString(R.string.user_welcome_text, user.username)
+            //binding.helloText.text = ctx.getString(R.string.user_welcome_text, user.username)
             binding.userId.text = user.id
 
             //binding.userCreatedAt.text =
@@ -143,29 +145,29 @@ class UserFragment : Fragment() {
 
         viewModel.server.observe(viewLifecycleOwner) { server ->
             Log.i(LOG_TAG, "viewModel.server.observe - server: $server")
-            binding.statsFilesCount.text = server.filesUploaded.toString()
+            binding.stats.filesCount.text = server.filesUploaded.toString()
 
-            binding.statsFilesSize.text =
+            binding.stats.filesSize.text =
                 Formatter.formatShortFileSize(context, server.storageUsed?.toLong() ?: 0)
 
-            binding.statsFileAvg.text =
+            binding.stats.fileAvg.text =
                 Formatter.formatShortFileSize(context, server.avgStorageUsed?.toLong() ?: 0)
 
-            binding.statsFileFav.text = server.favoriteFiles.toString()
-            binding.statsFileViews.text = server.views.toString()
+            binding.stats.fileFav.text = server.favoriteFiles.toString()
+            binding.stats.fileViews.text = server.views.toString()
 
             val avgViews = server.avgViews ?: 0.0
             val viewsRounded = avgViews.toBigDecimal().setScale(4, RoundingMode.HALF_UP).toDouble()
-            binding.statsFileAvgViews.text = if (avgViews == viewsRounded) {
+            binding.stats.fileAvgViews.text = if (avgViews == viewsRounded) {
                 avgViews.toString()
             } else {
                 String.format(Locale.getDefault(), "%.4f", avgViews)
             }
 
-            binding.statsUrls.text = server.urlsCreated.toString()
+            binding.stats.urls.text = server.urlsCreated.toString()
 
             //// TODO: Need to save stat updatedAt from server response and not Long...
-            //binding.statsUpdatedAt.text =
+            //binding.stats.UpdatedAt.text =
             //    ZonedDateTime.parse(server.updatedAt).withZoneSameInstant(ZoneId.systemDefault())
             //        .format(dateTimeFormat)
         }
@@ -185,6 +187,20 @@ class UserFragment : Fragment() {
                 viewModel.server.value = server
             }
         }
+
+        //binding.avatarMenu.setOnClickListener {
+        //    val popup = PopupMenu(ctx, it)
+        //    val inflater: MenuInflater = popup.menuInflater
+        //    inflater.inflate(R.menu.avatar_menu, popup.menu)
+        //    popup.show()
+        //}
+        //
+        //binding.userMenu.setOnClickListener {
+        //    val popup = PopupMenu(ctx, it)
+        //    val inflater: MenuInflater = popup.menuInflater
+        //    inflater.inflate(R.menu.user_menu, popup.menu)
+        //    popup.show()
+        //}
 
         val radius = ctx.resources.getDimension(R.dimen.avatar_radius)
         binding.appIcon.setShapeAppearanceModel(
@@ -214,7 +230,6 @@ class UserFragment : Fragment() {
             val avatar = "data:image/png;base64,$base64String"
             Log.d(LOG_TAG, "base64String: ${avatar.take(100)}...")
 
-            val api = ServerApi(ctx, savedUrl)
             lifecycleScope.launch {
                 val user = api.editUser(PatchUser(avatar = avatar))
                 Log.d(LOG_TAG, "user: $user")
@@ -275,7 +290,7 @@ class UserFragment : Fragment() {
         binding.copyToken.setOnClickListener {
             Log.d(LOG_TAG, "binding.copyToken.setOnClickListener")
             val authToken = preferences.getString("ziplineToken", null)
-            Log.d(LOG_TAG, "authToken: $authToken")
+            Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
             if (authToken != null) {
                 val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 clipboard.setPrimaryClip(ClipData.newPlainText("Token", authToken))
@@ -288,14 +303,18 @@ class UserFragment : Fragment() {
 
         binding.enableTotp.setOnClickListener {
             Log.d(LOG_TAG, "binding.enableTotp.setOnClickListener")
-            //Snackbar.make(view, "Not Yet Implemented!", Snackbar.LENGTH_SHORT).show()
             lifecycleScope.launch {
-                val api = ServerApi(ctx)
-                val totpResponse = api.getTotpSecret()
-                Log.d(LOG_TAG, "totpResponse: $totpResponse")
-                if (totpResponse?.secret != null) {
-                    // TODO: Cache the totpResponse.secret in the viewModel...
-                    ctx.enableTotpDialog(view, totpResponse.secret)
+                val totpSecret = if (viewModel.totpSecret.value != null) {
+                    Log.i(LOG_TAG, "USE - totpSecret from viewModel.totpSecret")
+                    viewModel.totpSecret.value
+                } else {
+                    Log.i(LOG_TAG, "GET - totpSecret from api.getTotpSecret")
+                    api.getTotpSecret()?.secret
+                }
+                Log.d(LOG_TAG, "totpSecret: $totpSecret")
+                if (totpSecret != null) {
+                    viewModel.totpSecret.value = totpSecret
+                    ctx.enableTotpDialog(view, totpSecret)
                 } else {
                     Snackbar.make(view, "Error Getting TOTP Secret!", Snackbar.LENGTH_LONG)
                         .setTextColor("#D32F2F".toColorInt()).show()
@@ -397,12 +416,6 @@ class UserFragment : Fragment() {
                 .show()
         }
 
-        class MyOnClickListener : View.OnClickListener {
-            override fun onClick(v: View) {
-                Log.d(LOG_TAG, "MyOnClickListener: $v")
-            }
-        }
-
         binding.clearTemp.setOnClickListener {
             Log.d(LOG_TAG, "binding.clearTemp.setOnClickListener")
             MaterialAlertDialogBuilder(ctx)
@@ -413,7 +426,6 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Confirm") { _, _ ->
                     Log.d(LOG_TAG, "Confirm")
                     lifecycleScope.launch {
-                        val api = ServerApi(ctx)
                         val response = api.clearTemp()
                         if (response.isSuccessful) {
                             val body = response.body()
@@ -441,7 +453,6 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Confirm") { _, _ ->
                     Log.d(LOG_TAG, "Confirm")
                     lifecycleScope.launch {
-                        val api = ServerApi(ctx)
                         val response = api.clearZeros()
                         if (response.isSuccessful) {
                             val body = response.body()
@@ -469,7 +480,6 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Confirm") { _, _ ->
                     Log.d(LOG_TAG, "Confirm")
                     lifecycleScope.launch {
-                        val api = ServerApi(ctx)
                         val response = api.thumbnails()
                         if (response.isSuccessful) {
                             val body = response.body()
@@ -487,11 +497,17 @@ class UserFragment : Fragment() {
                 .show()
         }
 
-        binding.testBtn.setOnClickListener {
-            Log.d(LOG_TAG, "binding.testBtn.setOnClickListener")
-            Snackbar.make(view, "Test Snackbar Action Message.", Snackbar.LENGTH_LONG)
-                .setAction("Action", MyOnClickListener()).show()
-        }
+        //class MyOnClickListener : View.OnClickListener {
+        //    override fun onClick(v: View) {
+        //        Log.d(LOG_TAG, "MyOnClickListener: $v")
+        //    }
+        //}
+        //
+        //binding.testBtn.setOnClickListener {
+        //    Log.d(LOG_TAG, "binding.testBtn.setOnClickListener")
+        //    Snackbar.make(view, "Test Snackbar Action Message.", Snackbar.LENGTH_LONG)
+        //        .setAction("Action", MyOnClickListener()).show()
+        //}
     }
 
     private fun Context.changeUsernameDialog(parentView: View) {
@@ -520,7 +536,6 @@ class UserFragment : Fragment() {
                     input.error = "Not Changed"
                     input.requestFocus()
                 } else {
-                    val api = ServerApi(this)
                     val patchUser = PatchUser(username = newValue)
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
@@ -585,7 +600,6 @@ class UserFragment : Fragment() {
                     input2.error = "Does Not Match"
                     input2.requestFocus()
                 } else {
-                    val api = ServerApi(this)
                     val patchUser = PatchUser(password = newValue)
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
@@ -642,7 +656,6 @@ class UserFragment : Fragment() {
                     input.error = "Must be 6 Digits"
                     input.requestFocus()
                 } else {
-                    val api = ServerApi(this)
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
                         val userResponse = api.disableTotp(totpCode)
@@ -675,7 +688,7 @@ class UserFragment : Fragment() {
     private fun Context.enableTotpDialog(parentView: View, totpSecret: String) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_totp_enable, null)
-        val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
+        //val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
         val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
         val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
@@ -724,7 +737,6 @@ class UserFragment : Fragment() {
                     input.error = "Must be 6 Digits"
                     input.requestFocus()
                 } else {
-                    val api = ServerApi(this)
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
                         val userResponse = api.enableTotp(totpSecret, totpCode)

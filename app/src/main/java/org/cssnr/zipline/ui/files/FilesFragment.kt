@@ -114,7 +114,7 @@ class FilesFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", "").toString()
         //Log.d("File[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", "")
-        //Log.d("File[onViewCreated]", "authToken: $authToken")
+        //Log.d("File[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         val perPage = preferences.getInt("files_per_page", 25)
         //Log.d("File[onViewCreated]", "perPage: $perPage")
         val previewMetered = preferences.getBoolean("file_preview_metered", false)

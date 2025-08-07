@@ -8,4 +8,5 @@ import org.cssnr.zipline.db.UserEntity
 class UserViewModel : ViewModel() {
     val user = MutableLiveData<UserEntity>()
     val server = MutableLiveData<ServerEntity>()
+    val totpSecret = MutableLiveData<String>()
 }

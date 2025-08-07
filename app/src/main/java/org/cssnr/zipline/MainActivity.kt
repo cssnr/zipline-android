@@ -79,7 +79,7 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("SetJavaScriptEnabled", "SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.d("Main[onCreate]", "savedInstanceState: ${savedInstanceState?.size()}")
+        Log.d(LOG_TAG, "savedInstanceState: ${savedInstanceState?.size()}")
         enableEdgeToEdge()
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState == null) {
             val navGraph = navController.navInflater.inflate(R.navigation.nav_graph)
             val startPreference = preferences.getString("start_destination", null)
-            Log.d("Main[onCreate]", "startPreference: $startPreference")
+            Log.d(LOG_TAG, "startPreference: $startPreference")
             val startDestination =
                 if (startPreference == "files") R.id.nav_item_files else R.id.nav_item_home
             navGraph.setStartDestination(startDestination)
@@ -223,7 +223,7 @@ class MainActivity : AppCompatActivity() {
             val dao: UserDao = UserDatabase.getInstance(this).userDao()
             lifecycleScope.launch {
                 val user = dao.getUserByUrl(savedUrl)
-                Log.d("Main[onCreate]", "user: $user")
+                Log.d(LOG_TAG, "user: $user")
                 val headerUsername = headerView.findViewById<TextView>(R.id.header_username)
                 headerUsername?.text = user?.username ?: getString(R.string.app_name)
             }
@@ -240,20 +240,20 @@ class MainActivity : AppCompatActivity() {
         )
         val file = File(filesDir, "avatar.png")
         if (file.exists()) {
-            Log.i("Main[onCreate]", "GLIDE LOAD - MainActivity - file.name: ${file.name}")
+            Log.i(LOG_TAG, "GLIDE LOAD - MainActivity - file.name: ${file.name}")
             Glide.with(headerImage).load(file).signature(ObjectKey(file.lastModified()))
                 .into(headerImage)
         }
 
         // TODO: Improve initialization of the WorkRequest
         val workInterval = preferences.getString("work_interval", null) ?: "0"
-        Log.i("Main[onCreate]", "workInterval: $workInterval")
+        Log.i(LOG_TAG, "workInterval: $workInterval")
         if (workInterval != "0") {
             val workRequest =
                 PeriodicWorkRequestBuilder<AppWorker>(workInterval.toLong(), TimeUnit.MINUTES)
                     .setConstraints(APP_WORKER_CONSTRAINTS)
                     .build()
-            Log.i("Main[onCreate]", "workRequest: $workRequest")
+            Log.i(LOG_TAG, "workRequest: $workRequest")
             WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                 "app_worker",
                 ExistingPeriodicWorkPolicy.KEEP,
@@ -261,7 +261,7 @@ class MainActivity : AppCompatActivity() {
             )
         } else {
             // TODO: Confirm this is necessary...
-            Log.i("Main[onCreate]", "Ensuring Work is Disabled")
+            Log.i(LOG_TAG, "Ensuring Work is Disabled")
             WorkManager.getInstance(this).cancelUniqueWork("app_worker")
         }
 
@@ -289,9 +289,12 @@ class MainActivity : AppCompatActivity() {
             Log.d(LOG_TAG, "previousVersion $previousVersion")
             val packageInfo = packageManager.getPackageInfo(packageName, 0)
             Log.d(LOG_TAG, "packageInfo.versionCode ${packageInfo.versionCode}")
-            preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
+            if (previousVersion != packageInfo.versionCode) {
+                Log.i(LOG_TAG, "SET - previousVersion: ${packageInfo.versionCode}")
+                preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
+            }
             val authToken = preferences.getString("ziplineToken", null)
-            Log.d("Multi[onViewCreated]", "authToken: $authToken")
+            Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
             if (!authToken.isNullOrEmpty() && previousVersion < packageInfo.versionCode) {
                 Log.i(LOG_TAG, "Upgrading from $previousVersion -> ${packageInfo.versionCode}")
                 val task1 = async { updateAvatar() }
@@ -322,7 +325,7 @@ class MainActivity : AppCompatActivity() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         val authToken = preferences.getString("ziplineToken", null)
         Log.d("onNewIntent", "savedUrl: $savedUrl")
-        Log.d("onNewIntent", "authToken: $authToken")
+        Log.d("onNewIntent", "authToken: ${authToken?.take(24)}...")
 
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.w("onNewIntent", "Missing Zipline URL or Token...")
@@ -340,9 +343,9 @@ class MainActivity : AppCompatActivity() {
         val isCalendarUri = data != null &&
                 data.authority?.contains("calendar") == true &&
                 listOf("/events", "/calendars", "/time").any { data.path?.contains(it) == true }
-        Log.d("handleIntent", "isCalendarUri: $isCalendarUri")
+        Log.d("onNewIntent", "isCalendarUri: $isCalendarUri")
         if (isCalendarUri) {
-            Log.i("handleIntent", "Calendar Links Not Supported!")
+            Log.i("onNewIntent", "Calendar Links Not Supported!")
             Toast.makeText(this, "Calendar Links Not Supported!", Toast.LENGTH_LONG).show()
             return
         }
@@ -404,7 +407,7 @@ class MainActivity : AppCompatActivity() {
                             .build()
                     )
                 } else {
-                    Log.i("handleIntent", "PLAIN TEXT DETECTED")
+                    Log.i("onNewIntent", "PLAIN TEXT DETECTED")
                     val bundle = Bundle().apply { putString("text", extraText) }
                     navController.navigate(
                         R.id.nav_item_text, bundle, NavOptions.Builder()
@@ -440,7 +443,7 @@ class MainActivity : AppCompatActivity() {
             showPreview(data)
 
         } else if (action == "UPLOAD_FILE") {
-            Log.d("handleIntent", "UPLOAD_FILE")
+            Log.d("onNewIntent", "UPLOAD_FILE")
 
             filePickerLauncher.launch(arrayOf("*/*"))
 
@@ -449,8 +452,6 @@ class MainActivity : AppCompatActivity() {
             Log.w("onNewIntent", "UNKNOWN INTENT - action: $action")
 
         }
-        //} else if (action == "RECENT_FILE") {
-        //    Log.d("handleIntent", "RECENT_FILE")
     }
 
     override fun onStop() {

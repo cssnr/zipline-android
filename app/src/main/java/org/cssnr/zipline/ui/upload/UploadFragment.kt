@@ -119,7 +119,7 @@ class UploadFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Upload[onViewCreated]", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
-        Log.d("Upload[onViewCreated]", "authToken: $authToken")
+        Log.d("Upload[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Upload[onViewCreated]", "savedUrl is null")
             Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
@@ -293,7 +293,7 @@ class UploadFragment : Fragment() {
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("processUpload", "savedUrl: $savedUrl")
         val authToken = preferences.getString("ziplineToken", null)
-        Log.d("processUpload", "authToken: $authToken")
+        Log.d("processUpload", "authToken: ${authToken?.take(24)}...")
         val shareUrl = preferences.getBoolean("share_after_upload", true)
         Log.d("processUpload", "shareUrl: $shareUrl")
 
