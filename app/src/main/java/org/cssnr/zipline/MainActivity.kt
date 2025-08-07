@@ -295,8 +295,10 @@ class MainActivity : AppCompatActivity() {
             }
             val authToken = preferences.getString("ziplineToken", null)
             Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
-            if (!authToken.isNullOrEmpty() && previousVersion < packageInfo.versionCode) {
-                Log.i(LOG_TAG, "Upgrading from $previousVersion -> ${packageInfo.versionCode}")
+            if (!authToken.isNullOrEmpty() && previousVersion == 0) {
+                // NOTE: previousVersion is new in this version. Therefore, users with both an
+                //  authToken and default previousVersion are being upgrading to the new version.
+                Log.i(LOG_TAG, "Performing Upgrading to versionCode: ${packageInfo.versionCode}")
                 val task1 = async { updateAvatar() }
                 val task2 = async { updateUserActivity() }
                 task1.await()
