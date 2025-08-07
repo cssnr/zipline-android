@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="24dp"
@@ -16,6 +20,16 @@
         android:textAppearance="?attr/textAppearanceHeadline5"
         android:text="Enable TOTP" />
 
+    <Button
+        android:id="@+id/open_auth_link"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Open in Authenticator App"
+        app:icon="@drawable/md_open_in_new_24px"
+        app:iconGravity="end"
+        app:iconPadding="12dp" />
+
     <FrameLayout
         android:id="@+id/secret_layout"
         android:layout_width="match_parent"
@@ -26,26 +40,28 @@
             android:layout_marginBottom="4dp"
             android:layout_gravity="bottom"
             android:labelFor="@id/totp_secret"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:text="TOTP Secret" />
         <ImageView
-            android:id="@+id/open_auth_link"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="60dp"
-            android:padding="12dp"
-            android:layout_gravity="end"
-            android:contentDescription="Open Link"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/md_open_in_new_24px" />
-        <ImageView
             android:id="@+id/copy_secret_btn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="12dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="8dp"
+            android:scaleType="centerCrop"
             android:layout_gravity="end"
             android:contentDescription="Copy Secret"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/md_content_copy_24px" />
+        <!--<ImageView-->
+        <!--    android:id="@+id/open_auth_link"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="48dp"-->
+        <!--    android:layout_marginEnd="60dp"-->
+        <!--    android:padding="8dp"-->
+        <!--    android:layout_gravity="end"-->
+        <!--    android:contentDescription="Open Link"-->
+        <!--    android:background="?attr/selectableItemBackgroundBorderless"-->
+        <!--    android:src="@drawable/md_open_in_new_24px" />-->
     </FrameLayout>
     <TextView
         android:id="@+id/totp_secret"
@@ -54,8 +70,8 @@
         android:layout_marginBottom="24dp"
         android:padding="8dp"
         android:background="?attr/colorSurfaceContainerLow"
-        android:inputType="textMultiLine"
         android:textColor="?attr/colorOutline"
+        android:textIsSelectable="true"
         android:text="test" />
 
     <EditText
@@ -64,10 +80,15 @@
         android:layout_height="wrap_content"
         android:padding="8dp"
         android:autofillHints=""
-        android:inputType="text"
+        android:inputType="number"
         android:maxLines="1"
         android:maxLength="6"
+        android:scrollbars="none"
+        android:overScrollMode="never"
+        android:singleLine="true"
         android:background="?attr/colorSurfaceContainerLow"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:hint="Code" />
 
 </LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

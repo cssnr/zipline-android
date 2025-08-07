@@ -16,25 +16,36 @@
         android:id="@+id/top_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center_vertical"
         tools:ignore="UseCompoundDrawables">
-        <ImageView
-            android:id="@+id/go_back"
-            android:layout_width="64dp"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:padding="12dp"
-            android:contentDescription="Go Back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/md_arrow_back_24px" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/go_back"
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:paddingBottom="16dp"
+                android:contentDescription="Go Back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/md_arrow_back_24px" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:text="Cancel" />
+        </FrameLayout>
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:layout_marginStart="12dp"
             android:orientation="vertical">
             <TextView
                 android:layout_width="wrap_content"
@@ -48,19 +59,29 @@
                 android:layout_height="wrap_content"
                 android:maxLines="1"
                 android:ellipsize="end"
-                android:text="Go back to cancel and crop to accept." />
+                android:text="Accept to set your new avatar." />
         </LinearLayout>
-        <ImageView
-            android:id="@+id/crop_btn"
-            android:layout_width="64dp"
-            android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:padding="12dp"
-            android:contentDescription="Go Back"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/md_crop_24px"
-            app:tint="#8BC34A" />
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/crop_btn"
+                android:layout_width="64dp"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:paddingBottom="16dp"
+                android:contentDescription="Go Back"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/md_crop_24px"
+                app:tint="#8BC34A" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal|bottom"
+                android:textColor="#8BC34A"
+                android:text="Accept" />
+        </FrameLayout>
     </LinearLayout>
 
     <!-- Image Cropper fill the remaining available height -->

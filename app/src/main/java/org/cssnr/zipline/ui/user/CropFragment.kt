@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.graphics.scale
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
@@ -90,18 +91,22 @@ class CropFragment : Fragment() {
         }
 
         binding.cropBtn.setOnClickListener {
-            val cropped = cropImageView.getCroppedImage() ?: throw Error("getCroppedImage is null")
-            Log.d(LOG_TAG, "cropped: $cropped")
             try {
+                var cropped = cropImageView.getCroppedImage() ?: throw Error("cropped null")
+                Log.d(LOG_TAG, "cropped size: ${cropped.width}x${cropped.height}")
+                if (cropped.width > 512) {
+                    cropped = cropped.scale(512, 512)
+                    Log.d(LOG_TAG, "cropped scale size: ${cropped.width}x${cropped.height}")
+                }
                 val file = File(ctx.filesDir, "cropped.png")
                 FileOutputStream(file).use { out ->
                     val result = cropped.compress(Bitmap.CompressFormat.PNG, 100, out)
-                    Log.d(LOG_TAG, "result: $result - file: ${file.name}")
+                    Log.d(LOG_TAG, "result: $result - file.name: ${file.name}")
                     setFragmentResult("CropFragment", bundleOf("fileName" to file.name))
                     findNavController().navigateUp()
                 }
-            } catch (e: IOException) {
-                Log.e(LOG_TAG, "IOException:", e)
+            } catch (e: Exception) {
+                Log.e(LOG_TAG, "Exception:", e)
                 Snackbar.make(view, "Error Cropping Image.", Snackbar.LENGTH_SHORT)
                     .setTextColor("#D32F2F".toColorInt()).show()
             }

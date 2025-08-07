@@ -13,6 +13,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
@@ -206,13 +207,16 @@ class UserFragment : Fragment() {
 
             val newFile = File(ctx.filesDir, fileName)
             Log.d(LOG_TAG, "newFile: $newFile")
+            Log.d(LOG_TAG, "newFile.length: ${newFile.length()}")
 
             val base64String = Base64.encodeToString(newFile.readBytes(), Base64.NO_WRAP)
-            Log.d(LOG_TAG, "base64String: ${base64String.take(100)}")
+            Log.d(LOG_TAG, "base64String.length: ${base64String.length}")
+            val avatar = "data:image/png;base64,$base64String"
+            Log.d(LOG_TAG, "base64String: ${avatar.take(100)}...")
 
             val api = ServerApi(ctx, savedUrl)
             lifecycleScope.launch {
-                val user = api.editUser(PatchUser(avatar = "data:image/png;base64,$base64String"))
+                val user = api.editUser(PatchUser(avatar = avatar))
                 Log.d(LOG_TAG, "user: $user")
                 if (user != null && newFile.exists()) {
                     // TODO: Verify result
@@ -360,14 +364,14 @@ class UserFragment : Fragment() {
             avatarFile.copyTo(shareFile, true)
 
             val uri = FileProvider.getUriForFile(ctx, "${ctx.packageName}.fileprovider", shareFile)
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            val intent = Intent(Intent.ACTION_SEND).apply {
                 type = "image/png"
                 putExtra(Intent.EXTRA_STREAM, uri)
                 //putExtra(Intent.EXTRA_TITLE, "avatar.png")
                 //putExtra(Intent.EXTRA_SUBJECT, "avatar.png")
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
-            ctx.startActivity(Intent.createChooser(shareIntent, "Share Avatar"))
+            ctx.startActivity(Intent.createChooser(intent, "Share Avatar"))
         }
 
         binding.logOutBtn.setOnClickListener {
@@ -380,6 +384,7 @@ class UserFragment : Fragment() {
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Log Out") { _, _ ->
                     Log.d(LOG_TAG, "LOG OUT")
+                    // TODO: Add logout function to ServerApi and actually log out...
                     preferences.edit { remove("ziplineToken") }
                     val bundle = bundleOf("url" to savedUrl)
                     Log.d(LOG_TAG, "bundle: $bundle")
@@ -510,6 +515,9 @@ class UserFragment : Fragment() {
                 Log.d("changeUsernameDialog", "newValue: $newValue")
                 if (newValue.isEmpty()) {
                     input.error = "Required"
+                    input.requestFocus()
+                } else if (viewModel.user.value?.username == newValue) {
+                    input.error = "Not Changed"
                     input.requestFocus()
                 } else {
                     val api = ServerApi(this)
@@ -669,7 +677,7 @@ class UserFragment : Fragment() {
         val view = inflater.inflate(R.layout.dialog_totp_enable, null)
         val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
-        val openAuthLink = view.findViewById<ImageView>(R.id.open_auth_link)
+        val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
         val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
         val input = view.findViewById<EditText>(R.id.totp_code)
 
@@ -690,8 +698,9 @@ class UserFragment : Fragment() {
             Log.d("enableTotpDialog", "copySecretBtn.setOnClickListener")
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("Token", totpSecret))
-            Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT)
-                .setAnchorView(secretLayout).show()
+            // TODO: Snake Bar in an AlertDialog does does not drop to bottom due to panel constraint
+            //Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT)
+            //    .setAnchorView(secretLayout).show()
         }
 
         val savedUrl = preferences.getString("ziplineUrl", null) ?: return

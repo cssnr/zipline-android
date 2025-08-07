@@ -255,8 +255,7 @@
             android:text="Refresh Profile"
             app:icon="@drawable/md_credit_card_gear_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/change_username"
             android:layout_width="match_parent"
@@ -265,8 +264,7 @@
             android:text="Change Username"
             app:icon="@drawable/md_signature_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/change_password"
             android:layout_width="match_parent"
@@ -275,8 +273,7 @@
             android:text="Change Password"
             app:icon="@drawable/md_password_2_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/copy_token"
             android:layout_width="match_parent"
@@ -285,23 +282,32 @@
             android:text="Copy Token"
             app:icon="@drawable/md_passkey_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
 
+        <!--<Button-->
+        <!--    android:id="@+id/enable_totp"-->
+        <!--    android:layout_width="match_parent"-->
+        <!--    android:layout_height="wrap_content"-->
+        <!--    android:layout_gravity="end"-->
+        <!--    android:textColor="?attr/colorPrimary"-->
+        <!--    android:text="Enable TOTP"-->
+        <!--    app:backgroundTint="@android:color/transparent"-->
+        <!--    app:strokeColor="?attr/colorPrimary"-->
+        <!--    app:strokeWidth="2dp"-->
+        <!--    app:icon="@drawable/md_encrypted_24px"-->
+        <!--    app:iconTint="?attr/colorPrimary"-->
+        <!--    app:iconGravity="end"-->
+        <!--    app:iconPadding="12dp" />-->
         <Button
             android:id="@+id/enable_totp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="end"
-            android:textColor="?attr/colorPrimary"
             android:text="Enable TOTP"
-            app:backgroundTint="@android:color/transparent"
-            app:strokeColor="?attr/colorPrimary"
-            app:strokeWidth="2dp"
+            android:backgroundTint="@android:color/holo_green_dark"
             app:icon="@drawable/md_encrypted_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/disable_totp"
             android:layout_width="match_parent"
@@ -313,7 +319,7 @@
             app:icon="@drawable/md_encrypted_24px"
             app:iconGravity="end"
             app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            tools:visibility="visible" />
 
         <TextView
             android:layout_width="match_parent"
@@ -329,8 +335,7 @@
             android:text="Refresh Stats"
             app:icon="@drawable/md_chart_data_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -346,8 +351,7 @@
             android:text="Refresh Avatar"
             app:icon="@drawable/md_account_box_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/change_avatar"
             android:layout_width="match_parent"
@@ -356,8 +360,7 @@
             android:text="Change Avatar"
             app:icon="@drawable/md_frame_person_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/share_avatar"
             android:layout_width="match_parent"
@@ -366,8 +369,7 @@
             android:text="Share Avatar"
             app:icon="@drawable/md_share_reviews_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -384,8 +386,7 @@
             android:backgroundTint="@android:color/holo_red_dark"
             app:icon="@drawable/md_logout_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
         <Button
             android:id="@+id/test_btn"
             android:layout_width="match_parent"
@@ -394,8 +395,7 @@
             android:text="Test Button"
             app:icon="@drawable/md_bug_report_24px"
             app:iconGravity="end"
-            app:iconPadding="12dp"
-            app:iconSize="18dp" />
+            app:iconPadding="12dp" />
 
         <LinearLayout
             android:id="@+id/server_settings"
@@ -426,6 +426,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Clear Temp"
+                android:backgroundTint="@android:color/holo_orange_dark"
                 app:icon="@drawable/md_delete_sweep_24px"
                 app:iconGravity="end"
                 app:iconPadding="12dp"
@@ -436,6 +437,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Clear Zeros"
+                android:backgroundTint="@android:color/holo_orange_dark"
                 app:icon="@drawable/md_delete_sweep_24px"
                 app:iconGravity="end"
                 app:iconPadding="12dp"
