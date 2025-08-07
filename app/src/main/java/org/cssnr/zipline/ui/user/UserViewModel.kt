@@ -9,4 +9,5 @@ class UserViewModel : ViewModel() {
     val user = MutableLiveData<UserEntity>()
     val server = MutableLiveData<ServerEntity>()
     val totpSecret = MutableLiveData<String>()
+    //val totpQrcode = MutableLiveData<String>()
 }

@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.ActivityResultLauncher
@@ -304,21 +303,17 @@ class UserFragment : Fragment() {
         binding.enableTotp.setOnClickListener {
             Log.d(LOG_TAG, "binding.enableTotp.setOnClickListener")
             lifecycleScope.launch {
-                val totpSecret = if (viewModel.totpSecret.value != null) {
-                    Log.i(LOG_TAG, "USE - totpSecret from viewModel.totpSecret")
-                    viewModel.totpSecret.value
-                } else {
-                    Log.i(LOG_TAG, "GET - totpSecret from api.getTotpSecret")
-                    api.getTotpSecret()?.secret
+                if (viewModel.totpSecret.value == null) {
+                    val totpResponse = api.getTotpSecret()
+                    Log.d(LOG_TAG, "totpResponse: $totpResponse")
+                    viewModel.totpSecret.value = totpResponse?.secret
+                    //viewModel.totpQrcode.value = totpResponse?.qrcode
                 }
-                Log.d(LOG_TAG, "totpSecret: $totpSecret")
-                if (totpSecret != null) {
-                    viewModel.totpSecret.value = totpSecret
-                    ctx.enableTotpDialog(view, totpSecret)
-                } else {
-                    Snackbar.make(view, "Error Getting TOTP Secret!", Snackbar.LENGTH_LONG)
-                        .setTextColor("#D32F2F".toColorInt()).show()
-                }
+
+                viewModel.totpSecret.value?.let {
+                    ctx.enableTotpDialog(view, it)
+                } ?: Snackbar.make(view, "Error Getting TOTP Secret!", Snackbar.LENGTH_LONG)
+                    .setTextColor("#D32F2F".toColorInt()).show()
             }
         }
 
@@ -691,11 +686,20 @@ class UserFragment : Fragment() {
         //val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
         val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
+        //val qrCodeImage = view.findViewById<ImageView>(R.id.qr_code)
         val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
         val input = view.findViewById<EditText>(R.id.totp_code)
 
         Log.d("enableTotpDialog", "totpSecret: $totpSecret")
         secretTextView.text = totpSecret
+
+        // NOTE: Code to load qrcode into ImageView
+        //viewModel.totpQrcode.value?.let {
+        //    val base64Part = it.substringAfter(",")
+        //    val decodedBytes = Base64.decode(base64Part, Base64.DEFAULT)
+        //    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+        //    Glide.with(view.context).load(bitmap).into(qrCodeImage)
+        //}
 
         openAuthLink.setOnClickListener {
             Log.d("enableTotpDialog", "openAuthLink.setOnClickListener")
@@ -711,9 +715,8 @@ class UserFragment : Fragment() {
             Log.d("enableTotpDialog", "copySecretBtn.setOnClickListener")
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("Token", totpSecret))
-            // TODO: Snake Bar in an AlertDialog does does not drop to bottom due to panel constraint
-            //Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT)
-            //    .setAnchorView(secretLayout).show()
+            // TODO: Determine how to show SnakeBar in an AlertDialog
+            //Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT).setAnchorView(secretLayout).show()
         }
 
         val savedUrl = preferences.getString("ziplineUrl", null) ?: return
