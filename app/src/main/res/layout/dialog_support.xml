@@ -5,96 +5,96 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fillViewport="true">
-        <LinearLayout
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="24dp"
+    android:paddingHorizontal="24dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/feedback_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginBottom="24dp"
+        android:textAppearance="?attr/textAppearanceHeadline5"
+        android:text="Help Build Zipline" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:text="Zipline is in Active Development!" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Contributing is as easy as telling us what changes you want to see..." />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:text="● Request a Feature" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:text="● Suggest a Change" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+            android:text="● Report an Issue" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/github_discussions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="24dp"
-            android:paddingHorizontal="24dp"
-            android:orientation="vertical">
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Discussions"
+            app:icon="@drawable/fa_github"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
+        <Button
+            android:id="@+id/github_issues"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Issues"
+            app:icon="@drawable/fa_github"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/feedback_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="24dp"
-                android:textAppearance="?attr/textAppearanceHeadline5"
-                android:text="Help Build Zipline" />
+    </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="Zipline is in Active Development!" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="Contributing is as easy as telling us what changes you want to see..." />
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:text="● Request a Feature" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:text="● Suggest a Change" />
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                    android:text="● Report an Issue" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical">
-                <Button
-                    android:id="@+id/github_discussions"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:text="Discussions"
-                    app:icon="@drawable/fa_github"
-                    app:iconGravity="end"
-                    app:iconPadding="12dp" />
-                <Button
-                    android:id="@+id/github_issues"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:text="Issues"
-                    app:icon="@drawable/fa_github"
-                    app:iconGravity="end"
-                    app:iconPadding="12dp" />
-            </LinearLayout>
-
-            </LinearLayout>
-
-        </LinearLayout>
-    </ScrollView>
+</LinearLayout>
+</ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
