@@ -122,7 +122,6 @@ class UserFragment : Fragment() {
                 if (user.role == "ADMIN" || user.role == "SUPERADMIN") View.VISIBLE else View.GONE
 
             binding.headingName.text = user.username
-            //binding.helloText.text = ctx.getString(R.string.user_welcome_text, user.username)
             binding.userId.text = user.id
 
             //binding.userCreatedAt.text =
@@ -533,6 +532,11 @@ class UserFragment : Fragment() {
                 .show()
         }
 
+        binding.supportBtn.setOnClickListener {
+            Log.d(LOG_TAG, "binding.supportBtn.setOnClickListener")
+            ctx.showSupportDialog()
+        }
+
         //class MyOnClickListener : View.OnClickListener {
         //    override fun onClick(v: View) {
         //        Log.d(LOG_TAG, "MyOnClickListener: $v")
@@ -820,6 +824,30 @@ class UserFragment : Fragment() {
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Enable TOTP") { _, _ -> }
         dialog.show()
     }
+
+    private fun Context.showSupportDialog() {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_support, null)
+
+        val discussionsBtn = view.findViewById<TextView>(R.id.github_discussions)
+        val issuesBtn = view.findViewById<TextView>(R.id.github_issues)
+
+        discussionsBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.discussions_url).toUri())
+            startActivity(intent)
+        }
+        issuesBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.issues_url).toUri())
+            startActivity(intent)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Close", null)
+            .create()
+        //dialog.setOnShowListener {}
+        dialog.show()
+    }
 }
 
 
@@ -931,6 +959,7 @@ suspend fun Activity.updateAvatar(): File {
     Log.d("updateAvatar", "DONE - file: $file")
     return file
 }
+
 
 //fun Context.copyToClipboard(text: String, label: String = "Text") {
 //    Log.d("copyToClipboard", "text: $text")

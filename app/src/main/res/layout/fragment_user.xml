@@ -386,6 +386,16 @@
             app:icon="@drawable/md_logout_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
+        <Button
+            android:id="@+id/support_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Help Build Zipline"
+            android:backgroundTint="@android:color/holo_green_dark"
+            app:icon="@drawable/fa_github"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
         <!--<Button-->
         <!--    android:id="@+id/test_btn"-->
         <!--    android:layout_width="match_parent"-->
