@@ -25,6 +25,26 @@
         android:text="Enable TOTP" />
 
     <Button
+        android:id="@+id/qrcode_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Show QR Code"
+        app:icon="@drawable/md_qr_code_24px"
+        app:iconGravity="end"
+        app:iconPadding="12dp" />
+
+    <ImageView
+        android:id="@+id/qrcode_image"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_gravity="center"
+        android:contentDescription="QR Code"
+        android:visibility="gone"
+        tools:visibility="gone"
+        tools:src="@tools:sample/avatars" />
+
+    <Button
         android:id="@+id/open_auth_link"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,14 +53,6 @@
         app:icon="@drawable/md_open_in_new_24px"
         app:iconGravity="end"
         app:iconPadding="12dp" />
-
-    <!--<ImageView-->
-    <!--    android:id="@+id/qr_code"-->
-    <!--    android:layout_width="128dp"-->
-    <!--    android:layout_height="128dp"-->
-    <!--    android:layout_gravity="center"-->
-    <!--    android:contentDescription="QR Code"-->
-    <!--    tools:src="@tools:sample/avatars" />-->
 
     <FrameLayout
         android:id="@+id/secret_layout"

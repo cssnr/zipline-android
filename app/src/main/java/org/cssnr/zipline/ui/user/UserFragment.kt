@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.format.Formatter
 import android.util.Base64
@@ -307,7 +308,7 @@ class UserFragment : Fragment() {
                     val totpResponse = api.getTotpSecret()
                     Log.d(LOG_TAG, "totpResponse: $totpResponse")
                     viewModel.totpSecret.value = totpResponse?.secret
-                    //viewModel.totpQrcode.value = totpResponse?.qrcode
+                    viewModel.totpQrcode.value = totpResponse?.qrcode
                 }
 
                 viewModel.totpSecret.value?.let {
@@ -692,7 +693,8 @@ class UserFragment : Fragment() {
         //val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
         val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
-        //val qrCodeImage = view.findViewById<ImageView>(R.id.qr_code)
+        val qrCodeButton = view.findViewById<Button>(R.id.qrcode_button)
+        val qrCodeImage = view.findViewById<ImageView>(R.id.qrcode_image)
         val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
         val input = view.findViewById<EditText>(R.id.totp_code)
 
@@ -706,6 +708,17 @@ class UserFragment : Fragment() {
         //    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         //    Glide.with(view.context).load(bitmap).into(qrCodeImage)
         //}
+
+        qrCodeButton.setOnClickListener {
+            viewModel.totpQrcode.value?.let {
+                qrCodeButton.visibility = View.GONE
+                val base64Part = it.substringAfter(",")
+                val decodedBytes = Base64.decode(base64Part, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                Glide.with(view.context).load(bitmap).into(qrCodeImage)
+                qrCodeImage.visibility = View.VISIBLE
+            }
+        }
 
         openAuthLink.setOnClickListener {
             Log.d("enableTotpDialog", "openAuthLink.setOnClickListener")
