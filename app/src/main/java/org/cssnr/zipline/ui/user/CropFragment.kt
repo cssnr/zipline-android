@@ -104,7 +104,7 @@ class CropFragment : Fragment() {
                     setFragmentResult("CropFragment", bundleOf("fileName" to file.name))
                     findNavController().navigateUp()
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e(LOG_TAG, "Exception:", e)
                 Snackbar.make(view, "Error Cropping Image.", Snackbar.LENGTH_SHORT)
                     .setTextColor("#D32F2F".toColorInt()).show()

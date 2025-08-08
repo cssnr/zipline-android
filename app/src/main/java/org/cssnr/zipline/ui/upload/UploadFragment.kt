@@ -360,7 +360,7 @@ class UploadFragment : Fragment() {
                         Toast.makeText(this@processUpload, message, Toast.LENGTH_LONG).show()
                     }
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
                 val msg = e.message ?: "Unknown Error"
                 Log.i("processUpload", "msg: $msg")

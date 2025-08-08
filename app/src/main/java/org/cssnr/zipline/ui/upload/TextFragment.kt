@@ -213,7 +213,7 @@ class TextFragment : Fragment() {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
                     }
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 e.printStackTrace()
                 val msg = e.message ?: "Unknown Error!"
                 Log.i("processUpload", "msg: $msg")

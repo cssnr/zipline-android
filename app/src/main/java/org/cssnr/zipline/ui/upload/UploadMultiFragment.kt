@@ -251,7 +251,7 @@ class UploadMultiFragment : Fragment() {
                         val msg = "Error: ${response.code()}: ${response.message()}"
                         Log.w("processMultiUpload", "UPLOAD ERROR: $msg")
                     }
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     e.printStackTrace()
                 }
             }

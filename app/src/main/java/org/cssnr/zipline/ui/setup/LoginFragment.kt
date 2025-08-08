@@ -301,7 +301,7 @@ class LoginFragment : Fragment() {
             } else {
                 result
             }
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.d("parseHost", "Exception: $e")
             return ""
         }

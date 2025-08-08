@@ -584,7 +584,7 @@ class FilesFragment : Fragment() {
                 viewModel.atEnd.value = atEnd
             }
 
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("getFiles", "Exception: $e")
             errorCount += 1
             val msg = e.message ?: "Exception Fetching Files"
