@@ -28,7 +28,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -174,7 +173,6 @@ class LoginFragment : Fragment() {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private suspend fun processLogin(context: Context) {
         _binding?.loginButton?.isEnabled = false
         _binding?.loginError?.visibility = View.INVISIBLE
