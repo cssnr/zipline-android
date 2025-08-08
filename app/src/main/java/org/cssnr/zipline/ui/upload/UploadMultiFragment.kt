@@ -46,10 +46,6 @@ class UploadMultiFragment : Fragment() {
 
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -255,7 +251,7 @@ class UploadMultiFragment : Fragment() {
                         val msg = "Error: ${response.code()}: ${response.message()}"
                         Log.w("processMultiUpload", "UPLOAD ERROR: $msg")
                     }
-                } catch (e: Exception) {
+                } catch (e: Throwable) {
                     e.printStackTrace()
                 }
             }

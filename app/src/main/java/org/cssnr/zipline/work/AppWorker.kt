@@ -24,7 +24,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
         Log.d("DailyWorker", "--- Update Stats")
         try {
             applicationContext.updateStats()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("DailyWorker", "updateStats: Exception: $e")
             applicationContext.debugLog("updateStats: Exception: $e")
         }
@@ -32,7 +32,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
         Log.d("DailyWorker", "--- Update User")
         try {
             applicationContext.updateUser()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("DailyWorker", "updateUser: Exception: $e")
             applicationContext.debugLog("updateUser: Exception: $e")
         }

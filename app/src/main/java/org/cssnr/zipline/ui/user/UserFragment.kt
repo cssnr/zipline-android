@@ -842,7 +842,7 @@ suspend fun Activity.updateUserActivity(): UserEntity? {
 }
 
 
-suspend fun Activity.updateAvatar(): File? {
+suspend fun Activity.updateAvatar(): File {
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val savedUrl = preferences.getString("ziplineUrl", null).toString()
     Log.d("updateAvatar", "savedUrl: $savedUrl")

@@ -570,7 +570,7 @@ class FilesFragment : Fragment() {
             val files = api.files(viewModel.currentPage.value!!, perPage)
             viewModel.currentPage.value = viewModel.currentPage.value?.plus(1)
             Log.d("getFiles", "files.count: ${files?.count()}")
-            if (!files.isNullOrEmpty()) {
+            if (files != null) {
                 filesAdapter.addData(files, reset)
                 viewModel.filesData.value = filesAdapter.getData()
                 if (files.count() < perPage) {
@@ -584,7 +584,7 @@ class FilesFragment : Fragment() {
                 viewModel.atEnd.value = atEnd
             }
 
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
             Log.e("getFiles", "Exception: $e")
             errorCount += 1
             val msg = e.message ?: "Exception Fetching Files"

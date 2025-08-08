@@ -196,7 +196,7 @@ class SetupFragment : Fragment() {
                         .build()
                 WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
                     "app_worker",
-                    ExistingPeriodicWorkPolicy.REPLACE,
+                    ExistingPeriodicWorkPolicy.UPDATE,
                     newRequest
                 )
             }

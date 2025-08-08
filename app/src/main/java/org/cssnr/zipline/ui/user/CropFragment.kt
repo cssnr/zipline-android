@@ -21,7 +21,6 @@ import org.cssnr.zipline.databinding.FragmentCropBinding
 import org.cssnr.zipline.ui.settings.headers.HeadersFragment
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 
 class CropFragment : Fragment() {
 
@@ -105,7 +104,7 @@ class CropFragment : Fragment() {
                     setFragmentResult("CropFragment", bundleOf("fileName" to file.name))
                     findNavController().navigateUp()
                 }
-            } catch (e: Exception) {
+            } catch (e: Throwable) {
                 Log.e(LOG_TAG, "Exception:", e)
                 Snackbar.make(view, "Error Cropping Image.", Snackbar.LENGTH_SHORT)
                     .setTextColor("#D32F2F".toColorInt()).show()
