@@ -395,6 +395,40 @@ class UserFragment : Fragment() {
             ctx.startActivity(Intent.createChooser(intent, "Share Avatar"))
         }
 
+        binding.removeAvatar.setOnClickListener {
+            Log.d(LOG_TAG, "binding.removeAvatar.setOnClickListener")
+            MaterialAlertDialogBuilder(ctx)
+                .setTitle("Remove Avatar")
+                .setIcon(R.drawable.md_hide_image_24px)
+                .setMessage("This will delete your avatar!")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Remove") { _, _ ->
+                    Log.d(LOG_TAG, "REMOVE AVATAR")
+                    lifecycleScope.launch {
+                        val newUser = api.editUser(PatchUser(avatar = ""))
+                        Log.d(LOG_TAG, "newUser: $newUser")
+                        if (newUser != null) {
+                            _binding?.appIcon?.let {
+                                Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                            }
+                            activity?.let { act ->
+                                act.findViewById<ImageView>(R.id.header_image)?.let {
+                                    Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                                }
+                            }
+                            if (avatarFile.exists()) {
+                                avatarFile.delete()
+                            }
+                            Snackbar.make(view, "Avatar Removed!", Snackbar.LENGTH_SHORT).show()
+                        } else {
+                            Snackbar.make(view, "Error Removing Avatar!", Snackbar.LENGTH_LONG)
+                                .setTextColor("#D32F2F".toColorInt()).show()
+                        }
+                    }
+                }
+                .show()
+        }
+
         binding.logOutBtn.setOnClickListener {
             Log.d(LOG_TAG, "binding.logOutBtn.setOnClickListener")
 
