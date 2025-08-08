@@ -180,6 +180,7 @@ class LoginFragment : Fragment() {
         _binding?.loginError?.visibility = View.INVISIBLE
         val inputHost = _binding?.loginHostname?.text.toString().trim()
         Log.d("loginButton", "inputHost: $inputHost")
+        // TODO: Overhaul this function and separate parsing and validation logic...
         val host = parseHost(inputHost)
         if (inputHost != host) {
             _binding?.loginHostname?.setText(host)
