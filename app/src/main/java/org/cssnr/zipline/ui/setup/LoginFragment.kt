@@ -283,6 +283,9 @@ class LoginFragment : Fragment() {
             if (!url.lowercase().startsWith("http")) {
                 url = "https://$url"
             }
+            if (url.toHttpUrlOrNull() == null) {
+                return url
+            }
             val uri = url.toUri()
             Log.d("parseHost", "uri: $uri")
             Log.d("parseHost", "uri.scheme: ${uri.scheme}")
