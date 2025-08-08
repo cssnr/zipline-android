@@ -49,7 +49,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentFilesBottomBinding.inflate(inflater, container, false)
         val root: View = binding.root
         return root

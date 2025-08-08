@@ -21,7 +21,6 @@ import org.cssnr.zipline.databinding.FragmentCropBinding
 import org.cssnr.zipline.ui.settings.headers.HeadersFragment
 import java.io.File
 import java.io.FileOutputStream
-import java.io.IOException
 
 class CropFragment : Fragment() {
 

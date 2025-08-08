@@ -272,7 +272,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                         .build()
                 WorkManager.getInstance(this).enqueueUniquePeriodicWork(
                     "app_worker",
-                    ExistingPeriodicWorkPolicy.REPLACE,
+                    ExistingPeriodicWorkPolicy.UPDATE,
                     newRequest
                 )
                 return true

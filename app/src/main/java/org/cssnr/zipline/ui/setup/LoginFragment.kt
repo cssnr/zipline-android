@@ -287,7 +287,7 @@ class LoginFragment : Fragment() {
             Log.d("parseHost", "uri: $uri")
             Log.d("parseHost", "uri.scheme: ${uri.scheme}")
             if (uri.scheme.isNullOrEmpty()) {
-                return ""
+                return "https://"
             }
             Log.d("parseHost", "uri.host: ${uri.host}")
             if (uri.host.isNullOrEmpty()) {
@@ -307,7 +307,11 @@ class LoginFragment : Fragment() {
         }
     }
 
-    private fun showErrorAnimation(buttonView: View?, textView: TextView? = null, text: String? = null) {
+    private fun showErrorAnimation(
+        buttonView: View?,
+        textView: TextView? = null,
+        text: String? = null,
+    ) {
         Log.d("loginFailed", "Context.loginFailed")
         textView.let {
             it?.text = text

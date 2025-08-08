@@ -204,7 +204,7 @@ class HomeFragment : Fragment() {
         binding.webView.resumeTimers()
     }
 
-    inner class MyWebViewClient() : WebViewClient() {
+    inner class MyWebViewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
             Log.d("shouldOverrideUrl", "url: $url")
