@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Context.CLIPBOARD_SERVICE
 import android.content.Intent
+import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.format.Formatter
 import android.util.Base64
@@ -121,7 +122,6 @@ class UserFragment : Fragment() {
                 if (user.role == "ADMIN" || user.role == "SUPERADMIN") View.VISIBLE else View.GONE
 
             binding.headingName.text = user.username
-            //binding.helloText.text = ctx.getString(R.string.user_welcome_text, user.username)
             binding.userId.text = user.id
 
             //binding.userCreatedAt.text =
@@ -307,7 +307,7 @@ class UserFragment : Fragment() {
                     val totpResponse = api.getTotpSecret()
                     Log.d(LOG_TAG, "totpResponse: $totpResponse")
                     viewModel.totpSecret.value = totpResponse?.secret
-                    //viewModel.totpQrcode.value = totpResponse?.qrcode
+                    viewModel.totpQrcode.value = totpResponse?.qrcode
                 }
 
                 viewModel.totpSecret.value?.let {
@@ -341,7 +341,7 @@ class UserFragment : Fragment() {
                 val file = requireActivity().updateAvatar()
                 Log.d(LOG_TAG, "binding.updateAvatar: file: $file")
                 _binding?.let {
-                    if (file?.exists() == true) {
+                    if (file.exists()) {
                         Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $file")
                         Glide.with(it.appIcon).load(file).signature(ObjectKey(file.lastModified()))
                             .into(it.appIcon)
@@ -357,6 +357,12 @@ class UserFragment : Fragment() {
 
         binding.changeAvatar.setOnClickListener {
             Log.d(LOG_TAG, "binding.changeAvatar.setOnClickListener")
+            filePickerLauncher.launch(arrayOf("image/*"))
+            // NOTE: Uses filePickerLauncher
+        }
+
+        binding.appIcon.setOnClickListener {
+            Log.d(LOG_TAG, "binding.appIcon.setOnClickListener")
             filePickerLauncher.launch(arrayOf("image/*"))
             // NOTE: Uses filePickerLauncher
         }
@@ -386,6 +392,40 @@ class UserFragment : Fragment() {
                 addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
             ctx.startActivity(Intent.createChooser(intent, "Share Avatar"))
+        }
+
+        binding.removeAvatar.setOnClickListener {
+            Log.d(LOG_TAG, "binding.removeAvatar.setOnClickListener")
+            MaterialAlertDialogBuilder(ctx)
+                .setTitle("Remove Avatar")
+                .setIcon(R.drawable.md_hide_image_24px)
+                .setMessage("This will delete your avatar!")
+                .setNegativeButton("Cancel", null)
+                .setPositiveButton("Remove") { _, _ ->
+                    Log.d(LOG_TAG, "REMOVE AVATAR")
+                    lifecycleScope.launch {
+                        val newUser = api.editUser(PatchUser(avatar = ""))
+                        Log.d(LOG_TAG, "newUser: $newUser")
+                        if (newUser != null) {
+                            _binding?.appIcon?.let {
+                                Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                            }
+                            activity?.let { act ->
+                                act.findViewById<ImageView>(R.id.header_image)?.let {
+                                    Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                                }
+                            }
+                            if (avatarFile.exists()) {
+                                avatarFile.delete()
+                            }
+                            Snackbar.make(view, "Avatar Removed!", Snackbar.LENGTH_SHORT).show()
+                        } else {
+                            Snackbar.make(view, "Error Removing Avatar!", Snackbar.LENGTH_LONG)
+                                .setTextColor("#D32F2F".toColorInt()).show()
+                        }
+                    }
+                }
+                .show()
         }
 
         binding.logOutBtn.setOnClickListener {
@@ -490,6 +530,11 @@ class UserFragment : Fragment() {
                     }
                 }
                 .show()
+        }
+
+        binding.supportBtn.setOnClickListener {
+            Log.d(LOG_TAG, "binding.supportBtn.setOnClickListener")
+            ctx.showSupportDialog()
         }
 
         //class MyOnClickListener : View.OnClickListener {
@@ -686,7 +731,8 @@ class UserFragment : Fragment() {
         //val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
         val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
-        //val qrCodeImage = view.findViewById<ImageView>(R.id.qr_code)
+        val qrCodeButton = view.findViewById<Button>(R.id.qrcode_button)
+        val qrCodeImage = view.findViewById<ImageView>(R.id.qrcode_image)
         val copySecretBtn = view.findViewById<ImageView>(R.id.copy_secret_btn)
         val input = view.findViewById<EditText>(R.id.totp_code)
 
@@ -700,6 +746,17 @@ class UserFragment : Fragment() {
         //    val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
         //    Glide.with(view.context).load(bitmap).into(qrCodeImage)
         //}
+
+        qrCodeButton.setOnClickListener {
+            viewModel.totpQrcode.value?.let {
+                qrCodeButton.visibility = View.GONE
+                val base64Part = it.substringAfter(",")
+                val decodedBytes = Base64.decode(base64Part, Base64.DEFAULT)
+                val bitmap = BitmapFactory.decodeByteArray(decodedBytes, 0, decodedBytes.size)
+                Glide.with(view.context).load(bitmap).into(qrCodeImage)
+                qrCodeImage.visibility = View.VISIBLE
+            }
+        }
 
         openAuthLink.setOnClickListener {
             Log.d("enableTotpDialog", "openAuthLink.setOnClickListener")
@@ -765,6 +822,30 @@ class UserFragment : Fragment() {
         }
 
         dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Enable TOTP") { _, _ -> }
+        dialog.show()
+    }
+
+    private fun Context.showSupportDialog() {
+        val inflater = LayoutInflater.from(this)
+        val view = inflater.inflate(R.layout.dialog_support, null)
+
+        val discussionsBtn = view.findViewById<TextView>(R.id.github_discussions)
+        val issuesBtn = view.findViewById<TextView>(R.id.github_issues)
+
+        discussionsBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.discussions_url).toUri())
+            startActivity(intent)
+        }
+        issuesBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.issues_url).toUri())
+            startActivity(intent)
+        }
+
+        val dialog = MaterialAlertDialogBuilder(this)
+            .setView(view)
+            .setNegativeButton("Close", null)
+            .create()
+        //dialog.setOnShowListener {}
         dialog.show()
     }
 }
@@ -878,6 +959,7 @@ suspend fun Activity.updateAvatar(): File {
     Log.d("updateAvatar", "DONE - file: $file")
     return file
 }
+
 
 //fun Context.copyToClipboard(text: String, label: String = "Text") {
 //    Log.d("copyToClipboard", "text: $text")

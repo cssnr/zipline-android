@@ -35,38 +35,45 @@
                     android:id="@+id/setup_header"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
                     android:gravity="center">
-                    <ImageView
-                        android:id="@+id/imageView"
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/app_icon"
+                        android:layout_width="96dp"
+                        android:layout_height="96dp"
                         android:contentDescription="@string/app_name"
                         app:srcCompat="@mipmap/ic_launcher_round" />
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:gravity="center"
+                        android:gravity="center_vertical"
                         android:orientation="vertical"
                         tools:ignore="UseCompoundDrawables,UselessParent">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
                             android:text="@string/app_name" />
                         <TextView
                             android:id="@+id/app_version"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
                             tools:text="v0.0.1-dev" />
                     </LinearLayout>
                 </LinearLayout>
 
                 <TextView
+                    android:id="@+id/user_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Display3"
-                    android:text="Welcome" />
+                    android:layout_marginBottom="12dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:text="Welcome, "
+                    tools:text="Welcome, administrator" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -90,6 +97,16 @@
                         android:ellipsize="end"
                         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:text="View, Edit and Dowload Files"
+                        android:drawablePadding="6dp"
+                        app:drawableStartCompat="@drawable/md_task_alt_24px"
+                        app:drawableTint="@android:color/holo_green_light" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:maxLines="1"
+                        android:ellipsize="end"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                        android:text="Edit Avatar, Settings and More"
                         android:drawablePadding="6dp"
                         app:drawableStartCompat="@drawable/md_task_alt_24px"
                         app:drawableTint="@android:color/holo_green_light" />

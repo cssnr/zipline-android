@@ -296,6 +296,16 @@
             app:icon="@drawable/md_share_reviews_24px"
             app:iconGravity="end"
             app:iconPadding="12dp" />
+        <Button
+            android:id="@+id/remove_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Remove Avatar"
+            android:backgroundTint="@android:color/holo_red_dark"
+            app:icon="@drawable/md_hide_image_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
 
         <TextView
             android:layout_width="match_parent"
@@ -374,6 +384,16 @@
             android:text="Log Out"
             android:backgroundTint="@android:color/holo_red_dark"
             app:icon="@drawable/md_logout_24px"
+            app:iconGravity="end"
+            app:iconPadding="12dp" />
+        <Button
+            android:id="@+id/support_btn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Help Build Zipline"
+            android:backgroundTint="@android:color/holo_green_dark"
+            app:icon="@drawable/fa_github"
             app:iconGravity="end"
             app:iconPadding="12dp" />
         <!--<Button-->

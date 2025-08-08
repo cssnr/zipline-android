@@ -14,8 +14,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 
-//import androidx.navigation.findNavController
-
 fun Activity.showTapTargets(view: View) {
     Log.d("showTapTargets", "start")
     val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
