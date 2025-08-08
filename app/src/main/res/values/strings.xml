@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Zipline</string>
     <string name="version_string">v%s</string>
+    <string name="welcome_username">Welcome, %s</string>
     <string name="github_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android">%s</a>]]></string>
     <string name="zipline_link"><![CDATA[<a href="https://github.com/diced/zipline">%s</a>]]></string>
     <string name="setup_zipline_text">Enter your <![CDATA[<a href="https://github.com/diced/zipline">Zipline v4 Server</a>]]> Details.</string>

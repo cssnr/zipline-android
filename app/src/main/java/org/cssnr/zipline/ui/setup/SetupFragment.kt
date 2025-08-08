@@ -11,13 +11,18 @@ import androidx.core.content.edit
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.shape.CornerFamily
+import kotlinx.coroutines.launch
 import nl.dionsegijn.konfetti.core.Angle
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
@@ -26,8 +31,13 @@ import nl.dionsegijn.konfetti.core.emitter.Emitter
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentSetupBinding
+import org.cssnr.zipline.db.UserDao
+import org.cssnr.zipline.db.UserDatabase
+import org.cssnr.zipline.db.UserEntity
+import org.cssnr.zipline.ui.user.UserFragment
 import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
 import org.cssnr.zipline.work.AppWorker
+import java.io.File
 import java.util.concurrent.TimeUnit
 
 class SetupFragment : Fragment() {
@@ -84,11 +94,38 @@ class SetupFragment : Fragment() {
 
         val ctx = requireContext()
 
+        val savedUrl = preferences.getString("ziplineUrl", null) ?: ""
+        Log.d(UserFragment.LOG_TAG, "savedUrl: $savedUrl")
+
+        lifecycleScope.launch {
+            val userDao: UserDao = UserDatabase.getInstance(ctx).userDao()
+            val userEntity: UserEntity? = userDao.getUserByUrl(url = savedUrl)
+            Log.d(UserFragment.LOG_TAG, "userEntity: $userEntity")
+            if (userEntity != null) {
+                _binding?.userUsername?.text =
+                    getString(R.string.welcome_username, userEntity.username)
+            }
+        }
+
         // Version
         val packageInfo = ctx.packageManager.getPackageInfo(ctx.packageName, 0)
         val versionName = packageInfo.versionName
         Log.d(LOG_TAG, "versionName: $versionName")
         binding.appVersion.text = getString(R.string.version_string, versionName)
+
+        val radius = ctx.resources.getDimension(R.dimen.avatar_radius)
+        binding.appIcon.setShapeAppearanceModel(
+            binding.appIcon.shapeAppearanceModel.toBuilder()
+                .setAllCorners(CornerFamily.ROUNDED, radius).build()
+        )
+
+        val avatarFile = File(ctx.filesDir, "avatar.png")
+        Log.d(UserFragment.LOG_TAG, "avatarFile: $avatarFile")
+        if (avatarFile.exists()) {
+            Log.i(UserFragment.LOG_TAG, "GLIDE LOAD - binding.appIcon: $avatarFile")
+            Glide.with(binding.appIcon).load(avatarFile)
+                .signature(ObjectKey(avatarFile.lastModified())).into(binding.appIcon)
+        }
 
         // Share Upload
         binding.shareUpload.isChecked = preferences.getBoolean("share_after_upload", false)
@@ -178,8 +215,8 @@ class SetupFragment : Fragment() {
             }
 
         // Start App Listener
-        val startAppListener: (View) -> Unit = { view ->
-            Log.d(LOG_TAG, "startAppListener: view: $view")
+        val startAppListener: (View) -> Unit = { v ->
+            Log.d(LOG_TAG, "startAppListener: view: $v")
 
             binding.btnContinue.isEnabled = false
             binding.btnSkip.isEnabled = false
@@ -203,7 +240,7 @@ class SetupFragment : Fragment() {
 
             // Arguments
             val bundle = bundleOf()
-            when (view.id) {
+            when (v.id) {
                 R.id.btn_continue -> {
                     Log.i(LOG_TAG, "Continue Button Pressed. Showing First Run...")
                     bundle.putBoolean("isFirstRun", true)
@@ -235,7 +272,7 @@ class SetupFragment : Fragment() {
         }
     }
 
-    fun hitEmWithConfetti() {
+    private fun hitEmWithConfetti() {
         val party = Party(
             speed = 10f,
             maxSpeed = 30f,

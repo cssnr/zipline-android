@@ -91,16 +91,6 @@ class LoginFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("onViewCreated", "savedInstanceState: $savedInstanceState")
 
-        //// TODO: Determine if this is necessary...
-        //if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-        //    binding.root.setOnApplyWindowInsetsListener { _, insets ->
-        //        Log.i("setOnApplyWindowInsetsListener", "insets: $insets")
-        //        val imeInsets = insets.getInsets(WindowInsetsCompat.Type.ime())
-        //        binding.root.setPadding(0, 0, 0, imeInsets.bottom)
-        //        insets
-        //    }
-        //}
-
         val ctx = requireContext()
 
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName

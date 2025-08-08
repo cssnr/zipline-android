@@ -341,7 +341,7 @@ class UserFragment : Fragment() {
                 val file = requireActivity().updateAvatar()
                 Log.d(LOG_TAG, "binding.updateAvatar: file: $file")
                 _binding?.let {
-                    if (file?.exists() == true) {
+                    if (file.exists()) {
                         Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $file")
                         Glide.with(it.appIcon).load(file).signature(ObjectKey(file.lastModified()))
                             .into(it.appIcon)
@@ -357,6 +357,12 @@ class UserFragment : Fragment() {
 
         binding.changeAvatar.setOnClickListener {
             Log.d(LOG_TAG, "binding.changeAvatar.setOnClickListener")
+            filePickerLauncher.launch(arrayOf("image/*"))
+            // NOTE: Uses filePickerLauncher
+        }
+
+        binding.appIcon.setOnClickListener {
+            Log.d(LOG_TAG, "binding.appIcon.setOnClickListener")
             filePickerLauncher.launch(arrayOf("image/*"))
             // NOTE: Uses filePickerLauncher
         }
