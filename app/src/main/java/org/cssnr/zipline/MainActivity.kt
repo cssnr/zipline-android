@@ -40,7 +40,6 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
@@ -56,10 +55,8 @@ import org.cssnr.zipline.ui.home.HomeViewModel
 import org.cssnr.zipline.ui.user.updateAvatar
 import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.widget.WidgetProvider
-import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
-import org.cssnr.zipline.work.AppWorker
+import org.cssnr.zipline.work.enqueueWorkRequest
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -246,19 +243,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         // TODO: Improve initialization of the WorkRequest
+        //  IMPORTANT: Determine how to setup Work with new preference "work_enabled"
+        //  Consider removing 0/disabled as an option and only use work_enabled to disable
         val workInterval = preferences.getString("work_interval", null) ?: "0"
         Log.i(LOG_TAG, "workInterval: $workInterval")
         if (workInterval != "0") {
-            val workRequest =
-                PeriodicWorkRequestBuilder<AppWorker>(workInterval.toLong(), TimeUnit.MINUTES)
-                    .setConstraints(APP_WORKER_CONSTRAINTS)
-                    .build()
-            Log.i(LOG_TAG, "workRequest: $workRequest")
-            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "app_worker",
-                ExistingPeriodicWorkPolicy.KEEP,
-                workRequest,
-            )
+            this.enqueueWorkRequest(workInterval, ExistingPeriodicWorkPolicy.KEEP)
         } else {
             // TODO: Confirm this is necessary...
             Log.i(LOG_TAG, "Ensuring Work is Disabled")

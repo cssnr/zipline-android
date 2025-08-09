@@ -15,9 +15,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -35,8 +32,7 @@ import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.db.UserEntity
 import org.cssnr.zipline.ui.user.UserFragment
-import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
-import org.cssnr.zipline.work.AppWorker
+import org.cssnr.zipline.work.enqueueWorkRequest
 import java.io.File
 import java.util.concurrent.TimeUnit
 
@@ -189,13 +185,15 @@ class SetupFragment : Fragment() {
         //    }
 
         // Update Interval Spinner
-        val workEntries = resources.getStringArray(R.array.work_interval_entries)
-        val workValues = resources.getStringArray(R.array.work_interval_values)
+        val workEntries =
+            arrayOf("Disabled", *resources.getStringArray(R.array.work_interval_entries))
+        val workValues = arrayOf("0", *resources.getStringArray(R.array.work_interval_values))
         val workAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_item, workEntries)
         workAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.workIntervalSpinner.adapter = workAdapter
         val currentWorkInterval = preferences.getString("work_interval", null) ?: "0"
         binding.workIntervalSpinner.setSelection(workValues.indexOf(currentWorkInterval))
+        // TODO: CONSIDER NOT CHANGING THIS UNTIL SETUP COMPLETE
         binding.workIntervalSpinner.onItemSelectedListener =
             object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(
@@ -206,6 +204,7 @@ class SetupFragment : Fragment() {
                 ) {
                     val selectedValue = workValues[position]
                     Log.d(LOG_TAG, "workIntervalSpinner: value: $selectedValue")
+                    // TODO: FIX THIS FOR work_enabled
                     preferences.edit { putString("work_interval", selectedValue) }
                 }
 
@@ -221,22 +220,10 @@ class SetupFragment : Fragment() {
             binding.btnContinue.isEnabled = false
             binding.btnSkip.isEnabled = false
 
-            // TODO: Duplication from SettingsFragment and MainActivity...
+            // TODO: FIX THIS FOR work_enabled
             val workInterval = preferences.getString("work_interval", null) ?: "0"
             Log.d(LOG_TAG, "startAppListener: workInterval: $workInterval")
-            if (workInterval != "0") {
-                val interval = workInterval.toLong()
-                val newRequest =
-                    PeriodicWorkRequestBuilder<AppWorker>(interval, TimeUnit.MINUTES)
-                        .setInitialDelay(interval, TimeUnit.MINUTES)
-                        .setConstraints(APP_WORKER_CONSTRAINTS)
-                        .build()
-                WorkManager.getInstance(ctx).enqueueUniquePeriodicWork(
-                    "app_worker",
-                    ExistingPeriodicWorkPolicy.UPDATE,
-                    newRequest
-                )
-            }
+            ctx.enqueueWorkRequest(workInterval)
 
             // Arguments
             val bundle = bundleOf()

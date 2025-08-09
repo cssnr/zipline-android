@@ -107,14 +107,51 @@
             android:icon="@drawable/md_widgets_24px"
             android:summary="Text and Background Color" />
 
+        <SwitchPreferenceCompat
+            android:key="work_enabled"
+            android:title="Enable Background Updates"
+            android:summary="Required for Stats Widget"
+            android:icon="@drawable/md_blood_pressure_24px"
+            android:defaultValue="true" />
+
         <ListPreference
             android:key="work_interval"
+            android:dependency="work_enabled"
             android:title="Update Interval"
             android:icon="@drawable/md_timer_play_24px"
             android:defaultValue="0"
             android:entries="@array/work_interval_entries"
             android:entryValues="@array/work_interval_values"
             tools:summary="1 Hour" />
+
+        <SwitchPreferenceCompat
+            android:key="work_metered"
+            android:dependency="work_enabled"
+            android:title="Updates on Metered Connection"
+            android:icon="@drawable/md_signal_cellular_alt_24"
+            android:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            android:key="work_update_stats"
+            android:dependency="work_enabled"
+            android:title="Update Stats"
+            android:summary="Required for Stats Widget"
+            android:icon="@drawable/md_chart_data_24px"
+            android:defaultValue="true" />
+        <SwitchPreferenceCompat
+            android:key="work_update_user"
+            android:dependency="work_enabled"
+            android:title="Update User Profile"
+            android:summary="Uses Very Little Data"
+            android:icon="@drawable/md_id_card_24px"
+            android:defaultValue="true" />
+        <SwitchPreferenceCompat
+            android:key="work_update_avatar"
+            android:dependency="work_enabled"
+            android:title="Update Avatar Data"
+            android:summary="May Increase Data Usage"
+            android:icon="@drawable/md_account_box_24px"
+            android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Application Information">
