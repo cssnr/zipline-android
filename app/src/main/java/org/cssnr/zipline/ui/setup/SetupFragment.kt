@@ -203,8 +203,7 @@ class SetupFragment : Fragment() {
                     id: Long
                 ) {
                     val selectedValue = workValues[position]
-                    Log.d(LOG_TAG, "workIntervalSpinner: value: $selectedValue")
-                    // TODO: FIX THIS FOR work_enabled
+                    Log.d(LOG_TAG, "workIntervalSpinner: selectedValue: $selectedValue")
                     preferences.edit { putString("work_interval", selectedValue) }
                 }
 
@@ -220,10 +219,11 @@ class SetupFragment : Fragment() {
             binding.btnContinue.isEnabled = false
             binding.btnSkip.isEnabled = false
 
-            // TODO: FIX THIS FOR work_enabled
             val workInterval = preferences.getString("work_interval", null) ?: "0"
             Log.d(LOG_TAG, "startAppListener: workInterval: $workInterval")
-            ctx.enqueueWorkRequest(workInterval)
+            if (workInterval != "0") {
+                ctx.enqueueWorkRequest(workInterval)
+            }
 
             // Arguments
             val bundle = bundleOf()

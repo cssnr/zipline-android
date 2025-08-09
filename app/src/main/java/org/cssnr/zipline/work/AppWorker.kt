@@ -19,7 +19,14 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
     override suspend fun doWork(): Result {
         Log.d("DailyWorker", "doWork: START")
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
-        // TODO: Exit here if savedUrl is Null or Empty...
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("DailyWorker", "authToken: ${authToken?.take(24)}...")
+        if (authToken == null) {
+            // TODO: Look into cancelling work here and rescheduling it on next login...
+            Log.w("DailyWorker", "Missing authToken - skipping work...")
+            applicationContext.debugLog("DailyWorker: No authToken, skipping...")
+            return Result.success()
+        }
         val savedUrl = preferences.getString("ziplineUrl", null).toString()
         Log.d("DailyWorker", "savedUrl: $savedUrl")
         val workUpdateStats = preferences.getBoolean("work_update_stats", false)

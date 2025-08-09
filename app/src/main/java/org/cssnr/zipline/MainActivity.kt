@@ -168,8 +168,8 @@ class MainActivity : AppCompatActivity() {
                 if (navController.currentDestination?.id != R.id.nav_item_home) {
                     Log.d("Drawer", "NAVIGATE: nav_item_home")
                     // NOTE: This is the correct navigation call...
-                    val menuItem = binding.navView.menu.findItem(R.id.nav_item_home)
-                    NavigationUI.onNavDestinationSelected(menuItem, navController)
+                    val destItem = binding.navView.menu.findItem(R.id.nav_item_home)
+                    NavigationUI.onNavDestinationSelected(destItem, navController)
                 }
                 true
             } else if (menuItem.itemId == R.id.nav_item_upload) {
@@ -203,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         //window.statusBarColor = Color.TRANSPARENT
         //binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
-        // Set Nav Header Top Padding
+        // Update Header Padding
         val headerView = binding.navView.getHeaderView(0)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -242,13 +242,13 @@ class MainActivity : AppCompatActivity() {
                 .into(headerImage)
         }
 
-        // TODO: Improve initialization of the WorkRequest
-        //  IMPORTANT: Determine how to setup Work with new preference "work_enabled"
-        //  Consider removing 0/disabled as an option and only use work_enabled to disable
+        // Work Manager
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
         val workInterval = preferences.getString("work_interval", null) ?: "0"
-        Log.i(LOG_TAG, "workInterval: $workInterval")
-        if (workInterval != "0") {
-            this.enqueueWorkRequest(workInterval, ExistingPeriodicWorkPolicy.KEEP)
+        Log.d(LOG_TAG, "workInterval: $workInterval")
+        if (workInterval != "0" && authToken != null) {
+            this.enqueueWorkRequest(null, ExistingPeriodicWorkPolicy.KEEP)
         } else {
             // TODO: Confirm this is necessary...
             Log.i(LOG_TAG, "Ensuring Work is Disabled")

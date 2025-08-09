@@ -65,6 +65,7 @@
     </string-array>
 
     <string-array name="work_interval_entries">
+        <item>Disabled</item>
         <item>15 Minutes</item>
         <item>30 Minutes</item>
         <item>1 Hour</item>
@@ -78,6 +79,7 @@
         <item>1 Week</item>
     </string-array>
     <string-array name="work_interval_values">
+        <item>0</item>
         <item>15</item>
         <item>30</item>
         <item>60</item>

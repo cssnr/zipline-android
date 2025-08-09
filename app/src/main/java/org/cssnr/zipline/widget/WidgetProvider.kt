@@ -62,8 +62,6 @@ class WidgetProvider : AppWidgetProvider() {
         Log.d("Widget[onUpdate]", "textColor: $textColor")
         val bgOpacity = preferences.getInt("widget_bg_opacity", 35)
         Log.d("Widget[onUpdate]", "bgOpacity: $bgOpacity")
-        val workEnabled = preferences.getBoolean("work_enabled", false)
-        Log.d("Widget[onUpdate]", "workEnabled: $workEnabled")
         val workInterval = preferences.getString("work_interval", null) ?: "0"
         Log.d("Widget[onUpdate]", "workInterval: $workInterval")
 
@@ -164,14 +162,14 @@ class WidgetProvider : AppWidgetProvider() {
                     views.setTextViewText(R.id.files_unit, split.getOrElse(1) { "" })
                 }
 
-                if (!workEnabled || workInterval == "0") {
+                if (workInterval == "0") {
                     views.setTextViewText(R.id.update_time, "Disabled")
-                } else if (server != null) {
+                } else if (server == null) {
+                    views.setTextViewText(R.id.update_time, "Refresh Data")
+                } else {
                     val time = DateFormat.getTimeFormat(context).format(server.updatedAt)
                     Log.d("Widget[onUpdate]", "time: $time")
                     views.setTextViewText(R.id.update_time, time)
-                } else {
-                    views.setTextViewText(R.id.update_time, "Refresh Data")
                 }
                 Log.d("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
                 appWidgetManager.updateAppWidget(appWidgetId, views)

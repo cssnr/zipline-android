@@ -44,6 +44,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private lateinit var preferences: SharedPreferences
 
+    private val workMeteredPref by lazy { findPreference<SwitchPreferenceCompat>("work_metered") }
+    private val workUpdateStatsPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_stats") }
+    private val workUpdateUserPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_user") }
+    private val workUpdateAvatarPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_avatar") }
+
     //// TODO: Determine why I put this here...
     //override fun onCreateView(
     //    inflater: LayoutInflater,
@@ -173,37 +178,22 @@ class SettingsFragment : PreferenceFragmentCompat() {
             false
         }
 
-        // Enable Work
-        val workEnabled = findPreference<SwitchPreferenceCompat>("work_enabled")
-        workEnabled?.setOnPreferenceChangeListener { _, newValue ->
-            Log.d("work_enabled", "newValue: $newValue")
-            val result = newValue as Boolean
-            Log.d("work_enabled", "result: $result")
-            if (result) {
-                val workInterval = preferences.getString("work_interval", null)
-                Log.d("work_enabled", "workInterval: $workInterval")
-                ctx.updateWorkManager(workInterval)
-            } else {
-                ctx.updateWorkManager("0")
-            }
-            true
-        }
-
-        // Update Interval
+        // Work Update Interval
         val workInterval = findPreference<ListPreference>("work_interval")
+        updateWorkInterval(workInterval?.value)
         workInterval?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         workInterval?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("work_interval", "newValue: $newValue")
-            ctx.updateWorkManager(newValue as String, workInterval.value)
+            updateWorkInterval(newValue as String)
+            ctx.updateWorkManager(newValue, workInterval.value)
         }
 
         // Work Metered
-        val workMetered = findPreference<SwitchPreferenceCompat>("work_metered")
-        workMetered?.setOnPreferenceChangeListener { _, newValue ->
+        workMeteredPref?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("work_metered", "newValue: $newValue")
             val result = newValue as Boolean
-            workMetered.isChecked = result
             Log.d("work_metered", "result: $result")
+            workMeteredPref?.isChecked = result
             ctx.enqueueWorkRequest()
             false
         }
@@ -247,6 +237,18 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Log.d("viewDebugLogs", "setOnPreferenceClickListener")
             navController.navigate(R.id.nav_item_settings_debug)
             false
+        }
+    }
+
+    private fun updateWorkInterval(selectedValue: String?) {
+        Log.i("updateWorkInterval", "selectedValue: $selectedValue")
+        if (selectedValue != null) {
+            val enabled = selectedValue != "0"
+            Log.d("updateWorkInterval", "enabled: $enabled")
+            workMeteredPref?.isEnabled = enabled
+            workUpdateStatsPref?.isEnabled = enabled
+            workUpdateUserPref?.isEnabled = enabled
+            workUpdateAvatarPref?.isEnabled = enabled
         }
     }
 
