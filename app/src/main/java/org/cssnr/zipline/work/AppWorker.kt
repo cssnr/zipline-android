@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.ui.user.updateAvatar
 import org.cssnr.zipline.ui.user.updateStats
 import org.cssnr.zipline.ui.user.updateUser
 import org.cssnr.zipline.widget.WidgetProvider
@@ -18,23 +19,53 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
     override suspend fun doWork(): Result {
         Log.d("DailyWorker", "doWork: START")
         val preferences = PreferenceManager.getDefaultSharedPreferences(applicationContext)
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d("DailyWorker", "authToken: ${authToken?.take(24)}...")
+        if (authToken == null) {
+            // TODO: Look into cancelling work here and rescheduling it on next login...
+            Log.w("DailyWorker", "Missing authToken - skipping work...")
+            applicationContext.debugLog("DailyWorker: No authToken, skipping...")
+            return Result.success()
+        }
         val savedUrl = preferences.getString("ziplineUrl", null).toString()
         Log.d("DailyWorker", "savedUrl: $savedUrl")
+        val workUpdateStats = preferences.getBoolean("work_update_stats", false)
+        Log.d("DailyWorker", "workUpdateStats: $workUpdateStats")
+        val workUpdateUser = preferences.getBoolean("work_update_user", false)
+        Log.d("DailyWorker", "workUpdateUser: $workUpdateUser")
+        val workUpdateAvatar = preferences.getBoolean("work_update_avatar", false)
+        Log.d("DailyWorker", "workUpdateAvatar: $workUpdateAvatar")
+        applicationContext.debugLog("DailyWorker: Running for: $savedUrl - workUpdateStats: $workUpdateStats - workUpdateUser: $workUpdateUser - workUpdateAvatar: $workUpdateAvatar")
 
-        Log.d("DailyWorker", "--- Update Stats")
-        try {
-            applicationContext.updateStats()
-        } catch (e: Throwable) {
-            Log.e("DailyWorker", "updateStats: Exception: $e")
-            applicationContext.debugLog("updateStats: Exception: $e")
+        if (workUpdateStats) {
+            Log.d("DailyWorker", "--- Update Stats")
+            try {
+                applicationContext.updateStats()
+            } catch (e: Throwable) {
+                Log.e("DailyWorker", "updateStats: Exception: $e")
+                applicationContext.debugLog("updateStats: Exception: $e")
+            }
         }
 
-        Log.d("DailyWorker", "--- Update User")
-        try {
-            applicationContext.updateUser()
-        } catch (e: Throwable) {
-            Log.e("DailyWorker", "updateUser: Exception: $e")
-            applicationContext.debugLog("updateUser: Exception: $e")
+        if (workUpdateUser) {
+            Log.d("DailyWorker", "--- Update User")
+            try {
+                applicationContext.updateUser()
+            } catch (e: Throwable) {
+                Log.e("DailyWorker", "updateUser: Exception: $e")
+                applicationContext.debugLog("updateUser: Exception: $e")
+            }
+        }
+
+        // TODO: This requires a Context.updateAvatar (currently only Activity)
+        if (workUpdateAvatar) {
+            Log.d("DailyWorker", "--- Update Avatar")
+            try {
+                applicationContext.updateAvatar()
+            } catch (e: Throwable) {
+                Log.e("DailyWorker", "updateAvatar: Exception: $e")
+                applicationContext.debugLog("updateAvatar: Exception: $e")
+            }
         }
 
         // Update Widget

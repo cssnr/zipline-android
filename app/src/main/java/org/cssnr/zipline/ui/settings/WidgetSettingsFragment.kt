@@ -31,7 +31,7 @@ class WidgetSettingsFragment : PreferenceFragmentCompat() {
         seekBar?.apply {
             setOnPreferenceChangeListener { pref, newValue ->
                 val intValue = (newValue as Int)
-                var stepped = ((intValue + 2) / 5) * 5
+                val stepped = ((intValue + 2) / 5) * 5
                 Log.d("WidgetSettingsFragment", "stepped: $stepped")
                 value = stepped
                 pref.summary = "Current Value: $stepped"

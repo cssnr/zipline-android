@@ -4,13 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-<androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/home_layout"
-    android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.settings.DebugFragment"
-    android:fillViewport="true">
+    tools:context=".ui.user.CropFragment">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/top_layout"

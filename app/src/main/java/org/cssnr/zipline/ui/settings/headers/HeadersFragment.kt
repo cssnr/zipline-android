@@ -258,8 +258,8 @@ class HeadersFragment : Fragment() {
             viewHolder.headerKey.text = data.first
             viewHolder.headerValue.text = data.second
 
-            viewHolder.itemView.setOnClickListener { view -> listener.onSelect(data) }
-            viewHolder.deleteButton.setOnClickListener { view -> listener.onDelete(data) }
+            viewHolder.itemView.setOnClickListener { listener.onSelect(data) }
+            viewHolder.deleteButton.setOnClickListener { listener.onDelete(data) }
         }
 
         override fun getItemCount() = dataSet.size

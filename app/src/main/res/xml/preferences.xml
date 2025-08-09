@@ -111,10 +111,35 @@
             android:key="work_interval"
             android:title="Update Interval"
             android:icon="@drawable/md_timer_play_24px"
-            android:defaultValue="0"
+            android:defaultValue="720"
             android:entries="@array/work_interval_entries"
             android:entryValues="@array/work_interval_values"
             tools:summary="1 Hour" />
+
+        <SwitchPreferenceCompat
+            android:key="work_metered"
+            android:title="Updates on Metered Connection"
+            android:icon="@drawable/md_signal_cellular_alt_24"
+            android:defaultValue="true"/>
+
+        <SwitchPreferenceCompat
+            android:key="work_update_stats"
+            android:title="Update Stats"
+            android:summary="Required for Stats Widget"
+            android:icon="@drawable/md_chart_data_24px"
+            android:defaultValue="true" />
+        <SwitchPreferenceCompat
+            android:key="work_update_user"
+            android:title="Update User Profile"
+            android:summary="Uses Very Little Data"
+            android:icon="@drawable/md_id_card_24px"
+            android:defaultValue="true" />
+        <SwitchPreferenceCompat
+            android:key="work_update_avatar"
+            android:title="Update Avatar Data"
+            android:summary="May Increase Data Usage"
+            android:icon="@drawable/md_account_box_24px"
+            android:defaultValue="false" />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Application Information">
@@ -148,17 +173,17 @@
         android:key="debug_settings"
         android:title="Debugging">
         <SwitchPreferenceCompat
-            android:defaultValue="false"
             android:key="enable_debug_logs"
             android:title="Enable Debug Logs"
             android:summary="For Debugging"
-            android:icon="@drawable/md_bug_report_24px" />
+            android:icon="@drawable/md_bug_report_24px"
+            android:defaultValue="false" />
 
         <Preference
             android:key="view_debug_logs"
+            android:dependency="enable_debug_logs"
             android:title="View Debug Logs"
             android:summary="For Debugging"
-            android:icon="@drawable/md_manage_search_24px"
-            android:enabled="false" />
+            android:icon="@drawable/md_manage_search_24px" />
     </PreferenceCategory>
 </PreferenceScreen>
