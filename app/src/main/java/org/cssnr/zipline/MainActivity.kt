@@ -52,7 +52,7 @@ import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.ui.home.HomeViewModel
-import org.cssnr.zipline.ui.user.updateAvatar
+import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.widget.WidgetProvider
 import org.cssnr.zipline.work.enqueueWorkRequest
@@ -289,7 +289,7 @@ class MainActivity : AppCompatActivity() {
                 // NOTE: previousVersion is new in this version. Therefore, users with both an
                 //  authToken and default previousVersion are being upgrading to the new version.
                 Log.i(LOG_TAG, "Performing Upgrading to versionCode: ${packageInfo.versionCode}")
-                val task1 = async { updateAvatar() }
+                val task1 = async { updateAvatarActivity() }
                 val task2 = async { updateUserActivity() }
                 task1.await()
                 task2.await()

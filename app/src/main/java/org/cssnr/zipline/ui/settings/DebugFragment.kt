@@ -10,15 +10,15 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
+import androidx.core.graphics.toColorInt
 import androidx.core.view.doOnLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -90,26 +90,35 @@ class DebugFragment : Fragment() {
             if (text.isNotEmpty()) {
                 val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 clipboard.setPrimaryClip(ClipData.newPlainText("Text", text))
-                Toast.makeText(ctx, "Copied to Clipboard", Toast.LENGTH_SHORT).show()
+                Snackbar.make(view, "Copied to Clipboard.", Snackbar.LENGTH_SHORT)
+                    .setAnchorView(binding.buttonGroup).show()
+            } else {
+                Snackbar.make(view, "Nothing to Copy!", Snackbar.LENGTH_LONG)
+                    .setTextColor("#D32F2F".toColorInt()).setAnchorView(binding.buttonGroup).show()
             }
         }
 
         binding.shareLogs.setOnClickListener {
             Log.d(LOG_TAG, "shareLogs")
             val text = binding.textView.text.toString().trim()
-            if (text.isEmpty()) return@setOnClickListener
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, binding.textView.text)
+            if (text.isNotEmpty()) {
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, binding.textView.text)
+                }
+                startActivity(Intent.createChooser(shareIntent, null))
+            } else {
+                Snackbar.make(view, "Nothing to Share!", Snackbar.LENGTH_LONG)
+                    .setTextColor("#D32F2F".toColorInt()).setAnchorView(binding.buttonGroup).show()
             }
-            startActivity(Intent.createChooser(shareIntent, null))
         }
 
         binding.reloadLogs.setOnClickListener {
             Log.d(LOG_TAG, "reloadLogs")
             lifecycleScope.launch {
                 _binding?.textView?.text = ctx.readLogFile()
-                Toast.makeText(ctx, "Logs Reloaded.", Toast.LENGTH_SHORT).show()
+                Snackbar.make(view, "Logs Reloaded.", Snackbar.LENGTH_SHORT)
+                    .setAnchorView(binding.buttonGroup).show()
             }
         }
 
@@ -126,21 +135,21 @@ class DebugFragment : Fragment() {
                     val logFile = File(ctx.filesDir, "debug_log.txt")
                     logFile.writeText("")
                     binding.textView.text = ""
-                    Toast.makeText(ctx, "Logs Cleared.", Toast.LENGTH_SHORT).show()
+                    Snackbar.make(view, "Logs Cleared.", Snackbar.LENGTH_SHORT)
+                        .setAnchorView(binding.buttonGroup).show()
                 }
                 .show()
         }
 
-        binding.swiperefresh.setOnRefreshListener(object : OnRefreshListener {
-            override fun onRefresh() {
-                Log.d(LOG_TAG, "setOnRefreshListener: onRefresh")
-                lifecycleScope.launch {
-                    _binding?.textView?.text = ctx.readLogFile()
-                    Toast.makeText(ctx, "Logs Reloaded.", Toast.LENGTH_SHORT).show()
-                    _binding?.swiperefresh?.isRefreshing = false
-                }
+        binding.swiperefresh.setOnRefreshListener {
+            Log.d(LOG_TAG, "setOnRefreshListener: onRefresh")
+            lifecycleScope.launch {
+                _binding?.textView?.text = ctx.readLogFile()
+                Snackbar.make(view, "Logs Reloaded.", Snackbar.LENGTH_SHORT)
+                    .setAnchorView(binding.buttonGroup).show()
+                _binding?.swiperefresh?.isRefreshing = false
             }
-        })
+        }
     }
 
     override fun onResume() {
@@ -149,7 +158,7 @@ class DebugFragment : Fragment() {
         lifecycleScope.launch { _binding?.textView?.text = requireContext().readLogFile() }
     }
 
-    suspend fun Context.readLogFile(): String = withContext(Dispatchers.IO) {
+    private suspend fun Context.readLogFile(): String = withContext(Dispatchers.IO) {
         try {
             // TODO: Ensure file exist here...
             val file = File(filesDir, "debug_log.txt")

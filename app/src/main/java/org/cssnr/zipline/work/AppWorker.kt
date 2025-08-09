@@ -9,6 +9,7 @@ import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.ui.user.updateAvatar
 import org.cssnr.zipline.ui.user.updateStats
 import org.cssnr.zipline.ui.user.updateUser
 import org.cssnr.zipline.widget.WidgetProvider
@@ -50,15 +51,15 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
         }
 
         // TODO: This requires a Context.updateAvatar (currently only Activity)
-        //if (workUpdateAvatar) {
-        //    Log.d("DailyWorker", "--- Update Avatar")
-        //    try {
-        //        applicationContext.updateAvatar()
-        //    } catch (e: Throwable) {
-        //        Log.e("DailyWorker", "updateAvatar: Exception: $e")
-        //        applicationContext.debugLog("updateAvatar: Exception: $e")
-        //    }
-        //}
+        if (workUpdateAvatar) {
+            Log.d("DailyWorker", "--- Update Avatar")
+            try {
+                applicationContext.updateAvatar()
+            } catch (e: Throwable) {
+                Log.e("DailyWorker", "updateAvatar: Exception: $e")
+                applicationContext.debugLog("updateAvatar: Exception: $e")
+            }
+        }
 
         // Update Widget
         // TODO: WidgetUpdate: Consolidate to a function...
