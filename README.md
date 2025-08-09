@@ -126,10 +126,9 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 ### Known Issues
 
 - After deleting files and then scrolling in the file list it skips the number of files deleted when loading.
-  - After deleting files, scroll to the top and pull down to refresh.
+  - _After deleting files, scroll to the top and pull down to refresh._
 - If your sessions get deleted you are logged out of the WebView (Home).
-  - The WebView is being deprecated and future updates will rely less on this.
-- The File List does not work properly if you have 0 files or there is an error fetching files.
+  - _The WebView is being deprecated and future updates will rely less on this._
 - Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
 
 ### Troubleshooting
@@ -204,8 +203,8 @@ To build the app you must first add a [Google Services](#Google-Services) file a
 
 1. Building this app requires a valid `app/google-services.json` file. For more info see [Google Services](#Google-Services).
 
-2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to  
-   `assets/preview/dist`.
+2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to:  
+   `assets/preview/dist`
 
 Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) below.
 

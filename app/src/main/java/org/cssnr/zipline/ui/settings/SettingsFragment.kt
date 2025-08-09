@@ -40,6 +40,8 @@ import org.cssnr.zipline.work.enqueueWorkRequest
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
+    private val navController by lazy { findNavController() }
+
     private lateinit var preferences: SharedPreferences
 
     //// TODO: Determine why I put this here...
@@ -70,6 +72,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         val ctx = requireContext()
+        // TODO: Determine how to initialize preferences
         preferences = preferenceManager.sharedPreferences!!
         //preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
@@ -103,7 +106,6 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // File Folder
-        //val fileFolderId = preferences.getString("file_folder_id", null)
         val fileFolderName = preferences.getString("file_folder_name", null)
         val fileFolderId = findPreference<Preference>("file_folder_id")
         fileFolderId?.setSummary(fileFolderName ?: "Not Set")
@@ -143,7 +145,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Custom Headers
         findPreference<Preference>("custom_headers")?.setOnPreferenceClickListener {
             Log.d("custom_headers", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_item_headers)
+            navController.navigate(R.id.nav_item_headers)
             false
         }
 
@@ -167,7 +169,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Widget Settings
         findPreference<Preference>("open_widget_settings")?.setOnPreferenceClickListener {
             Log.d("open_widget_settings", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_action_settings_widget, arguments)
+            navController.navigate(R.id.nav_action_settings_widget, arguments)
             false
         }
 
@@ -240,33 +242,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // Debugging
-        val enableDebugLogs = findPreference<SwitchPreferenceCompat>("enable_debug_logs")
         val viewDebugLogs = findPreference<Preference>("view_debug_logs")
-        enableDebugLogs?.setOnPreferenceChangeListener { _, newValue ->
-            Log.d("enableDebugLogs", "enable_debug_logs: $newValue")
-            val value = newValue as? Boolean == true
-            Log.d("enableDebugLogs", "Boolean value: $value")
-            viewDebugLogs?.isEnabled = value
-            true
-        }
-        viewDebugLogs?.isEnabled = enableDebugLogs?.isChecked == true
         viewDebugLogs?.setOnPreferenceClickListener {
             Log.d("viewDebugLogs", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_item_settings_debug)
+            navController.navigate(R.id.nav_item_settings_debug)
             false
         }
-
-        //val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
-        //showPreviewPref?.setOnPreferenceChangeListener { _, newValue ->
-        //    val newBool = newValue as Boolean
-        //    Log.d("showPreviewPref", "show_preview: $newBool")
-        //    true
-        //}
-
-        //var showPreview = preferences.getBoolean("show_preview", false)
-        //Log.d("SettingsFragment", "showPreview: $showPreview")
-        //var enableBiometrics = preferences.getBoolean("biometrics_enabled", false)
-        //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
     }
 
     private fun Context.updateWorkManager(newValue: String?, curValue: String? = null): Boolean {

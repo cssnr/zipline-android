@@ -25,7 +25,6 @@ import kotlinx.coroutines.withContext
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentDebugBinding
-import org.cssnr.zipline.ui.settings.headers.HeadersFragment
 import java.io.File
 
 class DebugFragment : Fragment() {
@@ -54,13 +53,13 @@ class DebugFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        Log.d(HeadersFragment.Companion.LOG_TAG, "onStart - Hide UI and Lock Drawer")
+        Log.d(LOG_TAG, "onStart - Hide UI and Lock Drawer")
         requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
         (activity as? MainActivity)?.setDrawerLockMode(false)
     }
 
     override fun onStop() {
-        Log.d(HeadersFragment.Companion.LOG_TAG, "onStop - Show UI and Unlock Drawer")
+        Log.d(LOG_TAG, "onStop - Show UI and Unlock Drawer")
         requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
             View.VISIBLE
         (activity as? MainActivity)?.setDrawerLockMode(true)
@@ -73,21 +72,26 @@ class DebugFragment : Fragment() {
 
         val ctx = requireContext()
 
-        lifecycleScope.launch { binding.textView.text = ctx.readLogFile() }
+        lifecycleScope.launch { _binding?.textView?.text = ctx.readLogFile() }
 
+        // TODO: Look into the usage of doOnLayout and updatePadding
         binding.buttonGroup.doOnLayout {
-            binding.textView.updatePadding(bottom = it.height + 24)
+            _binding?.textView?.updatePadding(bottom = it.height + 24)
         }
 
         binding.goBack.setOnClickListener {
-            Log.d(HeadersFragment.Companion.LOG_TAG, "binding.goBack: navController.navigateUp()")
+            Log.d(LOG_TAG, "binding.goBack: navController.navigateUp()")
             findNavController().navigateUp()
         }
 
         binding.copyLogs.setOnClickListener {
             Log.d(LOG_TAG, "copyLogs")
             val text = binding.textView.text.toString().trim()
-            if (text.isNotEmpty()) ctx.copyToClipboard(text, "Logs Copied")
+            if (text.isNotEmpty()) {
+                val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
+                clipboard.setPrimaryClip(ClipData.newPlainText("Text", text))
+                Toast.makeText(ctx, "Copied to Clipboard", Toast.LENGTH_SHORT).show()
+            }
         }
 
         binding.shareLogs.setOnClickListener {
@@ -104,7 +108,7 @@ class DebugFragment : Fragment() {
         binding.reloadLogs.setOnClickListener {
             Log.d(LOG_TAG, "reloadLogs")
             lifecycleScope.launch {
-                binding.textView.text = ctx.readLogFile()
+                _binding?.textView?.text = ctx.readLogFile()
                 Toast.makeText(ctx, "Logs Reloaded.", Toast.LENGTH_SHORT).show()
             }
         }
@@ -147,6 +151,7 @@ class DebugFragment : Fragment() {
 
     suspend fun Context.readLogFile(): String = withContext(Dispatchers.IO) {
         try {
+            // TODO: Ensure file exist here...
             val file = File(filesDir, "debug_log.txt")
             if (!file.canRead()) {
                 Log.e("readLogFile", "Log File Not Found or Not Readable: ${file.absolutePath}")
@@ -157,12 +162,5 @@ class DebugFragment : Fragment() {
             Log.e("readLogFile", "Exception", e)
             "Exception reading logs: ${e.message}"
         }
-    }
-
-    fun Context.copyToClipboard(text: String, msg: String? = null) {
-        val clipboard = this.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
-        val clip = ClipData.newPlainText("Text", text)
-        clipboard.setPrimaryClip(clip)
-        Toast.makeText(this, msg ?: "Copied to Clipboard", Toast.LENGTH_SHORT).show()
     }
 }

@@ -185,17 +185,17 @@
         android:key="debug_settings"
         android:title="Debugging">
         <SwitchPreferenceCompat
-            android:defaultValue="false"
             android:key="enable_debug_logs"
             android:title="Enable Debug Logs"
             android:summary="For Debugging"
-            android:icon="@drawable/md_bug_report_24px" />
+            android:icon="@drawable/md_bug_report_24px"
+            android:defaultValue="false" />
 
         <Preference
             android:key="view_debug_logs"
+            android:dependency="enable_debug_logs"
             android:title="View Debug Logs"
             android:summary="For Debugging"
-            android:icon="@drawable/md_manage_search_24px"
-            android:enabled="false" />
+            android:icon="@drawable/md_manage_search_24px" />
     </PreferenceCategory>
 </PreferenceScreen>
