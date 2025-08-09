@@ -247,8 +247,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
         val workInterval = preferences.getString("work_interval", null) ?: "0"
         Log.d(LOG_TAG, "workInterval: $workInterval")
+        // NOTE: This just ensures work manager is enabled or disabled based on preference
         if (workInterval != "0" && authToken != null) {
-            this.enqueueWorkRequest(null, ExistingPeriodicWorkPolicy.KEEP)
+            this.enqueueWorkRequest(workInterval, ExistingPeriodicWorkPolicy.KEEP)
         } else {
             // TODO: Confirm this is necessary...
             Log.i(LOG_TAG, "Ensuring Work is Disabled")
