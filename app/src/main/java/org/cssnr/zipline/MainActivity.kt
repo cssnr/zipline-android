@@ -284,8 +284,6 @@ class MainActivity : AppCompatActivity() {
                 Log.i(LOG_TAG, "SET - previousVersion: ${packageInfo.versionCode}")
                 preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
             }
-            val authToken = preferences.getString("ziplineToken", null)
-            Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
             if (!authToken.isNullOrEmpty() && previousVersion == 0) {
                 // NOTE: previousVersion is new in this version. Therefore, users with both an
                 //  authToken and default previousVersion are being upgrading to the new version.

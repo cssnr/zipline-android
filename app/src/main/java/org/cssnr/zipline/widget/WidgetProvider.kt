@@ -153,7 +153,7 @@ class WidgetProvider : AppWidgetProvider() {
 
                     Log.d("Widget[onUpdate]", "server.humanSize: ${server.storageUsed}")
                     val humanSize =
-                        Formatter.formatShortFileSize(context, server.storageUsed?.toLong() ?: 0)
+                        Formatter.formatShortFileSize(context, server.storageUsed ?: 0)
                     Log.d("Widget[onUpdate]", "humanSize: $humanSize")
 
                     val split = humanSize.split(' ')

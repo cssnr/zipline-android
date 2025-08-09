@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentCropBinding
-import org.cssnr.zipline.ui.settings.headers.HeadersFragment
 import java.io.File
 import java.io.FileOutputStream
 
