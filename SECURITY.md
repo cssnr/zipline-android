@@ -20,4 +20,5 @@ To report a security vulnerability, [click here](https://github.com/cssnr/ziplin
 ---
 
 [README](https://github.com/cssnr/zipline-android/?tab=readme-ov-file#readme) |
+[SECURITY](https://github.com/cssnr/zipline-android/?tab=security-ov-file) |
 [PRIVACY](https://github.com/cssnr/zipline-android/blob/master/PRIVACY.md)
