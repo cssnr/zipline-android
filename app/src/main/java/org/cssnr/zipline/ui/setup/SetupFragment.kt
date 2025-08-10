@@ -185,9 +185,8 @@ class SetupFragment : Fragment() {
         //    }
 
         // Update Interval Spinner
-        val workEntries =
-            arrayOf("Disabled", *resources.getStringArray(R.array.work_interval_entries))
-        val workValues = arrayOf("0", *resources.getStringArray(R.array.work_interval_values))
+        val workEntries = resources.getStringArray(R.array.work_interval_entries)
+        val workValues = resources.getStringArray(R.array.work_interval_values)
         val workAdapter = ArrayAdapter(ctx, android.R.layout.simple_spinner_item, workEntries)
         workAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         binding.workIntervalSpinner.adapter = workAdapter
