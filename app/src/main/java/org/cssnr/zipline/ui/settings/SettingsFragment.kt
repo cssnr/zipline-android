@@ -180,11 +180,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
         // Work Update Interval
         val workInterval = findPreference<ListPreference>("work_interval")
-        updateWorkInterval(workInterval?.value)
+        updateWorkIntervalSettings(workInterval?.value)
         workInterval?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         workInterval?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("work_interval", "newValue: $newValue")
-            updateWorkInterval(newValue as String)
+            updateWorkIntervalSettings(newValue as String)
             ctx.updateWorkManager(newValue, workInterval.value)
         }
 
@@ -240,11 +240,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    private fun updateWorkInterval(selectedValue: String?) {
-        Log.i("updateWorkInterval", "selectedValue: $selectedValue")
+    private fun updateWorkIntervalSettings(selectedValue: String?) {
+        Log.i("updateWorkIntervalSettings", "selectedValue: $selectedValue")
         if (selectedValue != null) {
             val enabled = selectedValue != "0"
-            Log.d("updateWorkInterval", "enabled: $enabled")
+            Log.d("updateWorkIntervalSettings", "enabled: $enabled")
             workMeteredPref?.isEnabled = enabled
             workUpdateStatsPref?.isEnabled = enabled
             workUpdateUserPref?.isEnabled = enabled
