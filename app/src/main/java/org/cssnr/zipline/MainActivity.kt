@@ -40,7 +40,6 @@ import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
 import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
@@ -53,13 +52,11 @@ import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.ui.home.HomeViewModel
-import org.cssnr.zipline.ui.user.updateAvatar
+import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.widget.WidgetProvider
-import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
-import org.cssnr.zipline.work.AppWorker
+import org.cssnr.zipline.work.enqueueWorkRequest
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity() {
 
@@ -171,8 +168,8 @@ class MainActivity : AppCompatActivity() {
                 if (navController.currentDestination?.id != R.id.nav_item_home) {
                     Log.d("Drawer", "NAVIGATE: nav_item_home")
                     // NOTE: This is the correct navigation call...
-                    val menuItem = binding.navView.menu.findItem(R.id.nav_item_home)
-                    NavigationUI.onNavDestinationSelected(menuItem, navController)
+                    val destItem = binding.navView.menu.findItem(R.id.nav_item_home)
+                    NavigationUI.onNavDestinationSelected(destItem, navController)
                 }
                 true
             } else if (menuItem.itemId == R.id.nav_item_upload) {
@@ -206,7 +203,7 @@ class MainActivity : AppCompatActivity() {
         //window.statusBarColor = Color.TRANSPARENT
         //binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
 
-        // Set Nav Header Top Padding
+        // Update Header Padding
         val headerView = binding.navView.getHeaderView(0)
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { _, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -245,20 +242,14 @@ class MainActivity : AppCompatActivity() {
                 .into(headerImage)
         }
 
-        // TODO: Improve initialization of the WorkRequest
+        // Work Manager
+        val authToken = preferences.getString("ziplineToken", null)
+        Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
         val workInterval = preferences.getString("work_interval", null) ?: "0"
-        Log.i(LOG_TAG, "workInterval: $workInterval")
-        if (workInterval != "0") {
-            val workRequest =
-                PeriodicWorkRequestBuilder<AppWorker>(workInterval.toLong(), TimeUnit.MINUTES)
-                    .setConstraints(APP_WORKER_CONSTRAINTS)
-                    .build()
-            Log.i(LOG_TAG, "workRequest: $workRequest")
-            WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                "app_worker",
-                ExistingPeriodicWorkPolicy.KEEP,
-                workRequest,
-            )
+        Log.d(LOG_TAG, "workInterval: $workInterval")
+        // NOTE: This just ensures work manager is enabled or disabled based on preference
+        if (workInterval != "0" && authToken != null) {
+            this.enqueueWorkRequest(workInterval, ExistingPeriodicWorkPolicy.KEEP)
         } else {
             // TODO: Confirm this is necessary...
             Log.i(LOG_TAG, "Ensuring Work is Disabled")
@@ -293,13 +284,11 @@ class MainActivity : AppCompatActivity() {
                 Log.i(LOG_TAG, "SET - previousVersion: ${packageInfo.versionCode}")
                 preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
             }
-            val authToken = preferences.getString("ziplineToken", null)
-            Log.d(LOG_TAG, "authToken: ${authToken?.take(24)}...")
             if (!authToken.isNullOrEmpty() && previousVersion == 0) {
                 // NOTE: previousVersion is new in this version. Therefore, users with both an
                 //  authToken and default previousVersion are being upgrading to the new version.
                 Log.i(LOG_TAG, "Performing Upgrading to versionCode: ${packageInfo.versionCode}")
-                val task1 = async { updateAvatar() }
+                val task1 = async { updateAvatarActivity() }
                 val task2 = async { updateUserActivity() }
                 task1.await()
                 task2.await()

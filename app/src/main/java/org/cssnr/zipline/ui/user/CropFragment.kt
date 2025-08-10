@@ -18,7 +18,6 @@ import com.google.android.material.snackbar.Snackbar
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentCropBinding
-import org.cssnr.zipline.ui.settings.headers.HeadersFragment
 import java.io.File
 import java.io.FileOutputStream
 
@@ -52,13 +51,13 @@ class CropFragment : Fragment() {
 
     override fun onStart() {
         super.onStart()
-        Log.d(HeadersFragment.Companion.LOG_TAG, "onStart - Hide UI and Lock Drawer")
+        Log.d(LOG_TAG, "onStart - Hide UI and Lock Drawer")
         bottomNav.visibility = View.GONE
         (activity as? MainActivity)?.setDrawerLockMode(false)
     }
 
     override fun onStop() {
-        Log.d(HeadersFragment.Companion.LOG_TAG, "onStop - Show UI and Unlock Drawer")
+        Log.d(LOG_TAG, "onStop - Show UI and Unlock Drawer")
         bottomNav.visibility = View.VISIBLE
         (activity as? MainActivity)?.setDrawerLockMode(true)
         super.onStop()
@@ -85,7 +84,7 @@ class CropFragment : Fragment() {
         cropImageView.setImageUriAsync(uri)
 
         binding.goBack.setOnClickListener {
-            Log.d(HeadersFragment.Companion.LOG_TAG, "binding.goBack: navController.navigateUp()")
+            Log.d(LOG_TAG, "binding.goBack: navController.navigateUp()")
             findNavController().navigateUp()
         }
 

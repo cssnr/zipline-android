@@ -76,8 +76,7 @@ class WidgetProvider : AppWidgetProvider() {
         val selectedTextColor = colorMap[textColor] ?: Color.WHITE
         Log.d("Widget[onUpdate]", "selectedTextColor: $selectedTextColor")
 
-        val opacityPercent = bgOpacity
-        val alpha = (opacityPercent * 255 / 100).coerceIn(1, 255)
+        val alpha = (bgOpacity * 255 / 100).coerceIn(1, 255)
         val finalBgColor = ColorUtils.setAlphaComponent(selectedBgColor, alpha)
         Log.d("Widget[onUpdate]", "finalBgColor: $finalBgColor")
 
@@ -154,7 +153,7 @@ class WidgetProvider : AppWidgetProvider() {
 
                     Log.d("Widget[onUpdate]", "server.humanSize: ${server.storageUsed}")
                     val humanSize =
-                        Formatter.formatShortFileSize(context, server.storageUsed?.toLong() ?: 0)
+                        Formatter.formatShortFileSize(context, server.storageUsed ?: 0)
                     Log.d("Widget[onUpdate]", "humanSize: $humanSize")
 
                     val split = humanSize.split(' ')
@@ -165,12 +164,12 @@ class WidgetProvider : AppWidgetProvider() {
 
                 if (workInterval == "0") {
                     views.setTextViewText(R.id.update_time, "Disabled")
-                } else if (server != null) {
+                } else if (server == null) {
+                    views.setTextViewText(R.id.update_time, "Refresh Data")
+                } else {
                     val time = DateFormat.getTimeFormat(context).format(server.updatedAt)
                     Log.d("Widget[onUpdate]", "time: $time")
                     views.setTextViewText(R.id.update_time, time)
-                } else {
-                    views.setTextViewText(R.id.update_time, "Refresh Data")
                 }
                 Log.d("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
                 appWidgetManager.updateAppWidget(appWidgetId, views)

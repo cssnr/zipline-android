@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/home_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.settings.DebugFragment"
-    android:fillViewport="true">
+    tools:context=".ui.settings.DebugFragment">
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:id="@+id/top_layout"
@@ -59,7 +60,8 @@
         app:layout_constraintBottom_toBottomOf="parent">
         <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:fillViewport="true">
             <TextView
                 android:id="@+id/text_view"
                 android:layout_width="match_parent"
@@ -67,7 +69,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textSize="14sp"
                 tools:text="@tools:sample/lorem/random"/>
-            </ScrollView>
+        </ScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <com.google.android.material.button.MaterialButtonToggleGroup
@@ -124,4 +126,6 @@
             app:iconPadding="0dp"
             app:backgroundTint="@android:color/holo_red_dark" />
     </com.google.android.material.button.MaterialButtonToggleGroup>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

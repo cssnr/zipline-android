@@ -37,6 +37,10 @@ Zipline Upload Android Client Application to Upload, Share and Manage Files and 
 Allows you to Share or Open files and Shorten URLs directly to a [diced/zipline](https://github.com/diced/zipline) v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
 
+Native Kotlin Android Application with a Mobile First Design.
+Everything is cached and images are not downloaded over metered connections unless enabled.
+Background updates, the update interval, and what gets updated are all user configurable.
+
 We are also developing a browser addon for all major browsers plus Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
 
@@ -86,11 +90,13 @@ should take you to the settings area to allow installation if not already enable
 3. Done! You can now share and open files with Zipline.
 4. Optionally add a Stats Widget to your Home Screen.
 
-To use, share or open any file, text, or URL and choose the Zipline app.
-Preview the items, set upload options, verify and submit.
+**To use**, share or open any file(s), text, or URL and choose the Zipline app.  
+Preview the item(s), set upload options, verify and submit.  
 The results will be shown and copied to the clipboard.
 
 The Files List can be used to view, edit, download, or delete any file or files.
+
+The User Page can be used to edit your profile, avatar, and execute server actions if administrator.
 
 > [!TIP]
 > Please [let us know](#support) if you run into any
@@ -102,7 +108,9 @@ The Files List can be used to view, edit, download, or delete any file or files.
 - Share or Open any File, Media, Text or URL
 - Preview, Edit and set Options before Uploading
 - Native File List with Multi-Select, Edit and Delete
+- User and Server Management Page with Avatar Cropper
 - Home Screen Widget with File Stats and App Shortcuts
+- User Configurable Background Update Task for Stats
 - Supports Two-Factor Authentication and Custom Headers
 
 ### Planned
@@ -118,10 +126,9 @@ The Files List can be used to view, edit, download, or delete any file or files.
 ### Known Issues
 
 - After deleting files and then scrolling in the file list it skips the number of files deleted when loading.
-  - After deleting files, scroll to the top and pull down to refresh.
+  - _After deleting files, scroll to the top and pull down to refresh._
 - If your sessions get deleted you are logged out of the WebView (Home).
-  - The WebView is being deprecated and future updates will rely less on this.
-- The File List does not work properly if you have 0 files or there is an error fetching files.
+  - _The WebView is being deprecated and future updates will rely less on this._
 - Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
 
 ### Troubleshooting
@@ -196,7 +203,8 @@ To build the app you must first add a [Google Services](#Google-Services) file a
 
 1. Building this app requires a valid `app/google-services.json` file. For more info see [Google Services](#Google-Services).
 
-2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to `assets/preview/dist`.
+2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to:  
+   `assets/preview/dist`
 
 Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) below.
 

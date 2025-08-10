@@ -2,6 +2,7 @@ package org.cssnr.zipline.ui.settings
 
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
@@ -10,7 +11,6 @@ import android.text.method.LinkMovementMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -25,11 +25,8 @@ import androidx.preference.Preference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import androidx.preference.SwitchPreferenceCompat
-import androidx.work.ExistingPeriodicWorkPolicy
-import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.firebase.analytics.ktx.analytics
 import com.google.firebase.ktx.Firebase
@@ -39,26 +36,31 @@ import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
 import org.cssnr.zipline.ui.dialogs.FolderFragment
-import org.cssnr.zipline.work.APP_WORKER_CONSTRAINTS
-import org.cssnr.zipline.work.AppWorker
-import java.util.concurrent.TimeUnit
+import org.cssnr.zipline.work.enqueueWorkRequest
 
 class SettingsFragment : PreferenceFragmentCompat() {
 
-    //private val foldersFragment by lazy { FoldersFragment() }
+    private val navController by lazy { findNavController() }
 
-    // TODO: Determine why I put this here...
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?,
-    ): View {
-        Log.d("SettingsFragment", "onCreateView: $savedInstanceState")
-        val view: View = super.onCreateView(inflater, container, savedInstanceState)
-        val color = MaterialColors.getColor(view, android.R.attr.colorBackground)
-        view.setBackgroundColor(color)
-        return view
-    }
+    private lateinit var preferences: SharedPreferences
+
+    private val workMeteredPref by lazy { findPreference<SwitchPreferenceCompat>("work_metered") }
+    private val workUpdateStatsPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_stats") }
+    private val workUpdateUserPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_user") }
+    private val workUpdateAvatarPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_avatar") }
+
+    //// TODO: Determine why I put this here...
+    //override fun onCreateView(
+    //    inflater: LayoutInflater,
+    //    container: ViewGroup?,
+    //    savedInstanceState: Bundle?,
+    //): View {
+    //    Log.d("SettingsFragment", "onCreateView: $savedInstanceState")
+    //    val view: View = super.onCreateView(inflater, container, savedInstanceState)
+    //    val color = MaterialColors.getColor(view, android.R.attr.colorBackground)
+    //    view.setBackgroundColor(color)
+    //    return view
+    //}
 
     override fun onStart() {
         super.onStart()
@@ -75,7 +77,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
         setPreferencesFromResource(R.xml.preferences, rootKey)
 
         val ctx = requireContext()
-        val preferences = preferenceManager.sharedPreferences
+        // TODO: Determine how to initialize preferences
+        preferences = preferenceManager.sharedPreferences!!
+        //preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
 
         // Start Destination
         val startDestination = findPreference<ListPreference>("start_destination")
@@ -107,8 +111,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // File Folder
-        //val fileFolderId = preferences?.getString("file_folder_id", null)
-        val fileFolderName = preferences?.getString("file_folder_name", null)
+        val fileFolderName = preferences.getString("file_folder_name", null)
         val fileFolderId = findPreference<Preference>("file_folder_id")
         fileFolderId?.setSummary(fileFolderName ?: "Not Set")
         fileFolderId?.setOnPreferenceClickListener {
@@ -117,7 +120,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 val folderName = bundle.getString("folderName")
                 Log.d("Settings", "folderId: $folderId")
                 Log.d("Settings", "folderName: $folderName")
-                preferences?.edit {
+                preferences.edit {
                     putString("file_folder_id", folderId)
                     putString("file_folder_name", folderName)
                 }
@@ -133,7 +136,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // File Compression
-        val fileCompression = preferences?.getInt("file_compression", 0)
+        val fileCompression = preferences.getInt("file_compression", 0)
         Log.d("onCreatePreferences", "fileCompression: $fileCompression")
         val fileCompressionBar = findPreference<SeekBarPreference>("file_compression")
         fileCompressionBar?.summary = "Current Value: ${fileCompression}%"
@@ -147,12 +150,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Custom Headers
         findPreference<Preference>("custom_headers")?.setOnPreferenceClickListener {
             Log.d("custom_headers", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_item_headers)
+            navController.navigate(R.id.nav_item_headers)
             false
         }
 
         // Files Per Page
-        val filesPerPage = preferences?.getInt("files_per_page", 25)
+        val filesPerPage = preferences.getInt("files_per_page", 25)
         Log.d("onCreatePreferences", "filesPerPage: $filesPerPage")
         val filesSeekBar = findPreference<SeekBarPreference>("files_per_page")
         filesSeekBar?.summary = "Current Value: $filesPerPage"
@@ -171,16 +174,28 @@ class SettingsFragment : PreferenceFragmentCompat() {
         // Widget Settings
         findPreference<Preference>("open_widget_settings")?.setOnPreferenceClickListener {
             Log.d("open_widget_settings", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_action_settings_widget, arguments)
+            navController.navigate(R.id.nav_action_settings_widget, arguments)
             false
         }
 
-        // Update Interval
+        // Work Update Interval
         val workInterval = findPreference<ListPreference>("work_interval")
+        updateWorkIntervalSettings(workInterval?.value)
         workInterval?.summaryProvider = ListPreference.SimpleSummaryProvider.getInstance()
         workInterval?.setOnPreferenceChangeListener { _, newValue ->
             Log.d("work_interval", "newValue: $newValue")
-            ctx.updateWorkManager(workInterval, newValue)
+            updateWorkIntervalSettings(newValue as String)
+            ctx.updateWorkManager(newValue, workInterval.value)
+        }
+
+        // Work Metered
+        workMeteredPref?.setOnPreferenceChangeListener { _, newValue ->
+            Log.d("work_metered", "newValue: $newValue")
+            val result = newValue as Boolean
+            Log.d("work_metered", "result: $result")
+            workMeteredPref?.isChecked = result
+            ctx.enqueueWorkRequest()
+            false
         }
 
         // Toggle Analytics
@@ -217,70 +232,48 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // Debugging
-        val enableDebugLogs = findPreference<SwitchPreferenceCompat>("enable_debug_logs")
         val viewDebugLogs = findPreference<Preference>("view_debug_logs")
-        enableDebugLogs?.setOnPreferenceChangeListener { _, newValue ->
-            Log.d("enableDebugLogs", "enable_debug_logs: $newValue")
-            val value = newValue as? Boolean == true
-            Log.d("enableDebugLogs", "Boolean value: $value")
-            viewDebugLogs?.isEnabled = value
-            true
-        }
-        viewDebugLogs?.isEnabled = enableDebugLogs?.isChecked == true
         viewDebugLogs?.setOnPreferenceClickListener {
             Log.d("viewDebugLogs", "setOnPreferenceClickListener")
-            findNavController().navigate(R.id.nav_item_settings_debug)
+            navController.navigate(R.id.nav_item_settings_debug)
             false
         }
-
-        //val showPreviewPref = findPreference<SwitchPreferenceCompat>("show_preview")
-        //showPreviewPref?.setOnPreferenceChangeListener { _, newValue ->
-        //    val newBool = newValue as Boolean
-        //    Log.d("showPreviewPref", "show_preview: $newBool")
-        //    true
-        //}
-
-        //var showPreview = preferences.getBoolean("show_preview", false)
-        //Log.d("SettingsFragment", "showPreview: $showPreview")
-        //var enableBiometrics = preferences.getBoolean("biometrics_enabled", false)
-        //Log.d("SettingsFragment", "enableBiometrics: $enableBiometrics")
     }
 
-    fun Context.updateWorkManager(listPref: ListPreference, newValue: Any): Boolean {
-        Log.d("updateWorkManager", "listPref: ${listPref.value} - newValue: $newValue")
-        val value = newValue as? String
-        Log.d("updateWorkManager", "String value: $value")
-        if (value.isNullOrEmpty()) {
-            Log.w("updateWorkManager", "NULL OR EMPTY - false")
+    private fun updateWorkIntervalSettings(selectedValue: String?) {
+        Log.i("updateWorkIntervalSettings", "selectedValue: $selectedValue")
+        if (selectedValue != null) {
+            val enabled = selectedValue != "0"
+            Log.d("updateWorkIntervalSettings", "enabled: $enabled")
+            workMeteredPref?.isEnabled = enabled
+            workUpdateStatsPref?.isEnabled = enabled
+            workUpdateUserPref?.isEnabled = enabled
+            workUpdateAvatarPref?.isEnabled = enabled
+        }
+    }
+
+    private fun Context.updateWorkManager(newValue: String?, curValue: String? = null): Boolean {
+        Log.i("updateWorkManager", "newValue: $newValue - curValue: $curValue")
+        if (newValue.isNullOrEmpty()) {
+            Log.w("updateWorkManager", "newValue.isNullOrEmpty() - false")
             return false
-        } else if (listPref.value == value) {
-            Log.i("updateWorkManager", "NO CHANGE - false")
+        } else if (curValue == newValue) {
+            Log.i("updateWorkManager", "curValue == newValue - false")
             return false
         } else {
-            Log.i("updateWorkManager", "RESCHEDULING WORK - true")
-            val interval = value.toLongOrNull()
-            Log.i("updateWorkManager", "interval: $interval")
-            if (interval == null || interval == 0L) {
-                Log.i("updateWorkManager", "DISABLING WORK")
+            Log.d("updateWorkManager", "ELSE - RESCHEDULING WORK - true")
+            if (newValue == "0" || newValue.toLongOrNull() == null) {
+                Log.i("updateWorkManager", "DISABLING WORK - newValue is 0 or null")
                 WorkManager.getInstance(this).cancelUniqueWork("app_worker")
                 return true
             } else {
-                val newRequest =
-                    PeriodicWorkRequestBuilder<AppWorker>(interval, TimeUnit.MINUTES)
-                        .setInitialDelay(interval, TimeUnit.MINUTES)
-                        .setConstraints(APP_WORKER_CONSTRAINTS)
-                        .build()
-                WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-                    "app_worker",
-                    ExistingPeriodicWorkPolicy.UPDATE,
-                    newRequest
-                )
+                enqueueWorkRequest(newValue)
                 return true
             }
         }
     }
 
-    fun Context.toggleAnalytics(switchPreference: SwitchPreferenceCompat, newValue: Any) {
+    private fun Context.toggleAnalytics(switchPreference: SwitchPreferenceCompat, newValue: Any) {
         Log.d("toggleAnalytics", "newValue: $newValue")
         if (newValue as Boolean) {
             Log.d("toggleAnalytics", "ENABLE Analytics")
@@ -301,7 +294,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
     }
 
-    fun Context.showFeedbackDialog() {
+    private fun Context.showFeedbackDialog() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_feedback, null)
         val input = view.findViewById<EditText>(R.id.feedback_input)
@@ -360,7 +353,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         dialog.show()
     }
 
-    fun Context.showAppInfoDialog() {
+    private fun Context.showAppInfoDialog() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_app_info, null)
         val appId = view.findViewById<TextView>(R.id.app_identifier)

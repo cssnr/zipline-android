@@ -338,8 +338,8 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.updateAvatar.setOnClickListener")
             binding.updateAvatar.isEnabled = false
             lifecycleScope.launch {
-                val file = requireActivity().updateAvatar()
-                Log.d(LOG_TAG, "binding.updateAvatar: file: $file")
+                val file = requireActivity().updateAvatarActivity()
+                Log.d(LOG_TAG, "binding.updateAvatarActivity: file: $file")
                 _binding?.let {
                     if (file.exists()) {
                         Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $file")
@@ -900,9 +900,10 @@ suspend fun Context.updateUser(): UserEntity? {
         return null
     }
     val api = ServerApi(this, savedUrl)
+    // TODO: Update user response to return Response<User> to check and log status
     val user = api.user() ?: return null
     Log.d("updateUser", "user: $user")
-    debugLog("updateUser: $user")
+    debugLog("updateUser: user: $user")
     val repo = UserRepository(UserDatabase.getInstance(this).userDao())
     val userEntity: UserEntity = repo.updateUser(savedUrl, user)
     Log.d("updateUser", "repo.updateUser: DONE")
@@ -923,7 +924,8 @@ suspend fun Activity.updateUserActivity(): UserEntity? {
 }
 
 
-suspend fun Activity.updateAvatar(): File {
+suspend fun Context.updateAvatar(): File {
+    Log.d("updateAvatar", "START - updateAvatar")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
     val savedUrl = preferences.getString("ziplineUrl", null).toString()
     Log.d("updateAvatar", "savedUrl: $savedUrl")
@@ -931,6 +933,7 @@ suspend fun Activity.updateAvatar(): File {
     val api = ServerApi(this, savedUrl)
     val avatar = api.avatar()
     Log.d("updateAvatar", "avatar: ${avatar?.take(100)}")
+    debugLog("updateAvatar: avatar: ${avatar?.take(20)}...")
 
     val file = File(filesDir, "avatar.png")
     if (avatar == null) {
@@ -942,21 +945,27 @@ suspend fun Activity.updateAvatar(): File {
         file.outputStream().use { it.write(imageBytes) }
         Log.d("updateAvatar", "Saving Avatar to File: $file")
     }
+    Log.d("updateAvatar", "DONE - file: $file")
+    return file
+}
 
+suspend fun Activity.updateAvatarActivity(): File {
+    Log.d("updateAvatarActivity", "START - updateAvatarActivity")
+    val file = updateAvatar()
     withContext(Dispatchers.Main) {
-        Log.d("updateAvatar", "Dispatchers.Main")
+        Log.d("updateAvatarActivity", "Dispatchers.Main")
         val headerImage = findViewById<ImageView>(R.id.header_image)
         headerImage.let {
             if (file.exists()) {
-                Log.i("updateAvatar", "GLIDE LOAD - headerImage: $file")
+                Log.i("updateAvatarActivity", "GLIDE LOAD - headerImage: $file")
                 Glide.with(it).load(file).signature(ObjectKey(file.lastModified())).into(it)
             } else {
-                Log.d("updateAvatar", "Set Header Image: Default Drawable")
+                Log.d("updateAvatarActivity", "Set Header Image: Default Drawable")
                 Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
             }
         }
     }
-    Log.d("updateAvatar", "DONE - file: $file")
+    Log.d("updateAvatarActivity", "DONE - file: $file")
     return file
 }
 
