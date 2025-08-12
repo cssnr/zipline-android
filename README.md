@@ -41,7 +41,7 @@ Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 Background updates, the update interval, and what gets updated are all user configurable.
 
-More information is available on the website: https://zipline-android.cssnr.com/
+**More information is available on the website: https://zipline-android.cssnr.com/**
 
 We are also developing a browser addon for all major browsers plus Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
