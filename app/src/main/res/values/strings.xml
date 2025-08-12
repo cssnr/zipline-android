@@ -6,6 +6,8 @@
 
     <string name="github_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android">%s</a>]]></string>
     <string name="zipline_link"><![CDATA[<a href="https://github.com/diced/zipline">%s</a>]]></string>
+    <string name="website_link"><![CDATA[<a href="https://zipline-android.cssnr.com/">%s</a>]]></string>
+    <string name="website_url">https://zipline-android.cssnr.com/</string>
     <string name="discussions_url">https://github.com/cssnr/zipline-android/discussions</string>
     <string name="discussions_link"><![CDATA[<a href="https://github.com/cssnr/zipline-android/discussions">%s</a>]]></string>
     <string name="issues_url">https://github.com/cssnr/zipline-android/issues</string>

@@ -360,9 +360,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val versionName = view.findViewById<TextView>(R.id.version_name)
         val versionCode = view.findViewById<TextView>(R.id.version_code)
         val sourceLink = view.findViewById<TextView>(R.id.source_link)
+        val websiteLink = view.findViewById<TextView>(R.id.website_link)
 
         val sourceText = getString(R.string.github_link, sourceLink.tag)
         Log.d("showAppInfoDialog", "sourceText: $sourceText")
+        val websiteText = getString(R.string.website_link, websiteLink.tag)
+        Log.d("showAppInfoDialog", "websiteText: $websiteText")
 
         val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
 
@@ -381,6 +384,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             sourceLink.text = Html.fromHtml(sourceText, Html.FROM_HTML_MODE_LEGACY)
             sourceLink.movementMethod = LinkMovementMethod.getInstance()
+
+            websiteLink.text = Html.fromHtml(websiteText, Html.FROM_HTML_MODE_LEGACY)
+            websiteLink.movementMethod = LinkMovementMethod.getInstance()
         }
         dialog.show()
     }

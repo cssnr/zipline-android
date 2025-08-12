@@ -70,6 +70,11 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/dialog_vertical_margin"
                 android:text="GitHub" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dialog_vertical_margin"
+                android:text="Website" />
         </LinearLayout>
 
         <LinearLayout
@@ -121,6 +126,15 @@
                 android:ellipsize="end"
                 android:tag="cssnr/zipline-android"
                 android:text="cssnr/zipline-android" />
+            <TextView
+                android:id="@+id/website_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dialog_vertical_margin"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:tag="zipline-android.cssnr.com"
+                android:text="zipline-android.cssnr.com" />
         </LinearLayout>
     </LinearLayout>
 
