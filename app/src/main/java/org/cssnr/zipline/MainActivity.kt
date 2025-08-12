@@ -387,7 +387,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
                 //if (extraText.lowercase().startsWith("http")) {
                 //if (Patterns.WEB_URL.matcher(extraText).matches()) {
-                if (extraText.toHttpUrlOrNull() == null) {
+                if (extraText.toHttpUrlOrNull() != null) {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply { putString("url", extraText) }
