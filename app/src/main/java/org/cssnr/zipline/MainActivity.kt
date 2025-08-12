@@ -275,6 +275,7 @@ class MainActivity : AppCompatActivity() {
         MediaCache.initialize(this)
 
         // Check Update Version
+        @Suppress("DEPRECATION")
         lifecycleScope.launch {
             val previousVersion = preferences.getInt("previousVersion", 0)
             Log.d(LOG_TAG, "previousVersion $previousVersion")
@@ -384,10 +385,10 @@ class MainActivity : AppCompatActivity() {
             Log.d("onNewIntent", "extraText: ${extraText?.take(100)}")
 
             if (fileUri == null && !extraText.isNullOrEmpty()) {
-                Log.d("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
+                Log.i("onNewIntent", "SEND TEXT DETECTED: ${extraText.take(100)}")
                 //if (extraText.lowercase().startsWith("http")) {
                 //if (Patterns.WEB_URL.matcher(extraText).matches()) {
-                if (extraText.toHttpUrlOrNull() == null) {
+                if (isTextUrl(extraText)) {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply { putString("url", extraText) }
@@ -398,7 +399,7 @@ class MainActivity : AppCompatActivity() {
                             .build()
                     )
                 } else {
-                    Log.i("onNewIntent", "PLAIN TEXT DETECTED")
+                    Log.d("onNewIntent", "PLAIN TEXT DETECTED")
                     val bundle = Bundle().apply { putString("text", extraText) }
                     navController.navigate(
                         R.id.nav_item_text, bundle, NavOptions.Builder()
@@ -478,6 +479,15 @@ class MainActivity : AppCompatActivity() {
                 .setLaunchSingleTop(true)
                 .build()
         )
+    }
+
+    private fun isTextUrl(input: String): Boolean {
+        val url = input.toHttpUrlOrNull() ?: return false
+        if (input != url.toString()) return false
+        if (url.scheme !in listOf("http", "https")) return false
+        if (url.host.isBlank()) return false
+        if (url.toString().length > 2048) return false
+        return true
     }
 
     // NOTE: This is used by SetupTapTargets showTapTargets
