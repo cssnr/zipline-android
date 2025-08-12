@@ -45,54 +45,61 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:orientation="vertical">
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="12dp"
-        android:orientation="vertical">
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:text="● Request a Feature" />
-        <TextView
+            android:layout_marginStart="12dp"
+            android:layout_marginBottom="12dp"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:text="● Request a Feature" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:text="● Report an Issue" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                android:text="● Ask a Question" />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:text="● Suggest a Change" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-            android:text="● Report an Issue" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/github_discussions"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Discussions"
-            app:icon="@drawable/fa_github"
-            app:iconGravity="end"
-            app:iconPadding="12dp" />
-        <Button
-            android:id="@+id/github_issues"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Issues"
-            app:icon="@drawable/fa_github"
-            app:iconGravity="end"
-            app:iconPadding="12dp" />
-    </LinearLayout>
-
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical">
+            <Button
+                android:id="@+id/github_discussions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Discussions"
+                app:icon="@drawable/fa_github"
+                app:iconGravity="end"
+                app:iconPadding="12dp" />
+            <Button
+                android:id="@+id/github_issues"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Issues"
+                app:icon="@drawable/fa_github"
+                app:iconGravity="end"
+                app:iconPadding="12dp" />
+            <Button
+                android:id="@+id/website_btn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:text="Website"
+                app:icon="@drawable/md_captive_portal_24px"
+                app:iconGravity="end"
+                app:iconPadding="12dp" />
+        </LinearLayout>
     </LinearLayout>
 
 </LinearLayout>

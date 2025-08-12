@@ -831,6 +831,7 @@ class UserFragment : Fragment() {
 
         val discussionsBtn = view.findViewById<TextView>(R.id.github_discussions)
         val issuesBtn = view.findViewById<TextView>(R.id.github_issues)
+        val websiteBtn = view.findViewById<TextView>(R.id.website_btn)
 
         discussionsBtn.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, getString(R.string.discussions_url).toUri())
@@ -838,6 +839,10 @@ class UserFragment : Fragment() {
         }
         issuesBtn.setOnClickListener {
             val intent = Intent(Intent.ACTION_VIEW, getString(R.string.issues_url).toUri())
+            startActivity(intent)
+        }
+        websiteBtn.setOnClickListener {
+            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.website_url).toUri())
             startActivity(intent)
         }
 
