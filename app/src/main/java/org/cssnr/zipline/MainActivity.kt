@@ -275,6 +275,7 @@ class MainActivity : AppCompatActivity() {
         MediaCache.initialize(this)
 
         // Check Update Version
+        @Suppress("DEPRECATION")
         lifecycleScope.launch {
             val previousVersion = preferences.getInt("previousVersion", 0)
             Log.d(LOG_TAG, "previousVersion $previousVersion")
