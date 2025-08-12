@@ -10,7 +10,7 @@
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
-[![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
+[![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
 
 # Zipline Upload
 
@@ -32,7 +32,7 @@
   - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
-Zipline Upload Android Client Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
+Zipline Android Client Application to Upload, Share and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
 
 Allows you to Share or Open files and Shorten URLs directly to a [diced/zipline](https://github.com/diced/zipline) v4 server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
@@ -119,7 +119,6 @@ All the features are documented on the website: [https://zipline-android.cssnr.c
 
 ### Planned
 
-- Add User Avatar and Management
 - Add Short URL Management
 - Add AppBar to Replace Bottom Navigation
 - Add Remaining Upload Options (ref: [upload-options](https://zipline.diced.sh/docs/guides/upload-options))
@@ -185,6 +184,8 @@ If you are having trouble using the app, please reach out to us on [Discord](htt
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/18.jpg"></a>
 
 ## Support
+
+Documentation and usage guides are available on the website: https://zipline-android.cssnr.com/
 
 For general help or to request a feature, see:
 
@@ -331,11 +332,6 @@ All contributions are welcome including [bug reports](https://github.com/cssnr/z
 [feature requests](https://github.com/cssnr/zipline-android/discussions/categories/feature-requests),
 or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
 
-Please consider making a donation to support the development of this project
-and [additional](https://cssnr.com/) open source projects.
-
-[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/cssnr)
-
 ### Zipline Projects
 
 - [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
@@ -358,5 +354,10 @@ Additional Android projects:
 - [NOAA Weather Android](https://github.com/cssnr/noaa-weather-android?tab=readme-ov-file#readme)
 - [Remote Wallpaper Android](https://github.com/cssnr/remote-wallpaper-android?tab=readme-ov-file#readme)
 - [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
+
+Please consider making a donation to support the development of this project
+and [additional](https://cssnr.com/) open source projects.
+
+[![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/cssnr)
 
 For a full list of current projects visit: [https://cssnr.github.io/](https://cssnr.github.io/)
