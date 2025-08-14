@@ -259,23 +259,34 @@ class SetupFragment : Fragment() {
     }
 
     private fun hitEmWithConfetti() {
+        //val party = Party(
+        //    speed = 10f,
+        //    maxSpeed = 30f,
+        //    damping = 0.9f,
+        //    angle = Angle.RIGHT - 45,
+        //    spread = Spread.SMALL,
+        //    colors = listOf(0x2ecc71, 0xff726d, 0x18e7ff, 0xff00ff),
+        //    emitter = Emitter(duration = 2, TimeUnit.SECONDS).perSecond(30),
+        //    position = Position.Relative(0.0, 0.4)
+        //)
+        //val parties = listOf(
+        //    party,
+        //    party.copy(
+        //        angle = party.angle - 90,
+        //        position = Position.Relative(1.0, 0.4)
+        //    ),
+        //)
+        //binding.konfettiView.start(parties)
         val party = Party(
-            speed = 10f,
+            speed = 0f,
             maxSpeed = 30f,
             damping = 0.9f,
-            angle = Angle.RIGHT - 45,
-            spread = Spread.SMALL,
+            spread = 360, // default
             colors = listOf(0x2ecc71, 0xff726d, 0x18e7ff, 0xff00ff),
-            emitter = Emitter(duration = 2, TimeUnit.SECONDS).perSecond(30),
-            position = Position.Relative(0.0, 0.4)
+            position = Position.Relative(0.5, 0.4),
+            emitter = Emitter(duration = 100, TimeUnit.MILLISECONDS).max(80),
+            timeToLive = 2000L, // default
         )
-        val parties = listOf(
-            party,
-            party.copy(
-                angle = party.angle - 90,
-                position = Position.Relative(1.0, 0.4)
-            ),
-        )
-        binding.konfettiView.start(parties)
+        binding.konfettiView.start(party)
     }
 }
