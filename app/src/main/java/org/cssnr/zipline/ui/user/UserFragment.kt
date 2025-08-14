@@ -894,7 +894,6 @@ suspend fun Context.updateStats(): ServerEntity? {
     return null
 }
 
-
 suspend fun Context.updateUser(): UserEntity? {
     Log.d("updateUser", "updateUser")
     val preferences = PreferenceManager.getDefaultSharedPreferences(this)
@@ -917,11 +916,11 @@ suspend fun Context.updateUser(): UserEntity? {
 
 suspend fun Activity.updateUserActivity(): UserEntity? {
     Log.d("updateUserActivity", "calling: updateUser()")
-    val preferences = PreferenceManager.getDefaultSharedPreferences(this)
-    val savedUrl = preferences.getString("ziplineUrl", null).toString()
-    Log.d("updateUser", "savedUrl: $savedUrl")
     val user = updateUser()
     if (user != null) {
+        val preferences = PreferenceManager.getDefaultSharedPreferences(this)
+        val savedUrl = preferences.getString("ziplineUrl", null).toString()
+        Log.d("updateUser", "savedUrl: $savedUrl")
         withContext(Dispatchers.Main) {
             Log.d("updateUserActivity", "Dispatchers.Main")
             findViewById<TextView>(R.id.header_username)?.text = user.username
@@ -930,7 +929,6 @@ suspend fun Activity.updateUserActivity(): UserEntity? {
     }
     return user
 }
-
 
 suspend fun Context.updateAvatar(): File {
     Log.d("updateAvatar", "START - updateAvatar")
