@@ -11,7 +11,9 @@
     android:gravity="center"
     android:orientation="vertical"
     android:paddingVertical="12dp"
-    android:paddingHorizontal="24dp">
+    android:paddingHorizontal="24dp"
+    android:clipChildren="false"
+    android:clipToPadding="false">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -54,56 +56,69 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:text="Enter your Zipline v4 Server Details." />
 
-    <EditText
-        android:id="@+id/login_hostname"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:padding="10dp"
-        android:autofillHints=""
-        android:hint="@string/hostname"
-        android:inputType="textUri"
-        android:drawableEnd="@drawable/md_http_24px"
-        android:drawableTint="?android:attr/textColorTertiary" />
-
-    <EditText
-        android:id="@+id/login_username"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:padding="10dp"
-        android:autofillHints="username"
-        android:hint="@string/username"
-        android:inputType="text"
-        android:drawableEnd="@drawable/md_person_24px"
-        android:drawableTint="?android:attr/textColorTertiary" />
-
-    <EditText
-        android:id="@+id/login_password"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:padding="10dp"
-        android:autofillHints="password"
-        android:hint="@string/password"
-        android:inputType="textPassword"
-        android:drawableEnd="@drawable/md_key_24px"
-        android:drawableTint="?android:attr/textColorTertiary" />
-
-    <EditText
-        android:id="@+id/login_code"
-        android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:padding="10dp"
-        android:autofillHints=""
-        android:hint="Two-Factor Code"
-        android:inputType="number"
-        android:maxLength="6"
-        android:drawableEnd="@drawable/md_password_2_24px"
-        android:drawableTint="?android:attr/textColorTertiary"
-        android:visibility="gone" />
+        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_max="488dp"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/login_hostname"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints=""
+            android:hint="@string/hostname"
+            android:inputType="textUri"
+            android:drawableEnd="@drawable/md_http_24px"
+            android:drawableTint="?android:attr/textColorTertiary" />
+        <EditText
+            android:id="@+id/login_username"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints="username"
+            android:hint="@string/username"
+            android:inputType="text"
+            android:drawableEnd="@drawable/md_person_24px"
+            android:drawableTint="?android:attr/textColorTertiary" />
+        <EditText
+            android:id="@+id/login_password"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints="password"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:drawableEnd="@drawable/md_key_24px"
+            android:drawableTint="?android:attr/textColorTertiary" />
+        <EditText
+            android:id="@+id/login_code"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:autofillHints=""
+            android:hint="Two-Factor Code"
+            android:inputType="number"
+            android:maxLength="6"
+            android:drawableEnd="@drawable/md_password_2_24px"
+            android:drawableTint="?android:attr/textColorTertiary"
+            android:visibility="gone"
+            tools:visibility="visible" />
+    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/login_error"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:gravity="center"
         android:maxLines="4"
         android:ellipsize="end"
@@ -111,57 +126,66 @@
         android:textColor="@android:color/holo_red_light"
         android:text="Login Failed"
         android:visibility="invisible"
-        tools:visibility="visible" />
+        tools:visibility="visible"
+        tools:text="A really long error message because that is probably what will happen here..."/>
 
-    <Button
-        android:id="@+id/login_button"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginHorizontal="12dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text="@string/login"
-        app:icon="@drawable/md_login_24px"
-        app:iconGravity="end"
-        app:iconPadding="-24dp"
-        app:iconSize="24dp" />
-
-    <Button
-        android:id="@+id/headers_button"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginHorizontal="12dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="Custom Headers"
-        app:icon="@drawable/md_credit_card_gear_24px"
-        app:iconGravity="end"
-        app:iconPadding="-18dp"
-        app:iconSize="18dp" />
-
-    <com.google.android.material.materialswitch.MaterialSwitch
-        android:id="@+id/toggle_debug_logs"
-        android:layout_width="match_parent"
+        android:clipChildren="false">
+    <LinearLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:paddingStart="70dp"
-        android:gravity="center"
-        android:text="Debug Logging"
-        app:thumbIcon="@drawable/md_bug_report_24px"
-        tools:checked="true" />
-
-    <Button
-        android:id="@+id/debug_logging"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="12dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="Debug Logs"
-        android:visibility="gone"
-        app:icon="@drawable/md_manage_search_24px"
-        app:iconGravity="end"
-        app:iconPadding="-18dp"
-        app:iconSize="18dp"
-        tools:visibility="visible" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_max="320dp"
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/login_button"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:text="@string/login"
+            app:icon="@drawable/md_login_24px"
+            app:iconGravity="end"
+            app:iconPadding="-24dp"
+            app:iconSize="24dp" />
+        <Button
+            android:id="@+id/headers_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Custom Headers"
+            app:icon="@drawable/md_credit_card_gear_24px"
+            app:iconGravity="end"
+            app:iconPadding="-18dp"
+            app:iconSize="18dp" />
+        <com.google.android.material.materialswitch.MaterialSwitch
+            android:id="@+id/toggle_debug_logs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="6dp"
+            android:text="Debug Logging"
+            app:thumbIcon="@drawable/md_bug_report_24px"
+            tools:checked="true"
+            tools:ignore="RtlSymmetry" />
+        <Button
+            android:id="@+id/debug_logging"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="Debug Logs"
+            android:visibility="gone"
+            app:icon="@drawable/md_manage_search_24px"
+            app:iconGravity="end"
+            app:iconPadding="-18dp"
+            app:iconSize="18dp"
+            tools:visibility="visible" />
+    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -169,10 +193,6 @@
         android:layout_marginTop="12dp"
         android:gravity="center"
         android:orientation="vertical">
-        <!--<TextView-->
-        <!--    android:layout_width="wrap_content"-->
-        <!--    android:layout_height="wrap_content"-->
-        <!--    android:text="For Additional Support visit GitHub." />-->
         <TextView
             android:id="@+id/website_link"
             android:layout_width="wrap_content"
