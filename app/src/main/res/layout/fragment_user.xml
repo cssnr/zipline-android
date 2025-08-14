@@ -15,9 +15,10 @@
     android:orientation="vertical"
     android:padding="12dp">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="120dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:gravity="center_vertical">
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/app_icon"
@@ -76,7 +77,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:text="Loading..." />
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
     <!--<LinearLayout-->
     <!--    android:layout_width="match_parent"-->

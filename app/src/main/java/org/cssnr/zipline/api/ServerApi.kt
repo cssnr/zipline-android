@@ -105,7 +105,8 @@ class ServerApi(private val context: Context, url: String? = null) {
                 }
                 return LoginData(token = tokenResponse.token, user = loginData.user)
             } else {
-                val errorResponse = loginResponse.parseErrorBody(context) ?: "Unknown Error"
+                val errorResponse =
+                    loginResponse.parseErrorBody(context) ?: "HTTP Error ${loginResponse.code()}"
                 Log.d("Api[login]", "errorResponse: $errorResponse")
                 context.debugLog("API: login: ${loginResponse.code()}: $errorResponse")
                 LoginData(error = errorResponse)

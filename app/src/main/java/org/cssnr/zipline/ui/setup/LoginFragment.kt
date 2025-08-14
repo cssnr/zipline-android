@@ -96,13 +96,17 @@ class LoginFragment : Fragment() {
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
         binding.appVersion.text = ctx.getString(R.string.version_string, versionName)
 
-        val linkText = getString(R.string.github_link, "github.com/cssnr/zipline-android")
-        binding.githubLink.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
-        binding.githubLink.movementMethod = LinkMovementMethod.getInstance()
-
         binding.serverText.text =
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
         binding.serverText.movementMethod = LinkMovementMethod.getInstance()
+
+        val websiteText = getString(R.string.website_link, binding.websiteLink.tag)
+        binding.websiteLink.text = Html.fromHtml(websiteText, Html.FROM_HTML_MODE_LEGACY)
+        binding.websiteLink.movementMethod = LinkMovementMethod.getInstance()
+
+        val githubText = getString(R.string.github_link, binding.githubLink.tag)
+        binding.githubLink.text = Html.fromHtml(githubText, Html.FROM_HTML_MODE_LEGACY)
+        binding.githubLink.movementMethod = LinkMovementMethod.getInstance()
 
         val enableDebugLogs = preferences.getBoolean("enable_debug_logs", false)
         Log.d(LOG_TAG, "enableDebugLogs: $enableDebugLogs")
@@ -231,9 +235,7 @@ class LoginFragment : Fragment() {
             //GlobalScope.launch(Dispatchers.IO) { requireActivity().updateAvatarActivity() }
 
             // NOTE: This updates in the background and does not block
-            CoroutineScope(Dispatchers.IO).launch {
-                requireContext().updateStats()
-            }
+            CoroutineScope(Dispatchers.IO).launch { requireContext().updateStats() }
 
             // NOTE: This runs both tasks simultaneously and blocks the current scope
             coroutineScope {
