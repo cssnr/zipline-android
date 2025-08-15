@@ -147,7 +147,7 @@ class UserFragment : Fragment() {
             binding.stats.filesCount.text = server.filesUploaded.toString()
 
             binding.stats.filesSize.text =
-                Formatter.formatShortFileSize(context, server.storageUsed?.toLong() ?: 0)
+                Formatter.formatShortFileSize(context, server.storageUsed ?: 0)
 
             binding.stats.fileAvg.text =
                 Formatter.formatShortFileSize(context, server.avgStorageUsed?.toLong() ?: 0)
@@ -215,7 +215,8 @@ class UserFragment : Fragment() {
                 .signature(ObjectKey(avatarFile.lastModified())).into(binding.appIcon)
         }
 
-        setFragmentResultListener("CropFragment") { requestKey, bundle ->
+        setFragmentResultListener("CropFragment") { _, bundle ->
+            // NOTE: Parameter _ is the requestKey
             Log.d(LOG_TAG, "CropFragment: $bundle")
             val fileName = bundle.getString("fileName") ?: return@setFragmentResultListener
             Log.d(LOG_TAG, "fileName: $fileName")

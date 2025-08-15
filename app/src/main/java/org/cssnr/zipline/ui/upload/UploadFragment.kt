@@ -228,7 +228,7 @@ class UploadFragment : Fragment() {
             binding.imageOverlayText.text = mimeType
             binding.imageOverlayText.visibility = View.VISIBLE
             // Set Icon Based on Type
-            binding.imagePreview.setImageResource(getGenericIcon(mimeType.toString()))
+            binding.imagePreview.setImageResource(getGenericIcon(mimeType))
         }
 
         // Share Button
@@ -280,14 +280,14 @@ class UploadFragment : Fragment() {
 
         // Upload Button
         binding.uploadButton.setOnClickListener {
-            val fileName = binding.fileName.text.toString().trim()
-            Log.d("uploadButton", "fileName: $fileName")
-            ctx.processUpload(uri, fileName) // NOTE: This is only called here...
+            val uploadFileName = binding.fileName.text.toString().trim()
+            Log.d("uploadButton", "uploadFileName: $uploadFileName")
+            ctx.processUpload(uri, uploadFileName) // NOTE: This is only called here...
         }
     }
 
     // TODO: NOTE: This was duplicated but is being cleaned up...
-    private fun Context.processUpload(fileUri: Uri, fileName: String?) {
+    private fun Context.processUpload(fileUri: Uri, inputFileName: String?) {
         Log.d("processUpload", "fileUri: $fileUri")
         val preferences = PreferenceManager.getDefaultSharedPreferences(this)
         val savedUrl = preferences.getString("ziplineUrl", null)
@@ -299,12 +299,12 @@ class UploadFragment : Fragment() {
 
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
-            Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
+            Log.w("processUpload", "Missing OR savedUrl/authToken")
             Toast.makeText(this, getString(R.string.tst_no_url), Toast.LENGTH_SHORT).show()
             logFileUpload(false, "URL or Token is null")
             return
         }
-        val fileName = fileName ?: getFileNameFromUri(this, fileUri)
+        val fileName = inputFileName ?: getFileNameFromUri(this, fileUri)
         Log.d("processUpload", "fileName: $fileName")
         if (fileName == null) {
             Log.w("processUpload", "Unable to parse fileName from URI")
@@ -377,7 +377,7 @@ fun logFileUpload(status: Boolean = true, message: String? = null, multiple: Boo
     val event = if (status) "upload_success" else "upload_failed"
     val params = Bundle().apply {
         message?.let { putString("message", it) }
-        if (multiple == true) {
+        if (multiple) {
             putString("multiple", "true")
         }
     }

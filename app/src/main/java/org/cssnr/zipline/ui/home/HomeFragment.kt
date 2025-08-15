@@ -224,7 +224,7 @@ class HomeFragment : Fragment() {
         override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
             Log.d("doUpdateVisitedHistory", "url: $url")
             //currentUrl = url
-            if (url.endsWith("/auth/login") == true) {
+            if (url.endsWith("/auth/login")) {
                 Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
 
                 val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())

@@ -38,7 +38,7 @@ class UploadMultiAdapter(
     }
 
     class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val imageHolder: FrameLayout = view.findViewById(R.id.image_holder)
+        //val imageHolder: FrameLayout = view.findViewById(R.id.image_holder)
         val itemSelect: FrameLayout = view.findViewById(R.id.item_select)
         val imageView: ImageView = view.findViewById(R.id.image_view)
         val fileText: TextView = view.findViewById(R.id.file_name)

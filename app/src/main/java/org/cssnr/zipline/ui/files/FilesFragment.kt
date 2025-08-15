@@ -23,7 +23,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout.OnRefreshListener
 import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
@@ -157,11 +156,10 @@ class FilesFragment : Fragment() {
             okHttpUrlLoader
         )
 
-        val selected = viewModel.selected.value?.toMutableSet() ?: mutableSetOf<Int>()
-        Log.d("File[onViewCreated]", "viewModel.selected -> selected.size: ${selected.size}")
-
         if (!::filesAdapter.isInitialized) {
             Log.i("File[onViewCreated]", "INITIALIZE ADAPTER isMetered: $isMetered")
+            val selected = viewModel.selected.value?.toMutableSet() ?: mutableSetOf()
+            Log.d("File[onViewCreated]", "viewModel.selected -> selected.size: ${selected.size}")
             filesAdapter = FilesViewAdapter(
                 ctx,
                 mutableListOf(),
@@ -211,7 +209,7 @@ class FilesFragment : Fragment() {
         }
 
         Log.d("File[onViewCreated]", "viewModel.selectedUris.value: ${viewModel.selected.value}")
-        if (viewModel.selected.value != null && viewModel.selected.value!!.isEmpty() != true) {
+        if (!viewModel.selected.value.isNullOrEmpty()) {
             Log.d(
                 "File[onViewCreated]",
                 "viewModel.selectedUris.value: ${viewModel.selected.value}"
@@ -293,47 +291,44 @@ class FilesFragment : Fragment() {
         })
 
         // Setup refresh listener which triggers new data loading
-        binding.refreshLayout.setOnRefreshListener(object : OnRefreshListener {
-            override fun onRefresh() {
-                // TODO: This will be overhauled and possibly disabled until then...
-                Log.d("File[refreshLayout]", "onRefresh")
-                lifecycleScope.launch {
-                    Log.d("File[refreshLayout]", "START")
+        binding.refreshLayout.setOnRefreshListener {
+            Log.d("File[refreshLayout]", "onRefresh")
+            lifecycleScope.launch {
+                Log.d("File[refreshLayout]", "START")
 
-                    _binding?.let {
-                        Log.d("File[refreshLayout]", "Binding is valid, starting refresh logic")
-                        viewModel.selected.value = mutableSetOf<Int>()
-                        filesAdapter.selected.clear()
-                        Log.i("File[refreshLayout]", "Fetching files on refresh")
-                        getFiles(perPage, true)
-                        it.refreshLayout.isRefreshing = false
+                _binding?.let {
+                    Log.d("File[refreshLayout]", "Binding is valid, starting refresh logic")
+                    viewModel.selected.value = mutableSetOf()
+                    filesAdapter.selected.clear()
+                    Log.i("File[refreshLayout]", "Fetching files on refresh")
+                    getFiles(perPage, true)
+                    it.refreshLayout.isRefreshing = false
 
-                        it.refreshBanner.post {
-                            Log.d("File[refreshLayout]", "Animating refresh banner fade-in")
-                            it.refreshBanner.translationY = -it.refreshBanner.height.toFloat()
-                            it.refreshBanner.visibility = View.VISIBLE
-                            it.refreshBanner.animate()
-                                .alpha(1f)
-                                .translationY(0f)
-                                .setDuration(400)
-                                .start()
-                        }
-
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            Log.d("File[refreshLayout]", "Animating refresh banner fade-out")
-                            it.refreshBanner.animate()
-                                .alpha(0f)
-                                .translationY(-it.refreshBanner.height.toFloat())
-                                .setDuration(400)
-                                .withEndAction { it.refreshBanner.visibility = View.GONE }
-                                .start()
-                        }, 1600)
+                    it.refreshBanner.post {
+                        Log.d("File[refreshLayout]", "Animating refresh banner fade-in")
+                        it.refreshBanner.translationY = -it.refreshBanner.height.toFloat()
+                        it.refreshBanner.visibility = View.VISIBLE
+                        it.refreshBanner.animate()
+                            .alpha(1f)
+                            .translationY(0f)
+                            .setDuration(400)
+                            .start()
                     }
+
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        Log.d("File[refreshLayout]", "Animating refresh banner fade-out")
+                        it.refreshBanner.animate()
+                            .alpha(0f)
+                            .translationY(-it.refreshBanner.height.toFloat())
+                            .setDuration(400)
+                            .withEndAction { it.refreshBanner.visibility = View.GONE }
+                            .start()
+                    }, 1600)
                 }
             }
-        })
+        }
 
-        val filesSelectAll: (View) -> Unit = { view ->
+        val filesSelectAll: (View) -> Unit = { _ ->
             val totalSize = viewModel.filesData.value?.size ?: 0
             Log.d("File[filesSelectAll]", "totalSize: $totalSize")
             val currentSelected = viewModel.selected.value?.toSet()
@@ -343,7 +338,7 @@ class FilesFragment : Fragment() {
                 Log.d("File[filesSelectAll]", "size: ${viewModel.selected.value?.size}")
                 binding.filesSelectedHeader.visibility = View.VISIBLE
                 val positionIds: MutableSet<Int> =
-                    viewModel.filesData.value?.indices?.toMutableSet() ?: mutableSetOf<Int>()
+                    viewModel.filesData.value?.indices?.toMutableSet() ?: mutableSetOf()
                 Log.d("deleteId[observe]", "positionIds: $positionIds")
                 viewModel.selected.value = positionIds
                 filesAdapter.selected.addAll(viewModel.selected.value!!)
@@ -363,7 +358,7 @@ class FilesFragment : Fragment() {
                 }
             } else {
                 Log.i("File[filesSelectAll]", "UNSELECT ALL")
-                viewModel.selected.value = mutableSetOf<Int>()
+                viewModel.selected.value = mutableSetOf()
                 filesAdapter.selected.clear()
                 Log.d(
                     "File[filesSelectAll]",
@@ -400,7 +395,7 @@ class FilesFragment : Fragment() {
                 val s = if (selectedPositions.size > 1) "s" else ""
                 val message = "Deleted ${selectedPositions.size} File${s}."
                 viewModel.showSnackbar(message)
-                viewModel.selected.value = mutableSetOf<Int>()
+                viewModel.selected.value = mutableSetOf()
             }
             ctx.deleteConfirmDialog(ids, ::callback)
         }
@@ -508,7 +503,7 @@ class FilesFragment : Fragment() {
             Log.d("deleteId[observe]", "fileId: $fileId")
             if (fileId != null) {
                 filesAdapter.deleteById(fileId)
-                viewModel.selected.value = mutableSetOf<Int>()
+                viewModel.selected.value = mutableSetOf()
             }
         }
 

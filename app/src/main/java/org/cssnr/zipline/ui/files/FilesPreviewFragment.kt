@@ -284,7 +284,7 @@ class FilesPreviewFragment : Fragment() {
             Log.d("FilesPreviewFragment", "OTHER - NO PREVIEW")
 
             binding.previewImageView.visibility = View.VISIBLE
-            binding.previewImageView.setImageResource(getGenericIcon(mimeType.toString()))
+            binding.previewImageView.setImageResource(getGenericIcon(mimeType))
             binding.previewImageView.setOnClickListener {
                 //navController.popBackStack()
                 navController.navigateUp()
@@ -292,7 +292,7 @@ class FilesPreviewFragment : Fragment() {
         }
     }
 
-    fun getContent(rawUrl: String): String? {
+    private fun getContent(rawUrl: String): String? {
         Log.d("getContent", "rawUrl: $rawUrl")
         val forceCacheInterceptor = Interceptor { chain ->
             val response = chain.proceed(chain.request())
@@ -318,7 +318,7 @@ class FilesPreviewFragment : Fragment() {
             client.newCall(request).execute().use { response ->
                 Log.d("getContent", "response.code: ${response.code}")
                 if (response.isSuccessful) {
-                    return response.body?.string()
+                    return response.body.string()
                 }
                 null
             }

@@ -15,6 +15,7 @@ import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 
 fun Activity.showTapTargets(view: View) {
+    // NOTE: view is no longer being used...
     Log.d("showTapTargets", "start")
     val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_nav)
     val navItemHome = bottomNav.getChildAt(0).findViewById<View>(R.id.nav_item_home)

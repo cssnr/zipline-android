@@ -516,7 +516,7 @@ class MainActivity : AppCompatActivity() {
 @UnstableApi
 object MediaCache {
     lateinit var simpleCache: SimpleCache
-    lateinit var cacheDataSourceFactory: CacheDataSource.Factory
+    private lateinit var cacheDataSourceFactory: CacheDataSource.Factory
 
     // TODO: Make Cache Size User Configurable: 350 MB
     fun initialize(context: Context) {
