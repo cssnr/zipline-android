@@ -147,7 +147,7 @@ class UserFragment : Fragment() {
             binding.stats.filesCount.text = server.filesUploaded.toString()
 
             binding.stats.filesSize.text =
-                Formatter.formatShortFileSize(context, server.storageUsed?.toLong() ?: 0)
+                Formatter.formatShortFileSize(context, server.storageUsed ?: 0)
 
             binding.stats.fileAvg.text =
                 Formatter.formatShortFileSize(context, server.avgStorageUsed?.toLong() ?: 0)
@@ -215,7 +215,8 @@ class UserFragment : Fragment() {
                 .signature(ObjectKey(avatarFile.lastModified())).into(binding.appIcon)
         }
 
-        setFragmentResultListener("CropFragment") { requestKey, bundle ->
+        setFragmentResultListener("CropFragment") { _, bundle ->
+            // NOTE: Parameter _ is the requestKey
             Log.d(LOG_TAG, "CropFragment: $bundle")
             val fileName = bundle.getString("fileName") ?: return@setFragmentResultListener
             Log.d(LOG_TAG, "fileName: $fileName")
@@ -278,7 +279,7 @@ class UserFragment : Fragment() {
 
         binding.changeUsername.setOnClickListener {
             Log.d(LOG_TAG, "binding.changeUsername.setOnClickListener")
-            ctx.changeUsernameDialog(view)
+            requireActivity().changeUsernameDialog(view)
         }
 
         binding.changePassword.setOnClickListener {
@@ -550,7 +551,7 @@ class UserFragment : Fragment() {
         //}
     }
 
-    private fun Context.changeUsernameDialog(parentView: View) {
+    private fun Activity.changeUsernameDialog(parentView: View) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_username, null)
         val input = view.findViewById<EditText>(R.id.username_text)
@@ -586,6 +587,8 @@ class UserFragment : Fragment() {
                             val user = userRepository.updateUser(savedUrl, newUser)
                             Log.d("changeUsernameDialog", "user: $user")
                             viewModel.user.value = user
+                            Log.i("header_username", "user.username: ${user.username}")
+                            findViewById<TextView>(R.id.header_username)?.text = user.username
                             val message = "Username Changed to ${user.username}"
                             Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
                             dialog.dismiss()

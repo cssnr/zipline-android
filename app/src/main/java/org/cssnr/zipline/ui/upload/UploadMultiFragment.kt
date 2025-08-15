@@ -193,14 +193,14 @@ class UploadMultiFragment : Fragment() {
         // Upload Button
         binding.uploadButton.text = getString(R.string.upload_multi, selectedUris.size)
         binding.uploadButton.setOnClickListener {
-            val selectedUris = viewModel.selectedUris.value
-            //Log.d("uploadButton", "selectedUris: $selectedUris")
-            Log.d("uploadButton", "selectedUris.size: ${selectedUris?.size}")
-            if (selectedUris.isNullOrEmpty()) {
+            val currentUris = viewModel.selectedUris.value
+            //Log.d("uploadButton", "currentUris: currentUris")
+            Log.d("uploadButton", "currentUris.size: ${currentUris?.size}")
+            if (currentUris.isNullOrEmpty()) {
                 Toast.makeText(requireContext(), "No Files Selected!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            requireContext().processMultiUpload(selectedUris)
+            requireContext().processMultiUpload(currentUris)
         }
     }
 
@@ -222,8 +222,7 @@ class UploadMultiFragment : Fragment() {
             logFileUpload(false, "URL or Token is null", true)
             return
         }
-        val msg = "Uploading ${fileUris.size} Files..."
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, "Uploading ${fileUris.size} Files...", Toast.LENGTH_SHORT).show()
 
         val api = ServerApi(this)
         Log.d("processMultiUpload", "api: $api")
@@ -248,8 +247,10 @@ class UploadMultiFragment : Fragment() {
                             results.add(uploadedFiles)
                         }
                     } else {
-                        val msg = "Error: ${response.code()}: ${response.message()}"
-                        Log.w("processMultiUpload", "UPLOAD ERROR: $msg")
+                        // TODO: Collect errors to display to user...
+                        val errMsg = "Error: ${response.code()}: ${response.message()}"
+                        Log.w("processMultiUpload", "UPLOAD ERROR: $errMsg")
+                        //debugLog("processMultiUpload - $errMsg")
                     }
                 } catch (e: Throwable) {
                     e.printStackTrace()
@@ -270,7 +271,7 @@ class UploadMultiFragment : Fragment() {
 
             val urls = results.flatMap { it.files }.joinToString("\n") { it.url }
             Log.d("processMultiUpload", "urls: \"${urls}\"")
-            if (!urls.isEmpty()) {
+            if (urls.isNotEmpty()) {
                 copyToClipboard(urls)
             }
 
@@ -278,7 +279,7 @@ class UploadMultiFragment : Fragment() {
             Toast.makeText(this@processMultiUpload, msg, Toast.LENGTH_SHORT).show()
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
-            if (shareUrl && !urls.isEmpty()) {
+            if (shareUrl && urls.isNotEmpty()) {
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     type = "text/plain"
                     putExtra(Intent.EXTRA_TEXT, urls)

@@ -43,7 +43,7 @@ import java.net.URLConnection
 class ServerApi(private val context: Context, url: String? = null) {
 
     val api: ApiService
-    var retrofit: Retrofit
+    private var retrofit: Retrofit
 
     private var ziplineUrl: String
     private var authToken: String
@@ -623,34 +623,34 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     @JsonClass(generateAdapter = true)
     data class LoginResponse(
-        @Json(name = "user") val user: User?,
-        @Json(name = "totp") val totp: Boolean?,
+        @param:Json(name = "user") val user: User?,
+        @param:Json(name = "totp") val totp: Boolean?,
     )
 
     @JsonClass(generateAdapter = true)
     data class UserResponse(
-        @Json(name = "user") val user: User
+        @param:Json(name = "user") val user: User
     )
 
     @JsonClass(generateAdapter = true)
     data class User(
-        @Json(name = "id") val id: String,
-        @Json(name = "username") val username: String,
-        @Json(name = "createdAt") val createdAt: String,
-        @Json(name = "updatedAt") val updatedAt: String,
-        @Json(name = "role") val role: String,
-        //@Json(name = "view") val view: UserViewSettings,
-        @Json(name = "sessions") val sessions: List<String>,
-        //@Json(name = "oauthProviders") val oauthProviders: List<String>,
-        @Json(name = "totpSecret") val totpSecret: String?,
-        //@Json(name = "quota") val quota: String?,
+        @param:Json(name = "id") val id: String,
+        @param:Json(name = "username") val username: String,
+        @param:Json(name = "createdAt") val createdAt: String,
+        @param:Json(name = "updatedAt") val updatedAt: String,
+        @param:Json(name = "role") val role: String,
+        //@param:Json(name = "view") val view: UserViewSettings,
+        @param:Json(name = "sessions") val sessions: List<String>,
+        //@param:Json(name = "oauthProviders") val oauthProviders: List<String>,
+        @param:Json(name = "totpSecret") val totpSecret: String?,
+        //@param:Json(name = "quota") val quota: String?,
     )
 
     @JsonClass(generateAdapter = true)
     data class PatchUser(
-        @Json(name = "username") val username: String? = null,
-        @Json(name = "password") val password: String? = null,
-        @Json(name = "avatar") val avatar: String? = null,
+        @param:Json(name = "username") val username: String? = null,
+        @param:Json(name = "password") val password: String? = null,
+        @param:Json(name = "avatar") val avatar: String? = null,
     )
 
     @JsonClass(generateAdapter = true)
@@ -689,34 +689,34 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     @JsonClass(generateAdapter = true)
     data class StatsResponse(
-        @Json(name = "filesUploaded") val filesUploaded: Int,
-        @Json(name = "favoriteFiles") val favoriteFiles: Int,
-        @Json(name = "views") val views: Int,
-        @Json(name = "avgViews") val avgViews: Double,
-        @Json(name = "storageUsed") val storageUsed: Long,
-        @Json(name = "avgStorageUsed") val avgStorageUsed: Double,
-        @Json(name = "urlsCreated") val urlsCreated: Int,
-        @Json(name = "urlViews") val urlViews: Int,
+        @param:Json(name = "filesUploaded") val filesUploaded: Int,
+        @param:Json(name = "favoriteFiles") val favoriteFiles: Int,
+        @param:Json(name = "views") val views: Int,
+        @param:Json(name = "avgViews") val avgViews: Double,
+        @param:Json(name = "storageUsed") val storageUsed: Long,
+        @param:Json(name = "avgStorageUsed") val avgStorageUsed: Double,
+        @param:Json(name = "urlsCreated") val urlsCreated: Int,
+        @param:Json(name = "urlViews") val urlViews: Int,
     )
 
     @JsonClass(generateAdapter = true)
     data class FileResponse(
-        @Json(name = "createdAt") val createdAt: String,
-        @Json(name = "updatedAt") val updatedAt: String,
-        @Json(name = "deletesAt") val deletesAt: String?,
-        @Json(name = "favorite") var favorite: Boolean,
-        @Json(name = "id") val id: String,
-        @Json(name = "originalName") val originalName: String?,
-        @Json(name = "name") val name: String,
-        @Json(name = "size") val size: Long,
-        @Json(name = "type") val type: String,
-        @Json(name = "views") val views: Int,
-        @Json(name = "maxViews") val maxViews: Int?,
-        @Json(name = "password") val password: Boolean?,
-        @Json(name = "folderId") val folderId: String?,
-        @Json(name = "thumbnail") val thumbnail: Thumbnail?,
-        //@Json(name = "tags") val tags: List<Tags>?,
-        @Json(name = "url") val url: String?,
+        @param:Json(name = "createdAt") val createdAt: String,
+        @param:Json(name = "updatedAt") val updatedAt: String,
+        @param:Json(name = "deletesAt") val deletesAt: String?,
+        @param:Json(name = "favorite") var favorite: Boolean,
+        @param:Json(name = "id") val id: String,
+        @param:Json(name = "originalName") val originalName: String?,
+        @param:Json(name = "name") val name: String,
+        @param:Json(name = "size") val size: Long,
+        @param:Json(name = "type") val type: String,
+        @param:Json(name = "views") val views: Int,
+        @param:Json(name = "maxViews") val maxViews: Int?,
+        @param:Json(name = "password") val password: Boolean?,
+        @param:Json(name = "folderId") val folderId: String?,
+        @param:Json(name = "thumbnail") val thumbnail: Thumbnail?,
+        //@param:Json(name = "tags") val tags: List<Tags>?,
+        @param:Json(name = "url") val url: String?,
     ) {
         @JsonClass(generateAdapter = true)
         data class Thumbnail(
@@ -726,48 +726,48 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     @JsonClass(generateAdapter = true)
     data class FilesResponse(
-        @Json(name = "page") val page: List<FileResponse>,
-        @Json(name = "total") val total: Int?,
-        @Json(name = "pages") val pages: Int?,
+        @param:Json(name = "page") val page: List<FileResponse>,
+        @param:Json(name = "total") val total: Int?,
+        @param:Json(name = "pages") val pages: Int?,
     )
 
     @JsonClass(generateAdapter = true)
     data class FolderResponse(
-        @Json(name = "id") val id: String,
-        @Json(name = "name") val name: String,
-        @Json(name = "public") val public: Boolean,
-        @Json(name = "allowUploads") val allowUploads: Boolean,
+        @param:Json(name = "id") val id: String,
+        @param:Json(name = "name") val name: String,
+        @param:Json(name = "public") val public: Boolean,
+        @param:Json(name = "allowUploads") val allowUploads: Boolean,
     )
 
     @JsonClass(generateAdapter = true)
     data class FilesTransaction(
-        @Json(name = "files") val files: List<String>,
-        @Json(name = "delete_datasourceFiles") val deleteDatasourceFiles: Boolean? = null,
-        @Json(name = "favorite") val favorite: Boolean? = null,
-        @Json(name = "folder") val folder: String? = null,
+        @param:Json(name = "files") val files: List<String>,
+        @param:Json(name = "delete_datasourceFiles") val deleteDatasourceFiles: Boolean? = null,
+        @param:Json(name = "favorite") val favorite: Boolean? = null,
+        @param:Json(name = "folder") val folder: String? = null,
     )
 
     @JsonClass(generateAdapter = true)
     data class FileEditRequest(
-        @Json(name = "id") val id: String? = null,
-        @Json(name = "favorite") val favorite: Boolean? = null,
-        @Json(name = "maxViews") val maxViews: Int? = null,
-        @Json(name = "password") val password: String? = null,
-        @Json(name = "originalName") val originalName: String? = null,
-        @Json(name = "type") val type: String? = null,
-        @Json(name = "tags") val tags: List<String>? = null
+        @param:Json(name = "id") val id: String? = null,
+        @param:Json(name = "favorite") val favorite: Boolean? = null,
+        @param:Json(name = "maxViews") val maxViews: Int? = null,
+        @param:Json(name = "password") val password: String? = null,
+        @param:Json(name = "originalName") val originalName: String? = null,
+        @param:Json(name = "type") val type: String? = null,
+        @param:Json(name = "tags") val tags: List<String>? = null
     )
 
     @JsonClass(generateAdapter = true)
     data class TotpRequest(
-        @Json(name = "secret") val secret: String? = null,
-        @Json(name = "code") val code: String? = null,
+        @param:Json(name = "secret") val secret: String? = null,
+        @param:Json(name = "code") val code: String? = null,
     )
 
     @JsonClass(generateAdapter = true)
     data class TotpResponse(
-        @Json(name = "secret") val secret: String? = null,
-        @Json(name = "qrcode") val qrcode: String? = null,
+        @param:Json(name = "secret") val secret: String? = null,
+        @param:Json(name = "qrcode") val qrcode: String? = null,
     )
 
     @JsonClass(generateAdapter = true)

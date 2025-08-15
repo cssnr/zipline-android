@@ -33,7 +33,7 @@ class FilesViewModel : ViewModel() {
 
     val filesData = MutableLiveData<List<FileResponse>>()
     val activeFile = MutableLiveData<FileResponse>()
-    val currentPage = MutableLiveData<Int>(1)
+    val currentPage = MutableLiveData(1)
     val atEnd = MutableLiveData<Boolean>()
     val deleteId = MutableLiveData<String>()
 

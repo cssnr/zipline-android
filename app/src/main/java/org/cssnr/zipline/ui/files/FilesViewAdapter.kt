@@ -84,7 +84,7 @@ class FilesViewAdapter(
         viewHolder.fileName.text = data.originalName ?: data.name
 
         // Size
-        viewHolder.fileSize.text = bytesToHuman(data.size.toDouble()).toString()
+        viewHolder.fileSize.text = bytesToHuman(data.size.toDouble())
 
         // Views
         viewHolder.fileView.text = if (data.views > 0) data.views.toString() else ""
@@ -114,7 +114,7 @@ class FilesViewAdapter(
         viewHolder.menuButton.setOnClickListener { view -> listener.onMenuClick(data, view) }
 
         // File Image - Item Preview - listener.onPreview
-        viewHolder.itemPreview.setOnClickListener { view -> listener.onPreview(data) }
+        viewHolder.itemPreview.setOnClickListener { listener.onPreview(data) }
         //viewHolder.itemSelect.setOnClickListener {
         //    it.findNavController().navigate(R.id.nav_item_files_action_preview, bundle)
         //}
@@ -223,15 +223,15 @@ class FilesViewAdapter(
 
     @SuppressLint("NotifyDataSetChanged")
     fun addData(newData: List<FileResponse>, reset: Boolean = false) {
-        Log.d("notifyIdsUpdated", "addData: ${newData.size}: $reset")
+        Log.d("addData", "addData: ${newData.size}: $reset")
         if (reset) dataSet.clear()
         val start = dataSet.size
         dataSet.addAll(newData)
         if (reset) {
-            Log.d("notifyIdsUpdated", "notifyDataSetChanged")
+            Log.d("addData", "notifyDataSetChanged")
             notifyDataSetChanged()
         } else {
-            Log.d("notifyIdsUpdated", "notifyItemRangeInserted: $start - ${newData.size}")
+            Log.d("addData", "notifyItemRangeInserted: $start - ${newData.size}")
             notifyItemRangeInserted(start, newData.size)
         }
     }
@@ -249,23 +249,22 @@ class FilesViewAdapter(
     }
 
 
-    fun notifyIdsUpdated(positions: List<Int>) {
-        // TODO: Look into notifyIdsUpdated and determine if it should be NUKED!!!
-        val sorted = positions.sortedDescending()
-        Log.d("notifyIdsUpdated", "sorted: $sorted")
-        for (pos in sorted) {
-            //Log.d("notifyIdsUpdated", "pos: $pos")
-            if (pos in dataSet.indices) {
-                Log.d("notifyIdsUpdated", "notifyItemChanged: pos: $pos")
-                notifyItemChanged(pos)
-            }
-        }
-        selected.clear()
-        //onItemClick(selected)
-
-        //Log.d("deleteIds", "start: ${sorted.min()} - count: ${dataSet.size - sorted.min()}")
-        //notifyItemRangeChanged(sorted.min(), dataSet.size - sorted.min())
-    }
+    //fun notifyIdsUpdated(positions: List<Int>) {
+    //    val sorted = positions.sortedDescending()
+    //    Log.d("notifyIdsUpdated", "sorted: $sorted")
+    //    for (pos in sorted) {
+    //        //Log.d("notifyIdsUpdated", "pos: $pos")
+    //        if (pos in dataSet.indices) {
+    //            Log.d("notifyIdsUpdated", "notifyItemChanged: pos: $pos")
+    //            notifyItemChanged(pos)
+    //        }
+    //    }
+    //    selected.clear()
+    //    //onItemClick(selected)
+    //
+    //    //Log.d("deleteIds", "start: ${sorted.min()} - count: ${dataSet.size - sorted.min()}")
+    //    //notifyItemRangeChanged(sorted.min(), dataSet.size - sorted.min())
+    //}
 
     fun deleteIds(positions: List<Int>) {
         val sorted = positions.sortedDescending()

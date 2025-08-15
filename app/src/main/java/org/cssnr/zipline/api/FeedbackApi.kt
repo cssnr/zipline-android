@@ -23,8 +23,9 @@ class FeedbackApi(val context: Context) {
 
     val api: ApiService
 
-    val versionName = context.packageManager.getPackageInfo(context.packageName, 0).versionName
-    val userAgent = "${context.packageName}/${versionName}"
+    private val versionName =
+        context.packageManager.getPackageInfo(context.packageName, 0).versionName
+    private val userAgent = "${context.packageName}/${versionName}"
 
     init {
         api = createRetrofit().create(ApiService::class.java)
@@ -47,8 +48,7 @@ class FeedbackApi(val context: Context) {
 
     @JsonClass(generateAdapter = true)
     data class Message(
-        @Json(name = "content")
-        val content: String
+        @param:Json(name = "content") val content: String
     )
 
     interface ApiService {
