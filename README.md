@@ -42,10 +42,10 @@ Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 Background updates, the update interval, and what gets updated are all user configurable.
 
+For more information visit the website: https://zipline-android.cssnr.com/
+
 We are also developing a browser addon for all major browsers including Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
-
-- **Website: https://zipline-android.cssnr.com/**
 
 ## Install
 
@@ -88,7 +88,7 @@ should take you to the settings area to allow installation if not already enable
 
 ### Setup
 
-For up-to-date setup guides, visit the website: https://zipline-android.cssnr.com/
+Setup guides are available on the website: https://zipline-android.cssnr.com/
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
@@ -110,7 +110,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 ## Features
 
-All the features are documented on the website: [https://zipline-android.cssnr.com/](https://zipline-android.cssnr.com/)
+Features are documented on the website: [https://zipline-android.cssnr.com/](https://zipline-android.cssnr.com/)
 
 - Share or Open any File, Media, Text or URL
 - Preview, Edit and set Options before Uploading
@@ -191,7 +191,7 @@ If you are having trouble using the app, support is available via [GitHub](#supp
 
 ## Support
 
-Documentation and usage guides are available on the website: https://zipline-android.cssnr.com/
+Documentation: https://zipline-android.cssnr.com/
 
 For general help or to request a feature, see:
 
@@ -223,9 +223,7 @@ Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) be
 
 ## Android Studio
 
-1. Download and Install Android Studio.
-
-https://developer.android.com/studio
+1. Download and Install Android Studio: https://developer.android.com/studio
 
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
 
@@ -242,7 +240,9 @@ To Build:
 
 ## Command Line
 
-_Note: This section is a WIP! For more details see the [release.yaml](.github/workflows/release.yaml)._
+> [!WARNING]  
+> This section may not be complete!
+> For more details see the [release.yaml](.github/workflows/release.yaml).
 
 You will need to have [ADB](https://developer.android.com/tools/adb) installed.
 
