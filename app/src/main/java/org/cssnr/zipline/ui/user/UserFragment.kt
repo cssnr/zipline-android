@@ -279,7 +279,7 @@ class UserFragment : Fragment() {
 
         binding.changeUsername.setOnClickListener {
             Log.d(LOG_TAG, "binding.changeUsername.setOnClickListener")
-            ctx.changeUsernameDialog(view)
+            requireActivity().changeUsernameDialog(view)
         }
 
         binding.changePassword.setOnClickListener {
@@ -551,7 +551,7 @@ class UserFragment : Fragment() {
         //}
     }
 
-    private fun Context.changeUsernameDialog(parentView: View) {
+    private fun Activity.changeUsernameDialog(parentView: View) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_username, null)
         val input = view.findViewById<EditText>(R.id.username_text)
@@ -587,6 +587,8 @@ class UserFragment : Fragment() {
                             val user = userRepository.updateUser(savedUrl, newUser)
                             Log.d("changeUsernameDialog", "user: $user")
                             viewModel.user.value = user
+                            Log.i("header_username", "user.username: ${user.username}")
+                            findViewById<TextView>(R.id.header_username)?.text = user.username
                             val message = "Username Changed to ${user.username}"
                             Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
                             dialog.dismiss()
