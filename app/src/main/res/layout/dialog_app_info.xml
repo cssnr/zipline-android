@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:ignore="HardcodedText">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -50,11 +51,11 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/dialog_vertical_margin"
                 android:text="Version" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/dialog_vertical_margin"
-                android:text="Code" />
+            <!--<TextView-->
+            <!--    android:layout_width="wrap_content"-->
+            <!--    android:layout_height="wrap_content"-->
+            <!--    android:paddingVertical="@dimen/dialog_vertical_margin"-->
+            <!--    android:text="Code" />-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -69,12 +70,12 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/dialog_vertical_margin"
-                android:text="GitHub" />
+                android:text="Website" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/dialog_vertical_margin"
-                android:text="Website" />
+                android:text="GitHub" />
         </LinearLayout>
 
         <LinearLayout
@@ -89,16 +90,16 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:maxLines="1"
                 android:ellipsize="end"
-                tools:text="v0.0.1" />
-            <TextView
-                android:id="@+id/version_code"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/dialog_vertical_margin"
-                android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                android:maxLines="1"
-                android:ellipsize="end"
-                tools:text="13" />
+                tools:text="0.0.1" />
+            <!--<TextView-->
+            <!--    android:id="@+id/version_code"-->
+            <!--    android:layout_width="wrap_content"-->
+            <!--    android:layout_height="wrap_content"-->
+            <!--    android:paddingVertical="@dimen/dialog_vertical_margin"-->
+            <!--    android:textAppearance="@style/TextAppearance.AppCompat.Body2"-->
+            <!--    android:maxLines="1"-->
+            <!--    android:ellipsize="end"-->
+            <!--    tools:text="13" />-->
             <TextView
                 android:id="@+id/app_identifier"
                 android:layout_width="wrap_content"
@@ -118,15 +119,6 @@
                 android:ellipsize="end"
                 android:text="@string/app_name" />
             <TextView
-                android:id="@+id/source_link"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingVertical="@dimen/dialog_vertical_margin"
-                android:maxLines="1"
-                android:ellipsize="end"
-                android:tag="cssnr/zipline-android"
-                android:text="cssnr/zipline-android" />
-            <TextView
                 android:id="@+id/website_link"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -135,6 +127,15 @@
                 android:ellipsize="end"
                 android:tag="zipline-android.cssnr.com"
                 android:text="zipline-android.cssnr.com" />
+            <TextView
+                android:id="@+id/source_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingVertical="@dimen/dialog_vertical_margin"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:tag="cssnr/zipline-android"
+                android:text="cssnr/zipline-android" />
         </LinearLayout>
     </LinearLayout>
 

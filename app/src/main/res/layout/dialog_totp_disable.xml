@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    tools:ignore="HardcodedText">
 <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -24,21 +25,38 @@
         android:textAppearance="?attr/textAppearanceHeadline5"
         android:text="Disable TOTP" />
 
-    <EditText
-        android:id="@+id/totp_code"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:autofillHints=""
-        android:inputType="number"
-        android:maxLines="1"
-        android:maxLength="6"
-        android:scrollbars="none"
-        android:overScrollMode="never"
-        android:singleLine="true"
-        android:background="?attr/colorSurfaceContainerLow"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:hint="Code" />
+        android:layout_marginBottom="12dp"
+        android:clipChildren="false">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintWidth_max="480dp"
+        android:orientation="vertical">
+        <EditText
+            android:id="@+id/totp_code"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="48dp"
+            android:padding="8dp"
+            android:autofillHints=""
+            android:inputType="number"
+            android:maxLines="1"
+            android:maxLength="6"
+            android:scrollbars="none"
+            android:overScrollMode="never"
+            android:singleLine="true"
+            android:background="?attr/colorSurfaceContainerLow"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large"
+            android:hint="Code" />
+    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
 </ScrollView>

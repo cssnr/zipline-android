@@ -28,8 +28,8 @@ import androidx.preference.SwitchPreferenceCompat
 import androidx.work.WorkManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.firebase.analytics.analytics
 import com.google.firebase.Firebase
+import com.google.firebase.analytics.analytics
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -340,10 +340,15 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             input.requestFocus()
 
-            val link = view.findViewById<TextView>(R.id.github_link)
-            val linkText = getString(R.string.github_link, link.tag)
-            link.text = Html.fromHtml(linkText, Html.FROM_HTML_MODE_LEGACY)
-            link.movementMethod = LinkMovementMethod.getInstance()
+            val websiteLink = view.findViewById<TextView>(R.id.website_link)
+            val websiteText = getString(R.string.website_link, websiteLink.tag)
+            websiteLink.text = Html.fromHtml(websiteText, Html.FROM_HTML_MODE_LEGACY)
+            websiteLink.movementMethod = LinkMovementMethod.getInstance()
+
+            val githubLink = view.findViewById<TextView>(R.id.github_link)
+            val githubText = getString(R.string.github_link, githubLink.tag)
+            githubLink.text = Html.fromHtml(githubText, Html.FROM_HTML_MODE_LEGACY)
+            githubLink.movementMethod = LinkMovementMethod.getInstance()
 
             //val imm = this.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             //imm.showSoftInput(input, InputMethodManager.SHOW_IMPLICIT)
@@ -358,36 +363,34 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val view = inflater.inflate(R.layout.dialog_app_info, null)
         val appId = view.findViewById<TextView>(R.id.app_identifier)
         val versionName = view.findViewById<TextView>(R.id.version_name)
-        val versionCode = view.findViewById<TextView>(R.id.version_code)
+        //val versionCode = view.findViewById<TextView>(R.id.version_code)
         val sourceLink = view.findViewById<TextView>(R.id.source_link)
         val websiteLink = view.findViewById<TextView>(R.id.website_link)
 
-        val sourceText = getString(R.string.github_link, sourceLink.tag)
-        Log.d("showAppInfoDialog", "sourceText: $sourceText")
-        val websiteText = getString(R.string.website_link, websiteLink.tag)
-        Log.d("showAppInfoDialog", "websiteText: $websiteText")
-
         val packageInfo = this.packageManager.getPackageInfo(this.packageName, 0)
-
-        val formattedVersion = getString(R.string.version_string, packageInfo.versionName)
+        val formattedVersion = getString(
+            R.string.version_code_string,
+            packageInfo.versionName,
+            packageInfo.versionCode.toString()
+        )
         Log.d("showAppInfoDialog", "formattedVersion: $formattedVersion")
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        appId.text = this.packageName
+        versionName.text = formattedVersion
+        //versionCode.text = packageInfo.versionCode.toString()
+
+        val sourceText = getString(R.string.github_link, sourceLink.tag)
+        sourceLink.text = Html.fromHtml(sourceText, Html.FROM_HTML_MODE_LEGACY)
+        sourceLink.movementMethod = LinkMovementMethod.getInstance()
+
+        val websiteText = getString(R.string.website_link, websiteLink.tag)
+        websiteLink.text = Html.fromHtml(websiteText, Html.FROM_HTML_MODE_LEGACY)
+        websiteLink.movementMethod = LinkMovementMethod.getInstance()
+
+        MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Close", null)
             .create()
-
-        dialog.setOnShowListener {
-            appId.text = this.packageName
-            versionName.text = formattedVersion
-            versionCode.text = packageInfo.versionCode.toString()
-
-            sourceLink.text = Html.fromHtml(sourceText, Html.FROM_HTML_MODE_LEGACY)
-            sourceLink.movementMethod = LinkMovementMethod.getInstance()
-
-            websiteLink.text = Html.fromHtml(websiteText, Html.FROM_HTML_MODE_LEGACY)
-            websiteLink.movementMethod = LinkMovementMethod.getInstance()
-        }
-        dialog.show()
+            .show()
     }
 }

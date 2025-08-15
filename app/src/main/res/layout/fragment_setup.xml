@@ -222,7 +222,7 @@
                     android:ellipsize="end"
                     android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                     android:textColor="?attr/colorPrimary"
-                    android:text="Background Update Interval" />
+                    android:text="Background Task Update Interval" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
