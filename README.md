@@ -135,6 +135,8 @@ All the features are documented on the website: [https://zipline-android.cssnr.c
   - _After deleting files, scroll to the top and pull down to refresh._
 - If your sessions get deleted you are logged out of the WebView (Home).
   - _The WebView is being deprecated and future updates will rely less on this._
+- Android 8 (API 26-27) crashes when downloading a file due to a permissions error.
+  - _Single files can be downloaded from the Home WebView. No work around for bulk downloads._
 - Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
 
 ### Troubleshooting
@@ -145,7 +147,7 @@ All the features are documented on the website: [https://zipline-android.cssnr.c
 - If you encounter issues with authentication, try clearing the application data (resets settings and auth).
 - If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
 
-If you are having trouble using the app, please reach out to us on [Discord](https://discord.gg/wXy6m2X8wY) or via [GitHub](#support).
+If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
 ## Screenshots
 
