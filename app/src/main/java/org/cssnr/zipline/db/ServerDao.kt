@@ -24,7 +24,7 @@ data class ServerEntity(
     val avgStorageUsed: Double? = null,
     val urlsCreated: Int? = null,
     val urlViews: Int,
-    // TODO: This is the client updatedAt time and not the stats updatedAt time...
+    // NOTE: This is the client update time because updatedAt is not returned on this endpoint
     val updatedAt: Long,
 )
 

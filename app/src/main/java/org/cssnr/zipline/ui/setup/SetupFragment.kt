@@ -20,10 +20,8 @@ import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.shape.CornerFamily
 import kotlinx.coroutines.launch
-import nl.dionsegijn.konfetti.core.Angle
 import nl.dionsegijn.konfetti.core.Party
 import nl.dionsegijn.konfetti.core.Position
-import nl.dionsegijn.konfetti.core.Spread
 import nl.dionsegijn.konfetti.core.emitter.Emitter
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R

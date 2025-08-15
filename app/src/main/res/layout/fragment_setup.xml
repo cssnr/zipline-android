@@ -10,7 +10,6 @@
     tools:ignore="HardcodedText">
 
     <ScrollView
-        android:id="@+id/scroll_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fillViewport="true"
@@ -18,222 +17,254 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/bottom_layout">
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:ignore="ScrollViewSize">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:paddingVertical="12dp"
+        android:paddingHorizontal="12dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center">
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/app_icon"
+                android:layout_width="96dp"
+                android:layout_height="96dp"
+                android:contentDescription="@string/app_name"
+                app:srcCompat="@mipmap/ic_launcher_round" />
             <LinearLayout
-                android:id="@+id/linear_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:gravity="center"
-                android:layout_gravity="center"
-                tools:ignore="UselessParent">
-
-                <LinearLayout
-                    android:id="@+id/setup_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:gravity="center">
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/app_icon"
-                        android:layout_width="96dp"
-                        android:layout_height="96dp"
-                        android:contentDescription="@string/app_name"
-                        app:srcCompat="@mipmap/ic_launcher_round" />
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="16dp"
-                        android:gravity="center_vertical"
-                        android:orientation="vertical"
-                        tools:ignore="UseCompoundDrawables,UselessParent">
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                            android:text="@string/app_name" />
-                        <TextView
-                            android:id="@+id/app_version"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            tools:text="v0.0.1-dev" />
-                    </LinearLayout>
-                </LinearLayout>
-
+                tools:ignore="UseCompoundDrawables,UselessParent">
                 <TextView
-                    android:id="@+id/user_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Display1"
+                    android:text="@string/app_name" />
+                <TextView
+                    android:id="@+id/app_version"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    tools:text="v0.0.1-dev" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp"
+            android:layout_marginBottom="12dp">
+            <TextView
+                android:id="@+id/user_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:text="Welcome, "
+                tools:text="Welcome, administrator" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:maxLines="1"
                     android:ellipsize="end"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                    android:text="Welcome, "
-                    tools:text="Welcome, administrator" />
-
-                <LinearLayout
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="Share or Open any File or URL"
+                    android:drawablePadding="6dp"
+                    app:drawableStartCompat="@drawable/md_task_alt_24px"
+                    app:drawableTint="@android:color/holo_green_light" />
+                <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="Share or Open any File or URL"
-                        android:drawablePadding="6dp"
-                        app:drawableStartCompat="@drawable/md_task_alt_24px"
-                        app:drawableTint="@android:color/holo_green_light" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="View, Edit and Dowload Files"
-                        android:drawablePadding="6dp"
-                        app:drawableStartCompat="@drawable/md_task_alt_24px"
-                        app:drawableTint="@android:color/holo_green_light" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:text="Edit Avatar, Settings and More"
-                        android:drawablePadding="6dp"
-                        app:drawableStartCompat="@drawable/md_task_alt_24px"
-                        app:drawableTint="@android:color/holo_green_light" />
-                </LinearLayout>
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="View, Edit and Dowload Files"
+                    android:drawablePadding="6dp"
+                    app:drawableStartCompat="@drawable/md_task_alt_24px"
+                    app:drawableTint="@android:color/holo_green_light" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:text="Edit Avatar, Settings and More"
+                    android:drawablePadding="6dp"
+                    app:drawableStartCompat="@drawable/md_task_alt_24px"
+                    app:drawableTint="@android:color/holo_green_light" />
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/start_destination_radio"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:text="Start Destination on Launching App" />
+                <!--<Spinner-->
+                <!--    android:id="@+id/start_destination"-->
+                <!--    android:layout_width="match_parent"-->
+                <!--    android:layout_height="48dp"-->
+                <!--    android:paddingHorizontal="8dp"-->
+                <!--    android:entries="@array/launcher_entries" />-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-                    <TextView
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:labelFor="@+id/start_destination_radio"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="?attr/colorPrimary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:text="Start Destination on Launching App" />
-                    <!--<Spinner-->
-                    <!--    android:id="@+id/start_destination"-->
-                    <!--    android:layout_width="match_parent"-->
-                    <!--    android:layout_height="48dp"-->
-                    <!--    android:paddingHorizontal="8dp"-->
-                    <!--    android:entries="@array/launcher_entries" />-->
-                    <LinearLayout
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="Start Destination"
+                        android:src="@drawable/md_flight_takeoff_24px" />
+                    <RadioGroup
+                        android:id="@+id/start_destination_radio"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
+                        android:gravity="center_horizontal"
                         android:orientation="horizontal">
-                        <ImageView
+                        <RadioButton
+                            android:id="@+id/start_radio_home"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:contentDescription="Start Destination"
-                            android:src="@drawable/md_flight_takeoff_24px" />
-                        <RadioGroup
-                            android:id="@+id/start_destination_radio"
-                            android:layout_width="match_parent"
+                            android:text="Web View"
+                            tools:checked="true" />
+                        <RadioButton
+                            android:id="@+id/start_radio_files"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:orientation="horizontal">
-                            <RadioButton
-                                android:id="@+id/start_radio_home"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Web View"
-                                tools:checked="true" />
-                            <RadioButton
-                                android:id="@+id/start_radio_files"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="24dp"
-                                android:text="File List" />
-                        </RadioGroup>
-                    </LinearLayout>
+                            android:layout_marginStart="24dp"
+                            android:text="File List" />
+                    </RadioGroup>
                 </LinearLayout>
+            </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@+id/notifications_switch"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textColor="?attr/colorPrimary"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:text="Automatically Show Share Dialog After" />
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/share_upload"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:drawablePadding="12dp"
+                    android:drawableStart="@drawable/md_attach_file_add_24px"
+                    android:text="File Upload" />
+                <com.google.android.material.materialswitch.MaterialSwitch
+                    android:id="@+id/share_short"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingHorizontal="8dp"
+                    android:drawablePadding="12dp"
+                    android:drawableStart="@drawable/md_add_link_24px"
+                    android:text="Shorten URL" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="6dp"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:visibility="visible"
+                tools:visibility="visible">
+                <TextView
+                    android:id="@+id/work_interval_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:labelFor="@id/work_interval_spinner"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body2"
+                    android:textColor="?attr/colorPrimary"
+                    android:text="Background Task Update Interval" />
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="12dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical">
-                    <TextView
+                    android:gravity="center_vertical">
+                    <ImageView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:labelFor="@+id/notifications_switch"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textColor="?attr/colorPrimary"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:text="Automatically Show Share Dialog After" />
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/share_upload"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="8dp"
-                        android:drawablePadding="12dp"
-                        android:drawableStart="@drawable/md_attach_file_add_24px"
-                        android:text="File Upload" />
-                    <com.google.android.material.materialswitch.MaterialSwitch
-                        android:id="@+id/share_short"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:paddingHorizontal="8dp"
-                        android:drawablePadding="12dp"
-                        android:drawableStart="@drawable/md_add_link_24px"
-                        android:text="Shorten URL" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="6dp"
-                    android:gravity="center_horizontal"
-                    android:orientation="vertical"
-                    android:visibility="visible"
-                    tools:visibility="visible">
-                    <TextView
-                        android:id="@+id/work_interval_label"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:labelFor="@id/work_interval_spinner"
-                        android:maxLines="1"
-                        android:ellipsize="end"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Body2"
-                        android:textColor="?attr/colorPrimary"
-                        android:text="Stats Widget Background Update Interval" />
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="Start Destination"
+                        android:src="@drawable/md_timer_play_24px" />
                     <Spinner
                         android:id="@+id/work_interval_spinner"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:paddingHorizontal="8dp"
+                        android:drawablePadding="12dp"
+                        android:drawableStart="@drawable/md_add_link_24px"
                         android:entries="@array/work_interval_entries" />
                 </LinearLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textAppearance="@style/TextAppearance.Material3.BodySmall"
-                    android:textStyle="italic"
-                    android:text="Settings can be changed later at any time." />
-
             </LinearLayout>
-        </FrameLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                android:textStyle="italic"
+                android:text="To disable the background task, select Disabled." />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="12dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:text="These settings and more can be changed later." />
+        </LinearLayout>
+
+    </LinearLayout>
     </ScrollView>
 
     <FrameLayout
