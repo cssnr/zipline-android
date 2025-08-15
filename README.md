@@ -122,6 +122,7 @@ All the features are documented on the website: [https://zipline-android.cssnr.c
 
 ### Planned
 
+- Update User Page UX
 - Add Short URL Management
 - Add AppBar to Replace Bottom Navigation
 - Add Remaining Upload Options (ref: [upload-options](https://zipline.diced.sh/docs/guides/upload-options))
