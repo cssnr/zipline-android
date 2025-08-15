@@ -44,8 +44,8 @@ Background updates, the update interval, and what gets updated are all user conf
 
 For more information visit the website: https://zipline-android.cssnr.com/
 
-We are also developing a browser addon for all major browsers including Firefox Android:
-[Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
+_We are also developing a browser addon for all major browsers including Firefox Android:
+[Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)_
 
 ## Install
 
