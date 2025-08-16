@@ -88,7 +88,7 @@ should take you to the settings area to allow installation if not already enable
 
 ### Setup
 
-Setup guides are available on the website: https://zipline-android.cssnr.com/
+Setup guides available on the website: https://zipline-android.cssnr.com/
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
