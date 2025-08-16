@@ -66,7 +66,7 @@ _We are also developing a browser addon for all major browsers including Firefox
 
 </details>
 
-_Note: If not GitHub, you may need to allow installation of apps from unknown sources.  
+_Note: If installing directly, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>

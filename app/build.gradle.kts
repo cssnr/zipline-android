@@ -1,3 +1,6 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -44,9 +47,15 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
+    //kotlinOptions {
+    //    jvmTarget = "11"
+    //}
+    tasks.withType<KotlinJvmCompile>().configureEach {
+        compilerOptions {
+            jvmTarget.set(JvmTarget.JVM_11)
+        }
     }
+
     buildFeatures {
         viewBinding = true
         buildConfig = true
@@ -65,9 +74,12 @@ dependencies {
     implementation(libs.androidx.preference.ktx)
     implementation(libs.androidx.work.runtime.ktx)
     implementation(libs.androidx.swiperefreshlayout)
+    implementation(libs.androidx.webkit)
     implementation(libs.androidx.room.ktx)
     implementation(libs.androidx.room.runtime)
-    implementation(libs.androidx.webkit)
+    implementation(libs.media3.exoplayer)
+    implementation(libs.media3.exoplayer.dash)
+    implementation(libs.media3.ui)
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.crashlytics)
@@ -76,9 +88,6 @@ dependencies {
     implementation(libs.converter.moshi)
     implementation(libs.glide)
     implementation(libs.okhttp3.integration)
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.exoplayer.dash)
-    implementation(libs.media3.ui)
     implementation(libs.taptargetview)
     implementation(libs.konfetti.xml)
     implementation(libs.photoview)
