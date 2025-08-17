@@ -42,12 +42,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private val navController by lazy { findNavController() }
 
-    private lateinit var preferences: SharedPreferences
-
     private val workMeteredPref by lazy { findPreference<SwitchPreferenceCompat>("work_metered") }
     private val workUpdateStatsPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_stats") }
     private val workUpdateUserPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_user") }
     private val workUpdateAvatarPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_avatar") }
+
+    private lateinit var preferences: SharedPreferences
 
     //// TODO: Determine why I put this here...
     //override fun onCreateView(
