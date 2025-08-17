@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
@@ -41,10 +40,10 @@ class UploadMultiFragment : Fragment() {
 
     private val uploadOptions = UploadOptions()
 
-    private lateinit var navController: NavController
-    private lateinit var adapter: UploadMultiAdapter
-
+    private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
+
+    private lateinit var adapter: UploadMultiAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -80,7 +79,7 @@ class UploadMultiFragment : Fragment() {
         Log.d("Multi[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
         Log.d("Multi[onViewCreated]", "arguments: $arguments")
 
-        navController = findNavController()
+        val ctx = requireContext()
 
         val savedUrl = preferences.getString("ziplineUrl", null)
         Log.d("Multi[onViewCreated]", "savedUrl: $savedUrl")
@@ -88,7 +87,7 @@ class UploadMultiFragment : Fragment() {
         Log.d("Multi[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Multi[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
+            Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -159,7 +158,7 @@ class UploadMultiFragment : Fragment() {
             }
         })
 
-        binding.previewRecycler.layoutManager = GridLayoutManager(requireContext(), spanCount)
+        binding.previewRecycler.layoutManager = GridLayoutManager(ctx, spanCount)
         if (binding.previewRecycler.adapter == null) {
             binding.previewRecycler.adapter = adapter
         }
@@ -178,14 +177,15 @@ class UploadMultiFragment : Fragment() {
                 val folderName = bundle.getString("folderName")
                 Log.d("folderButton", "folderId: $folderId")
                 Log.d("folderButton", "folderName: $folderName")
-                uploadOptions.fileFolderId = folderId
+                uploadOptions.fileFolderId = folderId ?: ""
             }
 
-            Log.d("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+            Log.i("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
-                uploadOptions.fileFolderId = folderFragment.setFolderData(requireContext())
+                // NOTE: Not setting uploadOptions here. DUPLICATION: upload, uploadMulti, text
+                folderFragment.setFolderData(ctx, uploadOptions.fileFolderId)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
             }
         }
@@ -197,10 +197,10 @@ class UploadMultiFragment : Fragment() {
             //Log.d("uploadButton", "currentUris: currentUris")
             Log.d("uploadButton", "currentUris.size: ${currentUris?.size}")
             if (currentUris.isNullOrEmpty()) {
-                Toast.makeText(requireContext(), "No Files Selected!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(ctx, "No Files Selected!", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            requireContext().processMultiUpload(currentUris)
+            ctx.processMultiUpload(currentUris)
         }
     }
 

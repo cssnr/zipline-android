@@ -42,12 +42,12 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
     private val navController by lazy { findNavController() }
 
-    private lateinit var preferences: SharedPreferences
-
     private val workMeteredPref by lazy { findPreference<SwitchPreferenceCompat>("work_metered") }
     private val workUpdateStatsPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_stats") }
     private val workUpdateUserPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_user") }
     private val workUpdateAvatarPref by lazy { findPreference<SwitchPreferenceCompat>("work_update_avatar") }
+
+    private lateinit var preferences: SharedPreferences
 
     //// TODO: Determine why I put this here...
     //override fun onCreateView(
@@ -116,10 +116,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         fileFolderId?.setSummary(fileFolderName ?: "Not Set")
         fileFolderId?.setOnPreferenceClickListener {
             setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                Log.d("setFragmentResultListener", "bundle: $bundle")
                 val folderId = bundle.getString("folderId")
                 val folderName = bundle.getString("folderName")
-                Log.d("Settings", "folderId: $folderId")
-                Log.d("Settings", "folderName: $folderName")
+                Log.i("setFragmentResultListener", "SAVE FOLDER: $folderName - $folderId")
                 preferences.edit {
                     putString("file_folder_id", folderId)
                     putString("file_folder_name", folderName)
@@ -129,8 +129,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
-                folderFragment.setFolderData(ctx)
+                val latestId = folderFragment.setFolderData(ctx)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
+                Log.d("Settings", "latestId: $latestId")
+                val currentId = preferences.getString("file_folder_id", null)
+                Log.d("Settings", "currentId: $currentId")
+                if (currentId != latestId) {
+                    Log.i("Settings", "RESET FOLDER: currentId != latestId!")
+                    fileFolderId.setSummary("Not Set")
+                    preferences.edit {
+                        putString("file_folder_id", null)
+                        putString("file_folder_name", null)
+                    }
+                }
             }
             false
         }
