@@ -129,8 +129,19 @@ class SettingsFragment : PreferenceFragmentCompat() {
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
-                folderFragment.setFolderData(ctx)
+                val latestId = folderFragment.setFolderData(ctx)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
+                Log.d("Settings", "latestId: $latestId")
+                val currentId = preferences.getString("file_folder_id", null)
+                Log.d("Settings", "currentId: $currentId")
+                if (currentId != latestId) {
+                    Log.i("Settings", "FOLDER NOT FOUND! RESET TO NULL")
+                    fileFolderId.setSummary("Not Set")
+                    preferences.edit {
+                        putString("file_folder_id", null)
+                        putString("file_folder_name", null)
+                    }
+                }
             }
             false
         }

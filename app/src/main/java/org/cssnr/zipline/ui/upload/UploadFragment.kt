@@ -56,11 +56,11 @@ class UploadFragment : Fragment() {
 
     private val uploadOptions = UploadOptions()
 
-    private lateinit var player: ExoPlayer
-    private lateinit var webView: WebView
-
     private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
+
+    private lateinit var player: ExoPlayer
+    private lateinit var webView: WebView
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -256,14 +256,15 @@ class UploadFragment : Fragment() {
                 val folderName = bundle.getString("folderName")
                 Log.d("folderButton", "folderId: $folderId")
                 Log.d("folderButton", "folderName: $folderName")
-                uploadOptions.fileFolderId = folderId
+                uploadOptions.fileFolderId = folderId ?: ""
             }
 
-            Log.d("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+            Log.i("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
-                uploadOptions.fileFolderId = folderFragment.setFolderData(ctx)
+                // NOTE: Not setting uploadOptions here. DUPLICATION: upload, uploadMulti, text
+                folderFragment.setFolderData(ctx, uploadOptions.fileFolderId)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
             }
         }

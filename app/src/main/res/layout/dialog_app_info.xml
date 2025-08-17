@@ -51,11 +51,6 @@
                 android:layout_height="wrap_content"
                 android:paddingVertical="@dimen/dialog_vertical_margin"
                 android:text="Version" />
-            <!--<TextView-->
-            <!--    android:layout_width="wrap_content"-->
-            <!--    android:layout_height="wrap_content"-->
-            <!--    android:paddingVertical="@dimen/dialog_vertical_margin"-->
-            <!--    android:text="Code" />-->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -90,16 +85,7 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Body2"
                 android:maxLines="1"
                 android:ellipsize="end"
-                tools:text="0.0.1" />
-            <!--<TextView-->
-            <!--    android:id="@+id/version_code"-->
-            <!--    android:layout_width="wrap_content"-->
-            <!--    android:layout_height="wrap_content"-->
-            <!--    android:paddingVertical="@dimen/dialog_vertical_margin"-->
-            <!--    android:textAppearance="@style/TextAppearance.AppCompat.Body2"-->
-            <!--    android:maxLines="1"-->
-            <!--    android:ellipsize="end"-->
-            <!--    tools:text="13" />-->
+                tools:text="0.0.1 (1)" />
             <TextView
                 android:id="@+id/app_identifier"
                 android:layout_width="wrap_content"
