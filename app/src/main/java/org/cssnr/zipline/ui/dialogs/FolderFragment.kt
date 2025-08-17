@@ -38,6 +38,10 @@ class FolderFragment : DialogFragment() {
             Log.d("FolderFragment", "current: $current")
             if (current == null) {
                 selectedId = null
+                selectedName = null
+            } else {
+                selectedId = current.id
+                selectedName = current.name
             }
         }
         return selectedId

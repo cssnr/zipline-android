@@ -116,10 +116,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         fileFolderId?.setSummary(fileFolderName ?: "Not Set")
         fileFolderId?.setOnPreferenceClickListener {
             setFragmentResultListener("folder_fragment_result") { _, bundle ->
+                Log.d("setFragmentResultListener", "bundle: $bundle")
                 val folderId = bundle.getString("folderId")
                 val folderName = bundle.getString("folderName")
-                Log.d("Settings", "folderId: $folderId")
-                Log.d("Settings", "folderName: $folderName")
+                Log.i("setFragmentResultListener", "SAVE FOLDER: $folderName - $folderId")
                 preferences.edit {
                     putString("file_folder_id", folderId)
                     putString("file_folder_name", folderName)
@@ -135,7 +135,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                 val currentId = preferences.getString("file_folder_id", null)
                 Log.d("Settings", "currentId: $currentId")
                 if (currentId != latestId) {
-                    Log.i("Settings", "FOLDER NOT FOUND! RESET TO NULL")
+                    Log.i("Settings", "RESET FOLDER: currentId != latestId!")
                     fileFolderId.setSummary("Not Set")
                     preferences.edit {
                         putString("file_folder_id", null)
