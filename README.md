@@ -33,12 +33,12 @@
   - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
-Zipline Android Client Application to Upload, Share, Download and Manage Files and Short URLs for the Zipline v4 ShareX Upload Server.
-
+Zipline Android Client Application to Upload, Share, Download and Manage Files and Short URLs
+for the [Zipline](https://github.com/diced/zipline) v4 ShareX Upload Server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
-Plus User Management to edit Username, Password, Avatar, TOTP, etc.
+Plus User Management to edit Username, Password, Avatar, TOTP, and more...
 
-Native Kotlin Android Application for a [diced/zipline](https://github.com/diced/zipline) v4 Server with a Mobile First Design.
+Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 User profile and stats widget are updated in the background with a user configurable task.
 
