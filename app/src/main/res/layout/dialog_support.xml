@@ -38,7 +38,7 @@
         android:layout_marginBottom="12dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Contributing is as easy as telling us what changes you want to see..." />
+        android:text="Contributing is as easy as telling us what changes you want to see…" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -78,6 +78,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Discussions"
+                android:tag="@string/discussions_url"
                 app:icon="@drawable/fa_github"
                 app:iconGravity="end"
                 app:iconPadding="12dp" />
@@ -87,6 +88,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Issues"
+                android:tag="@string/issues_url"
                 app:icon="@drawable/fa_github"
                 app:iconGravity="end"
                 app:iconPadding="12dp" />
@@ -96,6 +98,7 @@
                 android:layout_height="wrap_content"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="Website"
+                android:tag="@string/website_url"
                 app:icon="@drawable/md_captive_portal_24px"
                 app:iconGravity="end"
                 app:iconPadding="12dp" />

@@ -67,7 +67,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Display1"
-                android:text="Loading..." />
+                android:text="Loading…" />
             <TextView
                 android:id="@+id/heading_host"
                 android:layout_width="wrap_content"
@@ -76,7 +76,7 @@
                 android:maxLines="1"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-                android:text="Loading..." />
+                android:text="Loading…" />
         </LinearLayout>
     </LinearLayout>
 
