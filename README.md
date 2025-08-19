@@ -245,7 +245,7 @@ To Build:
 ### Command Line
 
 > [!WARNING]  
-> This section is incomplete.
+> This section is not complete.
 > For more details on building see the [release.yaml](.github/workflows/release.yaml).
 
 Ensure you both ADB and SDK Tools installed and accessible.
@@ -279,6 +279,8 @@ $ adb -s RF9M33Z1Q0M install app-debug.apk
 _Note: you may have to uninstall before installing due to different certificate signatures._
 
 ### Google Services
+
+Location: `app/google-services.json`
 
 This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
 You must add `org.cssnr.zipline` to a Firebase campaign here: https://firebase.google.com/
