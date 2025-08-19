@@ -2,6 +2,7 @@ package org.cssnr.zipline.ui.setup
 
 import android.animation.ObjectAnimator
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.Editable
@@ -100,13 +101,12 @@ class LoginFragment : Fragment() {
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
         binding.serverText.movementMethod = LinkMovementMethod.getInstance()
 
-        val websiteText = getString(R.string.website_link, binding.websiteLink.tag)
-        binding.websiteLink.text = Html.fromHtml(websiteText, Html.FROM_HTML_MODE_LEGACY)
-        binding.websiteLink.movementMethod = LinkMovementMethod.getInstance()
-
-        val githubText = getString(R.string.github_link, binding.githubLink.tag)
-        binding.githubLink.text = Html.fromHtml(githubText, Html.FROM_HTML_MODE_LEGACY)
-        binding.githubLink.movementMethod = LinkMovementMethod.getInstance()
+        binding.websiteLink.setOnClickListener { v ->
+            startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
+        }
+        binding.githubLink.setOnClickListener { v ->
+            startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
+        }
 
         val enableDebugLogs = preferences.getBoolean("enable_debug_logs", false)
         Log.d(LOG_TAG, "enableDebugLogs: $enableDebugLogs")
