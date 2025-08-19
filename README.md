@@ -31,8 +31,6 @@
 - [Support](#Support)
 - [Development](#Development)
   - [Building](#Building)
-  - [Android Studio](#Android-Studio)
-  - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
 Zipline Android Client Application to Upload, Share, Download and Manage Files and Short URLs
@@ -44,7 +42,7 @@ Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 User profile and stats widget are updated in the background with a user configurable task.
 
-For more information visit the website: https://zipline-android.cssnr.com/
+**For more information visit the website:** https://zipline-android.cssnr.com/
 
 _We are also developing a browser addon for all major browsers including Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)_
@@ -280,7 +278,7 @@ $ adb -s RF9M33Z1Q0M install app-debug.apk
 
 _Note: you may have to uninstall before installing due to different certificate signatures._
 
-## Google Services
+### Google Services
 
 This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
 You must add `org.cssnr.zipline` to a Firebase campaign here: https://firebase.google.com/
