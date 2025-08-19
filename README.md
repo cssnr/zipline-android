@@ -220,22 +220,19 @@ To update the Website/Docs go here: https://github.com/cssnr/zipline-android-doc
 To build the app you must first add a [Google Services](#Google-Services) file and optionally prepare highlightjs.
 
 1. Building this app requires a valid `app/google-services.json` file. For more info see [Google Services](#Google-Services).
-
 2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to:  
    `assets/preview/dist`
 
 Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) below.
 
-## Android Studio
+### Android Studio
 
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=AGP)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 
 _Note: Make sure to check the [AGP Android Studio compatibility](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)._
 
 1. Download and Install Android Studio: https://developer.android.com/studio
-
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
-
 3. Then build or run the app on your device.
    - Import the Project
    - Run Gradle Sync
@@ -247,78 +244,41 @@ To Build:
 - Select the Build Variant (debug or release)
 - Build > Generate App Bundles or APK > Generate APKs
 
-## Command Line
+### Command Line
 
 > [!WARNING]  
-> This section may not be complete!
-> For more details see the [release.yaml](.github/workflows/release.yaml).
+> This section is incomplete.
+> For more details on building see the [release.yaml](.github/workflows/release.yaml).
 
-You will need to have [ADB](https://developer.android.com/tools/adb) installed.
+Ensure you both ADB and SDK Tools installed and accessible.
 
-<details><summary>Click Here to Download and Install a Release</summary>
+- [Android Debug Bridge](https://developer.android.com/tools/adb)
+- [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools#downloads)
 
-```shell
-$ wget https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk
-$ ls
-app-release.apk
-
-$ which adb
-C:\Users\Shane\Android\sdk\platform-tools\adb.EXE
-
-$ adb devices
-List of devices attached
-RF9M33Z1Q0M     device
-
-$ adb -s RF9M33Z1Q0M install app-release.apk
-Performing Incremental Install
-Serving...
-All files should be loaded. Notifying the device.
-Success
-Install command complete in 917 ms
-```
-
-See below for more details...
-
-</details>
-
-1. Download and Install the Android SDK Platform Tools.
-
-https://developer.android.com/tools/releases/platform-tools#downloads
-
-Ensure that `adb` is in your PATH.
-
-2. List and verify the device is connected with:
-
-```shell
-$ adb devices
-List of devices attached
-RF9M33Z1Q0M     device
-```
-
-3. Build a debug or release apk.
+**Build a release:**
 
 ```shell
 ./gradlew assemble
-./gradlew assembleRelease
 ```
 
 _Note: Use `gradlew.bat` for Windows._
 
-4. Then install the apk to your device with adb.
+**Ensure device is connected:**
+
+```shell
+$ adb devices
+List of devices attached
+RF9M33Z1Q0M     device
+```
+
+**Install to device:**
 
 ```shell
 $ cd app/build/outputs/apk/debug
 $ adb -s RF9M33Z1Q0M install app-debug.apk
 ```
 
-```shell
-$ cd app/build/outputs/apk/release
-$ adb -s RF9M33Z1Q0M install app-release-unsigned.apk
-```
-
 _Note: you may have to uninstall before installing due to different certificate signatures._
-
-For more details, see the [ADB Documentation](https://developer.android.com/tools/adb#move).
 
 ## Google Services
 
