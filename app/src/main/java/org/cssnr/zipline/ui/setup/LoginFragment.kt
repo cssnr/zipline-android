@@ -101,9 +101,11 @@ class LoginFragment : Fragment() {
             Html.fromHtml(getString(R.string.setup_zipline_text), Html.FROM_HTML_MODE_LEGACY)
         binding.serverText.movementMethod = LinkMovementMethod.getInstance()
 
+        binding.websiteLink.paint?.isUnderlineText = true
         binding.websiteLink.setOnClickListener { v ->
             startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
         }
+        binding.githubLink.paint?.isUnderlineText = true
         binding.githubLink.setOnClickListener { v ->
             startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
         }

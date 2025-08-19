@@ -1,9 +1,9 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/releases/latest)
+[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
 [![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://zipline-android.cssnr.com/)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=github&label=updated)](https://github.com/cssnr/zipline-android/pulse)
-[![Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=github&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
-[![Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=github&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
+[![Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
+[![Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=cachet&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=AGP)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/zipline-android?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/cssnr/zipline-android)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/zipline-android?logo=htmx)](https://github.com/cssnr/zipline-android)
@@ -31,8 +31,6 @@
 - [Support](#Support)
 - [Development](#Development)
   - [Building](#Building)
-  - [Android Studio](#Android-Studio)
-  - [Command Line](#Command-Line)
 - [Contributing](#Contributing)
 
 Zipline Android Client Application to Upload, Share, Download and Manage Files and Short URLs
@@ -44,7 +42,7 @@ Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 User profile and stats widget are updated in the background with a user configurable task.
 
-For more information visit the website: https://zipline-android.cssnr.com/
+**For more information visit the website:** https://zipline-android.cssnr.com/
 
 _We are also developing a browser addon for all major browsers including Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)_
@@ -67,6 +65,9 @@ _We are also developing a browser addon for all major browsers including Firefox
 [![QR Code Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
 </details>
+
+[![Latest Release](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=release)](https://github.com/cssnr/zipline-android/releases/latest)
+[![Latest Pre-Release](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=pre-release&include_prereleases)](https://github.com/cssnr/zipline-android/releases)
 
 _Note: If installing directly, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
@@ -217,18 +218,19 @@ To update the Website/Docs go here: https://github.com/cssnr/zipline-android-doc
 To build the app you must first add a [Google Services](#Google-Services) file and optionally prepare highlightjs.
 
 1. Building this app requires a valid `app/google-services.json` file. For more info see [Google Services](#Google-Services).
-
 2. To build the text preview run `bash .github/scripts/prepare.sh` or manually add highlightjs to:  
    `assets/preview/dist`
 
 Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) below.
 
-## Android Studio
+### Android Studio
+
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=AGP)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
+
+_Note: Make sure to check the [AGP Android Studio compatibility](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)._
 
 1. Download and Install Android Studio: https://developer.android.com/studio
-
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
-
 3. Then build or run the app on your device.
    - Import the Project
    - Run Gradle Sync
@@ -240,80 +242,45 @@ To Build:
 - Select the Build Variant (debug or release)
 - Build > Generate App Bundles or APK > Generate APKs
 
-## Command Line
+### Command Line
 
 > [!WARNING]  
-> This section may not be complete!
-> For more details see the [release.yaml](.github/workflows/release.yaml).
+> This section is not complete.
+> For more details on building see the [release.yaml](.github/workflows/release.yaml).
 
-You will need to have [ADB](https://developer.android.com/tools/adb) installed.
+Ensure you both ADB and SDK Tools installed and accessible.
 
-<details><summary>Click Here to Download and Install a Release</summary>
+- [Android Debug Bridge](https://developer.android.com/tools/adb)
+- [Android SDK Platform Tools](https://developer.android.com/tools/releases/platform-tools#downloads)
 
-```shell
-$ wget https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk
-$ ls
-app-release.apk
-
-$ which adb
-C:\Users\Shane\Android\sdk\platform-tools\adb.EXE
-
-$ adb devices
-List of devices attached
-RF9M33Z1Q0M     device
-
-$ adb -s RF9M33Z1Q0M install app-release.apk
-Performing Incremental Install
-Serving...
-All files should be loaded. Notifying the device.
-Success
-Install command complete in 917 ms
-```
-
-See below for more details...
-
-</details>
-
-1. Download and Install the Android SDK Platform Tools.
-
-https://developer.android.com/tools/releases/platform-tools#downloads
-
-Ensure that `adb` is in your PATH.
-
-2. List and verify the device is connected with:
-
-```shell
-$ adb devices
-List of devices attached
-RF9M33Z1Q0M     device
-```
-
-3. Build a debug or release apk.
+**Build a release:**
 
 ```shell
 ./gradlew assemble
-./gradlew assembleRelease
 ```
 
 _Note: Use `gradlew.bat` for Windows._
 
-4. Then install the apk to your device with adb.
+**Ensure device is connected:**
+
+```shell
+$ adb devices
+List of devices attached
+RF9M33Z1Q0M     device
+```
+
+**Install to device:**
 
 ```shell
 $ cd app/build/outputs/apk/debug
 $ adb -s RF9M33Z1Q0M install app-debug.apk
 ```
 
-```shell
-$ cd app/build/outputs/apk/release
-$ adb -s RF9M33Z1Q0M install app-release-unsigned.apk
-```
-
 _Note: you may have to uninstall before installing due to different certificate signatures._
 
-For more details, see the [ADB Documentation](https://developer.android.com/tools/adb#move).
+### Google Services
 
-## Google Services
+Location: `app/google-services.json`
 
 This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
 You must add `org.cssnr.zipline` to a Firebase campaign here: https://firebase.google.com/
