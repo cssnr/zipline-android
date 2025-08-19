@@ -1,5 +1,5 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/releases/latest)
+[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
 [![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://zipline-android.cssnr.com/)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=github&label=updated)](https://github.com/cssnr/zipline-android/pulse)
 [![Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
@@ -67,6 +67,9 @@ _We are also developing a browser addon for all major browsers including Firefox
 [![QR Code Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
 </details>
+
+[![Latest Release](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=release)](https://github.com/cssnr/zipline-android/releases/latest)
+[![Latest Pre-Release](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=pre-release&include_prereleases)](https://github.com/cssnr/zipline-android/releases)
 
 _Note: If installing directly, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
