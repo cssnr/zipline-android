@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_max="480dp"
+            app:layout_constraintWidth_max="488dp"
             android:padding="8dp"
             android:autofillHints=""
             android:inputType="textMultiLine"
