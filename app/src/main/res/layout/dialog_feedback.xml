@@ -38,7 +38,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintWidth_max="480dp"
+            app:layout_constraintWidth_max="488dp"
             android:padding="8dp"
             android:autofillHints=""
             android:inputType="textMultiLine"
@@ -56,8 +56,9 @@
         android:layout_height="48dp"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="?attr/colorPrimary"
         android:text="Get Support"
-        android:tag="Get Support"
+        android:tag="@string/website_url"
         android:drawablePadding="8dp"
         app:drawableStartCompat="@drawable/md_captive_portal_24px" />
     <TextView
@@ -66,8 +67,9 @@
         android:layout_height="48dp"
         android:gravity="center_vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="?attr/colorPrimary"
         android:text="View Source Code"
-        android:tag="View Source Code"
+        android:tag="@string/github_url"
         android:drawablePadding="8dp"
         app:drawableStartCompat="@drawable/fa_github" />
 

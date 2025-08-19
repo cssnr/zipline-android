@@ -200,8 +200,9 @@
             android:layout_height="48dp"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="?attr/colorPrimary"
             android:text="View Docs and Get Support"
-            android:tag="View Docs or Get Support"
+            android:tag="@string/website_url"
             android:drawablePadding="8dp"
             app:drawableStartCompat="@drawable/md_captive_portal_24px" />
         <TextView
@@ -210,8 +211,9 @@
             android:layout_height="48dp"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="?attr/colorPrimary"
             android:text="View Source Code on GitHub"
-            android:tag="View Source Code on GitHub"
+            android:tag="@string/github_url"
             android:drawablePadding="8dp"
             app:drawableStartCompat="@drawable/fa_github" />
     </LinearLayout>

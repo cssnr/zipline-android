@@ -554,6 +554,7 @@ class UserFragment : Fragment() {
     private fun Activity.changeUsernameDialog(parentView: View) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_username, null)
+
         val input = view.findViewById<EditText>(R.id.username_text)
 
         val savedUrl = preferences.getString("ziplineUrl", null) ?: return
@@ -562,6 +563,7 @@ class UserFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
+            .setPositiveButton("Change Username", null)
             .create()
 
         dialog.setOnShowListener {
@@ -605,15 +607,13 @@ class UserFragment : Fragment() {
             input.setSelection(input.text.length)
             input.requestFocus()
         }
-
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Change Username") { _, _ -> }
         dialog.show()
     }
-
 
     private fun Context.changePasswordDialog(parentView: View) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_password, null)
+
         val input = view.findViewById<EditText>(R.id.password_text)
         val input2 = view.findViewById<EditText>(R.id.password_text2)
 
@@ -623,6 +623,7 @@ class UserFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
+            .setPositiveButton("Change Password", null)
             .create()
 
         dialog.setOnShowListener {
@@ -667,15 +668,13 @@ class UserFragment : Fragment() {
             }
             input.requestFocus()
         }
-
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Change Password") { _, _ -> }
         dialog.show()
     }
-
 
     private fun Context.disableTotpDialog(parentView: View) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_totp_disable, null)
+
         val input = view.findViewById<EditText>(R.id.totp_code)
 
         val savedUrl = preferences.getString("ziplineUrl", null) ?: return
@@ -684,6 +683,7 @@ class UserFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
+            .setPositiveButton("Disable TOTP", null)
             .create()
 
         dialog.setOnShowListener {
@@ -722,15 +722,13 @@ class UserFragment : Fragment() {
             }
             input.requestFocus()
         }
-
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Disable TOTP") { _, _ -> }
         dialog.show()
     }
-
 
     private fun Context.enableTotpDialog(parentView: View, totpSecret: String) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_totp_enable, null)
+
         //val secretLayout = view.findViewById<FrameLayout>(R.id.secret_layout)
         val secretTextView = view.findViewById<TextView>(R.id.totp_secret)
         val openAuthLink = view.findViewById<Button>(R.id.open_auth_link)
@@ -785,6 +783,7 @@ class UserFragment : Fragment() {
         val dialog = MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Cancel", null)
+            .setPositiveButton("Enable TOTP", null)
             .create()
 
         dialog.setOnShowListener {
@@ -823,8 +822,6 @@ class UserFragment : Fragment() {
             }
             input.requestFocus()
         }
-
-        dialog.setButton(AlertDialog.BUTTON_POSITIVE, "Enable TOTP") { _, _ -> }
         dialog.show()
     }
 
@@ -832,29 +829,21 @@ class UserFragment : Fragment() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_support, null)
 
-        val discussionsBtn = view.findViewById<TextView>(R.id.github_discussions)
-        val issuesBtn = view.findViewById<TextView>(R.id.github_issues)
-        val websiteBtn = view.findViewById<TextView>(R.id.website_btn)
-
-        discussionsBtn.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.discussions_url).toUri())
-            startActivity(intent)
+        view.findViewById<TextView>(R.id.github_discussions).setOnClickListener { v ->
+            startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
         }
-        issuesBtn.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.issues_url).toUri())
-            startActivity(intent)
+        view.findViewById<TextView>(R.id.github_issues).setOnClickListener { v ->
+            startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
         }
-        websiteBtn.setOnClickListener {
-            val intent = Intent(Intent.ACTION_VIEW, getString(R.string.website_url).toUri())
-            startActivity(intent)
+        view.findViewById<TextView>(R.id.website_btn).setOnClickListener { v ->
+            startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
         }
 
-        val dialog = MaterialAlertDialogBuilder(this)
+        MaterialAlertDialogBuilder(this)
             .setView(view)
             .setNegativeButton("Close", null)
             .create()
-        //dialog.setOnShowListener {}
-        dialog.show()
+            .show()
     }
 }
 
