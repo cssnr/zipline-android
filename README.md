@@ -228,6 +228,10 @@ Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) be
 
 ## Android Studio
 
+Note: Make sure to check the [AGP Android Studio compatibility](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility).
+
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=AGP)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
+
 1. Download and Install Android Studio: https://developer.android.com/studio
 
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
