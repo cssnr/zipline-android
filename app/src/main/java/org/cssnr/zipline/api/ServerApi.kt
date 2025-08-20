@@ -146,20 +146,15 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[upload]", "format: $format")
         val originalName = preferences.getBoolean("file_name_original", true)
         Log.d("Api[upload]", "originalName: $originalName")
-        val compression = preferences.getInt("file_compression", 0).takeIf { it != 0 }
-        Log.d("Api[upload]", "compression: $compression")
-        val deletesAt = preferences.getString("file_deletes_at", null)
-        Log.d("Api[upload]", "deletesAt: $deletesAt")
-        // TODO: Implement uploadOptions for: format, originalName, compression, deletesAt
-        //val folder = preferences.getString("file_folder_id", null) ?: uploadOptions.folderId
-        Log.i("Api[upload]", "uploadOptions.folderId: ${uploadOptions.folderId}")
+        // TODO: Implement uploadOptions for: format, originalName
+        Log.i("Api[upload]", "uploadOptions: $uploadOptions")
         val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
         val response = api.postUpload(
             part,
             format,
             originalName,
-            compression,
-            deletesAt,
+            uploadOptions.compression,
+            uploadOptions.deletesAt,
             uploadOptions.folderId,
             uploadOptions.password,
             uploadOptions.maxViews,
@@ -172,8 +167,8 @@ class ServerApi(private val context: Context, url: String? = null) {
                     part,
                     format,
                     originalName,
-                    compression,
-                    deletesAt,
+                    uploadOptions.compression,
+                    uploadOptions.deletesAt,
                     uploadOptions.folderId,
                     uploadOptions.password,
                     uploadOptions.maxViews,

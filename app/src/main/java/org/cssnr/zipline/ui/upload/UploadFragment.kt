@@ -149,10 +149,12 @@ class UploadFragment : Fragment() {
             return
         }
 
+        // Set Initial UploadOptions
         if (viewModel.uploadOptions.value == null) {
             viewModel.uploadOptions.value = UploadOptions(
                 folderId = preferences.getString("file_folder_id", null),
                 deletesAt = preferences.getString("file_deletes_at", null),
+                compression = preferences.getInt("file_compression", 0),
             )
         }
         Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
@@ -244,16 +246,19 @@ class UploadFragment : Fragment() {
         // Upload Options Button
         binding.uploadOptions.setOnClickListener {
             setFragmentResultListener("upload_options_result") { _, bundle ->
-                Log.i("folderButton", "bundle: $bundle")
+                Log.i("uploadOptions", "bundle: $bundle")
                 val filePassword = bundle.getString("filePassword")
                 val deletesAt = bundle.getString("deletesAt")
                 val maxViews = bundle.getInt("maxViews")
-                Log.d("folderButton", "filePassword: $filePassword")
-                Log.d("folderButton", "deletesAt: $deletesAt")
-                Log.d("folderButton", "maxViews: $maxViews")
+                val compression = bundle.getInt("compression")
+                Log.d("uploadOptions", "filePassword: $filePassword")
+                Log.d("uploadOptions", "deletesAt: $deletesAt")
+                Log.d("uploadOptions", "maxViews: $maxViews")
+                Log.d("uploadOptions", "compression: $compression")
                 viewModel.uploadOptions.value?.password = filePassword
                 viewModel.uploadOptions.value?.deletesAt = deletesAt
                 viewModel.uploadOptions.value?.maxViews = if (maxViews == 0) null else maxViews
+                viewModel.uploadOptions.value?.compression = compression
             }
             val uploadOptionsDialog =
                 UploadOptionsDialog.newInstance(viewModel.uploadOptions.value!!)

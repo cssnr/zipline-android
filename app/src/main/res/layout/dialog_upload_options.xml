@@ -20,6 +20,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_gravity="center"
         android:textAppearance="?attr/textAppearanceHeadline5"
         android:text="Options" />
@@ -74,33 +75,68 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipChildren="false">
-        <EditText
-            android:id="@+id/file_deletes_at"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintWidth_max="488dp"
-            android:minHeight="48dp"
-            android:padding="8dp"
-            android:autofillHints=""
-            android:inputType="text"
-            android:maxLines="1"
-            android:maxLength="128"
-            android:hint="Delete At"
-            android:drawableEnd="@drawable/md_auto_delete_24px"
-            android:drawableTint="?android:attr/textColorTertiary" />
+            android:orientation="vertical">
+            <EditText
+                android:id="@+id/file_deletes_at"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="48dp"
+                android:padding="8dp"
+                android:autofillHints=""
+                android:inputType="text"
+                android:maxLines="1"
+                android:maxLength="128"
+                android:hint="Delete At"
+                android:drawableEnd="@drawable/md_auto_delete_24px"
+                android:drawableTint="?android:attr/textColorTertiary" />
+            <TextView
+                android:id="@+id/delete_at_examples"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Examples: 1s, 1m, 1h, 1d, 1y"
+                android:visibility="gone"
+                tools:visibility="visible" />
+        </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/delete_at_examples"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Examples: 1s, 1m, 1h, 1d, 1y"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:layout_marginTop="8dp"
+        android:clipChildren="false">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintWidth_max="488dp"
+            android:orientation="vertical">
+            <TextView
+                android:id="@+id/image_compression_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:labelFor="@id/opacity_percent"
+                android:text="@string/background_opacity" />
+            <SeekBar
+                android:id="@+id/image_compression"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:min="0"
+                android:max="100"
+                app:showSeekBarValue="true" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
 </ScrollView>

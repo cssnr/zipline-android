@@ -7,4 +7,5 @@ data class UploadOptions(
     var password: String? = null,
     var deletesAt: String? = null,
     var maxViews: Int? = null,
+    var compression: Int? = null,
 ) : Parcelable

@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
@@ -17,6 +18,9 @@ import org.cssnr.zipline.R
 class UploadOptionsDialog : DialogFragment() {
 
     private var uploadOptions: UploadOptions? = null
+
+    private lateinit var imageCompressionText: TextView
+    private lateinit var imageCompressionBar: SeekBar
 
     companion object {
         fun newInstance(data: UploadOptions): UploadOptionsDialog {
@@ -47,6 +51,36 @@ class UploadOptionsDialog : DialogFragment() {
         uploadOptions?.deletesAt?.let { fileDeletesAt.setText(it) }
         uploadOptions?.maxViews?.let { fileMaxViews.setText(it.toString()) }
 
+        val compression = uploadOptions?.compression ?: 0
+        Log.d("UploadOptionsDialog", "compression: $compression")
+
+        imageCompressionText = view.findViewById(R.id.image_compression_text)
+        // TODO: Set Default Value Here...
+        imageCompressionText.text = getString(R.string.image_compression, compression)
+
+        imageCompressionBar = view.findViewById(R.id.image_compression)
+        // TODO: Set Default Value Here...
+        imageCompressionBar.progress = compression
+
+        imageCompressionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                Log.d("UploadOptionsDialog", "progress: $progress")
+                if (fromUser && seekBar != null) {
+                    //val stepped = ((progress + 2) / 5) * 5
+                    //seekBar.progress = stepped
+                    imageCompressionText.text = getString(R.string.image_compression, progress)
+                }
+            }
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) {
+                Log.d("UploadOptionsDialog", "START")
+            }
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
+                Log.d("UploadOptionsDialog", "STOP")
+            }
+        })
+
         val dialog = MaterialAlertDialogBuilder(requireContext())
             .setView(view)
             .setNegativeButton("Cancel", null)
@@ -76,6 +110,7 @@ class UploadOptionsDialog : DialogFragment() {
                     "filePassword" to filePassword.text.toString().takeIf { it.isNotEmpty() },
                     "deletesAt" to fileDeletesAt.text.toString().takeIf { it.isNotEmpty() },
                     "maxViews" to fileMaxViews.text.toString().toIntOrNull(),
+                    "compression" to imageCompressionBar.progress,
                 )
                 Log.i("UploadOptionsDialog", "bundle: $bundle")
                 setFragmentResult("upload_options_result", bundle)
@@ -83,5 +118,14 @@ class UploadOptionsDialog : DialogFragment() {
             }
         }
         return dialog
+    }
+
+    override fun onResume() {
+        if (::imageCompressionBar.isInitialized && ::imageCompressionBar.isInitialized) {
+            Log.d("UploadOptionsDialog", "progress ${imageCompressionBar.progress}")
+            imageCompressionText.text =
+                getString(R.string.image_compression, imageCompressionBar.progress)
+        }
+        super.onResume()
     }
 }
