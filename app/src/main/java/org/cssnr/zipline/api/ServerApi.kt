@@ -1,5 +1,6 @@
 package org.cssnr.zipline.api
 
+import UploadOptions
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
@@ -150,8 +151,8 @@ class ServerApi(private val context: Context, url: String? = null) {
         val deletesAt = preferences.getString("file_deletes_at", null)
         Log.d("Api[upload]", "deletesAt: $deletesAt")
         // TODO: Implement uploadOptions for: format, originalName, compression, deletesAt
-        //val folder = preferences.getString("file_folder_id", null) ?: uploadOptions.fileFolderId
-        Log.i("Api[upload]", "uploadOptions.fileFolderId: ${uploadOptions.fileFolderId}")
+        //val folder = preferences.getString("file_folder_id", null) ?: uploadOptions.folderId
+        Log.i("Api[upload]", "uploadOptions.folderId: ${uploadOptions.folderId}")
         val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
         val response = api.postUpload(
             part,
@@ -159,7 +160,7 @@ class ServerApi(private val context: Context, url: String? = null) {
             originalName,
             compression,
             deletesAt,
-            uploadOptions.fileFolderId
+            uploadOptions.folderId
         )
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
@@ -171,7 +172,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     originalName,
                     compression,
                     deletesAt,
-                    uploadOptions.fileFolderId
+                    uploadOptions.folderId
                 )
             }
         }

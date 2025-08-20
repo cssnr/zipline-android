@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.upload
 
+import UploadOptions
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -21,7 +22,6 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.api.UploadOptions
 import org.cssnr.zipline.databinding.FragmentTextBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 
@@ -98,7 +98,7 @@ class TextFragment : Fragment() {
 
         // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
         val fileFolderId = preferences.getString("file_folder_id", null)
-        uploadOptions.fileFolderId = fileFolderId
+        uploadOptions.folderId = fileFolderId
         Log.i("Upload[onViewCreated]", "uploadOptions: $uploadOptions")
 
         binding.textContent.setText(extraText)
@@ -127,15 +127,15 @@ class TextFragment : Fragment() {
                 val folderName = bundle.getString("folderName")
                 Log.d("folderButton", "folderId: $folderId")
                 Log.d("folderButton", "folderName: $folderName")
-                uploadOptions.fileFolderId = folderId ?: ""
+                uploadOptions.folderId = folderId ?: ""
             }
 
-            Log.i("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+            Log.i("folderButton", "folderId: ${uploadOptions.folderId}")
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
                 // NOTE: Not setting uploadOptions here. DUPLICATION: upload, uploadMulti, text
-                folderFragment.setFolderData(ctx, uploadOptions.fileFolderId)
+                folderFragment.setFolderData(ctx, uploadOptions.folderId)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
             }
         }

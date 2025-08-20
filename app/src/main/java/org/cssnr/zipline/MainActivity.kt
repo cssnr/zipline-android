@@ -392,21 +392,23 @@ class MainActivity : AppCompatActivity() {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply { putString("url", extraText) }
-                    navController.navigate(
-                        R.id.nav_item_short, bundle, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.id, true)
-                            .setLaunchSingleTop(true)
-                            .build()
-                    )
+                    navController.navigate(R.id.nav_item_short, bundle)
+                    //navController.navigate(
+                    //    R.id.nav_item_short, bundle, NavOptions.Builder()
+                    //        .setPopUpTo(navController.graph.id, true)
+                    //        .setLaunchSingleTop(true)
+                    //        .build()
+                    //)
                 } else {
                     Log.d("onNewIntent", "PLAIN TEXT DETECTED")
                     val bundle = Bundle().apply { putString("text", extraText) }
-                    navController.navigate(
-                        R.id.nav_item_text, bundle, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.id, true)
-                            .setLaunchSingleTop(true)
-                            .build()
-                    )
+                    navController.navigate(R.id.nav_item_text, bundle)
+                    //navController.navigate(
+                    //    R.id.nav_item_text, bundle, NavOptions.Builder()
+                    //        .setPopUpTo(navController.graph.id, true)
+                    //        .setLaunchSingleTop(true)
+                    //        .build()
+                    //)
                 }
             } else {
                 showPreview(fileUri)
@@ -460,12 +462,13 @@ class MainActivity : AppCompatActivity() {
         Log.d("Main[showPreview]", "uri: $uri")
         binding.drawerLayout.closeDrawers()
         val bundle = Bundle().apply { putString("uri", uri.toString()) }
-        navController.navigate(
-            R.id.nav_item_upload, bundle, NavOptions.Builder()
-                .setPopUpTo(navController.graph.id, true)
-                .setLaunchSingleTop(true)
-                .build()
-        )
+        navController.navigate(R.id.nav_item_upload, bundle)
+        //navController.navigate(
+        //    R.id.nav_item_upload, bundle, NavOptions.Builder()
+        //        .setPopUpTo(navController.graph.id, true)
+        //        .setLaunchSingleTop(true)
+        //        .build()
+        //)
     }
 
     private fun showMultiPreview(fileUris: ArrayList<Uri>) {
@@ -473,12 +476,13 @@ class MainActivity : AppCompatActivity() {
         //fileUris.sort()
         binding.drawerLayout.closeDrawers()
         val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
-        navController.navigate(
-            R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
-                .setPopUpTo(navController.graph.id, true)
-                .setLaunchSingleTop(true)
-                .build()
-        )
+        navController.navigate(R.id.nav_item_upload_multi, bundle)
+        //navController.navigate(
+        //    R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
+        //        .setPopUpTo(navController.graph.id, true)
+        //        .setLaunchSingleTop(true)
+        //        .build()
+        //)
     }
 
     private fun isTextUrl(input: String): Boolean {

@@ -309,11 +309,11 @@ class LoginFragment : Fragment() {
         text: String? = null,
     ) {
         Log.d("loginFailed", "Context.loginFailed")
-        textView.let {
-            it?.text = text
-            it?.visibility = View.VISIBLE
+        textView?.let {
+            it.text = text
+            it.visibility = View.VISIBLE
         }
-        val shake = buttonView.let {
+        val shake = buttonView?.let {
             ObjectAnimator.ofFloat(
                 it, "translationX",
                 0f, 25f, -25f, 20f, -20f, 15f, -15f, 6f, -6f, 0f

@@ -36,21 +36,22 @@
             app:iconSize="24dp"
             app:iconGravity="textStart"
             app:iconPadding="0dp" />
+        <!--<Button-->
+        <!--    android:id="@+id/open_button"-->
+        <!--    android:layout_width="48dp"-->
+        <!--    android:layout_height="64dp"-->
+        <!--    android:contentDescription="@string/open"-->
+        <!--    app:icon="@drawable/md_open_in_new_24px"-->
+        <!--    app:iconSize="24dp"-->
+        <!--    app:iconGravity="textStart"-->
+        <!--    app:iconPadding="0dp" />-->
         <Button
-            android:id="@+id/open_button"
+            android:id="@+id/upload_options"
             android:layout_width="48dp"
-            android:layout_height="64dp"
-            android:contentDescription="@string/open"
-            app:icon="@drawable/md_open_in_new_24px"
-            app:iconSize="24dp"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp" />
-        <Button
-            android:id="@+id/share_button"
-            android:layout_width="48dp"
-            android:layout_height="64dp"
+            android:layout_height="72dp"
             android:contentDescription="@string/share"
-            app:icon="@drawable/md_share_24px"
+            android:backgroundTint="@android:color/holo_green_dark"
+            app:icon="@drawable/md_subtitles_gear_24px"
             app:iconSize="24dp"
             app:iconGravity="textStart"
             app:iconPadding="0dp" />

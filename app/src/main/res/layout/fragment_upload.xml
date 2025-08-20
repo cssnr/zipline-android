@@ -85,7 +85,7 @@
                 android:id="@+id/flow"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:constraint_referenced_ids="share_button,open_button,folder_button,options_button"
+                app:constraint_referenced_ids="upload_options,folder_button,options_button"
                 app:flow_wrapMode="chain"
                 app:flow_horizontalGap="4dp"
                 app:flow_verticalGap="4dp"
@@ -93,24 +93,25 @@
                 app:flow_maxElementsWrap="8"
                 app:layout_constraintTop_toTopOf="parent" />
             <Button
-                android:id="@+id/share_button"
-                android:layout_width="64dp"
+                android:id="@+id/upload_options"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:icon="@drawable/md_share_24px"
+                android:backgroundTint="@android:color/holo_green_dark"
+                app:icon="@drawable/md_subtitles_gear_24px"
                 app:iconSize="24dp"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp" />
-            <Button
-                android:id="@+id/open_button"
-                android:layout_width="64dp"
-                android:layout_height="wrap_content"
-                app:icon="@drawable/md_open_in_new_24px"
-                app:iconSize="24dp"
-                app:iconGravity="textStart"
-                app:iconPadding="0dp" />
+            <!--<Button-->
+            <!--    android:id="@+id/open_button"-->
+            <!--    android:layout_width="64dp"-->
+            <!--    android:layout_height="wrap_content"-->
+            <!--    app:icon="@drawable/md_open_in_new_24px"-->
+            <!--    app:iconSize="24dp"-->
+            <!--    app:iconGravity="textStart"-->
+            <!--    app:iconPadding="0dp" />-->
             <Button
                 android:id="@+id/folder_button"
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/md_folder_24px"
                 app:iconSize="24dp"
@@ -118,7 +119,7 @@
                 app:iconPadding="0dp" />
             <Button
                 android:id="@+id/options_button"
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:icon="@drawable/md_settings_24px"
                 app:iconSize="24dp"

@@ -1,5 +1,6 @@
 package org.cssnr.zipline.ui.upload
 
+import UploadOptions
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -24,6 +25,7 @@ import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.MediaItem
@@ -43,10 +45,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
-import org.cssnr.zipline.api.UploadOptions
 import org.cssnr.zipline.api.parseErrorBody
 import org.cssnr.zipline.databinding.FragmentUploadBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
+import org.cssnr.zipline.ui.dialogs.UploadOptionsDialog
 import org.json.JSONObject
 
 class UploadFragment : Fragment() {
@@ -54,7 +56,8 @@ class UploadFragment : Fragment() {
     private var _binding: FragmentUploadBinding? = null
     private val binding get() = _binding!!
 
-    private val uploadOptions = UploadOptions()
+    // TODO: This does not survive device rotation...
+    private val viewModel: UploadViewModel by activityViewModels()
 
     private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
@@ -114,6 +117,12 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
 
+        if (arguments?.getBoolean("optionsCleared") != true) {
+            Log.i("Upload[onViewCreated]", "New Upload - null viewModel.uploadOptions")
+            viewModel.uploadOptions.value = null
+            arguments?.putBoolean("optionsCleared", true)
+        }
+
         val ctx = requireContext()
 
         val savedUrl = preferences.getString("ziplineUrl", null)
@@ -141,10 +150,12 @@ class UploadFragment : Fragment() {
             return
         }
 
-        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
-        val fileFolderId = preferences.getString("file_folder_id", null)
-        uploadOptions.fileFolderId = fileFolderId
-        Log.i("Upload[onViewCreated]", "uploadOptions: $uploadOptions")
+        if (viewModel.uploadOptions.value == null) {
+            viewModel.uploadOptions.value = UploadOptions()
+            val fileFolderId = preferences.getString("file_folder_id", null)
+            viewModel.uploadOptions.value?.folderId = fileFolderId
+            Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
+        }
 
         val mimeType = ctx.contentResolver.getType(uri)
         Log.d("Upload[onViewCreated]", "mimeType: $mimeType")
@@ -153,7 +164,6 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "fileName: $fileName")
         binding.fileName.setText(fileName)
 
-        // TODO: Overhaul with Glide and ExoPlayer...
         if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
             Log.d("Upload[onViewCreated]", "EXOPLAYER")
             binding.playerView.visibility = View.VISIBLE
@@ -231,15 +241,26 @@ class UploadFragment : Fragment() {
             binding.imagePreview.setImageResource(getGenericIcon(mimeType))
         }
 
-        // Share Button
-        binding.shareButton.setOnClickListener {
-            Log.d("shareButton", "setOnClickListener")
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                this.type = mimeType
-                putExtra(Intent.EXTRA_STREAM, uri)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        // Upload Options Button
+        binding.uploadOptions.setOnClickListener {
+            setFragmentResultListener("upload_options_result") { _, bundle ->
+                Log.i("folderButton", "bundle: $bundle")
+                val filePassword = bundle.getString("filePassword")
+                val deletesAt = bundle.getString("deletesAt")
+                val maxViews = bundle.getInt("maxViews")
+                Log.d("folderButton", "filePassword: $filePassword")
+                Log.d("folderButton", "deletesAt: $deletesAt")
+                Log.d("folderButton", "maxViews: $maxViews")
+                viewModel.uploadOptions.value?.password = filePassword
+                viewModel.uploadOptions.value?.deletesAt = deletesAt
+                viewModel.uploadOptions.value?.maxViews = if (maxViews == 0) null else maxViews
             }
-            startActivity(Intent.createChooser(shareIntent, null))
+//            val uploadOptionsDialog = UploadOptionsDialog()
+//            uploadOptionsDialog.setData(uploadOptions)
+//            uploadOptionsDialog.show(parentFragmentManager, "UploadOptions")
+            val uploadOptionsDialog =
+                UploadOptionsDialog.newInstance(viewModel.uploadOptions.value!!)
+            uploadOptionsDialog.show(parentFragmentManager, "UploadOptions")
         }
 
         // Options Button
@@ -256,28 +277,28 @@ class UploadFragment : Fragment() {
                 val folderName = bundle.getString("folderName")
                 Log.d("folderButton", "folderId: $folderId")
                 Log.d("folderButton", "folderName: $folderName")
-                uploadOptions.fileFolderId = folderId ?: ""
+                viewModel.uploadOptions.value?.folderId = folderId ?: ""
             }
 
-            Log.i("folderButton", "fileFolderId: ${uploadOptions.fileFolderId}")
+            Log.i("folderButton", "fileFolderId: ${viewModel.uploadOptions.value?.folderId}")
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
                 // NOTE: Not setting uploadOptions here. DUPLICATION: upload, uploadMulti, text
-                folderFragment.setFolderData(ctx, uploadOptions.fileFolderId)
+                folderFragment.setFolderData(ctx, viewModel.uploadOptions.value?.folderId)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
             }
         }
 
-        // Open Button
-        binding.openButton.setOnClickListener {
-            Log.d("openButton", "setOnClickListener")
-            val openIntent = Intent(Intent.ACTION_VIEW).apply {
-                setDataAndType(uri, mimeType)
-                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-            }
-            startActivity(Intent.createChooser(openIntent, null))
-        }
+        //// Open Button
+        //binding.openButton.setOnClickListener {
+        //    Log.d("openButton", "setOnClickListener")
+        //    val openIntent = Intent(Intent.ACTION_VIEW).apply {
+        //        setDataAndType(uri, mimeType)
+        //        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        //    }
+        //    startActivity(Intent.createChooser(openIntent, null))
+        //}
 
         // Upload Button
         binding.uploadButton.setOnClickListener {
@@ -328,7 +349,7 @@ class UploadFragment : Fragment() {
         Toast.makeText(this, getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT).show()
         lifecycleScope.launch {
             try {
-                val response = api.upload(fileName, inputStream, uploadOptions)
+                val response = api.upload(fileName, inputStream, viewModel.uploadOptions.value!!)
                 Log.d("processUpload", "response: $response")
                 if (response.isSuccessful) {
                     val uploadResponse = response.body() ?: throw Error("Empty Server Response")
