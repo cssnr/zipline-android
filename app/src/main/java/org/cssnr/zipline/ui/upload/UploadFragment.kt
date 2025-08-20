@@ -150,11 +150,12 @@ class UploadFragment : Fragment() {
         }
 
         if (viewModel.uploadOptions.value == null) {
-            viewModel.uploadOptions.value = UploadOptions()
-            val fileFolderId = preferences.getString("file_folder_id", null)
-            viewModel.uploadOptions.value?.folderId = fileFolderId
-            Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
+            viewModel.uploadOptions.value = UploadOptions(
+                folderId = preferences.getString("file_folder_id", null),
+                deletesAt = preferences.getString("file_deletes_at", null),
+            )
         }
+        Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
 
         val mimeType = ctx.contentResolver.getType(uri)
         Log.d("Upload[onViewCreated]", "mimeType: $mimeType")

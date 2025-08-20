@@ -112,13 +112,13 @@ class UploadMultiFragment : Fragment() {
             return
         }
 
-        // TODO: This fragment was updated on accident. Testing is being done in UploadFragment...
-        Log.i("Multi[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
         if (viewModel.uploadOptions.value == null) {
-            viewModel.uploadOptions.value = UploadOptions()
-            val fileFolderId = preferences.getString("file_folder_id", null)
-            viewModel.uploadOptions.value?.folderId = fileFolderId
+            viewModel.uploadOptions.value = UploadOptions(
+                folderId = preferences.getString("file_folder_id", null),
+                deletesAt = preferences.getString("file_deletes_at", null),
+            )
         }
+        Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
 
         if (viewModel.selectedUris.value == null) {
             Log.i("Multi[onCreate]", "RESET SELECTED URIS TO ALL")

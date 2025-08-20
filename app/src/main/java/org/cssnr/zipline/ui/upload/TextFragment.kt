@@ -103,16 +103,13 @@ class TextFragment : Fragment() {
             //return
         }
 
-//        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
-//        val fileFolderId = preferences.getString("file_folder_id", null)
-//        viewModel.uploadOptions.value?.folderId = fileFolderId
-//        Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
         if (viewModel.uploadOptions.value == null) {
-            viewModel.uploadOptions.value = UploadOptions()
-            val fileFolderId = preferences.getString("file_folder_id", null)
-            viewModel.uploadOptions.value?.folderId = fileFolderId
-            Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
+            viewModel.uploadOptions.value = UploadOptions(
+                folderId = preferences.getString("file_folder_id", null),
+                deletesAt = preferences.getString("file_deletes_at", null),
+            )
         }
+        Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
 
         binding.textContent.setText(extraText)
 

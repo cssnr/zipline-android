@@ -436,6 +436,24 @@ class ServerApi(private val context: Context, url: String? = null) {
         return response
     }
 
+    suspend fun requerySize(
+        forceDelete: Boolean = false,
+        forceUpdate: Boolean = false
+    ): Response<StatusResponse> {
+        Log.d("Api[requerySize]", "requerySize: $forceDelete / $forceUpdate")
+        val request = RequeryRequest(forceDelete, forceUpdate)
+        Log.d("Api[requerySize]", "request: $request")
+        val response = api.serverRequerySize(request)
+        if (response.code() == 401) {
+            val token = reAuthenticate(api, ziplineUrl)
+            Log.d("Api[requerySize]", "reAuthenticate: token: $token")
+            if (token != null) {
+                return api.serverRequerySize(request)
+            }
+        }
+        return response
+    }
+
     suspend fun thumbnails(reRun: Boolean = false): Response<StatusResponse> {
         Log.d("Api[clearZeros]", "clearZeros")
         val response = api.serverThumbnails(ThumbnailsRequest(rerun = reRun))
@@ -602,6 +620,11 @@ class ServerApi(private val context: Context, url: String? = null) {
 
         @DELETE("server/clear_zeros")
         suspend fun serverClearZeros(): Response<StatusResponse>
+
+        @POST("server/requery_size")
+        suspend fun serverRequerySize(
+            @Body request: RequeryRequest,
+        ): Response<StatusResponse>
 
         @POST("server/thumbnails")
         suspend fun serverThumbnails(
@@ -775,6 +798,12 @@ class ServerApi(private val context: Context, url: String? = null) {
     data class TotpResponse(
         @param:Json(name = "secret") val secret: String? = null,
         @param:Json(name = "qrcode") val qrcode: String? = null,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class RequeryRequest(
+        @param:Json(name = "forceDelete") val forceDelete: Boolean = false,
+        @param:Json(name = "forceUpdate") val forceUpdate: Boolean = false,
     )
 
     @JsonClass(generateAdapter = true)
