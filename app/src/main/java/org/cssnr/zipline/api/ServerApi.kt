@@ -160,7 +160,9 @@ class ServerApi(private val context: Context, url: String? = null) {
             originalName,
             compression,
             deletesAt,
-            uploadOptions.folderId
+            uploadOptions.folderId,
+            uploadOptions.password,
+            uploadOptions.maxViews,
         )
         if (response.code() == 401) {
             val token = reAuthenticate(api, ziplineUrl)
@@ -172,7 +174,9 @@ class ServerApi(private val context: Context, url: String? = null) {
                     originalName,
                     compression,
                     deletesAt,
-                    uploadOptions.folderId
+                    uploadOptions.folderId,
+                    uploadOptions.password,
+                    uploadOptions.maxViews,
                 )
             }
         }
@@ -589,6 +593,8 @@ class ServerApi(private val context: Context, url: String? = null) {
             @Header("x-zipline-image-compression-percent") compression: Int? = 100,
             @Header("x-zipline-deletes-at") deletesAt: String? = null,
             @Header("x-zipline-folder") folder: String? = null,
+            @Header("x-zipline-password") password: String? = null,
+            @Header("x-zipline-max-views") maxViews: Int? = null,
         ): Response<UploadedFiles>
 
         @DELETE("server/clear_temp")

@@ -94,6 +94,14 @@
             android:drawableTint="?android:attr/textColorTertiary" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/delete_at_examples"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Examples: 1s, 1m, 1h, 1d, 1y"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
 </LinearLayout>
 </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

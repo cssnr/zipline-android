@@ -56,7 +56,6 @@ class UploadFragment : Fragment() {
     private var _binding: FragmentUploadBinding? = null
     private val binding get() = _binding!!
 
-    // TODO: This does not survive device rotation...
     private val viewModel: UploadViewModel by activityViewModels()
 
     private val navController by lazy { findNavController() }
@@ -255,9 +254,6 @@ class UploadFragment : Fragment() {
                 viewModel.uploadOptions.value?.deletesAt = deletesAt
                 viewModel.uploadOptions.value?.maxViews = if (maxViews == 0) null else maxViews
             }
-//            val uploadOptionsDialog = UploadOptionsDialog()
-//            uploadOptionsDialog.setData(uploadOptions)
-//            uploadOptionsDialog.show(parentFragmentManager, "UploadOptions")
             val uploadOptionsDialog =
                 UploadOptionsDialog.newInstance(viewModel.uploadOptions.value!!)
             uploadOptionsDialog.show(parentFragmentManager, "UploadOptions")

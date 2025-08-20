@@ -4,7 +4,9 @@ import UploadOptions
 import android.app.Dialog
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -39,6 +41,7 @@ class UploadOptionsDialog : DialogFragment() {
         val filePassword = view.findViewById<EditText>(R.id.file_password)
         val fileDeletesAt = view.findViewById<EditText>(R.id.file_deletes_at)
         val fileMaxViews = view.findViewById<EditText>(R.id.file_max_views)
+        val deleteAtExamples = view.findViewById<TextView>(R.id.delete_at_examples)
 
         uploadOptions?.password?.let { filePassword.setText(it) }
         uploadOptions?.deletesAt?.let { fileDeletesAt.setText(it) }
@@ -52,6 +55,23 @@ class UploadOptionsDialog : DialogFragment() {
 
         dialog.setOnShowListener {
             dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+
+                Log.d("UploadOptionsDialog", "fileDeletesAt.text: ${fileDeletesAt.text}")
+                if (fileDeletesAt.text.isNotEmpty()) {
+                    val normalized = fileDeletesAt.text.filter { it.isLetterOrDigit() }
+                    Log.d("UploadOptionsDialog", "normalized: $normalized")
+                    val pattern = Regex(
+                        "^\\d+(ms|msec|msecs|millisecond|milliseconds|s|sec|secs|second|seconds|m|min|mins|minute|minutes|h|hr|hrs|hour|hours|d|day|days|w|week|weeks|y|yr|yrs|year|years)$",
+                        RegexOption.IGNORE_CASE
+                    )
+                    if (!pattern.matches(normalized)) {
+                        fileDeletesAt.error = "Invalid Value"
+                        deleteAtExamples.visibility = View.VISIBLE
+                        return@setOnClickListener
+                    }
+                    fileDeletesAt.setText(normalized)
+                }
+
                 val bundle = bundleOf(
                     "filePassword" to filePassword.text.toString().takeIf { it.isNotEmpty() },
                     "deletesAt" to fileDeletesAt.text.toString().takeIf { it.isNotEmpty() },

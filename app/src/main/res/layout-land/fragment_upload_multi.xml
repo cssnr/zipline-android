@@ -55,8 +55,18 @@
             <!--    app:iconGravity="textStart"-->
             <!--    app:iconPadding="0dp" />-->
             <Button
+                android:id="@+id/upload_options"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:backgroundTint="@android:color/holo_green_dark"
+                app:icon="@drawable/md_subtitles_gear_24px"
+                app:iconSize="24dp"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp" />
+            <Button
                 android:id="@+id/folder_button"
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 app:icon="@drawable/md_folder_24px"
@@ -65,7 +75,7 @@
                 app:iconPadding="0dp" />
             <Button
                 android:id="@+id/options_button"
-                android:layout_width="64dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 app:icon="@drawable/md_settings_24px"

@@ -2,7 +2,6 @@ package org.cssnr.zipline.ui.upload
 
 import UploadOptions
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavOptions
@@ -24,13 +24,14 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.databinding.FragmentTextBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
+import org.cssnr.zipline.ui.dialogs.UploadOptionsDialog
 
 class TextFragment : Fragment() {
 
     private var _binding: FragmentTextBinding? = null
     private val binding get() = _binding!!
 
-    private val uploadOptions = UploadOptions()
+    private val viewModel: UploadViewModel by activityViewModels()
 
     private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
@@ -69,6 +70,12 @@ class TextFragment : Fragment() {
         Log.d("Text[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Text[onViewCreated]", "arguments: $arguments")
 
+        if (arguments?.getBoolean("optionsCleared") != true) {
+            Log.i("Upload[onViewCreated]", "New Upload - null viewModel.uploadOptions")
+            viewModel.uploadOptions.value = null
+            arguments?.putBoolean("optionsCleared", true)
+        }
+
         val ctx = requireContext()
 
         val savedUrl = preferences.getString("ziplineUrl", null)
@@ -96,21 +103,36 @@ class TextFragment : Fragment() {
             //return
         }
 
-        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
-        val fileFolderId = preferences.getString("file_folder_id", null)
-        uploadOptions.folderId = fileFolderId
-        Log.i("Upload[onViewCreated]", "uploadOptions: $uploadOptions")
+//        // TODO: Store UploadOptions in ViewModel otherwise their lost on config changes...
+//        val fileFolderId = preferences.getString("file_folder_id", null)
+//        viewModel.uploadOptions.value?.folderId = fileFolderId
+//        Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
+        if (viewModel.uploadOptions.value == null) {
+            viewModel.uploadOptions.value = UploadOptions()
+            val fileFolderId = preferences.getString("file_folder_id", null)
+            viewModel.uploadOptions.value?.folderId = fileFolderId
+            Log.i("Upload[onViewCreated]", "uploadOptions: ${viewModel.uploadOptions.value}")
+        }
 
         binding.textContent.setText(extraText)
 
-        // Share Button
-        binding.shareButton.setOnClickListener {
-            Log.d("shareButton", "setOnClickListener")
-            val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, binding.textContent.text)
+        // Upload Options Button
+        binding.uploadOptions.setOnClickListener {
+            setFragmentResultListener("upload_options_result") { _, bundle ->
+                Log.i("folderButton", "bundle: $bundle")
+                val filePassword = bundle.getString("filePassword")
+                val deletesAt = bundle.getString("deletesAt")
+                val maxViews = bundle.getInt("maxViews")
+                Log.d("folderButton", "filePassword: $filePassword")
+                Log.d("folderButton", "deletesAt: $deletesAt")
+                Log.d("folderButton", "maxViews: $maxViews")
+                viewModel.uploadOptions.value?.password = filePassword
+                viewModel.uploadOptions.value?.deletesAt = deletesAt
+                viewModel.uploadOptions.value?.maxViews = if (maxViews == 0) null else maxViews
             }
-            startActivity(Intent.createChooser(shareIntent, null))
+            val uploadOptionsDialog =
+                UploadOptionsDialog.newInstance(viewModel.uploadOptions.value!!)
+            uploadOptionsDialog.show(parentFragmentManager, "UploadOptions")
         }
 
         // Options Button
@@ -127,15 +149,15 @@ class TextFragment : Fragment() {
                 val folderName = bundle.getString("folderName")
                 Log.d("folderButton", "folderId: $folderId")
                 Log.d("folderButton", "folderName: $folderName")
-                uploadOptions.folderId = folderId ?: ""
+                viewModel.uploadOptions.value?.folderId = folderId ?: ""
             }
 
-            Log.i("folderButton", "folderId: ${uploadOptions.folderId}")
+            Log.i("folderButton", "folderId: ${viewModel.uploadOptions.value?.folderId}")
 
             lifecycleScope.launch {
                 val folderFragment = FolderFragment()
                 // NOTE: Not setting uploadOptions here. DUPLICATION: upload, uploadMulti, text
-                folderFragment.setFolderData(ctx, uploadOptions.folderId)
+                folderFragment.setFolderData(ctx, viewModel.uploadOptions.value?.folderId)
                 folderFragment.show(parentFragmentManager, "FolderFragment")
             }
         }
@@ -184,7 +206,7 @@ class TextFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 // TODO: Implement editRequest
-                val response = api.upload(fileName, inputStream, uploadOptions)
+                val response = api.upload(fileName, inputStream, viewModel.uploadOptions.value!!)
                 Log.d("processUpload", "response: $response")
                 if (response.isSuccessful) {
                     val uploadResponse = response.body()

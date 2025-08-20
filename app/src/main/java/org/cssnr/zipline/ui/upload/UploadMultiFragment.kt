@@ -30,6 +30,7 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.UploadedFiles
 import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
+import org.cssnr.zipline.ui.dialogs.UploadOptionsDialog
 
 class UploadMultiFragment : Fragment() {
 
@@ -168,6 +169,25 @@ class UploadMultiFragment : Fragment() {
         binding.previewRecycler.layoutManager = GridLayoutManager(ctx, spanCount)
         if (binding.previewRecycler.adapter == null) {
             binding.previewRecycler.adapter = adapter
+        }
+
+        // Upload Options Button
+        binding.uploadOptions.setOnClickListener {
+            setFragmentResultListener("upload_options_result") { _, bundle ->
+                Log.i("folderButton", "bundle: $bundle")
+                val filePassword = bundle.getString("filePassword")
+                val deletesAt = bundle.getString("deletesAt")
+                val maxViews = bundle.getInt("maxViews")
+                Log.d("folderButton", "filePassword: $filePassword")
+                Log.d("folderButton", "deletesAt: $deletesAt")
+                Log.d("folderButton", "maxViews: $maxViews")
+                viewModel.uploadOptions.value?.password = filePassword
+                viewModel.uploadOptions.value?.deletesAt = deletesAt
+                viewModel.uploadOptions.value?.maxViews = if (maxViews == 0) null else maxViews
+            }
+            val uploadOptionsDialog =
+                UploadOptionsDialog.newInstance(viewModel.uploadOptions.value!!)
+            uploadOptionsDialog.show(parentFragmentManager, "UploadOptions")
         }
 
         // Options Button
