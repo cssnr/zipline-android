@@ -262,10 +262,10 @@ class MainActivity : AppCompatActivity() {
                 Log.d("filePickerLauncher", "uris: $uris")
                 if (uris.size > 1) {
                     Log.i("filePickerLauncher", "MULTI!")
-                    showMultiPreview(uris as ArrayList<Uri>)
+                    showMultiPreview(uris as ArrayList<Uri>, false)
                 } else if (uris.size == 1) {
                     Log.i("filePickerLauncher", "SINGLE!")
-                    showPreview(uris[0])
+                    showPreview(uris[0], false)
                 } else {
                     Log.w("filePickerLauncher", "No Files Selected!")
                     //Toast.makeText(this, "No Files Selected!", Toast.LENGTH_SHORT).show()
@@ -392,6 +392,7 @@ class MainActivity : AppCompatActivity() {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply { putString("url", extraText) }
+                    //navController.navigate(R.id.nav_item_short, bundle)
                     navController.navigate(
                         R.id.nav_item_short, bundle, NavOptions.Builder()
                             .setPopUpTo(navController.graph.id, true)
@@ -401,6 +402,7 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     Log.d("onNewIntent", "PLAIN TEXT DETECTED")
                     val bundle = Bundle().apply { putString("text", extraText) }
+                    //navController.navigate(R.id.nav_item_text, bundle)
                     navController.navigate(
                         R.id.nav_item_text, bundle, NavOptions.Builder()
                             .setPopUpTo(navController.graph.id, true)
@@ -456,29 +458,37 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    private fun showPreview(uri: Uri?) {
+    private fun showPreview(uri: Uri?, popTop: Boolean = true) {
         Log.d("Main[showPreview]", "uri: $uri")
         binding.drawerLayout.closeDrawers()
         val bundle = Bundle().apply { putString("uri", uri.toString()) }
-        navController.navigate(
-            R.id.nav_item_upload, bundle, NavOptions.Builder()
-                .setPopUpTo(navController.graph.id, true)
-                .setLaunchSingleTop(true)
-                .build()
-        )
+        if (popTop) {
+            navController.navigate(
+                R.id.nav_item_upload, bundle, NavOptions.Builder()
+                    .setPopUpTo(navController.graph.id, true)
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
+        } else {
+            navController.navigate(R.id.nav_item_upload, bundle)
+        }
     }
 
-    private fun showMultiPreview(fileUris: ArrayList<Uri>) {
+    private fun showMultiPreview(fileUris: ArrayList<Uri>, popTop: Boolean = true) {
         Log.d("Main[showMultiPreview]", "fileUris: $fileUris")
         //fileUris.sort()
         binding.drawerLayout.closeDrawers()
         val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
-        navController.navigate(
-            R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
-                .setPopUpTo(navController.graph.id, true)
-                .setLaunchSingleTop(true)
-                .build()
-        )
+        if (popTop) {
+            navController.navigate(
+                R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
+                    .setPopUpTo(navController.graph.id, true)
+                    .setLaunchSingleTop(true)
+                    .build()
+            )
+        } else {
+            navController.navigate(R.id.nav_item_upload_multi, bundle)
+        }
     }
 
     private fun isTextUrl(input: String): Boolean {

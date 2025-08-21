@@ -953,7 +953,7 @@ suspend fun Activity.updateAvatarActivity(): File {
     withContext(Dispatchers.Main) {
         Log.d("updateAvatarActivity", "Dispatchers.Main")
         val headerImage = findViewById<ImageView>(R.id.header_image)
-        headerImage.let {
+        headerImage?.let {
             if (file.exists()) {
                 Log.i("updateAvatarActivity", "GLIDE LOAD - headerImage: $file")
                 Glide.with(it).load(file).signature(ObjectKey(file.lastModified())).into(it)

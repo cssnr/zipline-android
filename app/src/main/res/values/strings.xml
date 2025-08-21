@@ -44,6 +44,7 @@
     <string name="upload_multi">Upload %1$d Files</string>
 
     <string name="background_opacity">Background Opacity %d</string>
+    <string name="image_compression">Image Compression %d%%</string>
 
     <string-array name="file_name_format_entries">
         <item>Random</item>

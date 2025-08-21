@@ -1,5 +1,11 @@
-package org.cssnr.zipline.api
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class UploadOptions(
-    var fileFolderId: String? = null,
-)
+    var folderId: String? = null,
+    var password: String? = null,
+    var deletesAt: String? = null,
+    var maxViews: Int? = null,
+    var compression: Int? = null,
+) : Parcelable
