@@ -55,19 +55,15 @@ class UploadOptionsDialog : DialogFragment() {
         Log.d("UploadOptionsDialog", "compression: $compression")
 
         imageCompressionText = view.findViewById(R.id.image_compression_text)
-        // TODO: Set Default Value Here...
         imageCompressionText.text = getString(R.string.image_compression, compression)
 
         imageCompressionBar = view.findViewById(R.id.image_compression)
-        // TODO: Set Default Value Here...
         imageCompressionBar.progress = compression
 
         imageCompressionBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
                 Log.d("UploadOptionsDialog", "progress: $progress")
                 if (fromUser && seekBar != null) {
-                    //val stepped = ((progress + 2) / 5) * 5
-                    //seekBar.progress = stepped
                     imageCompressionText.text = getString(R.string.image_compression, progress)
                 }
             }

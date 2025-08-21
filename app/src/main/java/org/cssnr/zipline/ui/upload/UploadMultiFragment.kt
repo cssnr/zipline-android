@@ -270,7 +270,8 @@ class UploadMultiFragment : Fragment() {
                         Log.w("processMultiUpload", "inputStream is null")
                         continue
                     }
-                    val response = api.upload(fileName!!, inputStream, viewModel.uploadOptions.value!!)
+                    val response =
+                        api.upload(fileName!!, inputStream, viewModel.uploadOptions.value!!)
                     Log.d("processMultiUpload", "response: $response")
                     if (response.isSuccessful) {
                         val uploadedFiles = response.body()
