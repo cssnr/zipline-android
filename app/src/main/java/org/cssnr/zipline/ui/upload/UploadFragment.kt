@@ -271,6 +271,17 @@ class UploadFragment : Fragment() {
             navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
         }
 
+        // Share Button
+        binding.shareButton.setOnClickListener {
+            Log.d("shareButton", "setOnClickListener")
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                this.type = mimeType
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            }
+            startActivity(Intent.createChooser(shareIntent, null))
+        }
+
         // Folder Button
         binding.folderButton.setOnClickListener {
             Log.d("folderButton", "setOnClickListener")
@@ -307,6 +318,11 @@ class UploadFragment : Fragment() {
             val uploadFileName = binding.fileName.text.toString().trim()
             Log.d("uploadButton", "uploadFileName: $uploadFileName")
             ctx.processUpload(uri, uploadFileName) // NOTE: This is only called here...
+        }
+
+        Log.d("Upload[onViewCreated]", "binding.leftLayout: ${binding.leftLayout}")
+        binding.leftLayout?.post {
+            binding.leftLayout?.fullScroll(View.FOCUS_DOWN)
         }
     }
 

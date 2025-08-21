@@ -2,6 +2,7 @@ package org.cssnr.zipline.ui.upload
 
 import UploadOptions
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -141,6 +142,16 @@ class TextFragment : Fragment() {
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
             navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
+        }
+
+        // Share Button
+        binding.shareButton.setOnClickListener {
+            Log.d("shareButton", "setOnClickListener")
+            val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                type = "text/plain"
+                putExtra(Intent.EXTRA_TEXT, binding.textContent.text)
+            }
+            startActivity(Intent.createChooser(shareIntent, null))
         }
 
         // Folder Button
