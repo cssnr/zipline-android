@@ -30,7 +30,7 @@
 - [Contributing](#Contributing)
 
 Zipline Android Client Application to Upload, Share, Download and Manage Files and Short URLs
-for the [Zipline](https://github.com/diced/zipline) v4 ShareX Upload Server.
+for the [Diced/Zipline](https://github.com/diced/zipline) v4 ShareX Upload Server.
 Includes a Native File List for Viewing, Editing and Downloading files locally.
 Plus User Management to edit Username, Password, Avatar, TOTP, and more...
 
