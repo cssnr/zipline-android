@@ -38,7 +38,7 @@ Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 User profile and stats widget are updated in the background with a user configurable task.
 
-**For more information visit the website:** https://zipline-android.cssnr.com/
+**More information available on the website:** https://zipline-android.cssnr.com/
 
 _We are also developing a browser addon for all major browsers including Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)_
@@ -87,7 +87,7 @@ should take you to the settings area to allow installation if not already enable
 
 ### Setup
 
-Setup guides available [on the website](https://zipline-android.cssnr.com/).
+Setup guides available [on the website](https://zipline-android.cssnr.com/guides/get-started).
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
@@ -192,7 +192,7 @@ A slideshow is available [on the website](https://zipline-android.cssnr.com/guid
 
 ## Support
 
-Documentation: https://zipline-android.cssnr.com/
+Documentation Site: https://zipline-android.cssnr.com/
 
 For general help or to request a feature, see:
 
