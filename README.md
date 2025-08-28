@@ -4,7 +4,7 @@
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=github&label=updated)](https://github.com/cssnr/zipline-android/pulse)
 [![Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
 [![Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=cachet&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
-[![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=AGP)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=agp&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/zipline-android?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/cssnr/zipline-android)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/zipline-android?logo=htmx)](https://github.com/cssnr/zipline-android)
 [![GitHub Discussions](https://img.shields.io/github/discussions/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/discussions)
@@ -16,10 +16,6 @@
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
 
 # Zipline Upload
-
-> [!IMPORTANT]  
-> **Google Play Testers Needed!**
-> See [this discussion](https://github.com/cssnr/zipline-android/discussions/25) for more details.
 
 - [Install](#Install)
   - [Setup](#Setup)
@@ -66,8 +62,8 @@ _We are also developing a browser addon for all major browsers including Firefox
 
 </details>
 
-[![Latest Release](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=release)](https://github.com/cssnr/zipline-android/releases/latest)
-[![Latest Pre-Release](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=pre-release&include_prereleases)](https://github.com/cssnr/zipline-android/releases)
+[![Latest Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=github&label=latest%20release)](https://github.com/cssnr/zipline-android/releases/latest)
+[![Latest Pre-Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=github&include_prereleases&label=pre-release)](https://github.com/cssnr/zipline-android/releases)
 
 _Note: If installing directly, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
@@ -91,7 +87,7 @@ should take you to the settings area to allow installation if not already enable
 
 ### Setup
 
-Setup guides available on the website: https://zipline-android.cssnr.com/
+Setup guides available [on the website](https://zipline-android.cssnr.com/).
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
@@ -113,7 +109,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 ## Features
 
-Features are documented on the website: [https://zipline-android.cssnr.com/](https://zipline-android.cssnr.com/)
+Features are documented [on the website](https://zipline-android.cssnr.com/guides/features).
 
 - Share or Open any File, Media, Text or URL
 - Preview, Edit and set Options before Uploading
@@ -154,6 +150,8 @@ Features are documented on the website: [https://zipline-android.cssnr.com/](htt
 If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
 ## Screenshots
+
+A slideshow is available [on the website](https://zipline-android.cssnr.com/guides/features#screenshots).
 
 <a title="Screenshot" href="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/1.jpg">
     <img alt="Screenshot" src="https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/screenshots/1.jpg"></a>
@@ -225,9 +223,7 @@ Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) be
 
 ### Android Studio
 
-[![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=AGP)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
-
-_Note: Make sure to check the [AGP Android Studio compatibility](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)._
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=agp&style=for-the-badge&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)
 
 1. Download and Install Android Studio: https://developer.android.com/studio
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.

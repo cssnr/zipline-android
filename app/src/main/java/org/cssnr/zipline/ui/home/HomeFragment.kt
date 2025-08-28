@@ -221,30 +221,30 @@ class HomeFragment : Fragment() {
             return true
         }
 
-        override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
-            Log.d("doUpdateVisitedHistory", "url: $url")
-            //currentUrl = url
-            if (url.endsWith("/auth/login")) {
-                Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
-
-                val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
-                Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
-                //preferences.edit { putString("ziplineToken", "") }
-                preferences.edit { remove("ziplineToken") }
-
-                Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
-                view.loadUrl("about:blank")
-                //view.destroy()
-                val bundle = bundleOf("url" to ziplineUrl)
-                Log.d("doUpdateVisitedHistory", "bundle: $bundle")
-                val navController = findNavController()
-                navController.navigate(
-                    R.id.nav_item_login, bundle, NavOptions.Builder()
-                        .setPopUpTo(navController.graph.id, true)
-                        .build()
-                )
-            }
-        }
+        //override fun doUpdateVisitedHistory(view: WebView, url: String, isReload: Boolean) {
+        //    Log.d("doUpdateVisitedHistory", "url: $url")
+        //    //currentUrl = url
+        //    if (url.endsWith("/auth/login")) {
+        //        Log.d("doUpdateVisitedHistory", "LOGOUT: $url")
+        //
+        //        val preferences = PreferenceManager.getDefaultSharedPreferences(requireContext())
+        //        Log.d("doUpdateVisitedHistory", "REMOVE: ziplineToken")
+        //        //preferences.edit { putString("ziplineToken", "") }
+        //        preferences.edit { remove("ziplineToken") }
+        //
+        //        Log.d("doUpdateVisitedHistory", "view.loadUrl: about:blank")
+        //        view.loadUrl("about:blank")
+        //        //view.destroy()
+        //        val bundle = bundleOf("url" to ziplineUrl)
+        //        Log.d("doUpdateVisitedHistory", "bundle: $bundle")
+        //        val navController = findNavController()
+        //        navController.navigate(
+        //            R.id.nav_item_login, bundle, NavOptions.Builder()
+        //                .setPopUpTo(navController.graph.id, true)
+        //                .build()
+        //        )
+        //    }
+        //}
 
         override fun onReceivedError(
             view: WebView,
