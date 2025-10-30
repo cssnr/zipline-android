@@ -139,14 +139,17 @@ class FilesFragment : Fragment() {
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
         val userAgent = "${ctx.packageName}/${versionName}"
 
-        val cookie = CookieManager.getInstance().getCookie(savedUrl)
+//        val cookie = CookieManager.getInstance().getCookie(savedUrl)
+        val cookie =
+            if (savedUrl.isNotEmpty()) CookieManager.getInstance().getCookie(savedUrl) else null
         val okHttpClient = OkHttpClient.Builder()
             .addInterceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Cookie", cookie)
+                val builder = chain.request().newBuilder()
                     .header("User-Agent", userAgent)
-                    .build()
-                chain.proceed(request)
+                if (cookie != null) {
+                    builder.addHeader("Cookie", cookie)
+                }
+                chain.proceed(builder.build())
             }
             .build()
         val okHttpUrlLoader = OkHttpUrlLoader.Factory(okHttpClient)
