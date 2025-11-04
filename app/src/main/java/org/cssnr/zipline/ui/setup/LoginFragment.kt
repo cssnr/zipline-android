@@ -281,6 +281,7 @@ class LoginFragment : Fragment() {
             }
             val uri = url.toUri()
             Log.d("parseHost", "uri: $uri")
+            Log.d("parseHost", "uri.port: ${uri.port}")
             Log.d("parseHost", "uri.scheme: ${uri.scheme}")
             if (uri.scheme.isNullOrEmpty()) {
                 return "https://"
@@ -290,7 +291,16 @@ class LoginFragment : Fragment() {
                 return "${uri.scheme}://"
             }
             Log.d("parseHost", "uri.path: ${uri.path}")
-            val result = "${uri.scheme}://${uri.host}${uri.path}"
+
+            val portPart = when (uri.port) {
+                -1 -> ""
+                80 -> ""
+                443 -> ""
+                else -> ":${uri.port}"
+            }
+            Log.d("parseHost", "portPart: $portPart")
+
+            val result = "${uri.scheme}://${uri.host}${portPart}${uri.path}"
             Log.i("parseHost", "result: $result")
             return if (result.endsWith("/")) {
                 result.dropLast(1)
