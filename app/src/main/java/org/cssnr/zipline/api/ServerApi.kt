@@ -10,18 +10,18 @@ import androidx.preference.PreferenceManager
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 import com.squareup.moshi.Moshi
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 import okhttp3.Cookie
 import okhttp3.CookieJar
 import okhttp3.Headers
 import okhttp3.HttpUrl
 import okhttp3.HttpUrl.Companion.toHttpUrl
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MediaType
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.OkHttpClient
-import okhttp3.RequestBody.Companion.toRequestBody
+import okhttp3.RequestBody
 import okhttp3.ResponseBody
+import okio.source
 import org.cssnr.zipline.R
 import org.cssnr.zipline.log.debugLog
 import retrofit2.Response
@@ -39,7 +39,6 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.InputStream
-import java.net.URLConnection
 
 class ServerApi(private val context: Context, url: String? = null) {
 
@@ -148,7 +147,12 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[upload]", "originalName: $originalName")
         // TODO: Implement uploadOptions for: format, originalName
         Log.i("Api[upload]", "uploadOptions: $uploadOptions")
-        val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
+        //val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
+        val requestBody = InputStreamRequestBody(
+            "application/octet-stream".toMediaType(),
+            inputStream
+        )
+        val part = MultipartBody.Part.createFormData("file", fileName, requestBody)
         val response = api.postUpload(
             part,
             format,
@@ -483,17 +487,18 @@ class ServerApi(private val context: Context, url: String? = null) {
         }
     }
 
-    private suspend fun inputStreamToMultipart(
-        file: InputStream,
-        fileName: String,
-    ): MultipartBody.Part {
-        val contentType =
-            URLConnection.guessContentTypeFromName(fileName) ?: "application/octet-stream"
-        Log.d("inputStreamToMultipart", "contentType: $contentType")
-        val bytes = withContext(Dispatchers.IO) { file.readBytes() }
-        val requestBody = bytes.toRequestBody(contentType.toMediaTypeOrNull())
-        return MultipartBody.Part.createFormData("file", fileName, requestBody)
-    }
+    // NOTE: This has been deprecated in favor of InputStreamRequestBody
+    //private suspend fun inputStreamToMultipart(
+    //    file: InputStream,
+    //    fileName: String,
+    //): MultipartBody.Part {
+    //    val contentType =
+    //        URLConnection.guessContentTypeFromName(fileName) ?: "application/octet-stream"
+    //    Log.d("inputStreamToMultipart", "contentType: $contentType")
+    //    val bytes = withContext(Dispatchers.IO) { file.readBytes() }
+    //    val requestBody = bytes.toRequestBody(contentType.toMediaTypeOrNull())
+    //    return MultipartBody.Part.createFormData("file", fileName, requestBody)
+    //}
 
     private fun createRetrofit(headerPreferences: SharedPreferences): Retrofit {
         val baseUrl = "${ziplineUrl}/api/"
@@ -848,6 +853,21 @@ fun Response<*>.parseErrorBody(context: Context): String? {
             context.debugLog("API: parseErrorBody: ${e.message}")
             Log.e("ResponseExt", "Failed to parse error body", e)
             null
+        }
+    }
+}
+
+
+class InputStreamRequestBody(
+    private val contentType: MediaType,
+    private val inputStream: InputStream
+) : RequestBody() {
+
+    override fun contentType(): MediaType = contentType
+
+    override fun writeTo(sink: okio.BufferedSink) {
+        inputStream.source().use { source ->
+            sink.writeAll(source)
         }
     }
 }
