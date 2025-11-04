@@ -39,6 +39,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.InputStream
+import java.net.URLConnection
 
 class ServerApi(private val context: Context, url: String? = null) {
 
@@ -147,11 +148,9 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[upload]", "originalName: $originalName")
         // TODO: Implement uploadOptions for: format, originalName
         Log.i("Api[upload]", "uploadOptions: $uploadOptions")
-        //val part: MultipartBody.Part = inputStreamToMultipart(inputStream, fileName)
-        val requestBody = InputStreamRequestBody(
-            "application/octet-stream".toMediaType(),
-            inputStream
-        )
+        val contentType =
+            URLConnection.guessContentTypeFromName(fileName) ?: "application/octet-stream"
+        val requestBody = InputStreamRequestBody(contentType.toMediaType(), inputStream)
         val part = MultipartBody.Part.createFormData("file", fileName, requestBody)
         val response = api.postUpload(
             part,
