@@ -850,7 +850,7 @@ data class ErrorResponse(val error: String)
 fun Response<*>.parseErrorBody(context: Context): String? {
     val errorBody = errorBody() ?: return null
     val moshi = Moshi.Builder()
-        .add(SkipNullsAdapterFactory()) // NOTE: Added for nullable adapter - SkipNullsAdapterFactory
+        .add(SkipNullsAdapterFactory()) // NOTE: Added for nullable adapter
         .build()
     val adapter = moshi.adapter(ErrorResponse::class.java)
     return errorBody.source().use { source ->
