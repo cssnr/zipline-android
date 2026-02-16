@@ -1,16 +1,18 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
-[![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://zipline-android.cssnr.com/)
-[![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=github&label=updated)](https://github.com/cssnr/zipline-android/pulse)
-[![Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=cachet&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
-[![Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=cachet&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
+[![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=testcafe&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
+[![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=testcafe&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=agp&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
-[![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/zipline-android?logo=bookstack&logoColor=white&label=repo%20size)](https://github.com/cssnr/zipline-android)
-[![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/zipline-android?logo=htmx)](https://github.com/cssnr/zipline-android)
-[![GitHub Discussions](https://img.shields.io/github/discussions/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/discussions)
-[![GitHub Forks](https://img.shields.io/github/forks/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/forks)
-[![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=github)](https://github.com/cssnr/zipline-android/stargazers)
-[![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=github&label=org%20stars)](https://cssnr.com/)
+[![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://zipline-android.cssnr.com/)
+[![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=listenhub&label=updated)](https://github.com/cssnr/zipline-android/pulse)
+[![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/zipline-android?logo=buffer&label=repo%20size)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
+[![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/zipline-android?logo=devbox)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
+[![GitHub Contributors](https://img.shields.io/github/contributors-anon/cssnr/zipline-android?logo=southwestairlines)](https://github.com/cssnr/zipline-android/graphs/contributors)
+[![GitHub Issues](https://img.shields.io/github/issues/cssnr/zipline-android?logo=codeforces&logoColor=white)](https://github.com/cssnr/zipline-android/issues)
+[![GitHub Discussions](https://img.shields.io/github/discussions/cssnr/zipline-android?logo=theconversation)](https://github.com/cssnr/zipline-android/discussions)
+[![GitHub Forks](https://img.shields.io/github/forks/cssnr/zipline-android?style=flat&logo=forgejo&logoColor=white)](https://github.com/cssnr/zipline-android/forks)
+[![GitHub Repo Stars](https://img.shields.io/github/stars/cssnr/zipline-android?style=flat&logo=gleam&logoColor=white)](https://github.com/cssnr/zipline-android/stargazers)
+[![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=apachespark&logoColor=white&label=org%20stars)](https://cssnr.github.io/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
@@ -38,10 +40,10 @@ Native Kotlin Android Application with a Mobile First Design.
 Everything is cached and images are not downloaded over metered connections unless enabled.
 User profile and stats widget are updated in the background with a user configurable task.
 
-**More information available on the website:** https://zipline-android.cssnr.com/
-
 _We are also developing a browser addon for all major browsers including Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)_
+
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
 
 ## Install
 
@@ -85,9 +87,9 @@ should take you to the settings area to allow installation if not already enable
 
 </details>
 
-### Setup
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
 
-Setup guides available [on the website](https://zipline-android.cssnr.com/guides/get-started).
+### Setup
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
@@ -149,6 +151,8 @@ Features are documented [on the website](https://zipline-android.cssnr.com/guide
 
 If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
+
 ## Screenshots
 
 A slideshow is available [on the website](https://zipline-android.cssnr.com/guides/features#screenshots).
@@ -192,7 +196,7 @@ A slideshow is available [on the website](https://zipline-android.cssnr.com/guid
 
 ## Support
 
-Documentation Site: https://zipline-android.cssnr.com/
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
 
 For general help or to request a feature, see:
 
