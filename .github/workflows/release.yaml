@@ -175,11 +175,11 @@ jobs:
         continue-on-error: true
         run: |
           echo "env.aab_path: ${{ env.aab_path }}"
-          ls -lAh ${{ env.aab_path }} ||:
+          ls -lAh "${{ env.aab_path }}" ||:
           echo "env.debug_symbols: ${{ env.debug_symbols }}"
-          ls -lAh ${{ env.debug_symbols }} ||:
+          ls -lAh "${{ env.debug_symbols }}" ||:
           echo "env.mapping_file: ${{ env.mapping_file }}"
-          ls -lAh $(dirname ${{ env.debug_symbols }}) ||:
+          ls -lAh "$(dirname "${{ env.debug_symbols }}")" ||:
 
       - name: "Sign Bundle"
         if: ${{ !github.event.release.prerelease }}
@@ -246,21 +246,21 @@ jobs:
         if: ${{ !github.event.act }}
         continue-on-error: true
         run: |
-          echo -e "## Android Release\n\n" >> $GITHUB_STEP_SUMMARY
+          echo -e "## Android Release\n\n" >> "$GITHUB_STEP_SUMMARY"
 
-          echo -e "Final APK: \`${{ env.signed_apk }}\`\n\n" >> $GITHUB_STEP_SUMMARY
+          echo -e "Final APK: \`${{ env.signed_apk }}\`\n\n" >> "$GITHUB_STEP_SUMMARY"
 
-          echo -e "<details><summary>Build Artifacts</summary>\n\n" >> $GITHUB_STEP_SUMMARY
-          echo -e "\`\`\`text\n$(ls -lAh ${{ env.apk_path }})\n\`\`\`\n\n" >> $GITHUB_STEP_SUMMARY
-          echo -e "</details>\n\n" >> $GITHUB_STEP_SUMMARY
+          echo -e "<details><summary>Build Artifacts</summary>\n\n" >> "$GITHUB_STEP_SUMMARY"
+          echo -e "\`\`\`text\n$(ls -lAh ${{ env.apk_path }})\n\`\`\`\n\n" >> "$GITHUB_STEP_SUMMARY"
+          echo -e "</details>\n\n" >> "$GITHUB_STEP_SUMMARY"
 
           if [ -f "${{ env.apk_path }}/output-metadata.json" ];then
-            echo -e "<details><summary>File: output-metadata.json</summary>\n\n" >> $GITHUB_STEP_SUMMARY
-            echo -e "\`\`\`json\n$(cat ${{ env.apk_path }}/output-metadata.json)\n\`\`\`\n\n" >> $GITHUB_STEP_SUMMARY
-            echo -e "</details>\n\n" >> $GITHUB_STEP_SUMMARY
+            echo -e "<details><summary>File: output-metadata.json</summary>\n\n" >> "$GITHUB_STEP_SUMMARY"
+            echo -e "\`\`\`json\n$(cat ${{ env.apk_path }}/output-metadata.json)\n\`\`\`\n\n" >> "$GITHUB_STEP_SUMMARY"
+            echo -e "</details>\n\n" >> "$GITHUB_STEP_SUMMARY"
           fi
 
-          echo -e "\n\n---" >> $GITHUB_STEP_SUMMARY
+          echo -e "\n\n---" >> "$GITHUB_STEP_SUMMARY"
 
       - name: "Send Failure Notification"
         if: ${{ failure() && github.event_name == 'release' }}
