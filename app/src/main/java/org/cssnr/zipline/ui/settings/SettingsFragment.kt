@@ -14,6 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
+import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.net.toUri
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
@@ -386,7 +387,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
         val formattedVersion = getString(
             R.string.version_code_string,
             packageInfo.versionName,
-            packageInfo.versionCode.toString()
+            PackageInfoCompat.getLongVersionCode(packageInfo).toString()
         )
         Log.d("showAppInfoDialog", "formattedVersion: $formattedVersion")
 

@@ -34,6 +34,7 @@ class UploadOptionsDialog : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        @Suppress("DEPRECATION")
         uploadOptions = arguments?.getParcelable("upload_options")
     }
 

@@ -8,7 +8,10 @@ import android.webkit.CookieManager
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
 import com.squareup.moshi.Json
+import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.JsonClass
+import com.squareup.moshi.JsonReader
+import com.squareup.moshi.JsonWriter
 import com.squareup.moshi.Moshi
 import okhttp3.Cookie
 import okhttp3.CookieJar
@@ -39,6 +42,7 @@ import retrofit2.http.Part
 import retrofit2.http.Path
 import retrofit2.http.Query
 import java.io.InputStream
+import java.lang.reflect.Type
 import java.net.URLConnection
 
 class ServerApi(private val context: Context, url: String? = null) {
@@ -69,7 +73,8 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[login]", "$user - $pass - $code")
 
         return try {
-            val loginResponse = api.postAuthLogin(LoginRequest(user, pass, code))
+            val codeValue = if (code.isNullOrBlank()) null else code
+            val loginResponse = api.postAuthLogin(LoginRequest(user, pass, codeValue))
             Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
             if (loginResponse.isSuccessful) {
                 val rawJson = loginResponse.body()?.string()
@@ -843,7 +848,9 @@ data class ErrorResponse(val error: String)
 
 fun Response<*>.parseErrorBody(context: Context): String? {
     val errorBody = errorBody() ?: return null
-    val moshi = Moshi.Builder().build()
+    val moshi = Moshi.Builder()
+        .add(SkipNullsAdapterFactory())
+        .build()
     val adapter = moshi.adapter(ErrorResponse::class.java)
     return errorBody.source().use { source ->
         try {
@@ -852,6 +859,20 @@ fun Response<*>.parseErrorBody(context: Context): String? {
             context.debugLog("API: parseErrorBody: ${e.message}")
             Log.e("ResponseExt", "Failed to parse error body", e)
             null
+        }
+    }
+}
+
+class SkipNullsAdapterFactory : JsonAdapter.Factory {
+    override fun create(type: Type, annotations: Set<Annotation>, moshi: Moshi): JsonAdapter<*> {
+        val delegate = moshi.nextAdapter<Any>(this, type, annotations)
+        return object : JsonAdapter<Any>() {
+            override fun fromJson(reader: JsonReader): Any? = delegate.fromJson(reader)
+
+            override fun toJson(writer: JsonWriter, value: Any?) {
+                writer.serializeNulls = false
+                delegate.toJson(writer, value)
+            }
         }
     }
 }
