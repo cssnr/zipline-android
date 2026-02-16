@@ -1,19 +1,17 @@
+# Generic
 .DS_Store
-
 .idea/
 *.iml
-
 **/build/
+**/dist/
 .gradle/
 .kotlin/
 captures/
 app/debug
 app/release
-
+# App
 local.properties
 *.keystore
 *.logcat
 **/google-services.json
 **/firebase-adminsdk.json
-
-**/dist/

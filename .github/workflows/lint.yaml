@@ -20,13 +20,19 @@ jobs:
 
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: "Debug event.json"
-        if: ${{ !cancelled() }}
         continue-on-error: true
-        run: |
-          cat "${GITHUB_EVENT_PATH}"
+        run: cat "${GITHUB_EVENT_PATH}"
+      - name: "Debug CTX github"
+        continue-on-error: true
+        env:
+          GITHUB_CTX: ${{ toJSON(github) }}
+        run: echo "$GITHUB_CTX"
+      - name: "Debug Environment"
+        continue-on-error: true
+        run: env
 
       - name: "Kotlin Lint"
         if: ${{ !cancelled() }}
@@ -49,28 +55,26 @@ jobs:
           echo "::endgroup::"
           npx prettier --check .
 
-      - name: "Yamllint"
+      - name: "yamllint"
         if: ${{ !cancelled() }}
         env:
-          CONFIG: "{extends: relaxed, ignore: [node_modules/,.github/disabled/], rules: {line-length: {max: 119}}}"
+          CONFIG: .github/yamllint.yaml
         run: |
           echo "::group::List Files"
-          yamllint -d '${{ env.CONFIG }}' --list-files .
+          yamllint -c "${{ env.CONFIG }}" --list-files .
           echo "::endgroup::"
-          yamllint -d '${{ env.CONFIG }}' .
+          yamllint -c "${{ env.CONFIG }}" .
 
-      - name: "Actionlint"
+      - name: "actionlint"
         if: ${{ !cancelled() }}
-        run: |
-          echo "::group::Download"
-          loc=$(curl -sI https://github.com/rhysd/actionlint/releases/latest | grep -i '^location:')
-          echo "loc: ${loc}"
-          tag=$(echo "${loc}" | sed -E 's|.*/tag/v?(.*)|\1|' | tr -d '\t\r\n')
-          echo "tag: ${tag}"
-          url="https://github.com/rhysd/actionlint/releases/latest/download/actionlint_${tag}_linux_amd64.tar.gz"
-          echo "url: ${url}"
-          curl -sL "${url}" | tar xz -C "${RUNNER_TEMP}" actionlint
-          file "${RUNNER_TEMP}/actionlint"
-          "${RUNNER_TEMP}/actionlint" --version
-          echo "::endgroup::"
-          "${RUNNER_TEMP}/actionlint" -color -verbose -shellcheck= -pyflakes=
+        uses: cssnr/actionlint-action@v1
+        with:
+          shellcheck_opts: -e SC2129
+
+      - name: "ShellCheck"
+        if: ${{ !cancelled() }}
+        uses: ludeeus/action-shellcheck@master
+        env:
+          SHELLCHECK_OPTS: -x
+        with:
+          scandir: .github/scripts

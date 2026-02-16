@@ -1,0 +1,24 @@
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: "3"
+
+tasks:
+  lint:
+    desc: Lint
+    cmd: |
+      prettier --check .
+      yamllint -c .github/yamllint.yaml .
+      actionlint -shellcheck="-e SC2129"
+      shellcheck .github/scripts/prepare.sh
+
+  format:
+    desc: Format
+    aliases: [fmt]
+    cmd: |
+      prettier --write .
+
+  build:
+    desc: Build (recommended android studio)
+    vars:
+      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    cmd: |
+      ./{{.GRADLEW}} assemble {{.CLI_ARGS}}

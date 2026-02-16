@@ -108,12 +108,12 @@
             android:layout_height="48dp"
             android:padding="10dp"
             android:autofillHints=""
-            android:hint="Two-Factor Code"
+            android:hint="Optional 2Factor Code"
             android:inputType="number"
             android:maxLength="6"
             android:drawableEnd="@drawable/md_password_2_24px"
             android:drawableTint="?android:attr/textColorTertiary"
-            android:visibility="gone"
+            android:visibility="visible"
             tools:visibility="visible" />
     </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
