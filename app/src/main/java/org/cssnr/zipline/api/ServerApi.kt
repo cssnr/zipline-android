@@ -73,6 +73,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         Log.d("Api[login]", "$user - $pass - $code")
 
         return try {
+            // NOTE: Added for nullable adapter - SkipNullsAdapterFactory
             val codeValue = if (code.isNullOrBlank()) null else code
             val loginResponse = api.postAuthLogin(LoginRequest(user, pass, codeValue))
             Log.i("Api[login]", "loginResponse.code(): ${loginResponse.code()}")
@@ -849,7 +850,7 @@ data class ErrorResponse(val error: String)
 fun Response<*>.parseErrorBody(context: Context): String? {
     val errorBody = errorBody() ?: return null
     val moshi = Moshi.Builder()
-        .add(SkipNullsAdapterFactory())
+        .add(SkipNullsAdapterFactory()) // NOTE: Added for nullable adapter - SkipNullsAdapterFactory
         .build()
     val adapter = moshi.adapter(ErrorResponse::class.java)
     return errorBody.source().use { source ->

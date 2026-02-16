@@ -113,6 +113,7 @@
             android:maxLength="6"
             android:drawableEnd="@drawable/md_password_2_24px"
             android:drawableTint="?android:attr/textColorTertiary"
+            android:visibility="visible"
             tools:visibility="visible" />
     </LinearLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
