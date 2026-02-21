@@ -1,6 +1,7 @@
 package org.cssnr.zipline.ui.files
 
 import android.app.DownloadManager
+import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
@@ -537,7 +538,13 @@ class FilesFragment : Fragment() {
 
         binding.downloadManager.setOnClickListener {
             Log.d("downloadManager", "setOnClickListener")
-            startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS), null)
+            try {
+                startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS))
+            } catch (e: ActivityNotFoundException) {
+                Log.e("downloadManager", "No activity found to handle ACTION_VIEW_DOWNLOADS", e)
+                Toast.makeText(requireContext(), "Downloads App Unavailable!", Toast.LENGTH_LONG)
+                    .show()
+            }
         }
 
         viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->

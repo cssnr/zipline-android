@@ -4,11 +4,11 @@ version: "3"
 tasks:
   lint:
     desc: Lint
-    cmd: |
-      prettier --check .
-      yamllint -c .github/yamllint.yaml .
-      actionlint -shellcheck="-e SC2129"
-      shellcheck .github/scripts/prepare.sh
+    cmds:
+      - prettier --check .
+      - yamllint -c .github/yamllint.yaml .
+      - actionlint -shellcheck="-e SC2129"
+      - shellcheck .github/scripts/prepare.sh
 
   format:
     desc: Format

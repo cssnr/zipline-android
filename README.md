@@ -1,7 +1,7 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
-[![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=testcafe&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
-[![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=testcafe&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
+[![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
+[![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=agp&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://zipline-android.cssnr.com/)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=listenhub&label=updated)](https://github.com/cssnr/zipline-android/pulse)
@@ -43,7 +43,7 @@ User profile and stats widget are updated in the background with a user configur
 _We are also developing a browser addon for all major browsers including Firefox Android:
 [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)_
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/)
 
 ## Install
 
@@ -87,7 +87,7 @@ should take you to the settings area to allow installation if not already enable
 
 </details>
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/guides/get-started)
 
 ### Setup
 
@@ -111,8 +111,6 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 ## Features
 
-Features are documented [on the website](https://zipline-android.cssnr.com/guides/features).
-
 - Share or Open any File, Media, Text or URL
 - Preview, Edit and set Options before Uploading
 - Native File List with Multi-Select, Edit and Delete
@@ -120,6 +118,8 @@ Features are documented [on the website](https://zipline-android.cssnr.com/guide
 - Home Screen Widget with File Stats and App Shortcuts
 - User Configurable Background Update Task for Stats
 - Supports Two-Factor Authentication and Custom Headers
+
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/guides/features)
 
 ### Planned
 
@@ -196,7 +196,7 @@ A slideshow is available [on the website](https://zipline-android.cssnr.com/guid
 
 ## Support
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/faq)
 
 For general help or to request a feature, see:
 
@@ -309,6 +309,8 @@ All contributions are welcome including [bug reports](https://github.com/cssnr/z
 [feature requests](https://github.com/cssnr/zipline-android/discussions/categories/feature-requests),
 or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
 
+If you would like to submit a PR, please review the [CONTRIBUTING.md](#contributing-ov-file).
+
 ### Zipline Projects
 
 - [Zipline Web Extension](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
@@ -321,6 +323,7 @@ or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (plea
 
 You can also star this project on GitHub and support other related projects:
 
+- [ShareX CLI](https://github.com/cssnr/sharex-cli?tab=readme-ov-file#readme)
 - [Django Files Server](https://github.com/django-files/django-files?tab=readme-ov-file#readme)
 - [Django Files iOS App](https://github.com/django-files/ios-client?tab=readme-ov-file#readme)
 - [Django Files Android App](https://github.com/django-files/android-client?tab=readme-ov-file#readme)
@@ -338,3 +341,11 @@ and [additional](https://cssnr.com/) open source projects.
 [![Ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/cssnr)
 
 For a full list of current projects visit: [https://cssnr.github.io/](https://cssnr.github.io/)
+
+<a href="https://github.com/cssnr/zipline-android/stargazers">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=cssnr/zipline-android&type=date&legend=bottom-right&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=cssnr/zipline-android&type=date&legend=bottom-right" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=cssnr/zipline-android&type=date&legend=bottom-right" />
+ </picture>
+</a>
