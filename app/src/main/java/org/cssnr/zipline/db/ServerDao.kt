@@ -50,7 +50,7 @@ interface ServerDao {
 }
 
 
-@Database(entities = [ServerEntity::class], version = 2)
+@Database(entities = [ServerEntity::class], version = 2, exportSchema = false)
 abstract class ServerDatabase : RoomDatabase() {
     abstract fun serverDao(): ServerDao
 

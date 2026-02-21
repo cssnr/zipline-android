@@ -1,11 +1,11 @@
 # Security
 
-[![Report a Vulnerability](https://img.shields.io/badge/Report_a_Vulnerability-34A853?style=for-the-badge)](https://github.com/cssnr/zipline-android/security/advisories/new)
-
 We take security seriously. Please let us know if you find any vulnerabilities.
 
 > [!WARNING]  
 > **Do not report security vulnerabilities through public issues, discussions, or pull requests.**
+
+[![Report a Vulnerability](https://img.shields.io/badge/Report_a_Vulnerability-34A853?style=for-the-badge&logo=googledocs&logoColor=white)](https://github.com/cssnr/zipline-android/security/advisories/new)
 
 ## Supported Versions
 
@@ -17,7 +17,7 @@ Only the [latest version](https://github.com/cssnr/zipline-android/releases/late
 
 To report a security vulnerability, [click here](https://github.com/cssnr/zipline-android/security/advisories/new).
 
-[![Report a Vulnerability](https://img.shields.io/badge/Report_a_Vulnerability-34A853?style=for-the-badge)](https://github.com/cssnr/zipline-android/security/advisories/new)
+[![Report a Vulnerability](https://img.shields.io/badge/Report_a_Vulnerability-34A853?style=for-the-badge&logo=googledocs&logoColor=white)](https://github.com/cssnr/zipline-android/security/advisories/new)
 
 ---
 
