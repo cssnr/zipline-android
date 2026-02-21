@@ -34,7 +34,7 @@ jobs:
         continue-on-error: true
         run: env
 
-      - name: "Kotlin Lint"
+      - name: "ktlint"
         if: ${{ !cancelled() }}
         continue-on-error: true # TODO: Resolve KTLint Issues
         env:
@@ -47,7 +47,7 @@ jobs:
           ${{ env.klint }} --version
           ${{ env.klint }} --color 'app/src/main/java/**'
 
-      - name: "Prettier"
+      - name: "prettier"
         if: ${{ !cancelled() }}
         run: |
           echo "::group::Install"
@@ -71,7 +71,7 @@ jobs:
         with:
           shellcheck_opts: -e SC2129
 
-      - name: "ShellCheck"
+      - name: "shellcheck"
         if: ${{ !cancelled() }}
         uses: ludeeus/action-shellcheck@master
         env:
