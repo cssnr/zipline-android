@@ -1,6 +1,5 @@
 # Security
 
-
 We take security seriously. Please let us know if you find any vulnerabilities.
 
 > [!WARNING]  

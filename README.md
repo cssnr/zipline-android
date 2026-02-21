@@ -151,7 +151,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/faq)
 
 ## Screenshots
 
@@ -196,7 +196,7 @@ A slideshow is available [on the website](https://zipline-android.cssnr.com/guid
 
 ## Support
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/faq)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/support)
 
 For general help or to request a feature, see:
 
