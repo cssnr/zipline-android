@@ -317,7 +317,7 @@ If you would like to submit a PR, please review the [CONTRIBUTING.md](#contribut
 
 [![Screenshot](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/extension/screenshot.jpg)](https://github.com/cssnr/zipline-extension?tab=readme-ov-file#readme)
 
-- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme) - _Only Supports v3_
+- [Zipline CLI](https://github.com/cssnr/zipline-cli?tab=readme-ov-file#readme)
 
 ### Related Projects
 
