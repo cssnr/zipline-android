@@ -1,6 +1,6 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
-[![APK Size](https://badges.cssnr.com/gh/release/cssnr/zipline-android/latest/asset/app-release.apk/size?label=apk)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
+[![APK Size](https://badges.cssnr.com/gh/release/cssnr/zipline-android/latest/asset/app-release.apk/size?label=apk&color=darkgreen)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=gradle)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
@@ -65,8 +65,8 @@ _We are also developing a browser addon for all major browsers including Firefox
 
 </details>
 
-[![Latest Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=github&label=latest%20release)](https://github.com/cssnr/zipline-android/releases/latest)
-[![Latest Pre-Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=github&include_prereleases&label=pre-release)](https://github.com/cssnr/zipline-android/releases)
+[![Latest Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=github&label=latest%20release&color=34A853)](https://github.com/cssnr/zipline-android/releases/latest)
+[![Latest Pre-Release](https://img.shields.io/github/v/release/cssnr/zipline-android?style=for-the-badge&logo=github&include_prereleases&label=pre-release&color=blue)](https://github.com/cssnr/zipline-android/releases)
 
 _Note: If installing directly, you may need to allow installation of apps from unknown sources.  
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
