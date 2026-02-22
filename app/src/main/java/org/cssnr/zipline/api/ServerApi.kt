@@ -820,7 +820,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     @JsonClass(generateAdapter = true)
     data class StatusResponse(val status: String)
 
-    inner class SimpleCookieJar : CookieJar {
+    class SimpleCookieJar : CookieJar {
         private val cookieStore = mutableMapOf<String, List<Cookie>>()
 
         override fun saveFromResponse(url: HttpUrl, cookies: List<Cookie>) {

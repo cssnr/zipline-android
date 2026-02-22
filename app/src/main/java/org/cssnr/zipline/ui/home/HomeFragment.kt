@@ -19,13 +19,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.edit
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHomeBinding

@@ -202,10 +202,8 @@ class UserFragment : Fragment() {
         //}
 
         val radius = ctx.resources.getDimension(R.dimen.avatar_radius)
-        binding.appIcon.setShapeAppearanceModel(
-            binding.appIcon.shapeAppearanceModel.toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED, radius).build()
-        )
+        binding.appIcon.shapeAppearanceModel = binding.appIcon.shapeAppearanceModel.toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, radius).build()
 
         val avatarFile = File(ctx.filesDir, "avatar.png")
         Log.d(LOG_TAG, "avatarFile: $avatarFile")

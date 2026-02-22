@@ -13,7 +13,7 @@ class HomeViewModel : ViewModel() {
         _urlToLoad.value = Event(url)
     }
 
-    inner class Event<out T>(private val content: T) {
+    class Event<out T>(private val content: T) {
         private var hasBeenHandled = false
 
         fun getContentIfNotHandled(): T? {
