@@ -13,8 +13,8 @@ tasks:
   format:
     desc: Format
     aliases: [fmt]
-    cmd: |
-      prettier --write .
+    cmds:
+      - prettier --write .
 
   build:
     desc: Build (recommended android studio)

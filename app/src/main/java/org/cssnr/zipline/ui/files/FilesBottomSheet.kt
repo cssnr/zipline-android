@@ -70,12 +70,10 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         val ctx = requireContext()
 
         val radius = ctx.resources.getDimension(R.dimen.image_preview_large)
-        binding.imagePreview.setShapeAppearanceModel(
-            binding.imagePreview.shapeAppearanceModel
-                .toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED, radius)
-                .build()
-        )
+        binding.imagePreview.shapeAppearanceModel = binding.imagePreview.shapeAppearanceModel
+            .toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, radius)
+            .build()
 
         viewModel.activeFile.observe(viewLifecycleOwner) { file ->
             Log.i("activeFile.observe", "file: $file")

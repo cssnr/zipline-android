@@ -231,10 +231,8 @@ class MainActivity : AppCompatActivity() {
         // Update Header Image
         val headerImage = headerView.findViewById<ShapeableImageView>(R.id.header_image)
         val radius = resources.getDimension(R.dimen.avatar_radius)
-        headerImage.setShapeAppearanceModel(
-            headerImage.shapeAppearanceModel.toBuilder()
-                .setAllCorners(CornerFamily.ROUNDED, radius).build()
-        )
+        headerImage.shapeAppearanceModel = headerImage.shapeAppearanceModel.toBuilder()
+            .setAllCorners(CornerFamily.ROUNDED, radius).build()
         val file = File(filesDir, "avatar.png")
         if (file.exists()) {
             Log.i(LOG_TAG, "GLIDE LOAD - MainActivity - file.name: ${file.name}")
