@@ -4,7 +4,7 @@
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=gradle)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
-[![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://zipline-android.cssnr.com/)
+[![GitHub Docs Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android-docs?logo=vitepress&logoColor=white&label=docs)](https://github.com/cssnr/zipline-android-docs)
 [![GitHub Last Commit](https://img.shields.io/github/last-commit/cssnr/zipline-android?logo=listenhub&label=updated)](https://github.com/cssnr/zipline-android/pulse)
 [![GitHub Repo Size](https://img.shields.io/github/repo-size/cssnr/zipline-android?logo=buffer&label=repo%20size)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
 [![GitHub Top Language](https://img.shields.io/github/languages/top/cssnr/zipline-android?logo=devbox)](https://github.com/cssnr/zipline-android?tab=readme-ov-file#readme)
@@ -152,7 +152,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/faq)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/faq)
 
 ## Screenshots
 
@@ -197,7 +197,7 @@ A slideshow is available [on the website](https://zipline-android.cssnr.com/guid
 
 ## Support
 
-[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/support)
+[![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/support)
 
 If you run into any issues or need help getting started, please do one of the following:
 
