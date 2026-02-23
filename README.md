@@ -199,16 +199,17 @@ A slideshow is available [on the website](https://zipline-android.cssnr.com/guid
 
 [![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=googledocs&logoColor=white)](https://zipline-android.cssnr.com/support)
 
-For general help or to request a feature, see:
+If you run into any issues or need help getting started, please do one of the following:
 
-- Q&A Discussion: https://github.com/cssnr/zipline-android/discussions/categories/q-a
-- Request a Feature: https://github.com/cssnr/zipline-android/discussions/categories/feature-requests
+- Report an Issue: <https://github.com/cssnr/zipline-android/issues>
+- Q&A Discussion: <https://github.com/cssnr/zipline-android/discussions/categories/q-a>
+- Request a Feature: <https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml>
+- Chat with us on Discord: <https://discord.gg/wXy6m2X8wY>
 
-If you are experiencing an issue/bug or getting unexpected results, you can:
-
-- Report an Issue: https://github.com/cssnr/zipline-android/issues
-- Chat with us on Discord: https://discord.gg/wXy6m2X8wY
-- Provide General Feedback: [https://cssnr.github.io/feedback/](https://cssnr.github.io/feedback/?app=Zipline%20Android%20App)
+[![Features](https://img.shields.io/badge/features-brightgreen?style=for-the-badge&logo=rocket&logoColor=white)](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml)
+[![Issues](https://img.shields.io/badge/issues-red?style=for-the-badge&logo=southwestairlines&logoColor=white)](https://github.com/cssnr/zipline-android/issues)
+[![Discussions](https://img.shields.io/badge/discussions-blue?style=for-the-badge&logo=livechat&logoColor=white)](https://github.com/cssnr/zipline-android/discussions)
+[![Discord](https://img.shields.io/badge/discord-5865F2?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/wXy6m2X8wY)
 
 # Development
 
@@ -345,8 +346,8 @@ For a full list of current projects visit: [https://cssnr.github.io/](https://cs
 
 <a href="https://github.com/cssnr/zipline-android/stargazers">
  <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=cssnr/zipline-android&type=date&legend=bottom-right&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=cssnr/zipline-android&type=date&legend=bottom-right" />
-   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=cssnr/zipline-android&type=date&legend=bottom-right" />
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=cssnr/zipline-android%2Ccssnr/zipline-extension%2Ccssnr/zipline-cli&type=date&legend=top-left&theme=dark" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=cssnr/zipline-android%2Ccssnr/zipline-extension%2Ccssnr/zipline-cli&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/svg?repos=cssnr/zipline-android%2Ccssnr/zipline-extension%2Ccssnr/zipline-cli&type=date&legend=top-left" />
  </picture>
 </a>
