@@ -9,7 +9,6 @@ import android.widget.EditText
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -103,12 +102,14 @@ class UploadOptionsDialog : DialogFragment() {
                     fileDeletesAt.setText(normalized)
                 }
 
-                val bundle = bundleOf(
-                    "filePassword" to filePassword.text.toString().takeIf { it.isNotEmpty() },
-                    "deletesAt" to fileDeletesAt.text.toString().takeIf { it.isNotEmpty() },
-                    "maxViews" to fileMaxViews.text.toString().toIntOrNull(),
-                    "compression" to imageCompressionBar.progress,
-                )
+                val bundle = Bundle().apply {
+                    putString(
+                        "filePassword",
+                        filePassword.text.toString().takeIf { it.isNotEmpty() })
+                    putString("deletesAt", fileDeletesAt.text.toString().takeIf { it.isNotEmpty() })
+                    fileMaxViews.text.toString().toIntOrNull()?.let { putInt("maxViews", it) }
+                    putInt("compression", imageCompressionBar.progress)
+                }
                 Log.i("UploadOptionsDialog", "bundle: $bundle")
                 setFragmentResult("upload_options_result", bundle)
                 dismiss()

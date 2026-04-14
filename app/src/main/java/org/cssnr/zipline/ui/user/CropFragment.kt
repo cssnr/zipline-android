@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.graphics.scale
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
@@ -100,7 +99,9 @@ class CropFragment : Fragment() {
                 FileOutputStream(file).use { out ->
                     val result = cropped.compress(Bitmap.CompressFormat.PNG, 100, out)
                     Log.d(LOG_TAG, "result: $result - file.name: ${file.name}")
-                    setFragmentResult("CropFragment", bundleOf("fileName" to file.name))
+                    setFragmentResult(
+                        "CropFragment",
+                        Bundle().apply { putString("fileName", file.name) })
                     findNavController().navigateUp()
                 }
             } catch (e: Throwable) {

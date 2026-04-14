@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -141,7 +140,9 @@ class TextFragment : Fragment() {
         // Options Button
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
+            navController.navigate(
+                R.id.nav_item_settings,
+                Bundle().apply { putBoolean("hide_bottom_nav", true) })
         }
 
         // Share Button
@@ -228,7 +229,12 @@ class TextFragment : Fragment() {
                         if (uploadResponse != null) {
                             logFileUpload(true, "Text Upload")
                             this@processUpload.copyToClipboard(uploadResponse.files.first().url)
-                            val bundle = bundleOf("url" to uploadResponse.files.first().url)
+                            val bundle = Bundle().apply {
+                                putString(
+                                    "url",
+                                    uploadResponse.files.first().url
+                                )
+                            }
                             navController.navigate(
                                 R.id.nav_item_home, bundle, NavOptions.Builder()
                                     .setPopUpTo(navController.graph.id, true)

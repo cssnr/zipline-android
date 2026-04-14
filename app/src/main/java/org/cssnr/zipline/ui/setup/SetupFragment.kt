@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.core.content.edit
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -221,7 +220,7 @@ class SetupFragment : Fragment() {
             }
 
             // Arguments
-            val bundle = bundleOf()
+            val bundle = Bundle()
             when (v.id) {
                 R.id.btn_continue -> {
                     Log.i(LOG_TAG, "Continue Button Pressed. Showing First Run...")

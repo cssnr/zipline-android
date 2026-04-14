@@ -9,7 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -107,7 +106,9 @@ class ShortFragment : Fragment() {
 
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
+            navController.navigate(
+                R.id.nav_item_settings,
+                Bundle().apply { putBoolean("hide_bottom_nav", true) })
         }
 
         binding.openButton.setOnClickListener {
@@ -152,7 +153,7 @@ class ShortFragment : Fragment() {
                         }
                         startActivity(Intent.createChooser(shareIntent, null))
                     }
-                    val bundle = bundleOf("url" to "${savedUrl}/dashboard/urls")
+                    val bundle = Bundle().apply { putString("url", "${savedUrl}/dashboard/urls") }
                     navController.navigate(
                         R.id.nav_item_home, bundle, NavOptions.Builder()
                             .setPopUpTo(navController.graph.id, true)
