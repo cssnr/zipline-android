@@ -25,7 +25,6 @@ import androidx.core.content.FileProvider
 import androidx.core.content.edit
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -254,7 +253,7 @@ class UserFragment : Fragment() {
             registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
                 Log.d("filePickerLauncher", "uris: $uri")
                 if (uri != null) {
-                    val bundle = bundleOf("uri" to uri.toString())
+                    val bundle = Bundle().apply { putString("uri", uri.toString()) }
                     navController.navigate(R.id.nav_item_crop, bundle)
                 }
                 //} else {
@@ -439,7 +438,7 @@ class UserFragment : Fragment() {
                     Log.d(LOG_TAG, "LOG OUT")
                     // TODO: Add logout function to ServerApi and actually log out...
                     preferences.edit { remove("ziplineToken") }
-                    val bundle = bundleOf("url" to savedUrl)
+                    val bundle = Bundle().apply { putString("url", savedUrl) }
                     Log.d(LOG_TAG, "bundle: $bundle")
                     navController.navigate(
                         R.id.nav_item_login, bundle, NavOptions.Builder()
