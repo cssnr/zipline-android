@@ -267,7 +267,9 @@ class UploadFragment : Fragment() {
         // Options Button
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, Bundle().apply { putBoolean("hide_bottom_nav", true) })
+            navController.navigate(
+                R.id.nav_item_settings,
+                Bundle().apply { putBoolean("hide_bottom_nav", true) })
         }
 
         // Share Button
@@ -383,7 +385,8 @@ class UploadFragment : Fragment() {
                             }
                             startActivity(Intent.createChooser(shareIntent, null))
                         }
-                        val bundle = Bundle().apply { putString("url", "${savedUrl}/dashboard/files/") }
+                        val bundle =
+                            Bundle().apply { putString("url", "${savedUrl}/dashboard/files/") }
                         navController.navigate(
                             R.id.nav_item_home, bundle, NavOptions.Builder()
                                 .setPopUpTo(navController.graph.id, true)

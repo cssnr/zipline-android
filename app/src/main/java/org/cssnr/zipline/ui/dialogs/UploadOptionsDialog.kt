@@ -103,7 +103,9 @@ class UploadOptionsDialog : DialogFragment() {
                 }
 
                 val bundle = Bundle().apply {
-                    putString("filePassword", filePassword.text.toString().takeIf { it.isNotEmpty() })
+                    putString(
+                        "filePassword",
+                        filePassword.text.toString().takeIf { it.isNotEmpty() })
                     putString("deletesAt", fileDeletesAt.text.toString().takeIf { it.isNotEmpty() })
                     fileMaxViews.text.toString().toIntOrNull()?.let { putInt("maxViews", it) }
                     putInt("compression", imageCompressionBar.progress)

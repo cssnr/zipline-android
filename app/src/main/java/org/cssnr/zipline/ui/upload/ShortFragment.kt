@@ -106,7 +106,9 @@ class ShortFragment : Fragment() {
 
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, Bundle().apply { putBoolean("hide_bottom_nav", true) })
+            navController.navigate(
+                R.id.nav_item_settings,
+                Bundle().apply { putBoolean("hide_bottom_nav", true) })
         }
 
         binding.openButton.setOnClickListener {

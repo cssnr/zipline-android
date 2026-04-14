@@ -99,7 +99,9 @@ class CropFragment : Fragment() {
                 FileOutputStream(file).use { out ->
                     val result = cropped.compress(Bitmap.CompressFormat.PNG, 100, out)
                     Log.d(LOG_TAG, "result: $result - file.name: ${file.name}")
-                    setFragmentResult("CropFragment", Bundle().apply { putString("fileName", file.name) })
+                    setFragmentResult(
+                        "CropFragment",
+                        Bundle().apply { putString("fileName", file.name) })
                     findNavController().navigateUp()
                 }
             } catch (e: Throwable) {

@@ -140,7 +140,9 @@ class TextFragment : Fragment() {
         // Options Button
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, Bundle().apply { putBoolean("hide_bottom_nav", true) })
+            navController.navigate(
+                R.id.nav_item_settings,
+                Bundle().apply { putBoolean("hide_bottom_nav", true) })
         }
 
         // Share Button
@@ -227,7 +229,12 @@ class TextFragment : Fragment() {
                         if (uploadResponse != null) {
                             logFileUpload(true, "Text Upload")
                             this@processUpload.copyToClipboard(uploadResponse.files.first().url)
-                            val bundle = Bundle().apply { putString("url", uploadResponse.files.first().url) }
+                            val bundle = Bundle().apply {
+                                putString(
+                                    "url",
+                                    uploadResponse.files.first().url
+                                )
+                            }
                             navController.navigate(
                                 R.id.nav_item_home, bundle, NavOptions.Builder()
                                     .setPopUpTo(navController.graph.id, true)
