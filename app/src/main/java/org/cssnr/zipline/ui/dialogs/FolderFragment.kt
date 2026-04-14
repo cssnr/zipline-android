@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.setFragmentResult
 import androidx.preference.PreferenceManager
@@ -82,10 +81,10 @@ class FolderFragment : DialogFragment() {
             }
             dialog.setPositiveButton("Save") { _, _ ->
                 Log.d("FolderFragment", "selectedName: $selectedName - selectedId: $selectedId")
-                val bundle = bundleOf(
-                    "folderId" to selectedId,
-                    "folderName" to selectedName,
-                )
+                val bundle = Bundle().apply {
+                    putString("folderId", selectedId)
+                    putString("folderName", selectedName)
+                }
                 setFragmentResult("folder_fragment_result", bundle)
                 dismiss()
             }

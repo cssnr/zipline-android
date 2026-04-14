@@ -23,7 +23,6 @@ import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -268,7 +267,7 @@ class UploadFragment : Fragment() {
         // Options Button
         binding.optionsButton.setOnClickListener {
             Log.d("optionsButton", "setOnClickListener")
-            navController.navigate(R.id.nav_item_settings, bundleOf("hide_bottom_nav" to true))
+            navController.navigate(R.id.nav_item_settings, Bundle().apply { putBoolean("hide_bottom_nav", true) })
         }
 
         // Share Button
@@ -384,7 +383,7 @@ class UploadFragment : Fragment() {
                             }
                             startActivity(Intent.createChooser(shareIntent, null))
                         }
-                        val bundle = bundleOf("url" to "${savedUrl}/dashboard/files/")
+                        val bundle = Bundle().apply { putString("url", "${savedUrl}/dashboard/files/") }
                         navController.navigate(
                             R.id.nav_item_home, bundle, NavOptions.Builder()
                                 .setPopUpTo(navController.graph.id, true)
