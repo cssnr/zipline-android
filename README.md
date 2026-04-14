@@ -20,6 +20,9 @@
 
 # Zipline Upload
 
+<a title="Django Files" href="https://zipline-android.cssnr.com/" target="_blank">
+<img alt="Django Files" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
+
 - [Install](#Install)
   - [Setup](#Setup)
 - [Features](#Features)

@@ -675,10 +675,20 @@ class ServerApi(private val context: Context, url: String? = null) {
         @param:Json(name = "updatedAt") val updatedAt: String,
         @param:Json(name = "role") val role: String,
         //@param:Json(name = "view") val view: UserViewSettings,
-        @param:Json(name = "sessions") val sessions: List<String>,
+        @param:Json(name = "sessions") val sessions: List<Session>,
         //@param:Json(name = "oauthProviders") val oauthProviders: List<String>,
         @param:Json(name = "totpSecret") val totpSecret: String?,
         //@param:Json(name = "quota") val quota: String?,
+    )
+
+    @JsonClass(generateAdapter = true)
+    data class Session(
+        val id: String,
+        val createdAt: String,
+        val ua: String?,
+        val client: String?,
+        val device: String?,
+        val userId: String
     )
 
     @JsonClass(generateAdapter = true)
