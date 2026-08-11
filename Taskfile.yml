@@ -12,7 +12,7 @@ tasks:
 
   format:
     desc: Format
-    aliases: [fmt]
+    aliases: [prettier, prettier:write]
     cmds:
       - prettier --write .
 
@@ -21,4 +21,30 @@ tasks:
     vars:
       GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
     cmd: |
-      ./{{.GRADLEW}} assemble {{.CLI_ARGS}}
+      {{.GRADLEW}} assemble {{.CLI_ARGS}}
+
+  release:
+    desc: Build Release Only
+    vars:
+      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    cmd: |
+      {{.GRADLEW}} assembleRelease {{.CLI_ARGS}}
+
+  compile:
+    desc: Compile Kotlin (quick check)
+    vars:
+      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    cmd: |
+      {{.GRADLEW}} :app:compileDebugKotlin
+
+  gradle-status:
+    desc: Show Gradle daemon status
+    vars:
+      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    cmd: "{{.GRADLEW}} --status"
+
+  gradle-stop:
+    desc: Stop all Gradle daemons
+    vars:
+      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    cmd: "{{.GRADLEW}} --stop"
