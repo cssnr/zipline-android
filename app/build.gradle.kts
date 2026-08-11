@@ -11,7 +11,7 @@ plugins {
 
 configure<ApplicationExtension> {
     namespace = "org.cssnr.zipline"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "org.cssnr.zipline"
@@ -36,8 +36,8 @@ configure<ApplicationExtension> {
         }
 
         debug {
-            //applicationIdSuffix = ".dev"
-            //versionNameSuffix = "-dev"
+            applicationIdSuffix = ".dev"
+            versionNameSuffix = "-dev"
             manifestPlaceholders["firebaseAnalyticsDeactivated"] = true // disabled
             manifestPlaceholders["firebaseCrashlyticsEnabled"] = false // disabled
         }
