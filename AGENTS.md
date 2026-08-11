@@ -1,9 +1,9 @@
 # Agent Guide
 
-Android application to update wallpaper from a remote URL on an interval.
+Android application for the [Zipline Upload Server](https://github.com/diced/zipline).
 
 - `app/` - Android app source (Kotlin, Gradle)
-- `Taskfile.yml` - task commands
+- `Taskfile.yml` - task commands (go-task/task)
 
 ## Commands
 

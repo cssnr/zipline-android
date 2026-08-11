@@ -311,7 +311,7 @@ See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) f
 # Contributing
 
 All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-extension/issues),
-[feature requests](https://github.com/cssnr/zipline-android/discussions/categories/feature-requests),
+[feature requests](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml),
 or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
 
 If you would like to submit a PR, please review the [CONTRIBUTING.md](#contributing-ov-file).
