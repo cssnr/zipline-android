@@ -95,6 +95,8 @@ should take you to the settings area to allow installation if not already enable
 6. Choose Install and Accept any Play Protect notifications.
 7. The app is now installed. Proceed to the [Setup](#Setup) section below.
 
+---
+
 </details>
 
 [![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/guides/get-started)
