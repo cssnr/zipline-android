@@ -18,6 +18,10 @@
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
 [![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
 
+> [!CAUTION]  
+> :rotating_light: **Free and Open-Source Android is under threat!**  
+> Google will turn Android into a locked-down platform, restricting your essential freedom to install apps of your choice. Make your voice heard – [Keep Android Open](https://keepandroidopen.org/).
+
 # Zipline Upload
 
 <a title="Django Files" href="https://zipline-android.cssnr.com/" target="_blank">
@@ -59,6 +63,8 @@ _We are also developing a browser addon for all major browsers including Firefox
 [![Get on Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/android/get80/google-play.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
 <details><summary>📲 Click to View QR Codes 📸 Supports Android 8 (API 26) 2017 +</summary>
+
+<br />
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
@@ -126,7 +132,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 > [!TIP]
 > Please [let us know](#support) if you run into any
-> [issues](https://github.com/cssnr/zipline-extension/issues).
+> [issues](https://github.com/cssnr/zipline-android/issues).
 > **All bugs** that can be reproduced, **will be fixed!**
 
 ## Features
@@ -150,7 +156,8 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 - Improve File List
   - Add Grid View Selector
   - Add Remaining File Options (ref: [file](https://zipline.diced.sh/docs/api/models/file))
-- [Request a Feature](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml)
+
+[![Request Feature](https://img.shields.io/badge/request_feature-brightgreen?style=for-the-badge&logo=rocket&logoColor=white)](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml)
 
 ### Known Issues
 
@@ -160,15 +167,16 @@ The User Page can be used to edit your profile, avatar, and execute server actio
   - _The WebView is being deprecated and future updates will rely less on this._
 - Android 8 (API 26-27) crashes when downloading a file due to a permissions error.
   - _Single files can be downloaded from the Home WebView. No work around for bulk downloads._
-- Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
+
+[![Report Issue](https://img.shields.io/badge/report_issue-red?style=for-the-badge&logo=southwestairlines&logoColor=white)](https://github.com/cssnr/zipline-android/issues)
 
 ### Troubleshooting
 
 - Most navigation and display issues can be fixed by fully closing the app and restarting it.
-  - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-extension/issues).
+  - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-android/issues).
 - If you encounter issues with the media in the file list, try clearing the application cache.
 - If you encounter issues with authentication, try clearing the application data (resets settings and auth).
-- If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
+- If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-android/issues).
 
 If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
@@ -327,9 +335,9 @@ See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) f
 
 # Contributing
 
-All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-extension/issues),
+All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-android/issues),
 [feature requests](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml),
-or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
+or [pull requests](https://github.com/cssnr/zipline-android/discussions) (please start a discussion).
 
 If you would like to submit a PR, please review the [CONTRIBUTING.md](#contributing-ov-file).
 
