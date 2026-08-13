@@ -2,8 +2,14 @@
 .DS_Store
 .idea/
 *.iml
-**/build/
-**/dist/
+.vscode/
+.*cache*
+node_modules/
+build/
+dist/
+out/
+*.dll
+*.exe
 .gradle/
 .kotlin/
 captures/
@@ -15,3 +21,4 @@ local.properties
 *.logcat
 **/google-services.json
 **/firebase-adminsdk.json
+site/

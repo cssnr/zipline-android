@@ -1,5 +1,5 @@
-[![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
+[![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases)
+[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/releases/latest)
 [![APK Size](https://badges.cssnr.com/gh/release/cssnr/zipline-android/latest/asset/app-release.apk/size?label=apk&color=darkgreen)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=gradle)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
@@ -16,19 +16,23 @@
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=apachespark&logoColor=white&label=org%20stars)](https://cssnr.github.io/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
-[![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
+[![Zipline Upload](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
+
+> [!CAUTION]  
+> :rotating_light: **Free and Open-Source Android is under threat!**  
+> Google will turn Android into a locked-down platform, restricting your essential freedom to install apps of your choice. Make your voice heard – [Keep Android Open](https://keepandroidopen.org/).
 
 # Zipline Upload
 
-<a title="Django Files" href="https://zipline-android.cssnr.com/" target="_blank">
-<img alt="Django Files" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
+<a title="Zipline Upload" href="https://zipline-android.cssnr.com/" target="_blank">
+<img alt="Zipline Upload" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
 
 - [Install](#Install)
-  - [Setup](#Setup)
+- [Setup](#Setup)
 - [Features](#Features)
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
-  - [Troubleshooting](#troubleshooting)
+  - [Troubleshooting](#Troubleshooting)
 - [Screenshots](#Screenshots)
 - [Support](#Support)
 - [Development](#Development)
@@ -60,9 +64,15 @@ _We are also developing a browser addon for all major browsers including Firefox
 
 <details><summary>📲 Click to View QR Codes 📸 Supports Android 8 (API 26) 2017 +</summary>
 
+<br />
+
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
+<br />
+
 [![QR Code Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
+
+<br />
 
 [![QR Code Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
@@ -75,6 +85,8 @@ _Note: If installing directly, you may need to allow installation of apps from u
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
+
+<br />
 
 Note: Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled. Otherwise:
@@ -89,11 +101,21 @@ should take you to the settings area to allow installation if not already enable
 6. Choose Install and Accept any Play Protect notifications.
 7. The app is now installed. Proceed to the [Setup](#Setup) section below.
 
+---
+
 </details>
 
 [![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/guides/get-started)
 
-### Setup
+_The GitHub APK has been registered with Google's [Android developer verification](https://developer.android.com/developer-verification)._
+
+```
+EE:11:BC:4B:22:05:85:EF:A1:17:CE:09:AA:43:EA:AF:08:8D:4D:D8:7D:F0:29:2F:E4:40:B2:AC:BC:0F:B7:E6
+```
+
+[_How to Verify an APK Signature_](https://developer.android.com/tools/apksigner#usage-verify)
+
+## Setup
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
@@ -110,7 +132,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 
 > [!TIP]
 > Please [let us know](#support) if you run into any
-> [issues](https://github.com/cssnr/zipline-extension/issues).
+> [issues](https://github.com/cssnr/zipline-android/issues).
 > **All bugs** that can be reproduced, **will be fixed!**
 
 ## Features
@@ -135,6 +157,8 @@ The User Page can be used to edit your profile, avatar, and execute server actio
   - Add Grid View Selector
   - Add Remaining File Options (ref: [file](https://zipline.diced.sh/docs/api/models/file))
 
+[![Request Feature](https://img.shields.io/badge/request_feature-brightgreen?style=for-the-badge&logo=rocket&logoColor=white)](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml)
+
 ### Known Issues
 
 - After deleting files and then scrolling in the file list it skips the number of files deleted when loading.
@@ -143,15 +167,16 @@ The User Page can be used to edit your profile, avatar, and execute server actio
   - _The WebView is being deprecated and future updates will rely less on this._
 - Android 8 (API 26-27) crashes when downloading a file due to a permissions error.
   - _Single files can be downloaded from the Home WebView. No work around for bulk downloads._
-- Please [Open a New Issue](https://github.com/cssnr/zipline-extension/issues) if you don't see yours.
+
+[![Report Issue](https://img.shields.io/badge/report_issue-red?style=for-the-badge&logo=southwestairlines&logoColor=white)](https://github.com/cssnr/zipline-android/issues)
 
 ### Troubleshooting
 
 - Most navigation and display issues can be fixed by fully closing the app and restarting it.
-  - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-extension/issues).
+  - If you encounter a reproducible issue please [report it as a bug](https://github.com/cssnr/zipline-android/issues).
 - If you encounter issues with the media in the file list, try clearing the application cache.
 - If you encounter issues with authentication, try clearing the application data (resets settings and auth).
-- If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-extension/issues).
+- If all of the above fail, try re-installing the application and [let us know what happened](https://github.com/cssnr/zipline-android/issues).
 
 If you are having trouble using the app, support is available via [GitHub](#support) or [Discord](https://discord.gg/wXy6m2X8wY).
 
@@ -232,7 +257,7 @@ Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) be
 
 ### Android Studio
 
-[![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=agp&style=for-the-badge&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=gradle&style=for-the-badge&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)
 
 1. Download and Install Android Studio: https://developer.android.com/studio
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
@@ -288,13 +313,13 @@ _Note: you may have to uninstall before installing due to different certificate 
 Location: `app/google-services.json`
 
 This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
-You must add `org.cssnr.zipline` to a Firebase campaign here: https://firebase.google.com/
+You must add `org.cssnr.zipline.dev` to a Firebase campaign here: https://firebase.google.com/
 
 To enable/disable Firebase DebugView use the following commands:
 
 ```shell
 # set
-adb shell setprop debug.firebase.analytics.app org.cssnr.zipline
+adb shell setprop debug.firebase.analytics.app org.cssnr.zipline.dev
 
 # unset
 adb shell setprop debug.firebase.analytics.app .none.
@@ -310,9 +335,9 @@ See the `manifestPlaceholders` in the [build.gradle.kts](app/build.gradle.kts) f
 
 # Contributing
 
-All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-extension/issues),
+All contributions are welcome including [bug reports](https://github.com/cssnr/zipline-android/issues),
 [feature requests](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml),
-or [pull requests](https://github.com/cssnr/zipline-extension/discussions) (please start a discussion).
+or [pull requests](https://github.com/cssnr/zipline-android/discussions) (please start a discussion).
 
 If you would like to submit a PR, please review the [CONTRIBUTING.md](#contributing-ov-file).
 

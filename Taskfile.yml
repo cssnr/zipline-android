@@ -1,6 +1,9 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: "3"
 
+vars:
+  GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+
 tasks:
   lint:
     desc: Lint
@@ -16,35 +19,26 @@ tasks:
     cmds:
       - prettier --write .
 
-  build:
-    desc: Build (recommended android studio)
-    vars:
-      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
-    cmd: |
-      {{.GRADLEW}} assemble {{.CLI_ARGS}}
+  compile:
+    desc: Compile Kotlin
+    cmd: "{{.GRADLEW}} :app:compileDebugKotlin"
+
+  debug:
+    desc: Build Debug (recommended android studio)
+    cmd: "{{.GRADLEW}} assembleDebug {{.CLI_ARGS}}"
 
   release:
-    desc: Build Release Only
-    vars:
-      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
-    cmd: |
-      {{.GRADLEW}} assembleRelease {{.CLI_ARGS}}
+    desc: Build Release APK
+    cmd: "{{.GRADLEW}} assembleRelease {{.CLI_ARGS}}"
 
-  compile:
-    desc: Compile Kotlin (quick check)
-    vars:
-      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
-    cmd: |
-      {{.GRADLEW}} :app:compileDebugKotlin
+  bundle:
+    desc: Build Android App Bundle
+    cmd: "{{.GRADLEW}} bundleRelease {{.CLI_ARGS}}"
 
   gradle-status:
-    desc: Show Gradle daemon status
-    vars:
-      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    desc: Gradle daemon status
     cmd: "{{.GRADLEW}} --status"
 
   gradle-stop:
-    desc: Stop all Gradle daemons
-    vars:
-      GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+    desc: Stop Gradle daemons
     cmd: "{{.GRADLEW}} --stop"
