@@ -24,8 +24,8 @@
 
 # Zipline Upload
 
-<a title="Django Files" href="https://zipline-android.cssnr.com/" target="_blank">
-<img alt="Django Files" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
+<a title="Zipline Android" href="https://zipline-android.cssnr.com/" target="_blank">
+<img alt="Zipline Android" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
 
 - [Install](#Install)
 - [Setup](#Setup)
