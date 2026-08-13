@@ -1,5 +1,5 @@
-[![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github&label=latest)](https://github.com/cssnr/zipline-android/releases/latest)
+[![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases)
+[![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/releases/latest)
 [![APK Size](https://badges.cssnr.com/gh/release/cssnr/zipline-android/latest/asset/app-release.apk/size?label=apk&color=darkgreen)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 [![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=gradle)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
@@ -16,7 +16,7 @@
 [![GitHub Org Stars](https://img.shields.io/github/stars/cssnr?style=flat&logo=apachespark&logoColor=white&label=org%20stars)](https://cssnr.github.io/)
 [![Discord](https://img.shields.io/discord/899171661457293343?logo=discord&logoColor=white&label=discord&color=7289da)](https://discord.gg/wXy6m2X8wY)
 [![Ko-fi](https://img.shields.io/badge/Ko--fi-72a5f2?logo=kofi&label=support)](https://ko-fi.com/cssnr)
-[![](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
+[![Zipline Upload](https://repository-images.githubusercontent.com/963715375/e18a8ea8-f964-4088-852b-98f51631877f)](https://zipline-android.cssnr.com/)
 
 > [!CAUTION]  
 > :rotating_light: **Free and Open-Source Android is under threat!**  
@@ -24,15 +24,15 @@
 
 # Zipline Upload
 
-<a title="Zipline Android" href="https://zipline-android.cssnr.com/" target="_blank">
-<img alt="Zipline Android" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
+<a title="Zipline Upload" href="https://zipline-android.cssnr.com/" target="_blank">
+<img alt="Zipline Upload" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
 
 - [Install](#Install)
 - [Setup](#Setup)
 - [Features](#Features)
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
-  - [Troubleshooting](#troubleshooting)
+  - [Troubleshooting](#Troubleshooting)
 - [Screenshots](#Screenshots)
 - [Support](#Support)
 - [Development](#Development)
@@ -257,7 +257,7 @@ Proceed to [Android Studio](#Android-Studio) or [Command Line](#Command-Line) be
 
 ### Android Studio
 
-[![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=agp&style=for-the-badge&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?logo=gradle&label=gradle&style=for-the-badge&query=%24.versions.agp&url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml)](https://developer.android.com/build/releases/gradle-plugin#android_gradle_plugin_and_android_studio_compatibility)
 
 1. Download and Install Android Studio: https://developer.android.com/studio
 2. Ensure that usb or wifi debugging is enabled in the Android developer settings and verify.
@@ -313,13 +313,13 @@ _Note: you may have to uninstall before installing due to different certificate 
 Location: `app/google-services.json`
 
 This app uses Firebase Google Services. Building requires a valid `google-services.json` file in the `app` directory.  
-You must add `org.cssnr.zipline` to a Firebase campaign here: https://firebase.google.com/
+You must add `org.cssnr.zipline.dev` to a Firebase campaign here: https://firebase.google.com/
 
 To enable/disable Firebase DebugView use the following commands:
 
 ```shell
 # set
-adb shell setprop debug.firebase.analytics.app org.cssnr.zipline
+adb shell setprop debug.firebase.analytics.app org.cssnr.zipline.dev
 
 # unset
 adb shell setprop debug.firebase.analytics.app .none.
