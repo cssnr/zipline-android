@@ -1,6 +1,6 @@
 # Agent Guide
 
-Android application for the [Zipline Upload Server](https://github.com/diced/zipline).
+Android client for the [Zipline Upload Server](https://github.com/diced/zipline).
 
 - `app/` - Android app source
 - `gradle/libs.versions.toml` - Library versions
