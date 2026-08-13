@@ -24,7 +24,7 @@
 <img alt="Django Files" align="right" width="128" height="auto" src="https://zipline-android.cssnr.com/images/logo.png"></a>
 
 - [Install](#Install)
-  - [Setup](#Setup)
+- [Setup](#Setup)
 - [Features](#Features)
   - [Planned](#Planned)
   - [Known Issues](#Known-Issues)
@@ -93,7 +93,15 @@ should take you to the settings area to allow installation if not already enable
 
 [![View Documentation](https://img.shields.io/badge/view_documentation-blue?style=for-the-badge&logo=quicklook)](https://zipline-android.cssnr.com/guides/get-started)
 
-### Setup
+_The GitHub APK has been registered with Google's [Android developer verification](https://developer.android.com/developer-verification)._
+
+```
+EE:11:BC:4B:22:05:85:EF:A1:17:CE:09:AA:43:EA:AF:08:8D:4D:D8:7D:F0:29:2F:E4:40:B2:AC:BC:0F:B7:E6
+```
+
+[_How to Verify an APK Signature_](https://developer.android.com/tools/apksigner#usage-verify)
+
+## Setup
 
 1. [Install](#Install) and open the app on your device.
 2. Log in as you normally would on the website.
@@ -134,6 +142,7 @@ The User Page can be used to edit your profile, avatar, and execute server actio
 - Improve File List
   - Add Grid View Selector
   - Add Remaining File Options (ref: [file](https://zipline.diced.sh/docs/api/models/file))
+- [Request a Feature](https://github.com/cssnr/zipline-android/issues/new?template=1-feature.yaml)
 
 ### Known Issues
 
