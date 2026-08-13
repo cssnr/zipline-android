@@ -62,7 +62,11 @@ _We are also developing a browser addon for all major browsers including Firefox
 
 [![QR Code GitHub](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-github.png)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 
+<br />
+
 [![QR Code Obtainium](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-obtainium.png)](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/cssnr/zipline-android)
+
+<br />
 
 [![QR Code Google Play](https://raw.githubusercontent.com/smashedr/repo-images/refs/heads/master/zipline/android/qr-code-google.png)](https://play.google.com/store/apps/details?id=org.cssnr.zipline)
 
@@ -75,6 +79,8 @@ _Note: If installing directly, you may need to allow installation of apps from u
 For more information, see [Release through a website](https://developer.android.com/studio/publish#publishing-website)._
 
 <details><summary>View Manual Steps to Install from Unknown Sources</summary>
+
+<br />
 
 Note: Downloading and Installing the [apk](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
 should take you to the settings area to allow installation if not already enabled. Otherwise:
