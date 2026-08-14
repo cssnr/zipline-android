@@ -92,7 +92,8 @@ class HomeFragment : Fragment() {
         if (arguments?.getBoolean("isFirstRun", false) == true) {
             Log.i("onStart", "FIRST RUN ARGUMENT DETECTED")
             arguments?.remove("isFirstRun")
-            requireActivity().showTapTargets(view)
+            //requireActivity().showTapTargets(view)
+            requireActivity().showTapTargets()
         }
 
         val versionName = ctx.packageManager.getPackageInfo(ctx.packageName, 0).versionName
