@@ -129,7 +129,8 @@ class FilesFragment : Fragment() {
         if (arguments?.getBoolean("isFirstRun", false) == true) {
             Log.i("onStart", "FIRST RUN ARGUMENT DETECTED")
             arguments?.remove("isFirstRun")
-            requireActivity().showTapTargets(view)
+            //requireActivity().showTapTargets(view)
+            requireActivity().showTapTargets()
         }
 
         viewModel.setUrl(savedUrl)
