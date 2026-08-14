@@ -23,6 +23,9 @@ import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -114,6 +117,12 @@ class UploadFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Upload[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Upload[onViewCreated]", "arguments: $arguments")
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = bars.top, bottom = bars.bottom)
+            insets
+        }
 
         if (arguments?.getBoolean("optionsCleared") != true) {
             Log.i("Upload[onViewCreated]", "New Upload - null viewModel.uploadOptions")

@@ -9,6 +9,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -69,6 +72,12 @@ class TextFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Text[onViewCreated]", "savedInstanceState: $savedInstanceState")
         Log.d("Text[onViewCreated]", "arguments: $arguments")
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = bars.top, bottom = bars.bottom)
+            insets
+        }
 
         if (arguments?.getBoolean("optionsCleared") != true) {
             Log.i("Upload[onViewCreated]", "New Upload - null viewModel.uploadOptions")

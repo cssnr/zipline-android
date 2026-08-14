@@ -16,6 +16,7 @@
             android:id="@+id/preview_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:clipToPadding="false"
             android:scrollbars="vertical"
             tools:itemCount="8"
             tools:viewBindingType="androidx.recyclerview.widget.RecyclerView"
@@ -28,6 +29,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:fitsSystemWindows="true"
         android:layout_gravity="bottom"
         android:paddingHorizontal="8dp"
         android:orientation="horizontal">

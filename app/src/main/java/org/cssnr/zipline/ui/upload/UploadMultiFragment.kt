@@ -13,6 +13,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.setFragmentResultListener
@@ -76,6 +79,13 @@ class UploadMultiFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         Log.d("Multi[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
         Log.d("Multi[onViewCreated]", "arguments: $arguments")
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.previewRecycler) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = bars.top, bottom = bars.bottom)
+            //WindowInsetsCompat.CONSUMED
+            insets
+        }
 
         if (arguments?.getBoolean("optionsCleared") != true) {
             Log.i("Upload[onViewCreated]", "New Upload - null viewModel.uploadOptions")

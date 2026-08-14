@@ -2,12 +2,49 @@ package org.cssnr.zipline.ui.settings
 
 import android.os.Bundle
 import android.util.Log
+import android.view.View
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.cssnr.zipline.R
 
 class WidgetSettingsFragment : PreferenceFragmentCompat() {
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("Settings[onStart]", "onStart: $arguments")
+        if (arguments?.getBoolean("hide_bottom_nav") == true) {
+            Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
+            requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+                View.GONE
+        }
+    }
+
+    override fun onStop() {
+        Log.d("Login[onStop]", "onStop - Show UI")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        super.onStop()
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            Log.d("ViewCompat", "top: ${bars.top}")
+            v.updatePadding(top = bars.top)
+
+            if (arguments?.getBoolean("hide_bottom_nav") == true) {
+                Log.d("ViewCompat", "bottom: ${bars.bottom}")
+                v.updatePadding(bottom = bars.bottom)
+            }
+            insets
+        }
+    }
 
     override fun onCreatePreferences(savedInstanceState: Bundle?, rootKey: String?) {
         Log.d("WidgetSettingsFragment", "rootKey: $rootKey")

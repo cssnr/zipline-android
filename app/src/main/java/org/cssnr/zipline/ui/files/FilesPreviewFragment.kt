@@ -12,6 +12,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -95,6 +98,13 @@ class FilesPreviewFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         Log.d("FilesPreviewFragment", "onViewCreated: ${savedInstanceState?.size()}")
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            Log.d("ViewCompat", "top: ${bars.top}")
+            v.updatePadding(top = bars.top)
+            insets
+        }
 
         val ctx = requireContext()
 

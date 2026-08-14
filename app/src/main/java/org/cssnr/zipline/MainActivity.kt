@@ -5,12 +5,14 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -77,7 +79,13 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d(LOG_TAG, "savedInstanceState: ${savedInstanceState?.size()}")
-        enableEdgeToEdge()
+        enableEdgeToEdge(
+            //statusBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            statusBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT),
+
+            //navigationBarStyle = SystemBarStyle.dark(Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.auto(Color.TRANSPARENT, Color.TRANSPARENT)
+        )
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -202,6 +210,19 @@ class MainActivity : AppCompatActivity() {
         // Update Status Bar
         //window.statusBarColor = Color.TRANSPARENT
         //binding.drawerLayout.setStatusBarBackgroundColor(Color.TRANSPARENT)
+
+        // Set Global Left/Right System Insets
+        ViewCompat.setOnApplyWindowInsetsListener(binding.contentMain.contentMainLayout) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            Log.i("Main[ViewCompat]", "bars: $bars")
+            v.updatePadding(left = bars.left, right = bars.right)
+            insets
+        }
+
+        // Update Navigation Bar
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            window.isNavigationBarContrastEnforced = false
+        }
 
         // Update Header Padding
         val headerView = binding.navView.getHeaderView(0)
