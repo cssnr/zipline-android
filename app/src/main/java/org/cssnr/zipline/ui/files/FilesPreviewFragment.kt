@@ -149,7 +149,7 @@ class FilesPreviewFragment : Fragment() {
                 //navController.popBackStack()
                 navController.navigateUp()
             }
-        } else if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
+        } else if (mimeType.startsWith("video/") || mimeType.startsWith("audio/")) {
             Log.d("FilesPreviewFragment", "EXOPLAYER")
             binding.playerView.visibility = View.VISIBLE
 
@@ -211,7 +211,7 @@ class FilesPreviewFragment : Fragment() {
             //    }
             //)
 
-        } else if (isGlideMime(mimeType.toString())) {
+        } else if (isGlideMime(mimeType)) {
             Log.d("FilesPreviewFragment", "GLIDE")
             binding.previewImageView.visibility = View.VISIBLE
 
