@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -287,9 +288,19 @@ class FilesPreviewFragment : Fragment() {
                     webView.apply {
                         settings.javaScriptEnabled = true
                         loadUrl(url)
+                        @SuppressLint("MissingOnRenderProcessGone")
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 evaluateJavascript(jsString, null)
+                            }
+
+                            override fun onRenderProcessGone(
+                                view: WebView?,
+                                detail: RenderProcessGoneDetail
+                            ): Boolean {
+                                Log.e("FilesPreviewFragment", "onRenderProcessGone: didCrash=${detail.didCrash()}")
+                                navController.navigateUp()
+                                return true
                             }
                         }
                     }

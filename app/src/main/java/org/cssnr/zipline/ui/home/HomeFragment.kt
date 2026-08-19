@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
@@ -212,6 +213,7 @@ class HomeFragment : Fragment() {
         binding.webView.resumeTimers()
     }
 
+    @SuppressLint("MissingOnRenderProcessGone")
     inner class MyWebViewClient : WebViewClient() {
         override fun shouldOverrideUrlLoading(view: WebView, request: WebResourceRequest): Boolean {
             val url = request.url.toString()
@@ -275,6 +277,14 @@ class HomeFragment : Fragment() {
             Log.d("onPageFinished", "Set: viewModel.webViewUrl.value: $url")
             viewModel.webViewUrl.value = url
             //onPageLoaded?.invoke()
+        }
+
+        override fun onRenderProcessGone(
+            view: WebView?,
+            detail: RenderProcessGoneDetail
+        ): Boolean {
+            Log.e("HomeFragment", "onRenderProcessGone: didCrash=${detail.didCrash()}")
+            return true
         }
     }
 
