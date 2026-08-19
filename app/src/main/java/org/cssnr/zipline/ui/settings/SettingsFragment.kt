@@ -16,6 +16,9 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.content.pm.PackageInfoCompat
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.setFragmentResultListener
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -69,6 +72,21 @@ class SettingsFragment : PreferenceFragmentCompat() {
             Log.d("Settings[onStart]", "BottomNavigationView = View.GONE")
             requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
                 View.GONE
+        }
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            Log.d("ViewCompat", "top: ${bars.top}")
+            v.updatePadding(top = bars.top)
+
+            if (arguments?.getBoolean("hide_bottom_nav") == true) {
+                Log.d("ViewCompat", "bottom: ${bars.bottom}")
+                v.updatePadding(bottom = bars.bottom)
+            }
+            insets
         }
     }
 

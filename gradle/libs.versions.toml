@@ -21,7 +21,7 @@ webkit = "1.17.0"
 room = "2.8.4"
 media3 = "1.11.0"
 
-okhttp = "5.4.0"
+okhttp = "5.5.0"
 retrofit = "3.0.0"
 moshiKotlinCodegen = "1.15.2"
 glide = "5.0.9"

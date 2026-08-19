@@ -20,6 +20,9 @@ import android.webkit.WebViewClient
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.net.toUri
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.preference.PreferenceManager
@@ -68,6 +71,14 @@ class HomeFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("Home[onViewCreated]", "savedInstanceState: ${savedInstanceState?.size()}")
         Log.d("Home[onViewCreated]", "webViewState: ${webViewState.size()}")
+
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            Log.d("ViewCompat", "top: ${bars.top}")
+            v.updatePadding(top = bars.top)
+            insets
+        }
+
         // TODO: Not sure when this method is triggered...
         if (savedInstanceState != null) {
             Log.i("Home[onViewCreated]", "SETTING webViewState FROM savedInstanceState")
