@@ -123,9 +123,15 @@ class FilesPreviewFragment : Fragment() {
 
         // Static Data
         // TODO: Currently this uses a mix of these val's and viewModel.activeFile.value data...
-        Log.d("FilesPreviewFragment", "viewModel.activeFile.value: ${viewModel.activeFile.value}")
-        val mimeType = viewModel.activeFile.value?.type
-        val rawUrl = viewModel.getRawUrl(viewModel.activeFile.value!!) // TODO: BANG BANG
+        val activeFile = viewModel.activeFile.value
+        Log.d("FilesPreviewFragment", "viewModel.activeFile.value: $activeFile")
+        if (activeFile == null) {
+            Log.w("FilesPreviewFragment", "activeFile is null, navigating up")
+            navController.navigateUp()
+            return
+        }
+        val mimeType = activeFile.type
+        val rawUrl = viewModel.getRawUrl(activeFile)
 
         binding.goBack.setOnClickListener {
             Log.d("FilesPreviewFragment", "GO BACK")
@@ -246,7 +252,7 @@ class FilesPreviewFragment : Fragment() {
             //    navController.navigateUp()
             //}
 
-        } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
+        } else if (mimeType.startsWith("text/") || isCodeMime(mimeType)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")
             binding.copyText.visibility = View.VISIBLE
             webView = WebView(ctx)
