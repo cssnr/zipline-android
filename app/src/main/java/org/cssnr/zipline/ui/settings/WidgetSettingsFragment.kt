@@ -25,7 +25,7 @@ class WidgetSettingsFragment : PreferenceFragmentCompat() {
     }
 
     override fun onStop() {
-        Log.d("Login[onStop]", "onStop - Show UI")
+        Log.d("Settings[onStop]", "onStop - Show UI")
         requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
             View.VISIBLE
         super.onStop()
