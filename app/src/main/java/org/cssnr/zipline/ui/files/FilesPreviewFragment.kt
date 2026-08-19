@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.CookieManager
+import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
@@ -123,9 +124,15 @@ class FilesPreviewFragment : Fragment() {
 
         // Static Data
         // TODO: Currently this uses a mix of these val's and viewModel.activeFile.value data...
-        Log.d("FilesPreviewFragment", "viewModel.activeFile.value: ${viewModel.activeFile.value}")
-        val mimeType = viewModel.activeFile.value?.type
-        val rawUrl = viewModel.getRawUrl(viewModel.activeFile.value!!) // TODO: BANG BANG
+        val activeFile = viewModel.activeFile.value
+        Log.d("FilesPreviewFragment", "viewModel.activeFile.value: $activeFile")
+        if (activeFile == null) {
+            Log.w("FilesPreviewFragment", "activeFile is null, navigating up")
+            navController.navigateUp()
+            return
+        }
+        val mimeType = activeFile.type
+        val rawUrl = viewModel.getRawUrl(activeFile)
 
         binding.goBack.setOnClickListener {
             Log.d("FilesPreviewFragment", "GO BACK")
@@ -143,7 +150,7 @@ class FilesPreviewFragment : Fragment() {
                 //navController.popBackStack()
                 navController.navigateUp()
             }
-        } else if (mimeType?.startsWith("video/") == true || mimeType?.startsWith("audio/") == true) {
+        } else if (mimeType.startsWith("video/") || mimeType.startsWith("audio/")) {
             Log.d("FilesPreviewFragment", "EXOPLAYER")
             binding.playerView.visibility = View.VISIBLE
 
@@ -205,7 +212,7 @@ class FilesPreviewFragment : Fragment() {
             //    }
             //)
 
-        } else if (isGlideMime(mimeType.toString())) {
+        } else if (isGlideMime(mimeType)) {
             Log.d("FilesPreviewFragment", "GLIDE")
             binding.previewImageView.visibility = View.VISIBLE
 
@@ -246,7 +253,7 @@ class FilesPreviewFragment : Fragment() {
             //    navController.navigateUp()
             //}
 
-        } else if (mimeType?.startsWith("text/") == true || isCodeMime(mimeType!!)) {
+        } else if (mimeType.startsWith("text/") || isCodeMime(mimeType)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")
             binding.copyText.visibility = View.VISIBLE
             webView = WebView(ctx)
@@ -281,9 +288,19 @@ class FilesPreviewFragment : Fragment() {
                     webView.apply {
                         settings.javaScriptEnabled = true
                         loadUrl(url)
+                        @SuppressLint("MissingOnRenderProcessGone")
                         webViewClient = object : WebViewClient() {
                             override fun onPageFinished(view: WebView?, url: String?) {
                                 evaluateJavascript(jsString, null)
+                            }
+
+                            override fun onRenderProcessGone(
+                                view: WebView?,
+                                detail: RenderProcessGoneDetail
+                            ): Boolean {
+                                Log.e("FilesPreviewFragment", "onRenderProcessGone: didCrash=${detail.didCrash()}")
+                                navController.navigateUp()
+                                return true
                             }
                         }
                     }
