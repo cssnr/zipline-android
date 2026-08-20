@@ -5,8 +5,9 @@ vars:
   GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
 
 tasks:
-  lint:
-    desc: Lint
+  check:
+    desc: Check Non-Kotlin Files
+    aliases: [prettier:check]
     cmds:
       - prettier --check .
       - yamllint -c .github/yamllint.yaml .
@@ -14,14 +15,18 @@ tasks:
       - shellcheck .github/scripts/prepare.sh
 
   format:
-    desc: Format
+    desc: Format Non-Kotlin Files
     aliases: [prettier, prettier:write]
     cmds:
       - prettier --write .
 
+  lint:
+    desc: Gradle Lint
+    cmd: "{{.GRADLEW}} lint {{.CLI_ARGS}}"
+
   compile:
     desc: Compile Kotlin
-    cmd: "{{.GRADLEW}} :app:compileDebugKotlin"
+    cmd: "{{.GRADLEW}} :app:compileDebugKotlin {{.CLI_ARGS}}"
 
   debug:
     desc: Build Debug (recommended android studio)
