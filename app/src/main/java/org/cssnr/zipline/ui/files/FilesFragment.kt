@@ -211,9 +211,15 @@ class FilesFragment : Fragment() {
         fun updateCheckButton() {
             val selectedSize = viewModel.selected.value?.size ?: 0
             val filesSize = viewModel.filesData.value?.size ?: 0
-            binding.filesTotalText.text = resources.getQuantityString(R.plurals.files_total, filesSize, filesSize)
+            binding.filesTotalText.text =
+                resources.getQuantityString(R.plurals.files_total, filesSize, filesSize)
             binding.filesSelectedText.text =
-                resources.getQuantityString(R.plurals.files_selected_total, filesSize, selectedSize, filesSize)
+                resources.getQuantityString(
+                    R.plurals.files_selected_total,
+                    filesSize,
+                    selectedSize,
+                    filesSize
+                )
             if (selectedSize == filesSize) {
                 //Log.i("filesData[updateCheckButton]", "ALL SELECTED")
                 binding.filesSelectAll.setImageResource(R.drawable.md_check_box_24px)
