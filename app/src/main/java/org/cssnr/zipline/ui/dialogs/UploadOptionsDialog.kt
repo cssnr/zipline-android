@@ -49,7 +49,9 @@ class UploadOptionsDialog : DialogFragment() {
 
         uploadOptions?.password?.let { filePassword.setText(it) }
         uploadOptions?.deletesAt?.let { fileDeletesAt.setText(it) }
+        //@SuppressLint("SetTextI18n")
         uploadOptions?.maxViews?.let { fileMaxViews.setText(it.toString()) }
+        //uploadOptions?.maxViews?.let { fileMaxViews.setText(String.format(Locale.getDefault(), "%d", it) ) }
 
         val compression = uploadOptions?.compression ?: 0
         Log.d("UploadOptionsDialog", "compression: $compression")
