@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:minHeight="48dp"
             android:padding="8dp"
-            android:autofillHints=""
+            android:autofillHints="2faAppOTPCode"
             android:inputType="number"
             android:maxLines="1"
             android:maxLength="6"

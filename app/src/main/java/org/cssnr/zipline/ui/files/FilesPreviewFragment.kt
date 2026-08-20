@@ -298,7 +298,10 @@ class FilesPreviewFragment : Fragment() {
                                 view: WebView?,
                                 detail: RenderProcessGoneDetail
                             ): Boolean {
-                                Log.e("FilesPreviewFragment", "onRenderProcessGone: didCrash=${detail.didCrash()}")
+                                Log.e(
+                                    "FilesPreviewFragment",
+                                    "onRenderProcessGone: didCrash=${detail.didCrash()}"
+                                )
                                 navController.navigateUp()
                                 return true
                             }

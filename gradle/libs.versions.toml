@@ -31,8 +31,8 @@ photoview = "1.0.3"
 androidImageCropper = "4.7.0"
 
 googleServices = "4.5.0"
-firebaseBom = "34.17.0"
-crashlyticsPlugin = "3.0.7"
+firebaseBom = "34.18.0"
+crashlyticsPlugin = "3.0.8"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }

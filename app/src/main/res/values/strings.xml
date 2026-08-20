@@ -31,6 +31,7 @@
     <string name="upload_file">Upload File</string>
     <string name="file_name">File Name</string>
     <string name="shorten_url">Shorten URL</string>
+    <string name="url_hint">URL to Shorten</string>
     <string name="file_list">File List</string>
 
     <string name="tst_upload_error">Error Uploading!</string>
@@ -38,10 +39,18 @@
     <string name="tst_uploading_file">Uploading File…</string>
     <string name="tst_copied_clipboard">Copied to Clipboard</string>
 
-    <string name="files_selected_total">%1$d / %2$d Files</string>
-    <string name="files_total">%1$d Files</string>
-
-    <string name="upload_multi">Upload %1$d Files</string>
+    <plurals name="files_selected_total">
+        <item quantity="one">%1$d / %2$d File</item>
+        <item quantity="other">%1$d / %2$d Files</item>
+    </plurals>
+    <plurals name="files_total">
+        <item quantity="one">%d File</item>
+        <item quantity="other">%d Files</item>
+    </plurals>
+    <plurals name="upload_multi">
+        <item quantity="one">Upload %d File</item>
+        <item quantity="other">Upload %d Files</item>
+    </plurals>
 
     <string name="background_opacity">Background Opacity %d</string>
     <string name="image_compression">Image Compression %d%%</string>

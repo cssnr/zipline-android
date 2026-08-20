@@ -22,7 +22,7 @@
             android:id="@+id/url_text"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:autofillHints="URL to Shorten"
+            android:autofillHints=""
             android:background="@drawable/edit_text_border"
             android:ellipsize="end"
             android:gravity="top|start"
@@ -31,6 +31,7 @@
             android:padding="8dp"
             android:scrollHorizontally="false"
             android:scrollbars="vertical"
+            android:hint="@string/url_hint"
             tools:text="https://github.com/django-files/android-client?tab=readme-ov-file#readme" />
 
     </LinearLayout>
@@ -49,7 +50,7 @@
             android:id="@+id/vanity_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:autofillHints="File Name"
+            android:autofillHints=""
             android:ellipsize="end"
             android:gravity="center"
             android:hint="@string/vanity"
@@ -89,7 +90,8 @@
                 app:icon="@drawable/md_share_24px"
                 app:iconSize="24dp"
                 app:iconGravity="textStart"
-                app:iconPadding="0dp" />
+                app:iconPadding="0dp"
+                style="@style/CustomMaterialButton" />
             <Button
                 android:id="@+id/open_button"
                 android:layout_width="wrap_content"
@@ -97,7 +99,8 @@
                 app:icon="@drawable/md_open_in_new_24px"
                 app:iconSize="24dp"
                 app:iconGravity="textStart"
-                app:iconPadding="0dp" />
+                app:iconPadding="0dp"
+                style="@style/CustomMaterialButton" />
             <Button
                 android:id="@+id/options_button"
                 android:layout_width="wrap_content"
@@ -105,7 +108,8 @@
                 app:icon="@drawable/md_settings_24px"
                 app:iconSize="24dp"
                 app:iconGravity="textStart"
-                app:iconPadding="0dp" />
+                app:iconPadding="0dp"
+                style="@style/CustomMaterialButton" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <Button
@@ -118,7 +122,8 @@
             app:icon="@drawable/md_link_24px"
             app:iconGravity="end"
             app:iconPadding="-28dp"
-            app:iconSize="28dp" />
+            app:iconSize="28dp"
+            style="@style/CustomMaterialButton" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

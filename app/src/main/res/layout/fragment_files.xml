@@ -101,7 +101,6 @@
             android:gravity="center_vertical"
             android:clickable="true"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:text="@string/files_selected_total"
             tools:text="999 / 999 Files" />
 
         <!--<LinearLayout-->

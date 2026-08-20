@@ -10,14 +10,15 @@ Android client for the [Zipline Upload Server](https://github.com/diced/zipline)
 
 ALWAYS use the `task *` commands
 
-| Command        | Purpose                                             |
-| -------------- | --------------------------------------------------- |
-| `task compile` | Compile Kotlin                                      |
-| `task debug`   | Build debug variant (APK)                           |
-| `task release` | Build release variant (APK)                         |
-| `task bundle`  | Build Android App Bundle (AAB)                      |
-| `task lint`    | Prettier check + yamllint + actionlint + shellcheck |
-| `task format`  | Prettier write (format non-kotlin files)            |
+| Command        | Purpose                                  |
+| -------------- | ---------------------------------------- |
+| `task lint`    | Gradle Lint                              |
+| `task compile` | Compile Kotlin                           |
+| `task debug`   | Build debug variant (APK)                |
+| `task release` | Build release variant (APK)              |
+| `task bundle`  | Build Android App Bundle (AAB)           |
+| `task check`   | Prettier check (check non-kotlin files)  |
+| `task format`  | Prettier write (format non-kotlin files) |
 
 Do NOT use `-q` or pipe Gradle output through `Select-Object` — both hide progress and make long builds look hung.
 

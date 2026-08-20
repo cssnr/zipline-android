@@ -107,7 +107,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:padding="10dp"
-            android:autofillHints=""
+            android:autofillHints="2faAppOTPCode"
             android:hint="Optional 2Factor Code"
             android:inputType="number"
             android:maxLength="6"
