@@ -31,6 +31,7 @@
             android:padding="8dp"
             android:scrollHorizontally="false"
             android:scrollbars="vertical"
+            android:hint="@string/url_hint"
             tools:text="https://github.com/django-files/android-client?tab=readme-ov-file#readme" />
 
     </LinearLayout>

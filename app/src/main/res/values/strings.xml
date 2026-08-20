@@ -31,6 +31,7 @@
     <string name="upload_file">Upload File</string>
     <string name="file_name">File Name</string>
     <string name="shorten_url">Shorten URL</string>
+    <string name="url_hint">URL to Shorten</string>
     <string name="file_list">File List</string>
 
     <string name="tst_upload_error">Error Uploading!</string>
