@@ -817,6 +817,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         @param:Json(name = "qrcode") val qrcode: String? = null,
     )
 
+    // NOTE: Requery Size is not used...
     //@JsonClass(generateAdapter = true)
     //data class RequeryRequest(
     //    @param:Json(name = "forceDelete") val forceDelete: Boolean = false,
@@ -848,7 +849,6 @@ class ServerApi(private val context: Context, url: String? = null) {
             cookieStore[url.host] = cookies
         }
 
-        // NOTE: Requery Size is not used...
         //fun getCookie(host: String, name: String): Cookie? {
         //    return cookieStore[host]?.find { it.name == name }
         //}
