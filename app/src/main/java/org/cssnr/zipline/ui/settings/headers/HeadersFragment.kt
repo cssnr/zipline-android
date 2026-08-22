@@ -26,6 +26,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHeadersBinding
+import org.cssnr.zipline.ui.dialogs.showKeyboard
 
 class HeadersFragment : Fragment() {
 
@@ -166,6 +167,7 @@ class HeadersFragment : Fragment() {
             } else {
                 inputKey.requestFocus()
             }
+            dialog.showKeyboard()
             val sendButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             sendButton.setOnClickListener {
                 sendButton.isEnabled = false
