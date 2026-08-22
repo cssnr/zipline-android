@@ -26,6 +26,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentHeadersBinding
+import org.cssnr.zipline.ui.dialogs.showKeyboard
 
 class HeadersFragment : Fragment() {
 
@@ -156,16 +157,18 @@ class HeadersFragment : Fragment() {
             .setPositiveButton("Save Header", null)
             .create()
 
+        if (data != null) {
+            Log.d(LOG_TAG, "Set data: $data")
+            inputKey.setText(data.first)
+            inputValue.setText(data.second)
+            inputValue.setSelection(0, data.second.length)
+            inputValue.requestFocus()
+        } else {
+            inputKey.requestFocus()
+        }
+        dialog.showKeyboard()
+
         dialog.setOnShowListener {
-            if (data != null) {
-                Log.d(LOG_TAG, "Set data: $data")
-                inputKey.setText(data.first)
-                inputValue.setText(data.second)
-                inputValue.setSelection(0, data.second.length)
-                inputValue.requestFocus()
-            } else {
-                inputKey.requestFocus()
-            }
             val sendButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE)
             sendButton.setOnClickListener {
                 sendButton.isEnabled = false
