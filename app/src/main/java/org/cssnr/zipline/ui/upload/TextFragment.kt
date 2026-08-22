@@ -75,7 +75,10 @@ class TextFragment : Fragment() {
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = bars.top, bottom = bars.bottom)
+            // NOTE: ime() is required since targetSdk 35+ / edge-to-edge, otherwise the
+            //  keyboard covers content. maxOf avoids double-padding when both are visible.
+            val ime = insets.getInsets(WindowInsetsCompat.Type.ime())
+            v.updatePadding(top = bars.top, bottom = maxOf(bars.bottom, ime.bottom))
             insets
         }
 
