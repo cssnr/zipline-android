@@ -379,9 +379,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     input.error = "Feedback is Required"
                 }
             }
-            input.requestFocus()
-            dialog.showKeyboard()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 

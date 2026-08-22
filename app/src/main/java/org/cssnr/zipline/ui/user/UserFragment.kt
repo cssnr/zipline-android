@@ -611,11 +611,11 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.setText(viewModel.user.value?.username ?: "")
-            input.setSelection(input.text.length)
-            input.requestFocus()
-            dialog.showKeyboard()
         }
+        input.setText(viewModel.user.value?.username ?: "")
+        input.setSelection(input.text.length)
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
@@ -675,9 +675,9 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.requestFocus()
-            dialog.showKeyboard()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
@@ -730,9 +730,9 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.requestFocus()
-            dialog.showKeyboard()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
@@ -831,9 +831,9 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.requestFocus()
-            dialog.showKeyboard()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
