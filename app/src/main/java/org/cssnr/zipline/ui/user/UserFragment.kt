@@ -56,6 +56,7 @@ import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.db.UserEntity
 import org.cssnr.zipline.db.UserRepository
 import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.ui.dialogs.showKeyboard
 import java.io.File
 import java.math.RoundingMode
 import java.time.ZoneId
@@ -610,10 +611,11 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.setText(viewModel.user.value?.username ?: "")
-            input.setSelection(input.text.length)
-            input.requestFocus()
         }
+        input.setText(viewModel.user.value?.username ?: "")
+        input.setSelection(input.text.length)
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
@@ -673,8 +675,9 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.requestFocus()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
@@ -727,8 +730,9 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.requestFocus()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 
@@ -827,8 +831,9 @@ class UserFragment : Fragment() {
                 }
                 btnPositive.isEnabled = true
             }
-            input.requestFocus()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 

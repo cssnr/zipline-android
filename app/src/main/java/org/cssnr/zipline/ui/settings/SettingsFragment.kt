@@ -39,6 +39,7 @@ import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
 import org.cssnr.zipline.ui.dialogs.FolderFragment
+import org.cssnr.zipline.ui.dialogs.showKeyboard
 import org.cssnr.zipline.work.enqueueWorkRequest
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -378,8 +379,9 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     input.error = "Feedback is Required"
                 }
             }
-            input.requestFocus()
         }
+        input.requestFocus()
+        dialog.showKeyboard()
         dialog.show()
     }
 

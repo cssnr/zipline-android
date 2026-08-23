@@ -6,6 +6,12 @@ Android client for the [Zipline Upload Server](https://github.com/diced/zipline)
 - `gradle/libs.versions.toml` - Library versions
 - `Taskfile.yml` - [task](https://github.com/go-task/task) commands
 
+## Android
+
+minSdk = 26
+targetSdk = 36
+compileSdk = 37
+
 ## Commands
 
 ALWAYS use the `task *` commands
