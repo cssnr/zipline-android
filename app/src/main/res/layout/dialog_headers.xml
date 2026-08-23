@@ -80,8 +80,8 @@
                 android:minHeight="48dp"
                 android:autofillHints=""
                 android:hint="Header Value"
-                android:inputType="textMultiLine"
-                android:maxLines="5"
+                android:inputType="text"
+                android:maxLines="1"
                 tools:text="" />
         </LinearLayout>
 
