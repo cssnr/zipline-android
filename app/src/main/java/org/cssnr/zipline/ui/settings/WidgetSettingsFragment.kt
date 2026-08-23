@@ -2,17 +2,47 @@ package org.cssnr.zipline.ui.settings
 
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
+import androidx.navigation.fragment.findNavController
 import androidx.preference.ListPreference
 import androidx.preference.PreferenceFragmentCompat
 import androidx.preference.SeekBarPreference
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.cssnr.zipline.R
+import org.cssnr.zipline.databinding.FragmentWidgetSettingsBinding
 
 class WidgetSettingsFragment : PreferenceFragmentCompat() {
+
+    private var _binding: FragmentWidgetSettingsBinding? = null
+    private val binding get() = _binding!!
+
+    private val navController by lazy { findNavController() }
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        Log.d("WidgetSettingsFragment", "onCreateView: $savedInstanceState")
+        // Inflate a custom layout with a title/back header and nest the
+        // PreferenceFragmentCompat view (with its RecyclerView) inside of it.
+        _binding = FragmentWidgetSettingsBinding.inflate(inflater, container, false)
+        val prefsView = super.onCreateView(inflater, binding.preferenceContainer, savedInstanceState)
+        Log.d("WidgetSettingsFragment", "prefsView: $prefsView")
+        binding.preferenceContainer.addView(prefsView)
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        Log.d("WidgetSettingsFragment", "onDestroyView")
+        super.onDestroyView()
+        _binding = null
+    }
 
     override fun onStart() {
         super.onStart()
@@ -33,6 +63,13 @@ class WidgetSettingsFragment : PreferenceFragmentCompat() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("WidgetSettingsFragment", "onViewCreated: $savedInstanceState")
+
+        binding.goBack.setOnClickListener {
+            Log.d("WidgetSettingsFragment", "binding.goBack: navController.navigateUp()")
+            navController.navigateUp()
+        }
+
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             Log.d("ViewCompat", "top: ${bars.top}")
