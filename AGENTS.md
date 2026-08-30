@@ -8,9 +8,7 @@ Android client for the [Zipline Upload Server](https://github.com/diced/zipline)
 
 ## Android
 
-- applicationId = "org.cssnr.zipline" Release
-- applicationId = "org.cssnr.zipline.dev" Debug
-
+- applicationId = org.cssnr.zipline.dev
 - minSdk = 26
 - targetSdk = 36
 - compileSdk = 37
@@ -21,7 +19,7 @@ ALWAYS use the `task *` commands
 
 | Command        | Purpose                                  |
 | -------------- | ---------------------------------------- |
-| `task lint`    | Gradle Lint                              |
+| `task lint`    | Gradle Lint - DO NOT RUN                 |
 | `task compile` | Compile Kotlin                           |
 | `task debug`   | Build debug variant (APK)                |
 | `task release` | Build release variant (APK)              |
@@ -29,7 +27,7 @@ ALWAYS use the `task *` commands
 | `task check`   | Prettier check (check non-kotlin files)  |
 | `task format`  | Prettier write (format non-kotlin files) |
 
-Do NOT run task compile/debug/release/bundle every turn unless it is REQUIRED!!!
+Do NOT run task lint/compile/debug/release/bundle every turn unless it is REQUIRED!!!
 
 ## Testing
 
