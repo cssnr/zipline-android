@@ -3,6 +3,7 @@ version: "3"
 
 vars:
   GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
+  PACKAGE: org.cssnr.zipline.dev
 
 tasks:
   check:
@@ -47,3 +48,11 @@ tasks:
   gradle-stop:
     desc: Stop Gradle daemons
     cmd: "{{.GRADLEW}} --stop"
+
+  clear:
+    desc: Clear Data
+    cmd: "adb {{.CLI_ARGS}} shell pm clear {{.PACKAGE}}"
+
+  uninstall:
+    desc: Uninstall App
+    cmd: "adb {{.CLI_ARGS}} shell pm uninstall {{.PACKAGE}}"

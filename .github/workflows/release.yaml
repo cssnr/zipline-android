@@ -88,13 +88,16 @@ jobs:
       - name: "Write Google Services File"
         run: |
           echo "${{ secrets.GOOGLE_SERVICES }}" | base64 --decode > app/google-services.json
-
           stat app/google-services.json
+
+      #- name: "Write Secret Properties"
+      #  run: |
+      #    echo "${{ secrets.SECRET_PROPERTIES }}" | base64 --decode > secret.properties
+      #    wc -l secret.properties
 
       - name: "Write Keystore File"
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > ${{ env.key_file }}
-
           echo ${{ secrets.ANDROID_KEYSTORE_PASS }} | keytool -list -keystore ${{ env.key_file }}
 
       - name: "Setup Node 24"
@@ -114,7 +117,7 @@ jobs:
           ls -lAh app
 
       - name: "Setup Java"
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "zulu"
           java-version: "17"
