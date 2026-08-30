@@ -8,9 +8,10 @@ Android client for the [Zipline Upload Server](https://github.com/diced/zipline)
 
 ## Android
 
-minSdk = 26
-targetSdk = 36
-compileSdk = 37
+- applicationId = org.cssnr.zipline.dev
+- minSdk = 26
+- targetSdk = 36
+- compileSdk = 37
 
 ## Commands
 
@@ -18,7 +19,7 @@ ALWAYS use the `task *` commands
 
 | Command        | Purpose                                  |
 | -------------- | ---------------------------------------- |
-| `task lint`    | Gradle Lint                              |
+| `task lint`    | Gradle Lint - DO NOT RUN                 |
 | `task compile` | Compile Kotlin                           |
 | `task debug`   | Build debug variant (APK)                |
 | `task release` | Build release variant (APK)              |
@@ -26,8 +27,10 @@ ALWAYS use the `task *` commands
 | `task check`   | Prettier check (check non-kotlin files)  |
 | `task format`  | Prettier write (format non-kotlin files) |
 
-Do NOT use `-q` or pipe Gradle output through `Select-Object` — both hide progress and make long builds look hung.
+Do NOT run task lint/compile/debug/release/bundle every turn unless it is REQUIRED!!!
 
-## Rules
+## Testing
 
-Do NOT run task compile/debug/release/bundle after making edits unless it is REQUIRED!!!
+To test on a device use the `adb` command. If no devices are running and attached, ask the user to do this!
+
+DO NOT uninstall the application to clear data, use: `adb shell pm clear`
