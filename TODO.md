@@ -1,6 +1,15 @@
 # TODO
 
-For bottom menu bar color and transparency on multi-upload:
+## Thumbnails
 
-- Enable enableEdgeToEdge [MainActivity.kt](app/src/main/java/org/cssnr/zipline/MainActivity.kt)
-- Add setOnApplyWindowInsetsListener [UploadMultiFragment.kt](app/src/main/java/org/cssnr/zipline/ui/upload/UploadMultiFragment.kt)
+Zipline UI currently says:
+
+```text
+Enables thumbnail generation for images. Requires a server restart.
+```
+
+But this statement is false and only works for videos.
+
+If this ever gets implemented, the following PR should be added to this codebase:
+
+- <https://github.com/django-files/android-client/pull/89>

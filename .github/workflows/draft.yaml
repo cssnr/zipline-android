@@ -21,13 +21,21 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v7
 
-      - name: "Draft Release Action"
-        id: draft
+      - name: "Draft Latest Release"
+        id: draft1
         uses: cssnr/draft-release-action@master
         with:
           semver: patch
           prerelease: false
 
+      - name: "Draft Beta Release"
+        id: draft2
+        uses: cssnr/draft-release-action@master
+        with:
+          semver: prerelease
+          prerelease: true
+
       - name: "Process Release Draft URL"
         run: |
-          echo "url: ${{ steps.draft.outputs.url }}"
+          echo "Latest: ${{ steps.draft1.outputs.url }}"
+          echo "Beta: ${{ steps.draft2.outputs.url }}"
