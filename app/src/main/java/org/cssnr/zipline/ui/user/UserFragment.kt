@@ -122,6 +122,7 @@ class UserFragment : Fragment() {
 
         viewModel.user.observe(viewLifecycleOwner) { user ->
             Log.i(LOG_TAG, "viewModel.user.observe - user: $user")
+            if (user == null) return@observe
 
             val totpEnabled = user.totpSecret?.isNotEmpty() == true
             Log.i(LOG_TAG, "totpEnabled: $totpEnabled")
@@ -154,6 +155,7 @@ class UserFragment : Fragment() {
 
         viewModel.server.observe(viewLifecycleOwner) { server ->
             Log.i(LOG_TAG, "viewModel.server.observe - server: $server")
+            if (server == null) return@observe
             binding.stats.filesCount.text = server.filesUploaded.toString()
 
             binding.stats.filesSize.text =
