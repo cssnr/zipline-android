@@ -283,7 +283,13 @@ class UserFragment : Fragment() {
                 Log.d(LOG_TAG, "binding.updateProfile - user: $user")
                 viewModel.user.value = user
                 _binding?.updateProfile?.isEnabled = true
-                Snackbar.make(view, "Profile Refreshed from Server.", Snackbar.LENGTH_SHORT).show()
+                if (user == null) {
+                    Snackbar.make(view, "Error Refreshing Profile!", Snackbar.LENGTH_LONG)
+                        .setTextColor("#D32F2F".toColorInt()).show()
+                } else {
+                    Snackbar.make(view, "Profile Refreshed from Server.", Snackbar.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
 
