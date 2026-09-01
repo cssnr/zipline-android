@@ -43,6 +43,7 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
+import org.cssnr.zipline.ui.files.FilesViewModel
 import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateStats
 import org.cssnr.zipline.ui.user.updateUserActivity
@@ -53,6 +54,8 @@ class LoginFragment : Fragment() {
     private val binding get() = _binding!!
 
     private val viewModel: SetupViewModel by activityViewModels()
+
+    private val filesViewModel: FilesViewModel by activityViewModels()
 
     private val navController by lazy { findNavController() }
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(requireContext()) }
@@ -245,6 +248,8 @@ class LoginFragment : Fragment() {
             Log.d("loginButton", "ziplineUrl: $host")
             Log.d("loginButton", "ziplineToken: ${auth.token}")
             Firebase.analytics.logEvent("login_success", null)
+            // NOTE: Clear previous user's cached file data before navigating back
+            filesViewModel.reset()
             //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
             //GlobalScope.launch(Dispatchers.IO) { requireActivity().updateAvatarActivity() }
 

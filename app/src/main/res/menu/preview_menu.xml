@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/preview_share"
+        android:icon="@drawable/md_share_24px"
+        android:title="Share" />
+    <item android:id="@+id/preview_copy_url"
+        android:icon="@drawable/md_link_24px"
+        android:title="Copy URL" />
+    <item android:id="@+id/preview_download"
+        android:icon="@drawable/md_download_24px"
+        android:title="Download" />
+    <item android:id="@+id/preview_delete"
+        android:icon="@drawable/md_delete_24px"
+        android:title="Delete" />
+    <item android:id="@+id/preview_favorite"
+        android:icon="@drawable/md_star_24px"
+        android:checkable="true"
+        android:title="Favorite" />
+    <item android:id="@+id/preview_open"
+        android:icon="@drawable/md_open_in_new_24px"
+        android:title="Open" />
+</menu>
