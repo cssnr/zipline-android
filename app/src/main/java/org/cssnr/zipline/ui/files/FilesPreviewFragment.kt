@@ -1,6 +1,8 @@
 package org.cssnr.zipline.ui.files
 
 import android.annotation.SuppressLint
+import android.app.DownloadManager
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -13,6 +15,8 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Toast
 import androidx.annotation.OptIn
+import androidx.appcompat.widget.PopupMenu
+import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -33,6 +37,8 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -42,6 +48,9 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.cssnr.zipline.MediaCache
 import org.cssnr.zipline.R
+import org.cssnr.zipline.api.ServerApi
+import org.cssnr.zipline.api.ServerApi.FileEditRequest
+import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.json.JSONObject
@@ -137,6 +146,63 @@ class FilesPreviewFragment : Fragment() {
         binding.goBack.setOnClickListener {
             Log.d("FilesPreviewFragment", "GO BACK")
             navController.navigateUp()
+        }
+
+        binding.menuButton.setOnClickListener { anchor ->
+            Log.d("FilesPreviewFragment", "MENU BUTTON")
+            val file = viewModel.activeFile.value ?: return@setOnClickListener
+            val fileViewUrl = viewModel.getViewUrl(file)
+            val popupMenu = PopupMenu(requireContext(), anchor)
+            popupMenu.menuInflater.inflate(R.menu.preview_menu, popupMenu.menu)
+            popupMenu.menu.findItem(R.id.preview_favorite).isChecked = file.favorite
+            popupMenu.setOnMenuItemClickListener { item ->
+                when (item.itemId) {
+                    R.id.preview_share -> {
+                        ctx.shareUrl(fileViewUrl)
+                        true
+                    }
+                    R.id.preview_copy_url -> {
+                        ctx.copyToClipboard(fileViewUrl)
+                        true
+                    }
+                    R.id.preview_download -> {
+                        val savedUrl = viewModel.savedUrl ?: return@setOnMenuItemClickListener true
+                        val dm = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
+                        dm.enqueue(getDownloadRequest(savedUrl, file))
+                        Toast.makeText(ctx, "Download Started", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    R.id.preview_delete -> {
+                        previewDelete(file)
+                        true
+                    }
+                    R.id.preview_favorite -> {
+                        lifecycleScope.launch {
+                            val api = ServerApi(ctx)
+                            val editRequest =
+                                FileEditRequest(id = file.id, favorite = !file.favorite)
+                            val result = api.editSingle(file.id, editRequest)
+                            if (result != null) {
+                                file.favorite = editRequest.favorite ?: false
+                                viewModel.editRequest.value = editRequest
+                                val text = if (result.favorite == true) "Added to" else "Removed from"
+                                Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
+                                    .setTextColor("#D32F2F".toColorInt()).show()
+                            }
+                        }
+                        true
+                    }
+                    R.id.preview_open -> {
+                        ctx.openUrl(fileViewUrl)
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
         }
 
         binding.playerView.transitionName = viewModel.activeFile.value?.id
@@ -320,6 +386,25 @@ class FilesPreviewFragment : Fragment() {
                 navController.navigateUp()
             }
         }
+    }
+
+    private fun previewDelete(data: FileResponse) {
+        Log.d("FilesPreviewFragment", "previewDelete: ${data.id}")
+        MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
+            .setTitle("Delete File?")
+            .setIcon(R.drawable.md_delete_24px)
+            .setMessage("Name: ${data.name}\nOriginal: ${data.originalName}\nID: ${data.id}")
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Delete") { _, _ ->
+                lifecycleScope.launch {
+                    val result = ServerApi(requireContext()).deleteSingle(data.id)
+                    viewModel.deleteId.value = data.id
+                    val msg = if (result != null) "File Deleted" else "Delete Failed"
+                    viewModel.showSnackbar(msg)
+                    navController.navigateUp()
+                }
+            }
+            .show()
     }
 
     private fun getContent(rawUrl: String): String? {

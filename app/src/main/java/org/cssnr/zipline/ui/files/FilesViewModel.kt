@@ -19,6 +19,14 @@ class FilesViewModel : ViewModel() {
         }
     }
 
+    fun reset() {
+        Log.d("reset", "Resetting FilesViewModel data")
+        filesData.value = emptyList()
+        currentPage.value = 1
+        atEnd.value = false
+        selected.value = mutableSetOf()
+    }
+
     private val _snackbarMessage = MutableLiveData<String?>()
     val snackbarMessage: LiveData<String?> = _snackbarMessage
 

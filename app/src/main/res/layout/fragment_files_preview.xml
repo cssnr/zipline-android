@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:contentDescription="Go Back"
             android:background="?attr/selectableItemBackground"
-            android:src="@drawable/md_right_panel_open_24px" />
+            android:src="@drawable/md_arrow_back_24px" />
         <TextView
             android:id="@+id/file_name"
             android:layout_width="0dp"
@@ -40,6 +40,13 @@
             android:visibility="gone"
             android:src="@drawable/md_content_copy_24px"
             tools:visibility="visible" />
+        <ImageView
+            android:id="@+id/menu_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:contentDescription="More Options"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/md_menu_24px" />
     </LinearLayout>
 
     <FrameLayout
