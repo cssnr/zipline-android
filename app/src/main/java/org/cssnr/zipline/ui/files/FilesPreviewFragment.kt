@@ -152,7 +152,6 @@ class FilesPreviewFragment : Fragment() {
             Log.d("FilesPreviewFragment", "MENU BUTTON")
             val file = viewModel.activeFile.value ?: return@setOnClickListener
             val fileViewUrl = viewModel.getViewUrl(file)
-            val fileRawUrl = viewModel.getRawUrl(file)
             val popupMenu = PopupMenu(requireContext(), anchor)
             popupMenu.menuInflater.inflate(R.menu.preview_menu, popupMenu.menu)
             popupMenu.menu.findItem(R.id.preview_favorite).isChecked = file.favorite
@@ -167,8 +166,9 @@ class FilesPreviewFragment : Fragment() {
                         true
                     }
                     R.id.preview_download -> {
+                        val savedUrl = viewModel.savedUrl ?: return@setOnMenuItemClickListener true
                         val dm = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
-                        dm.enqueue(getDownloadRequest(fileRawUrl.substringBefore("/raw/"), file))
+                        dm.enqueue(getDownloadRequest(savedUrl, file))
                         Toast.makeText(ctx, "Download Started", Toast.LENGTH_SHORT).show()
                         true
                     }
@@ -176,25 +176,25 @@ class FilesPreviewFragment : Fragment() {
                         previewDelete(file)
                         true
                     }
-                        R.id.preview_favorite -> {
-                            lifecycleScope.launch {
-                                val api = ServerApi(ctx)
-                                val editRequest =
-                                    FileEditRequest(id = file.id, favorite = !file.favorite)
-                                val result = api.editSingle(file.id, editRequest)
-                                if (result != null) {
-                                    file.favorite = editRequest.favorite ?: false
-                                    viewModel.editRequest.value = editRequest
-                                    val text = if (result.favorite == true) "Added to" else "Removed from"
-                                    Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
-                                        .show()
-                                } else {
-                                    Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
-                                        .setTextColor("#D32F2F".toColorInt()).show()
-                                }
+                    R.id.preview_favorite -> {
+                        lifecycleScope.launch {
+                            val api = ServerApi(ctx)
+                            val editRequest =
+                                FileEditRequest(id = file.id, favorite = !file.favorite)
+                            val result = api.editSingle(file.id, editRequest)
+                            if (result != null) {
+                                file.favorite = editRequest.favorite ?: false
+                                viewModel.editRequest.value = editRequest
+                                val text = if (result.favorite == true) "Added to" else "Removed from"
+                                Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
+                                    .setTextColor("#D32F2F".toColorInt()).show()
                             }
-                            true
                         }
+                        true
+                    }
                     R.id.preview_open -> {
                         ctx.openUrl(fileViewUrl)
                         true
@@ -399,7 +399,7 @@ class FilesPreviewFragment : Fragment() {
                 lifecycleScope.launch {
                     val result = ServerApi(requireContext()).deleteSingle(data.id)
                     viewModel.deleteId.value = data.id
-                    val msg = if (result != null) "File Deleted" else "File Not Found"
+                    val msg = if (result != null) "File Deleted" else "Delete Failed"
                     viewModel.showSnackbar(msg)
                     navController.navigateUp()
                 }
