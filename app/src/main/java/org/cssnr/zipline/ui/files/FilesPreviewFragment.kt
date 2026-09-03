@@ -13,7 +13,6 @@ import android.webkit.CookieManager
 import android.webkit.RenderProcessGoneDetail
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.graphics.toColorInt
@@ -163,13 +162,14 @@ class FilesPreviewFragment : Fragment() {
                     }
                     R.id.preview_copy_url -> {
                         ctx.copyToClipboard(fileViewUrl)
+                        Snackbar.make(view, "Copied URL to Clipboard.", Snackbar.LENGTH_SHORT).show()
                         true
                     }
                     R.id.preview_download -> {
                         val savedUrl = viewModel.savedUrl ?: return@setOnMenuItemClickListener true
                         val dm = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                         dm.enqueue(getDownloadRequest(savedUrl, file))
-                        Toast.makeText(ctx, "Download Started", Toast.LENGTH_SHORT).show()
+                        Snackbar.make(view, "Download Started", Snackbar.LENGTH_SHORT).show()
                         true
                     }
                     R.id.preview_delete -> {
@@ -338,12 +338,13 @@ class FilesPreviewFragment : Fragment() {
                     Log.w("FilesPreviewFragment", "content is null")
                     withContext(Dispatchers.Main) {
                         val msg = "Error Loading Content!"
-                        Toast.makeText(ctx, msg, Toast.LENGTH_LONG).show()
+                        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show()
                     }
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
                     ctx.copyToClipboard(content)
+                    Snackbar.make(view, "Copied Text to Clipboard.", Snackbar.LENGTH_SHORT).show()
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)

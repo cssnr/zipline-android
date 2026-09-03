@@ -15,7 +15,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.webkit.CookieManager
-import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -132,7 +131,7 @@ class FilesFragment : Fragment() {
 
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
-            Toast.makeText(ctx, "Missing Auth Token!", Toast.LENGTH_LONG).show()
+            Snackbar.make(view, "Missing Auth Token!", Snackbar.LENGTH_LONG).show()
             return
         }
 
@@ -559,8 +558,7 @@ class FilesFragment : Fragment() {
                 startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS))
             } catch (e: ActivityNotFoundException) {
                 Log.e("downloadManager", "No activity found to handle ACTION_VIEW_DOWNLOADS", e)
-                Toast.makeText(requireContext(), "Downloads App Unavailable!", Toast.LENGTH_LONG)
-                    .show()
+                Snackbar.make(requireView(), "Downloads App Unavailable!", Snackbar.LENGTH_LONG).show()
             }
         }
 
@@ -611,7 +609,7 @@ class FilesFragment : Fragment() {
             errorCount += 1
             val msg = e.message ?: "Exception Fetching Files"
             withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
             }
         }
         Log.d("loadingSpinner", "loadingSpinner: View.GONE")
@@ -621,7 +619,7 @@ class FilesFragment : Fragment() {
             viewModel.atEnd.value = atEnd
             val msg = "Recieved $errorCount Errors. Aborting!"
             withContext(Dispatchers.Main) {
-                Toast.makeText(requireContext(), msg, Toast.LENGTH_LONG).show()
+                Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
             }
         }
     }

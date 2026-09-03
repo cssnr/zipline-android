@@ -134,7 +134,7 @@ class ShortFragment : Fragment() {
         binding.shortButton.setOnClickListener {
             val longUrl = binding.urlText.text.toString().trim()
             Log.d("uploadButton", "longUrl: $longUrl")
-            val vanityName = binding.vanityName.text.toString().trim()
+            val vanityName = binding.vanityName.text.toString().trim().ifEmpty { null }
             Log.d("uploadButton", "vanityName: $vanityName")
             requireContext().processShort(longUrl, vanityName)
         }
@@ -158,6 +158,8 @@ class ShortFragment : Fragment() {
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
                     this@processShort.copyToClipboard(shortResponse.url)
+                    Toast.makeText(this@processShort,"Copied URL to Clipboard.",Toast.LENGTH_SHORT)
+                        .show()
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"

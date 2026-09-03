@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.toColorInt
@@ -161,6 +160,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         // Copy
         binding.copyButton.setOnClickListener {
             ctx.copyToClipboard(viewUrl)
+            Snackbar.make(binding.root, "Copied URL to Clipboard.", Snackbar.LENGTH_SHORT).show()
         }
 
         // Download
@@ -198,7 +198,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
             val downloadId = downloadManager.enqueue(request)
             Log.d("downloadButton", "Download ID: $downloadId")
-            Toast.makeText(ctx, "Download Started", Toast.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, "Download Started", Snackbar.LENGTH_SHORT).show()
             //dismiss()
         }
 
