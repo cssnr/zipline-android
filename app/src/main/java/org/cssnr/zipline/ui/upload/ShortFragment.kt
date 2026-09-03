@@ -158,11 +158,8 @@ class ShortFragment : Fragment() {
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
                     this@processShort.copyToClipboard(shortResponse.url)
-                    Toast.makeText(
-                        this@processShort,
-                        "Copied URL to Clipboard.",
-                        Toast.LENGTH_SHORT
-                    ).show()
+                    Toast.makeText(this@processShort,"Copied URL to Clipboard.",Toast.LENGTH_SHORT)
+                        .show()
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"

@@ -322,15 +322,12 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "urls: \"${urls}\"")
             if (urls.isNotEmpty()) {
                 copyToClipboard(urls)
-                Toast.makeText(
-                    this@processMultiUpload,
-                    "Copied URL to Clipboard.",
-                    Toast.LENGTH_SHORT
-                ).show()
+                Toast.makeText(this@processMultiUpload,"Copied URL to Clipboard.",Toast.LENGTH_SHORT).show()
             }
 
             val msg = "Uploaded ${results.size} Files."
-            Toast.makeText(this@processMultiUpload, msg, Toast.LENGTH_SHORT).show()
+            Toast.makeText(this@processMultiUpload, msg, Toast.LENGTH_SHORT)
+                .show()
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
             if (shareUrl && urls.isNotEmpty()) {
