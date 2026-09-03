@@ -390,6 +390,7 @@ class UploadFragment : Fragment() {
                     Log.d("processUpload", "url: $url")
                     withContext(Dispatchers.Main) {
                         copyToClipboard(url)
+                        Toast.makeText(this@processUpload, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
                         if (shareUrl) {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
@@ -453,12 +454,10 @@ fun getFileNameFromUri(context: Context, uri: Uri): String? {
 }
 
 fun Context.copyToClipboard(url: String) {
-    // TODO: Refactor this function and use Snackbar instead of Toast
     Log.d("copyToClipboard", "url: $url")
     val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
     val clip = ClipData.newPlainText("URL", url)
     clipboard.setPrimaryClip(clip)
-    Toast.makeText(this, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
 }
 
 //fun openUrl(context: Context, url: String) {

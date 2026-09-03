@@ -20,7 +20,7 @@ ALWAYS use the `task *` commands
 | Command        | Purpose                                  |
 | -------------- | ---------------------------------------- |
 | `task lint`    | Gradle Lint - DO NOT RUN                 |
-| `task compile` | Compile Kotlin                           |
+| `task compile` | Compile Kotlin - DO NOT truncate output  |
 | `task debug`   | Build debug variant (APK)                |
 | `task release` | Build release variant (APK)              |
 | `task bundle`  | Build Android App Bundle (AAB)           |

@@ -241,6 +241,11 @@ class TextFragment : Fragment() {
                         if (uploadResponse != null) {
                             logFileUpload(true, "Text Upload")
                             this@processUpload.copyToClipboard(uploadResponse.files.first().url)
+                            Toast.makeText(
+                                this@processUpload,
+                                "Copied URL to Clipboard.",
+                                Toast.LENGTH_SHORT
+                            ).show()
                             val bundle = Bundle().apply {
                                 putString(
                                     "url",
