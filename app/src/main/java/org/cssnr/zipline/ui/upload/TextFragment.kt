@@ -8,7 +8,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -20,6 +19,7 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -28,6 +28,7 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.databinding.FragmentTextBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.ui.dialogs.UploadOptionsDialog
+import org.cssnr.zipline.ui.showSnackbar
 
 class TextFragment : Fragment() {
 
@@ -96,7 +97,7 @@ class TextFragment : Fragment() {
         Log.d("Text[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Text[onViewCreated]", "savedUrl is null")
-            Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
+            ctx.showSnackbar("Missing URL!")
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -111,7 +112,7 @@ class TextFragment : Fragment() {
         if (extraText.isEmpty()) {
             // TODO: Better Handle this Error
             Log.w("Text[onViewCreated]", "extraText is null")
-            Toast.makeText(ctx, "No Text to Process!", Toast.LENGTH_LONG).show()
+            ctx.showSnackbar("No Text to Process!")
             //return
         }
 
@@ -220,15 +221,13 @@ class TextFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
-            Toast.makeText(this, getString(R.string.tst_no_url), Toast.LENGTH_SHORT)
-                .show()
+            showSnackbar(getString(R.string.tst_no_url), Snackbar.LENGTH_SHORT)
             return
         }
         val inputStream = textContent.byteInputStream()
         val api = ServerApi(this)
         Log.d("processUpload", "api: $api")
-        Toast.makeText(this, getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT)
-            .show()
+        showSnackbar(getString(R.string.tst_uploading_file), Snackbar.LENGTH_SHORT)
         lifecycleScope.launch {
             try {
                 // TODO: Implement editRequest
@@ -241,8 +240,7 @@ class TextFragment : Fragment() {
                         if (uploadResponse != null) {
                             logFileUpload(true, "Text Upload")
                             this@processUpload.copyToClipboard(uploadResponse.files.first().url)
-                            Toast.makeText(this@processUpload,"Copied URL to Clipboard.",Toast.LENGTH_SHORT)
-                                .show()
+                            this@processUpload.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
                             val bundle = Bundle().apply {
                                 putString(
                                     "url",
@@ -257,14 +255,14 @@ class TextFragment : Fragment() {
                         } else {
                             Log.w("processUpload", "uploadResponse is null")
                             val msg = "Unknown Response!"
-                            Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
+                            this@processUpload.showSnackbar(msg)
                         }
                     }
                 } else {
                     val msg = "Error: ${response.code()}: ${response.message()}"
                     Log.w("processUpload", "Error: $msg")
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
+                        this@processUpload.showSnackbar(msg)
                     }
                 }
             } catch (e: Throwable) {
@@ -272,7 +270,7 @@ class TextFragment : Fragment() {
                 val msg = e.message ?: "Unknown Error!"
                 Log.i("processUpload", "msg: $msg")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
+                    this@processUpload.showSnackbar(msg)
                 }
             }
         }

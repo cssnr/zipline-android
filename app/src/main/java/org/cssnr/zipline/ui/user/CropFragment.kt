@@ -20,6 +20,7 @@ import com.google.android.material.snackbar.Snackbar
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentCropBinding
+import org.cssnr.zipline.ui.showSnackbar
 import java.io.File
 import java.io.FileOutputStream
 
@@ -115,8 +116,8 @@ class CropFragment : Fragment() {
                 }
             } catch (e: Throwable) {
                 Log.e(LOG_TAG, "Exception:", e)
-                Snackbar.make(view, "Error Cropping Image.", Snackbar.LENGTH_SHORT)
-                    .setTextColor("#D32F2F".toColorInt()).show()
+                ctx.showSnackbar("Error Cropping Image.", Snackbar.LENGTH_SHORT,
+                    textColor = "#D32F2F".toColorInt())
             }
         }
     }

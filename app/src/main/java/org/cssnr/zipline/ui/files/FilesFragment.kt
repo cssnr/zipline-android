@@ -43,6 +43,7 @@ import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.api.ServerApi.FilesTransaction
 import org.cssnr.zipline.databinding.FragmentFilesBinding
 import org.cssnr.zipline.ui.setup.showTapTargets
+import org.cssnr.zipline.ui.showSnackbar
 import java.io.InputStream
 
 class FilesFragment : Fragment() {
@@ -131,7 +132,7 @@ class FilesFragment : Fragment() {
 
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
-            Snackbar.make(view, "Missing Auth Token!", Snackbar.LENGTH_LONG).show()
+            ctx.showSnackbar("Missing Auth Token!")
             return
         }
 
@@ -558,14 +559,14 @@ class FilesFragment : Fragment() {
                 startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS))
             } catch (e: ActivityNotFoundException) {
                 Log.e("downloadManager", "No activity found to handle ACTION_VIEW_DOWNLOADS", e)
-                Snackbar.make(requireView(), "Downloads App Unavailable!", Snackbar.LENGTH_LONG).show()
+                ctx.showSnackbar("Downloads App Unavailable!")
             }
         }
 
         viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
             Log.d("snackbarMessage[observe]", "message: $message")
             message?.let {
-                Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                ctx.showSnackbar(it, Snackbar.LENGTH_SHORT)
                 viewModel.snackbarShown()
             }
         }
@@ -609,7 +610,7 @@ class FilesFragment : Fragment() {
             errorCount += 1
             val msg = e.message ?: "Exception Fetching Files"
             withContext(Dispatchers.Main) {
-                Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
+                requireContext().showSnackbar(msg)
             }
         }
         Log.d("loadingSpinner", "loadingSpinner: View.GONE")
@@ -619,7 +620,7 @@ class FilesFragment : Fragment() {
             viewModel.atEnd.value = atEnd
             val msg = "Recieved $errorCount Errors. Aborting!"
             withContext(Dispatchers.Main) {
-                Snackbar.make(binding.root, msg, Snackbar.LENGTH_LONG).show()
+                requireContext().showSnackbar(msg)
             }
         }
     }

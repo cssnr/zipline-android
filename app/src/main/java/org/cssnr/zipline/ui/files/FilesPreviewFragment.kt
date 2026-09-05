@@ -52,6 +52,7 @@ import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
 import org.cssnr.zipline.ui.upload.copyToClipboard
+import org.cssnr.zipline.ui.showSnackbar
 import org.json.JSONObject
 import java.io.File
 
@@ -162,14 +163,14 @@ class FilesPreviewFragment : Fragment() {
                     }
                     R.id.preview_copy_url -> {
                         ctx.copyToClipboard(fileViewUrl)
-                        Snackbar.make(view, "Copied URL to Clipboard.", Snackbar.LENGTH_SHORT).show()
+                        ctx.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
                         true
                     }
                     R.id.preview_download -> {
                         val savedUrl = viewModel.savedUrl ?: return@setOnMenuItemClickListener true
                         val dm = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                         dm.enqueue(getDownloadRequest(savedUrl, file))
-                        Snackbar.make(view, "Download Started", Snackbar.LENGTH_SHORT).show()
+                        ctx.showSnackbar("Download Started", Snackbar.LENGTH_SHORT)
                         true
                     }
                     R.id.preview_delete -> {
@@ -186,11 +187,10 @@ class FilesPreviewFragment : Fragment() {
                                 file.favorite = editRequest.favorite ?: false
                                 viewModel.editRequest.value = editRequest
                                 val text = if (result.favorite == true) "Added to" else "Removed from"
-                                Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
-                                    .show()
+                                ctx.showSnackbar("File $text Favorites.", Snackbar.LENGTH_SHORT)
                             } else {
-                                Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
-                                    .setTextColor("#D32F2F".toColorInt()).show()
+                                ctx.showSnackbar("Error Changing File Favorite.",
+                                    textColor = "#D32F2F".toColorInt())
                             }
                         }
                         true
@@ -338,13 +338,13 @@ class FilesPreviewFragment : Fragment() {
                     Log.w("FilesPreviewFragment", "content is null")
                     withContext(Dispatchers.Main) {
                         val msg = "Error Loading Content!"
-                        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show()
+                        ctx.showSnackbar(msg)
                     }
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
                     ctx.copyToClipboard(content)
-                    Snackbar.make(view, "Copied Text to Clipboard.", Snackbar.LENGTH_SHORT).show()
+                    ctx.showSnackbar("Copied Text to Clipboard.", Snackbar.LENGTH_SHORT)
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)

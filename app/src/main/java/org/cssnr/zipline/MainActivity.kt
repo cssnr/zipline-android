@@ -11,7 +11,6 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -54,6 +53,7 @@ import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.ui.home.HomeViewModel
+import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateUserActivity
 import org.cssnr.zipline.widget.WidgetProvider
@@ -357,7 +357,7 @@ class MainActivity : AppCompatActivity() {
         Log.d("onNewIntent", "isCalendarUri: $isCalendarUri")
         if (isCalendarUri) {
             Log.i("onNewIntent", "Calendar Links Not Supported!")
-            Toast.makeText(this, "Calendar Links Not Supported!", Toast.LENGTH_LONG).show()
+            showSnackbar("Calendar Links Not Supported!")
             return
         }
 
@@ -444,7 +444,7 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d("onNewIntent", "fileUris: $fileUris")
             if (fileUris == null) {
-                Toast.makeText(this, "Error Parsing URI!", Toast.LENGTH_LONG).show()
+                showSnackbar("Error Parsing URI!")
                 Log.w("onNewIntent", "fileUris is null")
                 return
             }
@@ -461,7 +461,7 @@ class MainActivity : AppCompatActivity() {
             filePickerLauncher.launch(arrayOf("*/*"))
 
         } else {
-            Toast.makeText(this, "Unknown Link!", Toast.LENGTH_LONG).show()
+            showSnackbar("Unknown Link!")
             Log.w("onNewIntent", "UNKNOWN INTENT - action: $action")
 
         }

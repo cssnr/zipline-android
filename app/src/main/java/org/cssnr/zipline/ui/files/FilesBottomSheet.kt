@@ -221,13 +221,13 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     tintImage(binding.favoriteButton, result.favorite != true)
                     val text = if (result.favorite == true) "Added to" else "Removed from"
                     val snackbar =
-                        Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
+                        Snackbar.make(binding.root, "File $text Favorites.", Snackbar.LENGTH_SHORT)
                     snackbar.setAction("Close") { snackbar.dismiss() }
-                    snackbar.setAnchorView(requireView()).show()
+                    snackbar.show()
                 } else {
-                    Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
+                    Snackbar.make(binding.root, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
                         .setTextColor("#D32F2F".toColorInt())
-                        .setAnchorView(requireView()).show()
+                        .show()
                 }
             }
         }

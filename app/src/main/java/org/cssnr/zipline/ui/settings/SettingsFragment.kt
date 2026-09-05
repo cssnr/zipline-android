@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.content.pm.PackageInfoCompat
@@ -38,6 +37,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
+import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.ui.dialogs.showKeyboard
 import org.cssnr.zipline.work.enqueueWorkRequest
@@ -372,7 +372,7 @@ class SettingsFragment : PreferenceFragmentCompat() {
                             "Error: ${response.code()}"
                         }
                         Log.d("showFeedbackDialog", "msg: $msg")
-                        Toast.makeText(this@showFeedbackDialog, msg, Toast.LENGTH_LONG).show()
+                        this@showFeedbackDialog.showSnackbar(msg)
                     }
                 } else {
                     sendButton.isEnabled = true
