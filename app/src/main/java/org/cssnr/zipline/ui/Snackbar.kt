@@ -11,7 +11,7 @@ import org.cssnr.zipline.R
  * Shows a Snackbar anchored to the activity-level CoordinatorLayout so it survives
  * fragment navigation (unlike a Toast, a Snackbar must be attached to a live view).
  *
- * When the bottom navigation is visible the Snackbar is placed just above it.
+ * When the bottom navigation is present the Snackbar is placed just above it.
  */
 fun Context.showSnackbar(
     message: CharSequence,
@@ -24,12 +24,11 @@ fun Context.showSnackbar(
         activity.findViewById<View>(R.id.coordinator_layout)
             ?: activity.findViewById(android.R.id.content)
             ?: return
-    if (!coordinator.isAttachedToWindow) return
     val snackbar = Snackbar.make(coordinator, message, length)
     if (textColor != null) snackbar.setTextColor(textColor)
     snackbar.setAction("Close") {}
     val bottomNav = activity.findViewById<View>(R.id.bottom_nav)
-    if (bottomNav != null && bottomNav.isShown) {
+    if (bottomNav != null) {
         snackbar.anchorView = bottomNav
         snackbar.isAnchorViewLayoutListenerEnabled = true
     }

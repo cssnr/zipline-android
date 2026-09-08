@@ -321,10 +321,13 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "urls: \"${urls}\"")
             if (urls.isNotEmpty()) {
                 copyToClipboard(urls)
-                this@processMultiUpload.showSnackbar("Copied URL to Clipboard.")
             }
 
-            val msg = "Uploaded ${results.size} Files."
+            val msg = if (urls.isNotEmpty()) {
+                "Uploaded ${results.size} Files. URLs Copied."
+            } else {
+                "Uploaded ${results.size} Files."
+            }
             this@processMultiUpload.showSnackbar(msg)
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
