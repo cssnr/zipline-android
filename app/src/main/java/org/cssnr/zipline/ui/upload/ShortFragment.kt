@@ -18,7 +18,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -159,7 +158,7 @@ class ShortFragment : Fragment() {
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
                     this@processShort.copyToClipboard(shortResponse.url)
-                    this@processShort.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
+                    this@processShort.showSnackbar("Copied URL to Clipboard.")
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"

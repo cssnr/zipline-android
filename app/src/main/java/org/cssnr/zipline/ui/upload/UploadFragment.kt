@@ -39,7 +39,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.Firebase
 import com.google.firebase.analytics.analytics
 import kotlinx.coroutines.Dispatchers
@@ -354,7 +353,7 @@ class UploadFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken")
-            showSnackbar(getString(R.string.tst_no_url), Snackbar.LENGTH_SHORT)
+            showSnackbar(getString(R.string.tst_no_url))
             logFileUpload(false, "URL or Token is null")
             return
         }
@@ -362,7 +361,7 @@ class UploadFragment : Fragment() {
         Log.d("processUpload", "fileName: $fileName")
         if (fileName == null) {
             Log.w("processUpload", "Unable to parse fileName from URI")
-            showSnackbar("Unable to Parse File Name", Snackbar.LENGTH_SHORT)
+            showSnackbar("Unable to Parse File Name")
             logFileUpload(false, "File Name is null")
             return
         }
@@ -372,13 +371,13 @@ class UploadFragment : Fragment() {
         if (inputStream == null) {
             Log.w("processUpload", "inputStream is null")
             val msg = getString(R.string.tst_upload_error)
-            showSnackbar(msg, Snackbar.LENGTH_SHORT)
+            showSnackbar(msg)
             logFileUpload(false, "Input Stream is null")
             return
         }
         val api = ServerApi(this)
         Log.d("processUpload", "api: $api")
-        showSnackbar(getString(R.string.tst_uploading_file), Snackbar.LENGTH_SHORT)
+        showSnackbar(getString(R.string.tst_uploading_file))
         lifecycleScope.launch {
             try {
                 val response = api.upload(fileName, inputStream, viewModel.uploadOptions.value!!)
@@ -391,7 +390,7 @@ class UploadFragment : Fragment() {
                     Log.d("processUpload", "url: $url")
                     withContext(Dispatchers.Main) {
                         copyToClipboard(url)
-                        this@processUpload.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
+                        this@processUpload.showSnackbar("Copied URL to Clipboard.")
                         if (shareUrl) {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"

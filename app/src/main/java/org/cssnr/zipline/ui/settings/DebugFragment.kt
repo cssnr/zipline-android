@@ -20,7 +20,6 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -99,7 +98,7 @@ class DebugFragment : Fragment() {
             if (text.isNotEmpty()) {
                 val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 clipboard.setPrimaryClip(ClipData.newPlainText("Text", text))
-                ctx.showSnackbar("Copied to Clipboard.", Snackbar.LENGTH_SHORT)
+                ctx.showSnackbar("Copied to Clipboard.")
             } else {
                 ctx.showSnackbar("Nothing to Copy!",
                     textColor = "#D32F2F".toColorInt())
@@ -125,7 +124,7 @@ class DebugFragment : Fragment() {
             Log.d(LOG_TAG, "reloadLogs")
             lifecycleScope.launch {
                 _binding?.textView?.text = ctx.readLogFile()
-                ctx.showSnackbar("Logs Reloaded.", Snackbar.LENGTH_SHORT)
+                ctx.showSnackbar("Logs Reloaded.")
             }
         }
 
@@ -142,7 +141,7 @@ class DebugFragment : Fragment() {
                     val logFile = File(ctx.filesDir, "debug_log.txt")
                     logFile.writeText("")
                     binding.textView.text = ""
-                    ctx.showSnackbar("Logs Cleared.", Snackbar.LENGTH_SHORT)
+                    ctx.showSnackbar("Logs Cleared.")
                 }
                 .show()
         }
@@ -151,7 +150,7 @@ class DebugFragment : Fragment() {
             Log.d(LOG_TAG, "setOnRefreshListener: onRefresh")
             lifecycleScope.launch {
                 _binding?.textView?.text = ctx.readLogFile()
-                ctx.showSnackbar("Logs Reloaded.", Snackbar.LENGTH_SHORT)
+                ctx.showSnackbar("Logs Reloaded.")
                 _binding?.swiperefresh?.isRefreshing = false
             }
         }

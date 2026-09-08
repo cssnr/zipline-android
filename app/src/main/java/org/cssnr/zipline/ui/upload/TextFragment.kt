@@ -19,7 +19,6 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -221,13 +220,13 @@ class TextFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
-            showSnackbar(getString(R.string.tst_no_url), Snackbar.LENGTH_SHORT)
+            showSnackbar(getString(R.string.tst_no_url))
             return
         }
         val inputStream = textContent.byteInputStream()
         val api = ServerApi(this)
         Log.d("processUpload", "api: $api")
-        showSnackbar(getString(R.string.tst_uploading_file), Snackbar.LENGTH_SHORT)
+        showSnackbar(getString(R.string.tst_uploading_file))
         lifecycleScope.launch {
             try {
                 // TODO: Implement editRequest
@@ -240,7 +239,7 @@ class TextFragment : Fragment() {
                         if (uploadResponse != null) {
                             logFileUpload(true, "Text Upload")
                             this@processUpload.copyToClipboard(uploadResponse.files.first().url)
-                            this@processUpload.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
+                            this@processUpload.showSnackbar("Copied URL to Clipboard.")
                             val bundle = Bundle().apply {
                                 putString(
                                     "url",

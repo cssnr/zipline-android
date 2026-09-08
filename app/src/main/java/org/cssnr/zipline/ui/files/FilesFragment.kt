@@ -30,7 +30,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.integration.okhttp3.OkHttpUrlLoader
 import com.bumptech.glide.load.model.GlideUrl
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -415,7 +414,7 @@ class FilesFragment : Fragment() {
                 filesAdapter.deleteIds(selectedPositions)
                 val s = if (selectedPositions.size > 1) "s" else ""
                 val message = "Deleted ${selectedPositions.size} File${s}."
-                viewModel.showSnackbar(message)
+                ctx.showSnackbar(message)
                 viewModel.selected.value = mutableSetOf()
             }
             ctx.deleteConfirmDialog(ids, ::callback)
@@ -474,7 +473,7 @@ class FilesFragment : Fragment() {
                 } else {
                     "Removed ${selectedPositions.size} File$s from Favorites."
                 }
-                viewModel.showSnackbar(message)
+                ctx.showSnackbar(message)
             }
             ctx.favoriteConfirmDialog(ids, selectedPositions, ::callback)
         }
@@ -560,14 +559,6 @@ class FilesFragment : Fragment() {
             } catch (e: ActivityNotFoundException) {
                 Log.e("downloadManager", "No activity found to handle ACTION_VIEW_DOWNLOADS", e)
                 ctx.showSnackbar("Downloads App Unavailable!")
-            }
-        }
-
-        viewModel.snackbarMessage.observe(viewLifecycleOwner) { message ->
-            Log.d("snackbarMessage[observe]", "message: $message")
-            message?.let {
-                ctx.showSnackbar(it, Snackbar.LENGTH_SHORT)
-                viewModel.snackbarShown()
             }
         }
     }

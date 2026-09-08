@@ -37,7 +37,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -163,14 +162,14 @@ class FilesPreviewFragment : Fragment() {
                     }
                     R.id.preview_copy_url -> {
                         ctx.copyToClipboard(fileViewUrl)
-                        ctx.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
+                        ctx.showSnackbar("Copied URL to Clipboard.")
                         true
                     }
                     R.id.preview_download -> {
                         val savedUrl = viewModel.savedUrl ?: return@setOnMenuItemClickListener true
                         val dm = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                         dm.enqueue(getDownloadRequest(savedUrl, file))
-                        ctx.showSnackbar("Download Started", Snackbar.LENGTH_SHORT)
+                        ctx.showSnackbar("Download Started")
                         true
                     }
                     R.id.preview_delete -> {
@@ -187,7 +186,7 @@ class FilesPreviewFragment : Fragment() {
                                 file.favorite = editRequest.favorite ?: false
                                 viewModel.editRequest.value = editRequest
                                 val text = if (result.favorite == true) "Added to" else "Removed from"
-                                ctx.showSnackbar("File $text Favorites.", Snackbar.LENGTH_SHORT)
+                                ctx.showSnackbar("File $text Favorites.")
                             } else {
                                 ctx.showSnackbar("Error Changing File Favorite.",
                                     textColor = "#D32F2F".toColorInt())
@@ -344,7 +343,7 @@ class FilesPreviewFragment : Fragment() {
                 }
                 binding.copyText.setOnClickListener {
                     ctx.copyToClipboard(content)
-                    ctx.showSnackbar("Copied Text to Clipboard.", Snackbar.LENGTH_SHORT)
+                    ctx.showSnackbar("Copied Text to Clipboard.")
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)
@@ -401,7 +400,7 @@ class FilesPreviewFragment : Fragment() {
                     val result = ServerApi(requireContext()).deleteSingle(data.id)
                     viewModel.deleteId.value = data.id
                     val msg = if (result != null) "File Deleted" else "Delete Failed"
-                    viewModel.showSnackbar(msg)
+                    requireContext().showSnackbar(msg)
                     navController.navigateUp()
                 }
             }

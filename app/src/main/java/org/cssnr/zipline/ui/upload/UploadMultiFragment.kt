@@ -25,7 +25,6 @@ import androidx.preference.PreferenceManager
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
@@ -246,7 +245,7 @@ class UploadMultiFragment : Fragment() {
             //Log.d("uploadButton", "currentUris: currentUris")
             Log.d("uploadButton", "currentUris.size: ${currentUris?.size}")
             if (currentUris.isNullOrEmpty()) {
-                ctx.showSnackbar("No Files Selected!", Snackbar.LENGTH_SHORT)
+                ctx.showSnackbar("No Files Selected!")
                 return@setOnClickListener
             }
             ctx.processMultiUpload(currentUris)
@@ -267,11 +266,11 @@ class UploadMultiFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
-            showSnackbar(getString(R.string.tst_no_url), Snackbar.LENGTH_SHORT)
+            showSnackbar(getString(R.string.tst_no_url))
             logFileUpload(false, "URL or Token is null", true)
             return
         }
-        showSnackbar("Uploading ${fileUris.size} Files...", Snackbar.LENGTH_SHORT)
+        showSnackbar("Uploading ${fileUris.size} Files...")
 
         val api = ServerApi(this)
         Log.d("processMultiUpload", "api: $api")
@@ -310,7 +309,7 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "results.size: ${results.size}")
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
-                this@processMultiUpload.showSnackbar("All Uploads Failed!", Snackbar.LENGTH_SHORT)
+                this@processMultiUpload.showSnackbar("All Uploads Failed!")
                 logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
@@ -322,11 +321,11 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "urls: \"${urls}\"")
             if (urls.isNotEmpty()) {
                 copyToClipboard(urls)
-                this@processMultiUpload.showSnackbar("Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
+                this@processMultiUpload.showSnackbar("Copied URL to Clipboard.")
             }
 
             val msg = "Uploaded ${results.size} Files."
-            this@processMultiUpload.showSnackbar(msg, Snackbar.LENGTH_SHORT)
+            this@processMultiUpload.showSnackbar(msg)
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
             if (shareUrl && urls.isNotEmpty()) {

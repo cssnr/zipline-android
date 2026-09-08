@@ -16,7 +16,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentCropBinding
@@ -116,7 +115,7 @@ class CropFragment : Fragment() {
                 }
             } catch (e: Throwable) {
                 Log.e(LOG_TAG, "Exception:", e)
-                ctx.showSnackbar("Error Cropping Image.", Snackbar.LENGTH_SHORT,
+                ctx.showSnackbar("Error Cropping Image.",
                     textColor = "#D32F2F".toColorInt())
             }
         }

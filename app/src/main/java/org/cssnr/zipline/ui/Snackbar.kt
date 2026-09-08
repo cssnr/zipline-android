@@ -15,12 +15,11 @@ import org.cssnr.zipline.R
  */
 fun Context.showSnackbar(
     message: CharSequence,
-    length: Int = Snackbar.LENGTH_LONG,
-    actionText: String? = null,
-    onAction: (() -> Unit)? = null,
+    length: Int = Snackbar.LENGTH_SHORT,
     textColor: Int? = null,
 ) {
     val activity = findActivity() ?: return
+    if (activity.isFinishing || activity.isDestroyed) return
     val coordinator =
         activity.findViewById<View>(R.id.coordinator_layout)
             ?: activity.findViewById(android.R.id.content)
@@ -28,7 +27,7 @@ fun Context.showSnackbar(
     if (!coordinator.isAttachedToWindow) return
     val snackbar = Snackbar.make(coordinator, message, length)
     if (textColor != null) snackbar.setTextColor(textColor)
-    if (actionText != null) snackbar.setAction(actionText) { onAction?.invoke() }
+    snackbar.setAction("Close") {}
     activity.findViewById<View>(R.id.bottom_nav)
         ?.takeIf { it.isShown }
         ?.let { snackbar.setAnchorView(it) }
