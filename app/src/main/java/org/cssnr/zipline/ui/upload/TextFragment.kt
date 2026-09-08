@@ -96,7 +96,7 @@ class TextFragment : Fragment() {
         Log.d("Text[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Text[onViewCreated]", "savedUrl is null")
-            ctx.showSnackbar("Missing URL!")
+            ctx.showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -111,7 +111,7 @@ class TextFragment : Fragment() {
         if (extraText.isEmpty()) {
             // TODO: Better Handle this Error
             Log.w("Text[onViewCreated]", "extraText is null")
-            ctx.showSnackbar("No Text to Process!")
+            ctx.showSnackbar("No Text to Process!", true)
             //return
         }
 
@@ -220,7 +220,7 @@ class TextFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken/fileName")
-            showSnackbar(getString(R.string.tst_no_url))
+            showSnackbar(getString(R.string.tst_no_url), true)
             return
         }
         val inputStream = textContent.byteInputStream()
@@ -254,14 +254,14 @@ class TextFragment : Fragment() {
                         } else {
                             Log.w("processUpload", "uploadResponse is null")
                             val msg = "Unknown Response!"
-                            this@processUpload.showSnackbar(msg)
+                            this@processUpload.showSnackbar(msg, true)
                         }
                     }
                 } else {
                     val msg = "Error: ${response.code()}: ${response.message()}"
                     Log.w("processUpload", "Error: $msg")
                     withContext(Dispatchers.Main) {
-                        this@processUpload.showSnackbar(msg)
+                        this@processUpload.showSnackbar(msg, true)
                     }
                 }
             } catch (e: Throwable) {
@@ -269,7 +269,7 @@ class TextFragment : Fragment() {
                 val msg = e.message ?: "Unknown Error!"
                 Log.i("processUpload", "msg: $msg")
                 withContext(Dispatchers.Main) {
-                    this@processUpload.showSnackbar(msg)
+                    this@processUpload.showSnackbar(msg, true)
                 }
             }
         }

@@ -23,7 +23,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
-import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -39,7 +38,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -257,8 +255,7 @@ class UserFragment : Fragment() {
 
                     ctx.showSnackbar("Avatar Updated.")
                 } else {
-                    ctx.showSnackbar("Error Updating Avatar!",
-                        textColor = "#D32F2F".toColorInt())
+                    ctx.showSnackbar("Error Updating Avatar!", true)
                 }
             }
         }
@@ -285,8 +282,7 @@ class UserFragment : Fragment() {
                 viewModel.user.value = user
                 _binding?.updateProfile?.isEnabled = true
                 if (user == null) {
-                    ctx.showSnackbar("Error Refreshing Profile!",
-                        textColor = "#D32F2F".toColorInt())
+                    ctx.showSnackbar("Error Refreshing Profile!", true)
                 } else {
                     ctx.showSnackbar("Profile Refreshed from Server.")
                 }
@@ -312,8 +308,7 @@ class UserFragment : Fragment() {
                 clipboard.setPrimaryClip(ClipData.newPlainText("Token", authToken))
                 ctx.showSnackbar("Token Copied to Clipboard.")
             } else {
-                ctx.showSnackbar("Token is null! This is a Problem!",
-                    textColor = "#D32F2F".toColorInt())
+                ctx.showSnackbar("Token is null! This is a Problem!", true)
             }
         }
 
@@ -329,8 +324,7 @@ class UserFragment : Fragment() {
 
                 viewModel.totpSecret.value?.let {
                     ctx.enableTotpDialog(it)
-                } ?: ctx.showSnackbar("Error Getting TOTP Secret!",
-                    textColor = "#D32F2F".toColorInt())
+                } ?: ctx.showSnackbar("Error Getting TOTP Secret!", true)
             }
         }
 
@@ -387,8 +381,7 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.shareAvatar.setOnClickListener")
 
             if (!avatarFile.exists()) {
-                ctx.showSnackbar("Avatar File Not Found!",
-                    textColor = "#D32F2F".toColorInt())
+                ctx.showSnackbar("Avatar File Not Found!", true)
                 return@setOnClickListener
             }
 
@@ -436,8 +429,7 @@ class UserFragment : Fragment() {
                             }
                             ctx.showSnackbar("Avatar Removed!")
                         } else {
-                            ctx.showSnackbar("Error Removing Avatar!",
-                                textColor = "#D32F2F".toColorInt())
+                            ctx.showSnackbar("Error Removing Avatar!", true)
                         }
                     }
                 }
@@ -486,7 +478,7 @@ class UserFragment : Fragment() {
                         } else {
                             val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
                             Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            ctx.showSnackbar(errorResponse, textColor = "#D32F2F".toColorInt())
+                            ctx.showSnackbar(errorResponse, true)
                         }
                     }
                 }
@@ -512,7 +504,7 @@ class UserFragment : Fragment() {
                         } else {
                             val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
                             Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            ctx.showSnackbar(errorResponse, textColor = "#D32F2F".toColorInt())
+                            ctx.showSnackbar(errorResponse, true)
                         }
                     }
                 }
@@ -538,7 +530,7 @@ class UserFragment : Fragment() {
                         } else {
                             val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
                             Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            ctx.showSnackbar(errorResponse, textColor = "#D32F2F".toColorInt())
+                            ctx.showSnackbar(errorResponse, true)
                         }
                     }
                 }

@@ -101,7 +101,7 @@ class UploadMultiFragment : Fragment() {
         Log.d("Multi[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Multi[onViewCreated]", "savedUrl is null")
-            ctx.showSnackbar("Missing URL!")
+            ctx.showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -266,7 +266,7 @@ class UploadMultiFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
-            showSnackbar(getString(R.string.tst_no_url))
+            showSnackbar(getString(R.string.tst_no_url), true)
             logFileUpload(false, "URL or Token is null", true)
             return
         }
@@ -309,7 +309,7 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "results.size: ${results.size}")
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
-                this@processMultiUpload.showSnackbar("All Uploads Failed!")
+                this@processMultiUpload.showSnackbar("All Uploads Failed!", true)
                 logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }

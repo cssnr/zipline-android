@@ -34,7 +34,8 @@ class WidgetSettingsFragment : PreferenceFragmentCompat() {
         // Inflate a custom layout with a title/back header and nest the
         // PreferenceFragmentCompat view (with its RecyclerView) inside of it.
         _binding = FragmentWidgetSettingsBinding.inflate(inflater, container, false)
-        val prefsView = super.onCreateView(inflater, binding.preferenceContainer, savedInstanceState)
+        val prefsView =
+            super.onCreateView(inflater, binding.preferenceContainer, savedInstanceState)
         Log.d("WidgetSettingsFragment", "prefsView: $prefsView")
         binding.preferenceContainer.addView(prefsView)
         return binding.root

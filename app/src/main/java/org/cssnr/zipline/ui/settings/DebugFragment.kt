@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -100,8 +99,7 @@ class DebugFragment : Fragment() {
                 clipboard.setPrimaryClip(ClipData.newPlainText("Text", text))
                 ctx.showSnackbar("Copied to Clipboard.")
             } else {
-                ctx.showSnackbar("Nothing to Copy!",
-                    textColor = "#D32F2F".toColorInt())
+                ctx.showSnackbar("Nothing to Copy!", true)
             }
         }
 
@@ -115,8 +113,7 @@ class DebugFragment : Fragment() {
                 }
                 startActivity(Intent.createChooser(shareIntent, null))
             } else {
-                ctx.showSnackbar("Nothing to Share!",
-                    textColor = "#D32F2F".toColorInt())
+                ctx.showSnackbar("Nothing to Share!", true)
             }
         }
 

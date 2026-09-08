@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.scale
-import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -115,8 +114,7 @@ class CropFragment : Fragment() {
                 }
             } catch (e: Throwable) {
                 Log.e(LOG_TAG, "Exception:", e)
-                ctx.showSnackbar("Error Cropping Image.",
-                    textColor = "#D32F2F".toColorInt())
+                ctx.showSnackbar("Error Cropping Image.", true)
             }
         }
     }

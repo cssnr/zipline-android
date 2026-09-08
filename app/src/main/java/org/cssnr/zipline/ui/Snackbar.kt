@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import android.view.View
+import androidx.core.graphics.toColorInt
 import com.google.android.material.snackbar.Snackbar
 import org.cssnr.zipline.R
 
@@ -12,11 +13,13 @@ import org.cssnr.zipline.R
  * fragment navigation (unlike a Toast, a Snackbar must be attached to a live view).
  *
  * When the bottom navigation is present the Snackbar is placed just above it.
+ *
+ * When [error] is true the message is logged, shown in red for a longer duration,
+ * and the Close action is replaced with a Logs action that navigates to the debug logs.
  */
 fun Context.showSnackbar(
     message: CharSequence,
-    length: Int = Snackbar.LENGTH_SHORT,
-    textColor: Int? = null,
+    error: Boolean = false,
 ) {
     val activity = findActivity() ?: return
     if (activity.isFinishing || activity.isDestroyed) return
@@ -24,8 +27,10 @@ fun Context.showSnackbar(
         activity.findViewById<View>(R.id.coordinator_layout)
             ?: activity.findViewById(android.R.id.content)
             ?: return
+
+    val length = if (error) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT
     val snackbar = Snackbar.make(coordinator, message, length)
-    if (textColor != null) snackbar.setTextColor(textColor)
+    if (error) snackbar.setTextColor("#D32F2F".toColorInt())
     snackbar.setAction("Close") {}
     val bottomNav = activity.findViewById<View>(R.id.bottom_nav)
     if (bottomNav != null) {

@@ -141,7 +141,7 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Upload[onViewCreated]", "savedUrl is null")
-            ctx.showSnackbar("Missing URL!")
+            ctx.showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -156,7 +156,7 @@ class UploadFragment : Fragment() {
         if (uri == null) {
             // TODO: Better Handle this Error
             Log.e("Upload[onViewCreated]", "URI is null")
-            ctx.showSnackbar("No URI to Process!")
+            ctx.showSnackbar("No URI to Process!", true)
             return
         }
 
@@ -353,7 +353,7 @@ class UploadFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken")
-            showSnackbar(getString(R.string.tst_no_url))
+            showSnackbar(getString(R.string.tst_no_url), true)
             logFileUpload(false, "URL or Token is null")
             return
         }
@@ -361,7 +361,7 @@ class UploadFragment : Fragment() {
         Log.d("processUpload", "fileName: $fileName")
         if (fileName == null) {
             Log.w("processUpload", "Unable to parse fileName from URI")
-            showSnackbar("Unable to Parse File Name")
+            showSnackbar("Unable to Parse File Name", true)
             logFileUpload(false, "File Name is null")
             return
         }
@@ -371,7 +371,7 @@ class UploadFragment : Fragment() {
         if (inputStream == null) {
             Log.w("processUpload", "inputStream is null")
             val msg = getString(R.string.tst_upload_error)
-            showSnackbar(msg)
+            showSnackbar(msg, true)
             logFileUpload(false, "Input Stream is null")
             return
         }
@@ -412,7 +412,7 @@ class UploadFragment : Fragment() {
                     val message = errorResponse ?: "Unknown Error: ${response.code()}"
                     Log.i("processCode", "message - $message")
                     withContext(Dispatchers.Main) {
-                        this@processUpload.showSnackbar(message)
+                        this@processUpload.showSnackbar(message, true)
                     }
                 }
             } catch (e: Throwable) {
@@ -421,7 +421,7 @@ class UploadFragment : Fragment() {
                 Log.i("processUpload", "msg: $msg")
                 logFileUpload(false, "Exception: $msg")
                 withContext(Dispatchers.Main) {
-                    this@processUpload.showSnackbar(msg)
+                    this@processUpload.showSnackbar(msg, true)
                 }
             }
         }

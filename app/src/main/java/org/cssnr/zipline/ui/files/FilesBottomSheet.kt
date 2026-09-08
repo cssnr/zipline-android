@@ -13,7 +13,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -23,7 +22,6 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
@@ -161,9 +159,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         // Copy
         binding.copyButton.setOnClickListener {
             ctx.copyToClipboard(viewUrl)
-            Snackbar.make(binding.root, "Copied URL to Clipboard.", Snackbar.LENGTH_SHORT)
-                .setAction("Close") {}
-                .show()
+            ctx.showSnackbar("Copied URL to Clipboard.")
         }
 
         // Download
@@ -201,9 +197,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
             val downloadId = downloadManager.enqueue(request)
             Log.d("downloadButton", "Download ID: $downloadId")
-            Snackbar.make(binding.root, "Download Started", Snackbar.LENGTH_SHORT)
-                .setAction("Close") {}
-                .show()
+            ctx.showSnackbar("Download Started")
             //dismiss()
         }
 
@@ -225,14 +219,9 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     viewModel.editRequest.value = editRequest
                     tintImage(binding.favoriteButton, result.favorite != true)
                     val text = if (result.favorite == true) "Added to" else "Removed from"
-                    Snackbar.make(binding.root, "File $text Favorites.", Snackbar.LENGTH_SHORT)
-                        .setAction("Close") {}
-                        .show()
+                    ctx.showSnackbar("File $text Favorites.")
                 } else {
-                    Snackbar.make(binding.root, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
-                        .setTextColor("#D32F2F".toColorInt())
-                        .setAction("Close") {}
-                        .show()
+                    ctx.showSnackbar("Error Changing File Favorite.", true)
                 }
             }
         }
@@ -310,7 +299,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     val msg = if (result != null) "File Deleted" else "File Not Found"
                     dialog.dismiss()
                     dismiss()
-                    requireContext().showSnackbar(msg)
+                    requireContext().showSnackbar(msg, result == null)
                 }
             }
         }

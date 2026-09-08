@@ -131,7 +131,7 @@ class FilesFragment : Fragment() {
 
         if (authToken.isNullOrEmpty()) {
             Log.w("File[onViewCreated]", "NO AUTH TOKEN")
-            ctx.showSnackbar("Missing Auth Token!")
+            ctx.showSnackbar("Missing Auth Token!", true)
             return
         }
 
@@ -558,7 +558,7 @@ class FilesFragment : Fragment() {
                 startActivity(Intent(DownloadManager.ACTION_VIEW_DOWNLOADS))
             } catch (e: ActivityNotFoundException) {
                 Log.e("downloadManager", "No activity found to handle ACTION_VIEW_DOWNLOADS", e)
-                ctx.showSnackbar("Downloads App Unavailable!")
+                ctx.showSnackbar("Downloads App Unavailable!", true)
             }
         }
     }
@@ -601,7 +601,7 @@ class FilesFragment : Fragment() {
             errorCount += 1
             val msg = e.message ?: "Exception Fetching Files"
             withContext(Dispatchers.Main) {
-                requireContext().showSnackbar(msg)
+                requireContext().showSnackbar(msg, true)
             }
         }
         Log.d("loadingSpinner", "loadingSpinner: View.GONE")
@@ -611,7 +611,7 @@ class FilesFragment : Fragment() {
             viewModel.atEnd.value = atEnd
             val msg = "Recieved $errorCount Errors. Aborting!"
             withContext(Dispatchers.Main) {
-                requireContext().showSnackbar(msg)
+                requireContext().showSnackbar(msg, true)
             }
         }
     }

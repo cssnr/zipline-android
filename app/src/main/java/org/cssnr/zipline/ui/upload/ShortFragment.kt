@@ -86,7 +86,7 @@ class ShortFragment : Fragment() {
         Log.d("Short[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Short[onViewCreated]", "savedUrl is null")
-            requireContext().showSnackbar("Missing URL!")
+            requireContext().showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -101,7 +101,7 @@ class ShortFragment : Fragment() {
         if (url == null) {
             // TODO: Better Handle this Error
             Log.e("Short[onViewCreated]", "URL is null")
-            requireContext().showSnackbar("No URL to Process!")
+            requireContext().showSnackbar("No URL to Process!", true)
             return
         }
 
@@ -178,7 +178,7 @@ class ShortFragment : Fragment() {
             }
             Log.e("processShort", "response/shortResponse is null")
             withContext(Dispatchers.Main) {
-                this@processShort.showSnackbar("File Upload Failed!")
+                this@processShort.showSnackbar("File Upload Failed!", true)
             }
         }
     }

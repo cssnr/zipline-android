@@ -37,9 +37,9 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
-import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.ui.dialogs.showKeyboard
+import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.work.enqueueWorkRequest
 
 class SettingsFragment : PreferenceFragmentCompat() {

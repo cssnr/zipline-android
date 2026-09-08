@@ -444,7 +444,7 @@ class MainActivity : AppCompatActivity() {
             }
             Log.d("onNewIntent", "fileUris: $fileUris")
             if (fileUris == null) {
-                showSnackbar("Error Parsing URI!")
+                showSnackbar("Error Parsing URI!", true)
                 Log.w("onNewIntent", "fileUris is null")
                 return
             }
@@ -461,7 +461,7 @@ class MainActivity : AppCompatActivity() {
             filePickerLauncher.launch(arrayOf("*/*"))
 
         } else {
-            showSnackbar("Unknown Link!")
+            showSnackbar("Unknown Link!", true)
             Log.w("onNewIntent", "UNKNOWN INTENT - action: $action")
 
         }
