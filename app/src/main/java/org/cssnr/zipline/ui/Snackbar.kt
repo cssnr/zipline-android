@@ -28,9 +28,11 @@ fun Context.showSnackbar(
     val snackbar = Snackbar.make(coordinator, message, length)
     if (textColor != null) snackbar.setTextColor(textColor)
     snackbar.setAction("Close") {}
-    activity.findViewById<View>(R.id.bottom_nav)
-        ?.takeIf { it.isShown }
-        ?.let { snackbar.setAnchorView(it) }
+    val bottomNav = activity.findViewById<View>(R.id.bottom_nav)
+    if (bottomNav != null && bottomNav.isShown) {
+        snackbar.anchorView = bottomNav
+        snackbar.isAnchorViewLayoutListenerEnabled = true
+    }
     snackbar.show()
 }
 
