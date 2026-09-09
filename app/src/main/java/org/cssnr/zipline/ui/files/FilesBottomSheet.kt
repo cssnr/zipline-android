@@ -13,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
@@ -22,6 +23,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.launch
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
@@ -159,7 +161,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         // Copy
         binding.copyButton.setOnClickListener {
             ctx.copyToClipboard(viewUrl)
-            ctx.showSnackbar("Copied URL to Clipboard.")
+            showSheetSnackbar("Copied URL to Clipboard.")
         }
 
         // Download
@@ -197,7 +199,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
             val downloadId = downloadManager.enqueue(request)
             Log.d("downloadButton", "Download ID: $downloadId")
-            ctx.showSnackbar("Download Started")
+            showSheetSnackbar("Download Started")
             //dismiss()
         }
 
@@ -219,9 +221,9 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     viewModel.editRequest.value = editRequest
                     tintImage(binding.favoriteButton, result.favorite != true)
                     val text = if (result.favorite == true) "Added to" else "Removed from"
-                    ctx.showSnackbar("File $text Favorites.")
+                    showSheetSnackbar("File $text Favorites.")
                 } else {
-                    ctx.showSnackbar("Error Changing File Favorite.", true)
+                    showSheetSnackbar("Error Changing File Favorite.", true)
                 }
             }
         }
@@ -272,6 +274,14 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     ContextCompat.getColor(ctx, android.R.color.holo_orange_light)
                 )
         }
+    }
+
+    private fun showSheetSnackbar(message: CharSequence, error: Boolean = false) {
+        val length = if (error) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT
+        val snackbar = Snackbar.make(binding.snackbarHost, message, length)
+        if (error) snackbar.setTextColor("#D32F2F".toColorInt())
+        snackbar.setAction("Close") {}
+        snackbar.show()
     }
 
     private fun deleteConfirmDialog(data: FileResponse) {
