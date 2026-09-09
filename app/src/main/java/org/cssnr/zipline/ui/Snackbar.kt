@@ -14,8 +14,9 @@ import org.cssnr.zipline.R
  *
  * When the bottom navigation is present the Snackbar is placed just above it.
  *
- * When [error] is true the message is logged, shown in red for a longer duration,
- * and the Close action is replaced with a Logs action that navigates to the debug logs.
+ * A Close action is always provided.
+ *
+ * When [error] is true the message is shown in red for a longer duration.
  */
 fun Context.showSnackbar(
     message: CharSequence,
