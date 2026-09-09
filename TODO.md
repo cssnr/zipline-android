@@ -1,5 +1,11 @@
 # TODO
 
+## Bottom Sheet Snackbar
+
+The bottom sheet snackbar uses its own Snackbar handler.
+
+- [FilesBottomSheet.kt](app/src/main/java/org/cssnr/zipline/ui/files/FilesBottomSheet.kt)
+
 ## Preview Download Requires Auth
 
 `DownloadManager.Request` has no API for custom headers/cookies, so the

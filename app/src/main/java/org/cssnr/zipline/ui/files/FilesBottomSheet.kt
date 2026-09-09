@@ -30,6 +30,7 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.databinding.FragmentFilesBottomBinding
+import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.upload.copyToClipboard
 
 class FilesBottomSheet : BottomSheetDialogFragment() {
@@ -160,7 +161,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         // Copy
         binding.copyButton.setOnClickListener {
             ctx.copyToClipboard(viewUrl)
-            Snackbar.make(binding.root, "Copied URL to Clipboard.", Snackbar.LENGTH_SHORT).show()
+            showSheetSnackbar("Copied URL to Clipboard.")
         }
 
         // Download
@@ -198,7 +199,7 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
 
             val downloadId = downloadManager.enqueue(request)
             Log.d("downloadButton", "Download ID: $downloadId")
-            Snackbar.make(binding.root, "Download Started", Snackbar.LENGTH_SHORT).show()
+            showSheetSnackbar("Download Started")
             //dismiss()
         }
 
@@ -220,14 +221,9 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     viewModel.editRequest.value = editRequest
                     tintImage(binding.favoriteButton, result.favorite != true)
                     val text = if (result.favorite == true) "Added to" else "Removed from"
-                    val snackbar =
-                        Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
-                    snackbar.setAction("Close") { snackbar.dismiss() }
-                    snackbar.setAnchorView(requireView()).show()
+                    showSheetSnackbar("File $text Favorites.")
                 } else {
-                    Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
-                        .setTextColor("#D32F2F".toColorInt())
-                        .setAnchorView(requireView()).show()
+                    showSheetSnackbar("Error Changing File Favorite.", true)
                 }
             }
         }
@@ -280,6 +276,14 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
+    private fun showSheetSnackbar(message: CharSequence, error: Boolean = false) {
+        val length = if (error) Snackbar.LENGTH_LONG else Snackbar.LENGTH_SHORT
+        val snackbar = Snackbar.make(binding.snackbarHost, message, length)
+        if (error) snackbar.setTextColor("#D32F2F".toColorInt())
+        snackbar.setAction("Close") {}
+        snackbar.show()
+    }
+
     private fun deleteConfirmDialog(data: FileResponse) {
         Log.d("deleteConfirmDialog", "${data.id}: ${data.name}")
 
@@ -303,9 +307,9 @@ class FilesBottomSheet : BottomSheetDialogFragment() {
                     Log.d("deleteConfirmDialog", "result: $result")
                     viewModel.deleteId.value = data.id
                     val msg = if (result != null) "File Deleted" else "File Not Found"
-                    viewModel.showSnackbar(msg)
                     dialog.dismiss()
                     dismiss()
+                    requireContext().showSnackbar(msg, result == null)
                 }
             }
         }

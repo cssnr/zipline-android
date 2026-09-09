@@ -11,7 +11,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.edit
 import androidx.core.content.pm.PackageInfoCompat
@@ -40,6 +39,7 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.FeedbackApi
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.ui.dialogs.showKeyboard
+import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.work.enqueueWorkRequest
 
 class SettingsFragment : PreferenceFragmentCompat() {
@@ -358,10 +358,11 @@ class SettingsFragment : PreferenceFragmentCompat() {
                     lifecycleScope.launch {
                         val response = withContext(Dispatchers.IO) { api.sendFeedback(message) }
                         Log.d("showFeedbackDialog", "response: $response")
-                        val msg = if (response.isSuccessful) {
+                        if (response.isSuccessful) {
                             findPreference<Preference>("send_feedback")?.isEnabled = false
+                            Log.d("showFeedbackDialog", "msg: Feedback Sent. Thank You!")
                             dialog.dismiss()
-                            "Feedback Sent. Thank You!"
+                            this@showFeedbackDialog.showSnackbar("Feedback Sent. Thank You!")
                         } else {
                             sendButton.isEnabled = true
                             val params = Bundle().apply {
@@ -369,10 +370,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
                                 putString("code", response.code().toString())
                             }
                             Firebase.analytics.logEvent("feedback_failed", params)
-                            "Error: ${response.code()}"
+                            val msg = "Error: ${response.code()}"
+                            Log.d("showFeedbackDialog", "msg: $msg")
+                            input.error = msg
                         }
-                        Log.d("showFeedbackDialog", "msg: $msg")
-                        Toast.makeText(this@showFeedbackDialog, msg, Toast.LENGTH_LONG).show()
                     }
                 } else {
                     sendButton.isEnabled = true

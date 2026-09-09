@@ -7,7 +7,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.graphics.scale
-import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -16,10 +15,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.snackbar.Snackbar
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentCropBinding
+import org.cssnr.zipline.ui.showSnackbar
 import java.io.File
 import java.io.FileOutputStream
 
@@ -115,8 +114,7 @@ class CropFragment : Fragment() {
                 }
             } catch (e: Throwable) {
                 Log.e(LOG_TAG, "Exception:", e)
-                Snackbar.make(view, "Error Cropping Image.", Snackbar.LENGTH_SHORT)
-                    .setTextColor("#D32F2F".toColorInt()).show()
+                ctx.showSnackbar("Error Cropping Image.", true)
             }
         }
     }

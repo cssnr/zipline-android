@@ -15,7 +15,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.PopupMenu
-import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -37,7 +36,6 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -51,6 +49,7 @@ import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.FileEditRequest
 import org.cssnr.zipline.api.ServerApi.FileResponse
 import org.cssnr.zipline.databinding.FragmentFilesPreviewBinding
+import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.json.JSONObject
 import java.io.File
@@ -160,22 +159,26 @@ class FilesPreviewFragment : Fragment() {
                         ctx.shareUrl(fileViewUrl)
                         true
                     }
+
                     R.id.preview_copy_url -> {
                         ctx.copyToClipboard(fileViewUrl)
-                        Snackbar.make(view, "Copied URL to Clipboard.", Snackbar.LENGTH_SHORT).show()
+                        ctx.showSnackbar("Copied URL to Clipboard.")
                         true
                     }
+
                     R.id.preview_download -> {
                         val savedUrl = viewModel.savedUrl ?: return@setOnMenuItemClickListener true
                         val dm = ctx.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager
                         dm.enqueue(getDownloadRequest(savedUrl, file))
-                        Snackbar.make(view, "Download Started", Snackbar.LENGTH_SHORT).show()
+                        ctx.showSnackbar("Download Started")
                         true
                     }
+
                     R.id.preview_delete -> {
                         previewDelete(file)
                         true
                     }
+
                     R.id.preview_favorite -> {
                         lifecycleScope.launch {
                             val api = ServerApi(ctx)
@@ -185,20 +188,21 @@ class FilesPreviewFragment : Fragment() {
                             if (result != null) {
                                 file.favorite = editRequest.favorite ?: false
                                 viewModel.editRequest.value = editRequest
-                                val text = if (result.favorite == true) "Added to" else "Removed from"
-                                Snackbar.make(view, "File $text Favorites.", Snackbar.LENGTH_SHORT)
-                                    .show()
+                                val text =
+                                    if (result.favorite == true) "Added to" else "Removed from"
+                                ctx.showSnackbar("File $text Favorites.")
                             } else {
-                                Snackbar.make(view, "Error Changing File Favorite.", Snackbar.LENGTH_LONG)
-                                    .setTextColor("#D32F2F".toColorInt()).show()
+                                ctx.showSnackbar("Error Changing File Favorite.", true)
                             }
                         }
                         true
                     }
+
                     R.id.preview_open -> {
                         ctx.openUrl(fileViewUrl)
                         true
                     }
+
                     else -> false
                 }
             }
@@ -338,13 +342,13 @@ class FilesPreviewFragment : Fragment() {
                     Log.w("FilesPreviewFragment", "content is null")
                     withContext(Dispatchers.Main) {
                         val msg = "Error Loading Content!"
-                        Snackbar.make(view, msg, Snackbar.LENGTH_LONG).show()
+                        ctx.showSnackbar(msg, true)
                     }
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
                     ctx.copyToClipboard(content)
-                    Snackbar.make(view, "Copied Text to Clipboard.", Snackbar.LENGTH_SHORT).show()
+                    ctx.showSnackbar("Copied Text to Clipboard.")
                 }
                 //Log.d("FilesPreviewFragment", "content: $content")
                 val escapedContent = JSONObject.quote(content)
@@ -401,7 +405,7 @@ class FilesPreviewFragment : Fragment() {
                     val result = ServerApi(requireContext()).deleteSingle(data.id)
                     viewModel.deleteId.value = data.id
                     val msg = if (result != null) "File Deleted" else "Delete Failed"
-                    viewModel.showSnackbar(msg)
+                    requireContext().showSnackbar(msg, result == null)
                     navController.navigateUp()
                 }
             }

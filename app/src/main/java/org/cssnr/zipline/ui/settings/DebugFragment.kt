@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.doOnLayout
@@ -20,13 +19,13 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentDebugBinding
+import org.cssnr.zipline.ui.showSnackbar
 import java.io.File
 
 class DebugFragment : Fragment() {
@@ -98,11 +97,9 @@ class DebugFragment : Fragment() {
             if (text.isNotEmpty()) {
                 val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 clipboard.setPrimaryClip(ClipData.newPlainText("Text", text))
-                Snackbar.make(view, "Copied to Clipboard.", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(binding.buttonGroup).show()
+                ctx.showSnackbar("Copied to Clipboard.")
             } else {
-                Snackbar.make(view, "Nothing to Copy!", Snackbar.LENGTH_LONG)
-                    .setTextColor("#D32F2F".toColorInt()).setAnchorView(binding.buttonGroup).show()
+                ctx.showSnackbar("Nothing to Copy!", true)
             }
         }
 
@@ -116,8 +113,7 @@ class DebugFragment : Fragment() {
                 }
                 startActivity(Intent.createChooser(shareIntent, null))
             } else {
-                Snackbar.make(view, "Nothing to Share!", Snackbar.LENGTH_LONG)
-                    .setTextColor("#D32F2F".toColorInt()).setAnchorView(binding.buttonGroup).show()
+                ctx.showSnackbar("Nothing to Share!", true)
             }
         }
 
@@ -125,8 +121,7 @@ class DebugFragment : Fragment() {
             Log.d(LOG_TAG, "reloadLogs")
             lifecycleScope.launch {
                 _binding?.textView?.text = ctx.readLogFile()
-                Snackbar.make(view, "Logs Reloaded.", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(binding.buttonGroup).show()
+                ctx.showSnackbar("Logs Reloaded.")
             }
         }
 
@@ -143,8 +138,7 @@ class DebugFragment : Fragment() {
                     val logFile = File(ctx.filesDir, "debug_log.txt")
                     logFile.writeText("")
                     binding.textView.text = ""
-                    Snackbar.make(view, "Logs Cleared.", Snackbar.LENGTH_SHORT)
-                        .setAnchorView(binding.buttonGroup).show()
+                    ctx.showSnackbar("Logs Cleared.")
                 }
                 .show()
         }
@@ -153,8 +147,7 @@ class DebugFragment : Fragment() {
             Log.d(LOG_TAG, "setOnRefreshListener: onRefresh")
             lifecycleScope.launch {
                 _binding?.textView?.text = ctx.readLogFile()
-                Snackbar.make(view, "Logs Reloaded.", Snackbar.LENGTH_SHORT)
-                    .setAnchorView(binding.buttonGroup).show()
+                ctx.showSnackbar("Logs Reloaded.")
                 _binding?.swiperefresh?.isRefreshing = false
             }
         }

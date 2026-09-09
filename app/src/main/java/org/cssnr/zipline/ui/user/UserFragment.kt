@@ -23,7 +23,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.core.content.edit
-import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -39,7 +38,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.shape.CornerFamily
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -57,6 +55,7 @@ import org.cssnr.zipline.db.UserEntity
 import org.cssnr.zipline.db.UserRepository
 import org.cssnr.zipline.log.debugLog
 import org.cssnr.zipline.ui.dialogs.showKeyboard
+import org.cssnr.zipline.ui.showSnackbar
 import java.io.File
 import java.math.RoundingMode
 import java.time.ZoneId
@@ -254,10 +253,9 @@ class UserFragment : Fragment() {
                     Glide.with(headerImage).load(avatarFile)
                         .signature(ObjectKey(avatarFile.lastModified())).into(headerImage)
 
-                    Snackbar.make(view, "Avatar Updated.", Snackbar.LENGTH_SHORT).show()
+                    ctx.showSnackbar("Avatar Updated.")
                 } else {
-                    Snackbar.make(view, "Error Updating Avatar!", Snackbar.LENGTH_LONG)
-                        .setTextColor("#D32F2F".toColorInt()).show()
+                    ctx.showSnackbar("Error Updating Avatar!", true)
                 }
             }
         }
@@ -270,7 +268,7 @@ class UserFragment : Fragment() {
                     navController.navigate(R.id.nav_item_crop, bundle)
                 }
                 //} else {
-                //    Snackbar.make(view, "No Image Selected.", Snackbar.LENGTH_SHORT).show()
+                //    Snackbar.make(view, "No Image Selected.").show()
                 //}
                 // NOTE: Uses setFragmentResultListener
             }
@@ -284,23 +282,21 @@ class UserFragment : Fragment() {
                 viewModel.user.value = user
                 _binding?.updateProfile?.isEnabled = true
                 if (user == null) {
-                    Snackbar.make(view, "Error Refreshing Profile!", Snackbar.LENGTH_LONG)
-                        .setTextColor("#D32F2F".toColorInt()).show()
+                    ctx.showSnackbar("Error Refreshing Profile!", true)
                 } else {
-                    Snackbar.make(view, "Profile Refreshed from Server.", Snackbar.LENGTH_SHORT)
-                        .show()
+                    ctx.showSnackbar("Profile Refreshed from Server.")
                 }
             }
         }
 
         binding.changeUsername.setOnClickListener {
             Log.d(LOG_TAG, "binding.changeUsername.setOnClickListener")
-            requireActivity().changeUsernameDialog(view)
+            requireActivity().changeUsernameDialog()
         }
 
         binding.changePassword.setOnClickListener {
             Log.d(LOG_TAG, "binding.changeUsername.setOnClickListener")
-            ctx.changePasswordDialog(view)
+            ctx.changePasswordDialog()
         }
 
         binding.copyToken.setOnClickListener {
@@ -310,10 +306,9 @@ class UserFragment : Fragment() {
             if (authToken != null) {
                 val clipboard = ctx.getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
                 clipboard.setPrimaryClip(ClipData.newPlainText("Token", authToken))
-                Snackbar.make(view, "Token Copied to Clipboard.", Snackbar.LENGTH_SHORT).show()
+                ctx.showSnackbar("Token Copied to Clipboard.")
             } else {
-                Snackbar.make(view, "Token is null! This is a Problem!", Snackbar.LENGTH_LONG)
-                    .setTextColor("#D32F2F".toColorInt()).show()
+                ctx.showSnackbar("Token is null! This is a Problem!", true)
             }
         }
 
@@ -328,15 +323,14 @@ class UserFragment : Fragment() {
                 }
 
                 viewModel.totpSecret.value?.let {
-                    ctx.enableTotpDialog(view, it)
-                } ?: Snackbar.make(view, "Error Getting TOTP Secret!", Snackbar.LENGTH_LONG)
-                    .setTextColor("#D32F2F".toColorInt()).show()
+                    ctx.enableTotpDialog(it)
+                } ?: ctx.showSnackbar("Error Getting TOTP Secret!", true)
             }
         }
 
         binding.disableTotp.setOnClickListener {
             Log.d(LOG_TAG, "binding.disableTotp.setOnClickListener")
-            ctx.disableTotpDialog(view)
+            ctx.disableTotpDialog()
         }
 
         binding.updateStats.setOnClickListener {
@@ -347,7 +341,7 @@ class UserFragment : Fragment() {
                 Log.d(LOG_TAG, "binding.updateStats - serverEntity: $serverEntity")
                 viewModel.server.value = serverEntity
                 _binding?.updateStats?.isEnabled = true
-                Snackbar.make(view, "Stats Refreshed from Server.", Snackbar.LENGTH_SHORT).show()
+                ctx.showSnackbar("Stats Refreshed from Server.")
             }
         }
 
@@ -366,8 +360,7 @@ class UserFragment : Fragment() {
                         Glide.with(it.appIcon).load(R.mipmap.ic_launcher_round).into(it.appIcon)
                     }
                     it.updateAvatar.isEnabled = true
-                    Snackbar.make(view, "Avatar Refreshed from Server.", Snackbar.LENGTH_SHORT)
-                        .show()
+                    ctx.showSnackbar("Avatar Refreshed from Server.")
                 }
             }
         }
@@ -388,8 +381,7 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.shareAvatar.setOnClickListener")
 
             if (!avatarFile.exists()) {
-                Snackbar.make(view, "Avatar File Not Found!", Snackbar.LENGTH_LONG)
-                    .setTextColor("#D32F2F".toColorInt()).show()
+                ctx.showSnackbar("Avatar File Not Found!", true)
                 return@setOnClickListener
             }
 
@@ -435,10 +427,9 @@ class UserFragment : Fragment() {
                             if (avatarFile.exists()) {
                                 avatarFile.delete()
                             }
-                            Snackbar.make(view, "Avatar Removed!", Snackbar.LENGTH_SHORT).show()
+                            ctx.showSnackbar("Avatar Removed!")
                         } else {
-                            Snackbar.make(view, "Error Removing Avatar!", Snackbar.LENGTH_LONG)
-                                .setTextColor("#D32F2F".toColorInt()).show()
+                            ctx.showSnackbar("Error Removing Avatar!", true)
                         }
                     }
                 }
@@ -483,12 +474,11 @@ class UserFragment : Fragment() {
                             val body = response.body()
                             val status = body?.status.toString()
                             Log.d(LOG_TAG, "status: $status")
-                            Snackbar.make(view, status, Snackbar.LENGTH_SHORT).show()
+                            ctx.showSnackbar(status)
                         } else {
                             val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
                             Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            Snackbar.make(view, errorResponse, Snackbar.LENGTH_LONG)
-                                .setTextColor("#D32F2F".toColorInt()).show()
+                            ctx.showSnackbar(errorResponse, true)
                         }
                     }
                 }
@@ -510,12 +500,11 @@ class UserFragment : Fragment() {
                             val body = response.body()
                             val status = body?.status.toString()
                             Log.d(LOG_TAG, "status: $status")
-                            Snackbar.make(view, status, Snackbar.LENGTH_SHORT).show()
+                            ctx.showSnackbar(status)
                         } else {
                             val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
                             Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            Snackbar.make(view, errorResponse, Snackbar.LENGTH_LONG)
-                                .setTextColor("#D32F2F".toColorInt()).show()
+                            ctx.showSnackbar(errorResponse, true)
                         }
                     }
                 }
@@ -537,12 +526,11 @@ class UserFragment : Fragment() {
                             val body = response.body()
                             val status = body?.status.toString()
                             Log.d(LOG_TAG, "status: $status")
-                            Snackbar.make(view, status, Snackbar.LENGTH_SHORT).show()
+                            ctx.showSnackbar(status)
                         } else {
                             val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
                             Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            Snackbar.make(view, errorResponse, Snackbar.LENGTH_LONG)
-                                .setTextColor("#D32F2F".toColorInt()).show()
+                            ctx.showSnackbar(errorResponse, true)
                         }
                     }
                 }
@@ -567,7 +555,7 @@ class UserFragment : Fragment() {
         //}
     }
 
-    private fun Activity.changeUsernameDialog(parentView: View) {
+    private fun Activity.changeUsernameDialog() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_username, null)
 
@@ -608,7 +596,7 @@ class UserFragment : Fragment() {
                             Log.i("header_username", "user.username: ${user.username}")
                             findViewById<TextView>(R.id.header_username)?.text = user.username
                             val message = "Username Changed to ${user.username}"
-                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            this@changeUsernameDialog.showSnackbar(message)
                             dialog.dismiss()
                         } else {
                             // TODO: Better Handle Errors here...
@@ -627,7 +615,7 @@ class UserFragment : Fragment() {
         dialog.show()
     }
 
-    private fun Context.changePasswordDialog(parentView: View) {
+    private fun Context.changePasswordDialog() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_password, null)
 
@@ -672,7 +660,7 @@ class UserFragment : Fragment() {
                             Log.d("changePasswordDialog", "user: $user")
                             viewModel.user.value = user
                             val message = "Password Changed."
-                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            this@changePasswordDialog.showSnackbar(message)
                             dialog.dismiss()
                         } else {
                             // TODO: Better Handle Errors here...
@@ -689,7 +677,7 @@ class UserFragment : Fragment() {
         dialog.show()
     }
 
-    private fun Context.disableTotpDialog(parentView: View) {
+    private fun Context.disableTotpDialog() {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_totp_disable, null)
 
@@ -727,7 +715,7 @@ class UserFragment : Fragment() {
                             Log.d("disableTotpDialog", "user: $user")
                             viewModel.user.value = user
                             val message = "TOTP Disabled!"
-                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            this@disableTotpDialog.showSnackbar(message)
                             dialog.dismiss()
                         } else {
                             // TODO: Better Handle Errors here...
@@ -744,7 +732,7 @@ class UserFragment : Fragment() {
         dialog.show()
     }
 
-    private fun Context.enableTotpDialog(parentView: View, totpSecret: String) {
+    private fun Context.enableTotpDialog(totpSecret: String) {
         val inflater = LayoutInflater.from(this)
         val view = inflater.inflate(R.layout.dialog_totp_enable, null)
 
@@ -793,7 +781,7 @@ class UserFragment : Fragment() {
             val clipboard = getSystemService(CLIPBOARD_SERVICE) as ClipboardManager
             clipboard.setPrimaryClip(ClipData.newPlainText("Token", totpSecret))
             // TODO: Determine how to show SnakeBar in an AlertDialog
-            //Snackbar.make(view, "Copied", Snackbar.LENGTH_SHORT).setAnchorView(secretLayout).show()
+            //Snackbar.make(view, "Copied").setAnchorView(secretLayout).show()
         }
 
         val savedUrl = preferences.getString("ziplineUrl", null) ?: return
@@ -828,7 +816,7 @@ class UserFragment : Fragment() {
                             Log.d("enableTotpDialog", "user: $user")
                             viewModel.user.value = user
                             val message = "TOTP Enabled!"
-                            Snackbar.make(parentView, message, Snackbar.LENGTH_SHORT).show()
+                            this@enableTotpDialog.showSnackbar(message)
                             dialog.dismiss()
                         } else {
                             // TODO: Better Handle Errors here...

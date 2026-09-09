@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -25,6 +24,7 @@ import kotlinx.coroutines.withContext
 import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.databinding.FragmentShortBinding
+import org.cssnr.zipline.ui.showSnackbar
 
 class ShortFragment : Fragment() {
 
@@ -86,7 +86,7 @@ class ShortFragment : Fragment() {
         Log.d("Short[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Short[onViewCreated]", "savedUrl is null")
-            Toast.makeText(requireContext(), "Missing URL!", Toast.LENGTH_LONG).show()
+            requireContext().showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -101,7 +101,7 @@ class ShortFragment : Fragment() {
         if (url == null) {
             // TODO: Better Handle this Error
             Log.e("Short[onViewCreated]", "URL is null")
-            Toast.makeText(requireContext(), "No URL to Process!", Toast.LENGTH_LONG).show()
+            requireContext().showSnackbar("No URL to Process!", true)
             return
         }
 
@@ -158,8 +158,7 @@ class ShortFragment : Fragment() {
                 if (shortResponse != null) {
                     Log.d("processShort", "shortResponse.url: ${shortResponse.url}")
                     this@processShort.copyToClipboard(shortResponse.url)
-                    Toast.makeText(this@processShort,"Copied URL to Clipboard.",Toast.LENGTH_SHORT)
-                        .show()
+                    this@processShort.showSnackbar("Copied URL to Clipboard.")
                     if (shareUrl) {
                         val shareIntent = Intent(Intent.ACTION_SEND).apply {
                             type = "text/plain"
@@ -179,7 +178,7 @@ class ShortFragment : Fragment() {
             }
             Log.e("processShort", "response/shortResponse is null")
             withContext(Dispatchers.Main) {
-                Toast.makeText(this@processShort, "File Upload Failed!", Toast.LENGTH_LONG).show()
+                this@processShort.showSnackbar("File Upload Failed!", true)
             }
         }
     }

@@ -18,7 +18,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import android.widget.Toast
 import androidx.annotation.OptIn
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
@@ -51,6 +50,7 @@ import org.cssnr.zipline.api.parseErrorBody
 import org.cssnr.zipline.databinding.FragmentUploadBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.ui.dialogs.UploadOptionsDialog
+import org.cssnr.zipline.ui.showSnackbar
 import org.json.JSONObject
 
 class UploadFragment : Fragment() {
@@ -141,7 +141,7 @@ class UploadFragment : Fragment() {
         Log.d("Upload[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Upload[onViewCreated]", "savedUrl is null")
-            Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
+            ctx.showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -156,7 +156,7 @@ class UploadFragment : Fragment() {
         if (uri == null) {
             // TODO: Better Handle this Error
             Log.e("Upload[onViewCreated]", "URI is null")
-            Toast.makeText(ctx, "No URI to Process!", Toast.LENGTH_LONG).show()
+            ctx.showSnackbar("No URI to Process!", true)
             return
         }
 
@@ -353,7 +353,7 @@ class UploadFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processUpload", "Missing OR savedUrl/authToken")
-            Toast.makeText(this, getString(R.string.tst_no_url), Toast.LENGTH_SHORT).show()
+            showSnackbar(getString(R.string.tst_no_url), true)
             logFileUpload(false, "URL or Token is null")
             return
         }
@@ -361,7 +361,7 @@ class UploadFragment : Fragment() {
         Log.d("processUpload", "fileName: $fileName")
         if (fileName == null) {
             Log.w("processUpload", "Unable to parse fileName from URI")
-            Toast.makeText(this, "Unable to Parse File Name", Toast.LENGTH_SHORT).show()
+            showSnackbar("Unable to Parse File Name", true)
             logFileUpload(false, "File Name is null")
             return
         }
@@ -371,13 +371,13 @@ class UploadFragment : Fragment() {
         if (inputStream == null) {
             Log.w("processUpload", "inputStream is null")
             val msg = getString(R.string.tst_upload_error)
-            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
+            showSnackbar(msg, true)
             logFileUpload(false, "Input Stream is null")
             return
         }
         val api = ServerApi(this)
         Log.d("processUpload", "api: $api")
-        Toast.makeText(this, getString(R.string.tst_uploading_file), Toast.LENGTH_SHORT).show()
+        showSnackbar(getString(R.string.tst_uploading_file))
         lifecycleScope.launch {
             try {
                 val response = api.upload(fileName, inputStream, viewModel.uploadOptions.value!!)
@@ -390,7 +390,7 @@ class UploadFragment : Fragment() {
                     Log.d("processUpload", "url: $url")
                     withContext(Dispatchers.Main) {
                         copyToClipboard(url)
-                        Toast.makeText(this@processUpload, "Copied URL to Clipboard.", Toast.LENGTH_SHORT).show()
+                        this@processUpload.showSnackbar("Copied URL to Clipboard.")
                         if (shareUrl) {
                             val shareIntent = Intent(Intent.ACTION_SEND).apply {
                                 type = "text/plain"
@@ -412,7 +412,7 @@ class UploadFragment : Fragment() {
                     val message = errorResponse ?: "Unknown Error: ${response.code()}"
                     Log.i("processCode", "message - $message")
                     withContext(Dispatchers.Main) {
-                        Toast.makeText(this@processUpload, message, Toast.LENGTH_LONG).show()
+                        this@processUpload.showSnackbar(message, true)
                     }
                 }
             } catch (e: Throwable) {
@@ -421,7 +421,7 @@ class UploadFragment : Fragment() {
                 Log.i("processUpload", "msg: $msg")
                 logFileUpload(false, "Exception: $msg")
                 withContext(Dispatchers.Main) {
-                    Toast.makeText(this@processUpload, msg, Toast.LENGTH_LONG).show()
+                    this@processUpload.showSnackbar(msg, true)
                 }
             }
         }

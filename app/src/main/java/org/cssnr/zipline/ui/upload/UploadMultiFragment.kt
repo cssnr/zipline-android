@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.updatePadding
@@ -33,6 +32,7 @@ import org.cssnr.zipline.api.ServerApi.UploadedFiles
 import org.cssnr.zipline.databinding.FragmentUploadMultiBinding
 import org.cssnr.zipline.ui.dialogs.FolderFragment
 import org.cssnr.zipline.ui.dialogs.UploadOptionsDialog
+import org.cssnr.zipline.ui.showSnackbar
 
 class UploadMultiFragment : Fragment() {
 
@@ -101,7 +101,7 @@ class UploadMultiFragment : Fragment() {
         Log.d("Multi[onViewCreated]", "authToken: ${authToken?.take(24)}...")
         if (savedUrl.isNullOrEmpty() || authToken.isNullOrEmpty()) {
             Log.e("Multi[onViewCreated]", "savedUrl is null")
-            Toast.makeText(ctx, "Missing URL!", Toast.LENGTH_LONG).show()
+            ctx.showSnackbar("Missing URL!", true)
             navController.navigate(
                 R.id.nav_item_login, null, NavOptions.Builder()
                     .setPopUpTo(navController.graph.id, true)
@@ -245,7 +245,7 @@ class UploadMultiFragment : Fragment() {
             //Log.d("uploadButton", "currentUris: currentUris")
             Log.d("uploadButton", "currentUris.size: ${currentUris?.size}")
             if (currentUris.isNullOrEmpty()) {
-                Toast.makeText(ctx, "No Files Selected!", Toast.LENGTH_SHORT).show()
+                ctx.showSnackbar("No Files Selected!")
                 return@setOnClickListener
             }
             ctx.processMultiUpload(currentUris)
@@ -266,11 +266,11 @@ class UploadMultiFragment : Fragment() {
         if (savedUrl == null || authToken == null) {
             // TODO: Show settings dialog here...
             Log.w("processMultiUpload", "Missing OR savedUrl/authToken")
-            Toast.makeText(this, getString(R.string.tst_no_url), Toast.LENGTH_SHORT).show()
+            showSnackbar(getString(R.string.tst_no_url), true)
             logFileUpload(false, "URL or Token is null", true)
             return
         }
-        Toast.makeText(this, "Uploading ${fileUris.size} Files...", Toast.LENGTH_SHORT).show()
+        showSnackbar("Uploading ${fileUris.size} Files...")
 
         val api = ServerApi(this)
         Log.d("processMultiUpload", "api: $api")
@@ -309,8 +309,7 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "results.size: ${results.size}")
             if (results.isEmpty()) {
                 // TODO: Handle upload failures better...
-                Toast.makeText(this@processMultiUpload, "All Uploads Failed!", Toast.LENGTH_SHORT)
-                    .show()
+                this@processMultiUpload.showSnackbar("All Uploads Failed!", true)
                 logFileUpload(false, "All Uploads Failed", true)
                 return@launch
             }
@@ -322,12 +321,14 @@ class UploadMultiFragment : Fragment() {
             Log.d("processMultiUpload", "urls: \"${urls}\"")
             if (urls.isNotEmpty()) {
                 copyToClipboard(urls)
-                Toast.makeText(this@processMultiUpload,"Copied URL to Clipboard.",Toast.LENGTH_SHORT).show()
             }
 
-            val msg = "Uploaded ${results.size} Files."
-            Toast.makeText(this@processMultiUpload, msg, Toast.LENGTH_SHORT)
-                .show()
+            val msg = if (urls.isNotEmpty()) {
+                "Uploaded ${results.size} Files. URLs Copied."
+            } else {
+                "Uploaded ${results.size} Files."
+            }
+            this@processMultiUpload.showSnackbar(msg)
             val fcMsg = if (results.size == fileUris.size) null else "Some Files Failed to Upload"
             logFileUpload(true, fcMsg, true)
             if (shareUrl && urls.isNotEmpty()) {
