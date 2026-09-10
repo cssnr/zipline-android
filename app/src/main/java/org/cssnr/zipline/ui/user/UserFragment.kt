@@ -391,7 +391,8 @@ class UserFragment : Fragment() {
                     when {
                         file != null && file.exists() -> {
                             Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $file")
-                            Glide.with(it.appIcon).load(file).signature(ObjectKey(file.lastModified()))
+                            Glide.with(it.appIcon).load(file)
+                                .signature(ObjectKey(file.lastModified()))
                                 .into(it.appIcon)
                             ctx.showSnackbar("Avatar Refreshed from Server.")
                         }

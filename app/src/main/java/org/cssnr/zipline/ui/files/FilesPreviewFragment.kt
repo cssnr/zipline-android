@@ -55,7 +55,6 @@ import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.json.JSONObject
 import java.io.File
-import java.util.concurrent.TimeUnit
 
 class FilesPreviewFragment : Fragment() {
 
@@ -534,9 +533,6 @@ class FilesPreviewFragment : Fragment() {
                     }
                     // TODO: Make Cache Size User Configurable: 100 MB
                     httpClient = OkHttpClient.Builder()
-                        .connectTimeout(10, TimeUnit.SECONDS) // default: 10
-                        .readTimeout(10, TimeUnit.SECONDS) // default: 10
-                        .callTimeout(10, TimeUnit.SECONDS) // default: 0 (no timeout)
                         .addNetworkInterceptor(forceCacheInterceptor)
                         .cache(
                             Cache(

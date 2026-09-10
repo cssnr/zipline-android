@@ -35,7 +35,6 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Header
-import retrofit2.http.Headers as HeadersAnnotation
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -45,6 +44,7 @@ import retrofit2.http.Query
 import java.io.InputStream
 import java.lang.reflect.Type
 import java.net.URLConnection
+import retrofit2.http.Headers as HeadersAnnotation
 
 class ServerApi(private val context: Context, url: String? = null) {
 
