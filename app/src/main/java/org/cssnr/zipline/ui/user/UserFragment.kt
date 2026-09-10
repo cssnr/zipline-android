@@ -57,6 +57,7 @@ import org.cssnr.zipline.log.debugLog
 import org.cssnr.zipline.ui.dialogs.showKeyboard
 import org.cssnr.zipline.ui.showSnackbar
 import java.io.File
+import java.io.IOException
 import java.math.RoundingMode
 import java.time.ZoneId
 import java.time.ZonedDateTime
@@ -240,7 +241,12 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "base64String: ${avatar.take(100)}...")
 
             lifecycleScope.launch {
-                val user = api.editUser(PatchUser(avatar = avatar))
+                val user = try {
+                    api.editUser(PatchUser(avatar = avatar))
+                } catch (e: IOException) {
+                    Log.e(LOG_TAG, "editUser IOException: ${e.message}")
+                    null
+                }
                 Log.d(LOG_TAG, "user: $user")
                 if (user != null && newFile.exists()) {
                     // TODO: Verify result
@@ -277,7 +283,12 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.updateProfile.setOnClickListener")
             binding.updateProfile.isEnabled = false
             lifecycleScope.launch {
-                val user = requireActivity().updateUserActivity()
+                val user = try {
+                    requireActivity().updateUserActivity()
+                } catch (e: IOException) {
+                    Log.e(LOG_TAG, "updateUserActivity IOException: ${e.message}")
+                    null
+                }
                 Log.d(LOG_TAG, "binding.updateProfile - user: $user")
                 viewModel.user.value = user
                 _binding?.updateProfile?.isEnabled = true
@@ -316,7 +327,12 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.enableTotp.setOnClickListener")
             lifecycleScope.launch {
                 if (viewModel.totpSecret.value == null) {
-                    val totpResponse = api.getTotpSecret()
+                    val totpResponse = try {
+                        api.getTotpSecret()
+                    } catch (e: IOException) {
+                        Log.e(LOG_TAG, "getTotpSecret IOException: ${e.message}")
+                        null
+                    }
                     Log.d(LOG_TAG, "totpResponse: $totpResponse")
                     viewModel.totpSecret.value = totpResponse?.secret
                     viewModel.totpQrcode.value = totpResponse?.qrcode
@@ -337,7 +353,12 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.updateStats.setOnClickListener")
             binding.updateStats.isEnabled = false
             lifecycleScope.launch {
-                val serverEntity = ctx.updateStats()
+                val serverEntity = try {
+                    ctx.updateStats()
+                } catch (e: IOException) {
+                    Log.e(LOG_TAG, "updateStats IOException: ${e.message}")
+                    null
+                }
                 Log.d(LOG_TAG, "binding.updateStats - serverEntity: $serverEntity")
                 viewModel.server.value = serverEntity
                 _binding?.updateStats?.isEnabled = true
@@ -349,7 +370,12 @@ class UserFragment : Fragment() {
             Log.d(LOG_TAG, "binding.updateAvatar.setOnClickListener")
             binding.updateAvatar.isEnabled = false
             lifecycleScope.launch {
-                val file = requireActivity().updateAvatarActivity()
+                val file = try {
+                    requireActivity().updateAvatarActivity()
+                } catch (e: IOException) {
+                    Log.e(LOG_TAG, "updateAvatarActivity IOException: ${e.message}")
+                    File(ctx.filesDir, "avatar.png")
+                }
                 Log.d(LOG_TAG, "binding.updateAvatarActivity: file: $file")
                 _binding?.let {
                     if (file.exists()) {
@@ -413,7 +439,12 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Remove") { _, _ ->
                     Log.d(LOG_TAG, "REMOVE AVATAR")
                     lifecycleScope.launch {
-                        val newUser = api.editUser(PatchUser(avatar = ""))
+                        val newUser = try {
+                            api.editUser(PatchUser(avatar = ""))
+                        } catch (e: IOException) {
+                            Log.e(LOG_TAG, "editUser IOException: ${e.message}")
+                            null
+                        }
                         Log.d(LOG_TAG, "newUser: $newUser")
                         if (newUser != null) {
                             _binding?.appIcon?.let {
@@ -469,16 +500,21 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Confirm") { _, _ ->
                     Log.d(LOG_TAG, "Confirm")
                     lifecycleScope.launch {
-                        val response = api.clearTemp()
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            val status = body?.status.toString()
-                            Log.d(LOG_TAG, "status: $status")
-                            ctx.showSnackbar(status)
-                        } else {
-                            val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
-                            Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            ctx.showSnackbar(errorResponse, true)
+                        try {
+                            val response = api.clearTemp()
+                            if (response.isSuccessful) {
+                                val body = response.body()
+                                val status = body?.status.toString()
+                                Log.d(LOG_TAG, "status: $status")
+                                ctx.showSnackbar(status)
+                            } else {
+                                val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
+                                Log.d(LOG_TAG, "errorResponse: $errorResponse")
+                                ctx.showSnackbar(errorResponse, true)
+                            }
+                        } catch (e: IOException) {
+                            Log.e(LOG_TAG, "clearTemp IOException: ${e.message}")
+                            ctx.showSnackbar("Network Error: ${e.message}", true)
                         }
                     }
                 }
@@ -495,16 +531,21 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Confirm") { _, _ ->
                     Log.d(LOG_TAG, "Confirm")
                     lifecycleScope.launch {
-                        val response = api.clearZeros()
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            val status = body?.status.toString()
-                            Log.d(LOG_TAG, "status: $status")
-                            ctx.showSnackbar(status)
-                        } else {
-                            val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
-                            Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            ctx.showSnackbar(errorResponse, true)
+                        try {
+                            val response = api.clearZeros()
+                            if (response.isSuccessful) {
+                                val body = response.body()
+                                val status = body?.status.toString()
+                                Log.d(LOG_TAG, "status: $status")
+                                ctx.showSnackbar(status)
+                            } else {
+                                val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
+                                Log.d(LOG_TAG, "errorResponse: $errorResponse")
+                                ctx.showSnackbar(errorResponse, true)
+                            }
+                        } catch (e: IOException) {
+                            Log.e(LOG_TAG, "clearZeros IOException: ${e.message}")
+                            ctx.showSnackbar("Network Error: ${e.message}", true)
                         }
                     }
                 }
@@ -521,16 +562,21 @@ class UserFragment : Fragment() {
                 .setPositiveButton("Confirm") { _, _ ->
                     Log.d(LOG_TAG, "Confirm")
                     lifecycleScope.launch {
-                        val response = api.thumbnails()
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            val status = body?.status.toString()
-                            Log.d(LOG_TAG, "status: $status")
-                            ctx.showSnackbar(status)
-                        } else {
-                            val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
-                            Log.d(LOG_TAG, "errorResponse: $errorResponse")
-                            ctx.showSnackbar(errorResponse, true)
+                        try {
+                            val response = api.thumbnails()
+                            if (response.isSuccessful) {
+                                val body = response.body()
+                                val status = body?.status.toString()
+                                Log.d(LOG_TAG, "status: $status")
+                                ctx.showSnackbar(status)
+                            } else {
+                                val errorResponse = response.parseErrorBody(ctx) ?: "Unknown Error"
+                                Log.d(LOG_TAG, "errorResponse: $errorResponse")
+                                ctx.showSnackbar(errorResponse, true)
+                            }
+                        } catch (e: IOException) {
+                            Log.e(LOG_TAG, "thumbnails IOException: ${e.message}")
+                            ctx.showSnackbar("Network Error: ${e.message}", true)
                         }
                     }
                 }
@@ -586,7 +632,12 @@ class UserFragment : Fragment() {
                     val patchUser = PatchUser(username = newValue)
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
-                        val newUser = api.editUser(patchUser)
+                        val newUser = try {
+                            api.editUser(patchUser)
+                        } catch (e: IOException) {
+                            Log.e("changeUsernameDialog", "editUser IOException: ${e.message}")
+                            null
+                        }
                         Log.d("changeUsernameDialog", "newUser: $newUser")
                         if (newUser != null) {
                             val userRepository = UserRepository(dao)
@@ -652,7 +703,12 @@ class UserFragment : Fragment() {
                     val patchUser = PatchUser(password = newValue)
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
-                        val newUser = api.editUser(patchUser)
+                        val newUser = try {
+                            api.editUser(patchUser)
+                        } catch (e: IOException) {
+                            Log.e("changePasswordDialog", "editUser IOException: ${e.message}")
+                            null
+                        }
                         Log.d("changePasswordDialog", "newUser: $newUser")
                         if (newUser != null) {
                             val userRepository = UserRepository(dao)
@@ -707,7 +763,12 @@ class UserFragment : Fragment() {
                 } else {
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
-                        val userResponse = api.disableTotp(totpCode)
+                        val userResponse = try {
+                            api.disableTotp(totpCode)
+                        } catch (e: IOException) {
+                            Log.e("disableTotpDialog", "disableTotp IOException: ${e.message}")
+                            null
+                        }
                         Log.d("disableTotpDialog", "userResponse: $userResponse")
                         if (userResponse != null) {
                             val userRepository = UserRepository(dao)
@@ -808,7 +869,12 @@ class UserFragment : Fragment() {
                 } else {
                     val dao: UserDao = UserDatabase.getInstance(this).userDao()
                     lifecycleScope.launch {
-                        val userResponse = api.enableTotp(totpSecret, totpCode)
+                        val userResponse = try {
+                            api.enableTotp(totpSecret, totpCode)
+                        } catch (e: IOException) {
+                            Log.e("enableTotpDialog", "enableTotp IOException: ${e.message}")
+                            null
+                        }
                         Log.d("enableTotpDialog", "userResponse: $userResponse")
                         if (userResponse != null) {
                             val userRepository = UserRepository(dao)
@@ -866,7 +932,12 @@ suspend fun Context.updateStats(): ServerEntity? {
         return null
     }
     val api = ServerApi(this, savedUrl)
-    val statsResponse = api.stats()
+    val statsResponse = try {
+        api.stats()
+    } catch (e: IOException) {
+        Log.e("updateStats", "stats IOException: ${e.message}")
+        return null
+    }
     Log.d("updateStats", "statsResponse: $statsResponse")
     debugLog("updateStats: response: ${statsResponse.code()}")
     if (statsResponse.isSuccessful) {
@@ -905,7 +976,12 @@ suspend fun Context.updateUser(): UserEntity? {
     }
     val api = ServerApi(this, savedUrl)
     // TODO: Update user response to return Response<User> to check and log status
-    val user = api.user() ?: return null
+    val user = try {
+        api.user()
+    } catch (e: IOException) {
+        Log.e("updateUser", "user IOException: ${e.message}")
+        null
+    } ?: return null
     Log.d("updateUser", "user: $user")
     debugLog("updateUser: user: $user")
     val repo = UserRepository(UserDatabase.getInstance(this).userDao())
@@ -937,7 +1013,12 @@ suspend fun Context.updateAvatar(): File {
     Log.d("updateAvatar", "savedUrl: $savedUrl")
 
     val api = ServerApi(this, savedUrl)
-    val avatar = api.avatar()
+    val avatar = try {
+        api.avatar()
+    } catch (e: IOException) {
+        Log.e("updateAvatar", "avatar IOException: ${e.message}")
+        null
+    }
     Log.d("updateAvatar", "avatar: ${avatar?.take(100)}")
     debugLog("updateAvatar: avatar: ${avatar?.take(20)}...")
 

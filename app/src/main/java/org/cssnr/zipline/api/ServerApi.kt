@@ -35,6 +35,7 @@ import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.HTTP
 import retrofit2.http.Header
+import retrofit2.http.Headers as HeadersAnnotation
 import retrofit2.http.Multipart
 import retrofit2.http.PATCH
 import retrofit2.http.POST
@@ -128,16 +129,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     suspend fun shorten(url: String, vanity: String?): Response<ShortResponse> {
         Log.d("Api[shorten]", "url: $url")
         Log.d("Api[shorten]", "vanity: $vanity")
-
-        val response = api.postShort(ShortRequest(url, vanity, true))
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[shorten]", "reAuthenticate: token: $token")
-            if (token != null) {
-                return api.postShort(ShortRequest(url, vanity, true))
-            }
-        }
-        return response
+        return withAuthRetry { api.postShort(ShortRequest(url, vanity, true)) }
     }
 
     suspend fun upload(
@@ -158,58 +150,28 @@ class ServerApi(private val context: Context, url: String? = null) {
             URLConnection.guessContentTypeFromName(fileName) ?: "application/octet-stream"
         val requestBody = InputStreamRequestBody(contentType.toMediaType(), inputStream)
         val part = MultipartBody.Part.createFormData("file", fileName, requestBody)
-        val response = api.postUpload(
-            part,
-            format,
-            originalName,
-            uploadOptions.compression?.takeIf { it != 0 },
-            uploadOptions.deletesAt,
-            uploadOptions.folderId,
-            uploadOptions.password,
-            uploadOptions.maxViews,
-        )
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
-            if (token != null) {
-                return api.postUpload(
-                    part,
-                    format,
-                    originalName,
-                    uploadOptions.compression,
-                    uploadOptions.deletesAt,
-                    uploadOptions.folderId,
-                    uploadOptions.password,
-                    uploadOptions.maxViews,
-                )
-            }
+        return withAuthRetry {
+            api.postUpload(
+                part,
+                format,
+                originalName,
+                uploadOptions.compression?.takeIf { it != 0 },
+                uploadOptions.deletesAt,
+                uploadOptions.folderId,
+                uploadOptions.password,
+                uploadOptions.maxViews,
+            )
         }
-        return response
     }
 
     suspend fun stats(): Response<StatsResponse> {
         Log.d("Api[stats]", "stats")
-        val response = api.getStats()
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[stats]", "reAuthenticate: token: $token")
-            if (token != null) {
-                return api.getStats()
-            }
-        }
-        return response
+        return withAuthRetry { api.getStats() }
     }
 
     suspend fun avatar(): String? {
         Log.d("Api[avatar]", "avatar")
-        var response = api.getUserAvatar()
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[avatar]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.getUserAvatar()
-            }
-        }
+        val response = withAuthRetry { api.getUserAvatar() }
         if (response.isSuccessful) {
             val data = response.body()
             if (data != null) {
@@ -221,27 +183,13 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun user(): User? {
         Log.d("Api[user]", "user")
-        var response = api.getUser()
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[user]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.getUser()
-            }
-        }
+        val response = withAuthRetry { api.getUser() }
         return if (response.isSuccessful) response.body()?.user else null
     }
 
     suspend fun editUser(patchUser: PatchUser): User? {
         Log.d("Api[editUser]", "patchUser: ${patchUser.toString().take(100)}")
-        var response = api.patchUser(patchUser)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[editUser]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.patchUser(patchUser)
-            }
-        }
+        val response = withAuthRetry { api.patchUser(patchUser) }
         return if (response.isSuccessful) response.body()?.user else null
     }
 
@@ -260,14 +208,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun folders(noincl: Boolean = false): List<FolderResponse>? {
         Log.d("Api[folders]", "noincl: $noincl")
-        var response = api.getFolders(noincl)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.getFolders(noincl)
-            }
-        }
+        val response = withAuthRetry { api.getFolders(noincl) }
         Log.d("Api[files]", "code: ${response.code()}")
         Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
         if (response.isSuccessful) {
@@ -279,14 +220,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun files(page: Int, perpage: Int = 25): List<FileResponse>? {
         Log.d("Api[files]", "page: $page - perpage: $perpage")
-        var response = api.getFiles(page, perpage)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.getFiles(page, perpage)
-            }
-        }
+        val response = withAuthRetry { api.getFiles(page, perpage) }
         Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
         if (response.isSuccessful) {
             val body = response.body()
@@ -297,15 +231,8 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun editSingle(fileId: String, editRequest: FileEditRequest): FileEditRequest? {
         Log.d("Api[editSingle]", "fileId: $fileId - $editRequest")
-        var response = api.editFile(fileId, editRequest)
+        val response = withAuthRetry { api.editFile(fileId, editRequest) }
         Log.d("Api[editSingle]", "response: $response")
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[editSingle]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.editFile(fileId, editRequest)
-            }
-        }
         Log.d("Api[editSingle]", "isSuccessful: ${response.isSuccessful}")
         if (response.isSuccessful) {
             val body = response.body()
@@ -317,14 +244,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     suspend fun editMany(transaction: FilesTransaction): Int? {
         //Log.d("Api[deleteMany]", "files: $files")
         Log.d("Api[deleteMany]", "transaction: $transaction")
-        var response = api.editFiles(transaction)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.editFiles(transaction)
-            }
-        }
+        val response = withAuthRetry { api.editFiles(transaction) }
         Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
         if (response.isSuccessful) {
             val body = response.body()
@@ -337,14 +257,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         //Log.d("Api[deleteMany]", "files: $files")
         val transaction = FilesTransaction(files = files)
         Log.d("Api[deleteMany]", "transaction: $transaction")
-        var response = api.deleteFiles(transaction)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.deleteFiles(transaction)
-            }
-        }
+        val response = withAuthRetry { api.deleteFiles(transaction) }
         Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
         if (response.isSuccessful) {
             val body = response.body()
@@ -355,14 +268,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun deleteSingle(fileId: String): FileResponse? {
         //Log.d("Api[deleteMany]", "files: $files")
-        var response = api.deleteFile(fileId)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[upload]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.deleteFile(fileId)
-            }
-        }
+        val response = withAuthRetry { api.deleteFile(fileId) }
         Log.d("Api[files]", "isSuccessful: ${response.isSuccessful}")
         if (response.isSuccessful) {
             val body = response.body()
@@ -374,70 +280,33 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun getTotpSecret(): TotpResponse? {
         Log.d("Api[getTotpSecret]", "getTotpSecret")
-        var response = api.getUserMfaTotp()
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[getTotpSecret]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.getUserMfaTotp()
-            }
-        }
+        val response = withAuthRetry { api.getUserMfaTotp() }
         return response.body()
     }
 
     suspend fun enableTotp(secret: String, code: String): User? {
         Log.d("Api[enableTotp]", "enableTotp")
         val request = TotpRequest(secret = secret, code = code)
-        var response = api.postUserMfaTotp(request)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[enableTotp]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.postUserMfaTotp(request)
-            }
-        }
+        val response = withAuthRetry { api.postUserMfaTotp(request) }
         return response.body()
     }
 
     suspend fun disableTotp(code: String): User? {
         Log.d("Api[disableTotp]", "disableTotp")
         val request = TotpRequest(code = code)
-        var response = api.deleteUserMfaTotp(request)
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[disableTotp]", "reAuthenticate: token: $token")
-            if (token != null) {
-                response = api.deleteUserMfaTotp(request)
-            }
-        }
+        val response = withAuthRetry { api.deleteUserMfaTotp(request) }
         return response.body()
     }
 
 
     suspend fun clearTemp(): Response<StatusResponse> {
         Log.d("Api[clearTemp]", "clearTemp")
-        val response = api.serverClearTemp()
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[clearTemp]", "reAuthenticate: token: $token")
-            if (token != null) {
-                return api.serverClearTemp()
-            }
-        }
-        return response
+        return withAuthRetry { api.serverClearTemp() }
     }
 
     suspend fun clearZeros(): Response<StatusResponse> {
         Log.d("Api[clearZeros]", "clearZeros")
-        val response = api.serverClearZeros()
-        if (response.code() == 401) {
-            val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[clearZeros]", "reAuthenticate: token: $token")
-            if (token != null) {
-                return api.serverClearZeros()
-            }
-        }
-        return response
+        return withAuthRetry { api.serverClearZeros() }
     }
 
     // NOTE: Requery Size is not used...
@@ -461,12 +330,16 @@ class ServerApi(private val context: Context, url: String? = null) {
 
     suspend fun thumbnails(reRun: Boolean = false): Response<StatusResponse> {
         Log.d("Api[clearZeros]", "clearZeros")
-        val response = api.serverThumbnails(ThumbnailsRequest(rerun = reRun))
+        return withAuthRetry { api.serverThumbnails(ThumbnailsRequest(rerun = reRun)) }
+    }
+
+    private suspend fun <T> withAuthRetry(call: suspend () -> Response<T>): Response<T> {
+        var response = call()
         if (response.code() == 401) {
+            Log.d("Api", "withAuthRetry: 401 - re-authenticating")
             val token = reAuthenticate(api, ziplineUrl)
-            Log.d("Api[clearZeros]", "reAuthenticate: token: $token")
             if (token != null) {
-                return api.serverThumbnails(ThumbnailsRequest(rerun = reRun))
+                response = call()
             }
         }
         return response
@@ -518,7 +391,10 @@ class ServerApi(private val context: Context, url: String? = null) {
             .addInterceptor { chain ->
                 val requestBuilder = chain.request().newBuilder()
                     .header("User-Agent", userAgent)
-                    .header("authorization", authToken)
+                if (chain.request().header("no-auth") == null) {
+                    requestBuilder.header("authorization", authToken)
+                }
+                requestBuilder.removeHeader("no-auth")
                 for ((key, value) in headerPreferences.all) {
                     Log.d("createRetrofit", "Custom Header: $key - $value")
                     requestBuilder.header(key, value.toString())
@@ -541,6 +417,7 @@ class ServerApi(private val context: Context, url: String? = null) {
         ): Response<ResponseBody>
 
         @GET("user/token")
+        @HeadersAnnotation("no-auth: true")
         suspend fun getUserToken(): TokenResponse
 
         @GET("user/stats")
