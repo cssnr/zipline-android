@@ -111,6 +111,7 @@ class UserFragment : Fragment() {
         }
 
         val ctx = requireContext()
+        val mainActivity = requireActivity()
 
         //val dateFormat = DateFormat.getDateFormat(ctx)
         //val timeFormat = DateFormat.getTimeFormat(ctx)
@@ -245,6 +246,7 @@ class UserFragment : Fragment() {
                     api.editUser(PatchUser(avatar = avatar))
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "editUser IOException: ${e.message}")
+                    ctx.debugLog("UserFragment: editUser IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "user: $user")
@@ -255,7 +257,7 @@ class UserFragment : Fragment() {
 
                     Glide.with(binding.appIcon).load(avatarFile)
                         .signature(ObjectKey(avatarFile.lastModified())).into(binding.appIcon)
-                    val headerImage = requireActivity().findViewById<ImageView>(R.id.header_image)
+                    val headerImage = mainActivity.findViewById<ImageView>(R.id.header_image)
                     Glide.with(headerImage).load(avatarFile)
                         .signature(ObjectKey(avatarFile.lastModified())).into(headerImage)
 
@@ -284,9 +286,10 @@ class UserFragment : Fragment() {
             binding.updateProfile.isEnabled = false
             lifecycleScope.launch {
                 val user = try {
-                    requireActivity().updateUserActivity()
+                    mainActivity.updateUserActivity()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateUserActivity IOException: ${e.message}")
+                    ctx.debugLog("UserFragment: updateUserActivity IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "binding.updateProfile - user: $user")
@@ -331,6 +334,7 @@ class UserFragment : Fragment() {
                         api.getTotpSecret()
                     } catch (e: IOException) {
                         Log.e(LOG_TAG, "getTotpSecret IOException: ${e.message}")
+                        ctx.debugLog("UserFragment: getTotpSecret IOException: ${e.message}")
                         null
                     }
                     Log.d(LOG_TAG, "totpResponse: $totpResponse")
@@ -357,6 +361,7 @@ class UserFragment : Fragment() {
                     ctx.updateStats()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateStats IOException: ${e.message}")
+                    ctx.debugLog("UserFragment: updateStats IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "binding.updateStats - serverEntity: $serverEntity")
@@ -371,22 +376,32 @@ class UserFragment : Fragment() {
             binding.updateAvatar.isEnabled = false
             lifecycleScope.launch {
                 val file = try {
-                    requireActivity().updateAvatarActivity()
+                    mainActivity.updateAvatarActivity()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateAvatarActivity IOException: ${e.message}")
-                    File(ctx.filesDir, "avatar.png")
+                    ctx.debugLog("UserFragment: updateAvatarActivity IOException: ${e.message}")
+                    null
                 }
                 Log.d(LOG_TAG, "binding.updateAvatarActivity: file: $file")
                 _binding?.let {
-                    if (file.exists()) {
-                        Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $file")
-                        Glide.with(it.appIcon).load(file).signature(ObjectKey(file.lastModified()))
-                            .into(it.appIcon)
-                    } else {
-                        Glide.with(it.appIcon).load(R.mipmap.ic_launcher_round).into(it.appIcon)
+                    when {
+                        file != null && file.exists() -> {
+                            Log.i(LOG_TAG, "GLIDE LOAD - binding.appIcon: $file")
+                            Glide.with(it.appIcon).load(file).signature(ObjectKey(file.lastModified()))
+                                .into(it.appIcon)
+                            ctx.showSnackbar("Avatar Refreshed from Server.")
+                        }
+
+                        file != null -> {
+                            Glide.with(it.appIcon).load(R.mipmap.ic_launcher_round).into(it.appIcon)
+                            ctx.showSnackbar("No Avatar on Server.")
+                        }
+
+                        else -> {
+                            ctx.showSnackbar("Error Refreshing Avatar!", true)
+                        }
                     }
                     it.updateAvatar.isEnabled = true
-                    ctx.showSnackbar("Avatar Refreshed from Server.")
                 }
             }
         }
@@ -443,6 +458,7 @@ class UserFragment : Fragment() {
                             api.editUser(PatchUser(avatar = ""))
                         } catch (e: IOException) {
                             Log.e(LOG_TAG, "editUser IOException: ${e.message}")
+                            ctx.debugLog("UserFragment: editUser IOException: ${e.message}")
                             null
                         }
                         Log.d(LOG_TAG, "newUser: $newUser")
@@ -636,6 +652,7 @@ class UserFragment : Fragment() {
                             api.editUser(patchUser)
                         } catch (e: IOException) {
                             Log.e("changeUsernameDialog", "editUser IOException: ${e.message}")
+                            this@changeUsernameDialog.debugLog("changeUsernameDialog: editUser IOException: ${e.message}")
                             null
                         }
                         Log.d("changeUsernameDialog", "newUser: $newUser")
@@ -707,6 +724,7 @@ class UserFragment : Fragment() {
                             api.editUser(patchUser)
                         } catch (e: IOException) {
                             Log.e("changePasswordDialog", "editUser IOException: ${e.message}")
+                            this@changePasswordDialog.debugLog("changePasswordDialog: editUser IOException: ${e.message}")
                             null
                         }
                         Log.d("changePasswordDialog", "newUser: $newUser")
@@ -767,6 +785,7 @@ class UserFragment : Fragment() {
                             api.disableTotp(totpCode)
                         } catch (e: IOException) {
                             Log.e("disableTotpDialog", "disableTotp IOException: ${e.message}")
+                            this@disableTotpDialog.debugLog("disableTotpDialog: disableTotp IOException: ${e.message}")
                             null
                         }
                         Log.d("disableTotpDialog", "userResponse: $userResponse")
@@ -873,6 +892,7 @@ class UserFragment : Fragment() {
                             api.enableTotp(totpSecret, totpCode)
                         } catch (e: IOException) {
                             Log.e("enableTotpDialog", "enableTotp IOException: ${e.message}")
+                            this@enableTotpDialog.debugLog("enableTotpDialog: enableTotp IOException: ${e.message}")
                             null
                         }
                         Log.d("enableTotpDialog", "userResponse: $userResponse")
@@ -932,12 +952,7 @@ suspend fun Context.updateStats(): ServerEntity? {
         return null
     }
     val api = ServerApi(this, savedUrl)
-    val statsResponse = try {
-        api.stats()
-    } catch (e: IOException) {
-        Log.e("updateStats", "stats IOException: ${e.message}")
-        return null
-    }
+    val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
     debugLog("updateStats: response: ${statsResponse.code()}")
     if (statsResponse.isSuccessful) {
@@ -976,12 +991,7 @@ suspend fun Context.updateUser(): UserEntity? {
     }
     val api = ServerApi(this, savedUrl)
     // TODO: Update user response to return Response<User> to check and log status
-    val user = try {
-        api.user()
-    } catch (e: IOException) {
-        Log.e("updateUser", "user IOException: ${e.message}")
-        null
-    } ?: return null
+    val user = api.user() ?: return null
     Log.d("updateUser", "user: $user")
     debugLog("updateUser: user: $user")
     val repo = UserRepository(UserDatabase.getInstance(this).userDao())
@@ -1013,16 +1023,11 @@ suspend fun Context.updateAvatar(): File {
     Log.d("updateAvatar", "savedUrl: $savedUrl")
 
     val api = ServerApi(this, savedUrl)
-    val avatar = try {
-        api.avatar()
-    } catch (e: IOException) {
-        Log.e("updateAvatar", "avatar IOException: ${e.message}")
-        null
-    }
+    val file = File(filesDir, "avatar.png")
+    val avatar = api.avatar()
     Log.d("updateAvatar", "avatar: ${avatar?.take(100)}")
     debugLog("updateAvatar: avatar: ${avatar?.take(20)}...")
 
-    val file = File(filesDir, "avatar.png")
     if (avatar == null) {
         Log.d("updateAvatar", "No Avatar Returned! Deleting File: $file")
         file.delete()
