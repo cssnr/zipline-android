@@ -97,6 +97,7 @@ class FilesPreviewFragment : Fragment() {
         }
         if (webView != null) {
             Log.d("FilesPreviewFragment", "webView?.destroy")
+            (webView?.parent as? ViewGroup)?.removeView(webView)
             webView?.destroy()
             webView = null
         }
