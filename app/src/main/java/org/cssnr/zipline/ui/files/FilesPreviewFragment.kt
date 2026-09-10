@@ -329,6 +329,8 @@ class FilesPreviewFragment : Fragment() {
         } else if (mimeType.startsWith("text/") || isCodeMime(mimeType)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")
             binding.copyText.visibility = View.VISIBLE
+            binding.copyText.isEnabled = false
+            binding.copyText.alpha = 0.4f
             binding.previewProgress.visibility = View.VISIBLE
 
             val url = "file:///android_asset/preview/preview.html"
@@ -401,6 +403,8 @@ class FilesPreviewFragment : Fragment() {
                     binding.previewImageView.setImageResource(getGenericIcon(mimeType))
                     return@launch
                 }
+                binding.copyText.isEnabled = true
+                binding.copyText.alpha = 1.0f
                 binding.copyText.setOnClickListener {
                     ctx.copyToClipboard(content)
                     ctx.showSnackbar("Copied Text to Clipboard.")
