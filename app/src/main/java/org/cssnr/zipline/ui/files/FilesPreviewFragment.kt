@@ -9,8 +9,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.ConsoleMessage
 import android.webkit.CookieManager
 import android.webkit.RenderProcessGoneDetail
+import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.annotation.OptIn
@@ -65,7 +67,7 @@ class FilesPreviewFragment : Fragment() {
     private var currentPosition: Long = 0
 
     private lateinit var player: ExoPlayer
-    private lateinit var webView: WebView
+    private var webView: WebView? = null
 
     private val navController by lazy { findNavController() }
 
@@ -93,9 +95,10 @@ class FilesPreviewFragment : Fragment() {
             Log.d("FilesPreviewFragment", "player.release")
             player.release()
         }
-        if (::webView.isInitialized) {
+        if (webView != null) {
             Log.d("FilesPreviewFragment", "webView.destroy")
-            webView.destroy()
+            webView?.destroy()
+            webView = null
         }
         super.onDestroyView()
         _binding = null
@@ -326,8 +329,7 @@ class FilesPreviewFragment : Fragment() {
         } else if (mimeType.startsWith("text/") || isCodeMime(mimeType)) {
             Log.d("FilesPreviewFragment", "WEB VIEW TIME")
             binding.copyText.visibility = View.VISIBLE
-            webView = WebView(ctx)
-            binding.previewContainer.addView(webView)
+            binding.previewProgress.visibility = View.VISIBLE
 
             val url = "file:///android_asset/preview/preview.html"
             Log.d("FilesPreviewFragment", "url: $url")
@@ -336,14 +338,67 @@ class FilesPreviewFragment : Fragment() {
             //cookieManager.setAcceptCookie(true)
             //cookieManager.setAcceptThirdPartyCookies(webView, true)
 
-            lifecycleScope.launch {
-                val content = withContext(Dispatchers.IO) { getContent(rawUrl) }
+            var contentJs: String? = null
+            var pageReady = false
+            var injected = false
+
+            fun injectContent() {
+                val wv = webView ?: return
+                if (!pageReady || injected) return
+                val js = contentJs ?: run {
+                    Log.d("FilesPreviewFragment", "content not ready, will inject after fetch")
+                    return
+                }
+                injected = true
+                Log.d("FilesPreviewFragment", "injecting content")
+                wv.evaluateJavascript(js, null)
+                binding.previewProgress.visibility = View.GONE
+            }
+
+            webView = WebView(ctx).also { wv ->
+                binding.previewContainer.addView(wv)
+                wv.setBackgroundColor(0)
+                binding.previewProgress.bringToFront()
+                wv.settings.javaScriptEnabled = true
+                wv.webViewClient = object : WebViewClient() {
+                    override fun onPageFinished(view: WebView?, url: String?) {
+                        Log.d("FilesPreviewFragment", "onPageFinished: $url")
+                        pageReady = true
+                        injectContent()
+                        super.onPageFinished(view, url)
+                    }
+
+                    override fun onRenderProcessGone(
+                        view: WebView?,
+                        detail: RenderProcessGoneDetail
+                    ): Boolean {
+                        Log.e(
+                            "FilesPreviewFragment",
+                            "onRenderProcessGone: didCrash=${detail.didCrash()}"
+                        )
+                        navController.navigateUp()
+                        return true
+                    }
+                }
+                wv.webChromeClient = object : WebChromeClient() {
+                    override fun onConsoleMessage(consoleMessage: ConsoleMessage): Boolean {
+                        Log.d(
+                            "FilesPreviewFragment",
+                            "${consoleMessage.message()} (${consoleMessage.sourceId()}:${consoleMessage.lineNumber()})"
+                        )
+                        return true
+                    }
+                }
+                Log.d("FilesPreviewFragment", "loading: $url")
+                wv.loadUrl(url)
+            }
+
+            viewLifecycleOwner.lifecycleScope.launch {
+                val content = withContext(Dispatchers.IO) { getContent(ctx, rawUrl) }
                 if (content == null) {
                     Log.w("FilesPreviewFragment", "content is null")
-                    withContext(Dispatchers.Main) {
-                        val msg = "Error Loading Content!"
-                        ctx.showSnackbar(msg, true)
-                    }
+                    ctx.showSnackbar("Error Loading Content!", true)
+                    binding.previewProgress.visibility = View.GONE
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
@@ -355,32 +410,9 @@ class FilesPreviewFragment : Fragment() {
                 //Log.d("FilesPreviewFragment", "escapedContent: $escapedContent")
                 val jsString = "addContent(${escapedContent});"
                 //Log.d("FilesPreviewFragment", "jsString: $jsString")
-                withContext(Dispatchers.Main) {
-                    webView.apply {
-                        settings.javaScriptEnabled = true
-                        loadUrl(url)
-                        @SuppressLint("MissingOnRenderProcessGone")
-                        webViewClient = object : WebViewClient() {
-                            override fun onPageFinished(view: WebView?, url: String?) {
-                                evaluateJavascript(jsString, null)
-                            }
-
-                            override fun onRenderProcessGone(
-                                view: WebView?,
-                                detail: RenderProcessGoneDetail
-                            ): Boolean {
-                                Log.e(
-                                    "FilesPreviewFragment",
-                                    "onRenderProcessGone: didCrash=${detail.didCrash()}"
-                                )
-                                navController.navigateUp()
-                                return true
-                            }
-                        }
-                    }
-                }
+                contentJs = jsString
+                injectContent()
             }
-
         } else {
             Log.d("FilesPreviewFragment", "OTHER - NO PREVIEW")
 
@@ -412,30 +444,17 @@ class FilesPreviewFragment : Fragment() {
             .show()
     }
 
-    private fun getContent(rawUrl: String): String? {
+    private fun getContent(ctx: Context, rawUrl: String): String? {
         Log.d("getContent", "rawUrl: $rawUrl")
-        val forceCacheInterceptor = Interceptor { chain ->
-            val response = chain.proceed(chain.request())
-            response.newBuilder()
-                .header("Cache-Control", "public, max-age=31536000")
-                .build()
-        }
-
         val cookies = CookieManager.getInstance().getCookie(rawUrl)
         Log.d("getContent", "cookies: $cookies")
 
-        val cacheDirectory = File(requireContext().cacheDir, "http_cache")
-        // TODO: Make Cache Size User Configurable: 100 MB
-        val cache = Cache(cacheDirectory, 100 * 1024 * 1024)
-
-        val client = OkHttpClient.Builder()
-            .addNetworkInterceptor(forceCacheInterceptor)
-            .cache(cache)
+        val request = Request.Builder()
+            .url(rawUrl)
+            .header("Cookie", cookies ?: "")
             .build()
-
-        val request = Request.Builder().url(rawUrl).header("Cookie", cookies ?: "").build()
         return try {
-            client.newCall(request).execute().use { response ->
+            getHttpClient(ctx).newCall(request).execute().use { response ->
                 Log.d("getContent", "response.code: ${response.code}")
                 if (response.isSuccessful) {
                     return response.body.string()
@@ -494,4 +513,37 @@ class FilesPreviewFragment : Fragment() {
     //    Log.d("FilesPreviewFragment", "ON RESUME")
     //    super.onResume()
     //}
+
+    companion object {
+        private val httpClientLock = Any()
+        private var httpClient: OkHttpClient? = null
+
+        private fun getHttpClient(ctx: Context): OkHttpClient {
+            synchronized(httpClientLock) {
+                if (httpClient == null) {
+                    val forceCacheInterceptor = Interceptor { chain ->
+                        val response = chain.proceed(chain.request())
+                        if (response.isSuccessful) {
+                            response.newBuilder()
+                                .header("Cache-Control", "public, max-age=604800")
+                                .build()
+                        } else {
+                            response
+                        }
+                    }
+                    // TODO: Make Cache Size User Configurable: 100 MB
+                    httpClient = OkHttpClient.Builder()
+                        .addNetworkInterceptor(forceCacheInterceptor)
+                        .cache(
+                            Cache(
+                                File(ctx.applicationContext.cacheDir, "http_cache"),
+                                100 * 1024 * 1024
+                            )
+                        )
+                        .build()
+                }
+            }
+            return httpClient ?: error("httpClient not initialized")
+        }
+    }
 }
