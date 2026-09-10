@@ -55,6 +55,7 @@ import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.upload.copyToClipboard
 import org.json.JSONObject
 import java.io.File
+import java.util.concurrent.TimeUnit
 
 class FilesPreviewFragment : Fragment() {
 
@@ -96,7 +97,7 @@ class FilesPreviewFragment : Fragment() {
             player.release()
         }
         if (webView != null) {
-            Log.d("FilesPreviewFragment", "webView.destroy")
+            Log.d("FilesPreviewFragment", "webView?.destroy")
             webView?.destroy()
             webView = null
         }
@@ -345,10 +346,7 @@ class FilesPreviewFragment : Fragment() {
             fun injectContent() {
                 val wv = webView ?: return
                 if (!pageReady || injected) return
-                val js = contentJs ?: run {
-                    Log.d("FilesPreviewFragment", "content not ready, will inject after fetch")
-                    return
-                }
+                val js = contentJs ?: return
                 injected = true
                 Log.d("FilesPreviewFragment", "injecting content")
                 wv.evaluateJavascript(js, null)
@@ -399,6 +397,9 @@ class FilesPreviewFragment : Fragment() {
                     Log.w("FilesPreviewFragment", "content is null")
                     ctx.showSnackbar("Error Loading Content!", true)
                     binding.previewProgress.visibility = View.GONE
+                    webView?.visibility = View.GONE
+                    binding.previewImageView.visibility = View.VISIBLE
+                    binding.previewImageView.setImageResource(getGenericIcon(mimeType))
                     return@launch
                 }
                 binding.copyText.setOnClickListener {
@@ -533,6 +534,9 @@ class FilesPreviewFragment : Fragment() {
                     }
                     // TODO: Make Cache Size User Configurable: 100 MB
                     httpClient = OkHttpClient.Builder()
+                        .connectTimeout(10, TimeUnit.SECONDS) // default: 10
+                        .readTimeout(10, TimeUnit.SECONDS) // default: 10
+                        .callTimeout(10, TimeUnit.SECONDS) // default: 0 (no timeout)
                         .addNetworkInterceptor(forceCacheInterceptor)
                         .cache(
                             Cache(
