@@ -43,10 +43,12 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
+import org.cssnr.zipline.log.debugLog
 import org.cssnr.zipline.ui.files.FilesViewModel
 import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateStats
 import org.cssnr.zipline.ui.user.updateUserActivity
+import java.io.IOException
 
 class LoginFragment : Fragment() {
 
@@ -253,13 +255,37 @@ class LoginFragment : Fragment() {
             //GlobalScope.launch(Dispatchers.IO) { ctx.updateStats() }
             //GlobalScope.launch(Dispatchers.IO) { requireActivity().updateAvatarActivity() }
 
+            val ctx = requireContext()
+            val activity = requireActivity()
+
             // NOTE: This updates in the background and does not block
-            CoroutineScope(Dispatchers.IO).launch { requireContext().updateStats() }
+            CoroutineScope(Dispatchers.IO).launch {
+                try {
+                    ctx.updateStats()
+                } catch (e: IOException) {
+                    Log.e(LOG_TAG, "updateStats IOException: ${e.message}")
+                    ctx.debugLog("LoginFragment: updateStats IOException: ${e.message}")
+                }
+            }
 
             // NOTE: This runs both tasks simultaneously and blocks the current scope
             coroutineScope {
-                val task1 = async { requireActivity().updateAvatarActivity() }
-                val task2 = async { requireActivity().updateUserActivity() }
+                val task1 = async {
+                    try {
+                        activity.updateAvatarActivity()
+                    } catch (e: IOException) {
+                        Log.e(LOG_TAG, "updateAvatarActivity IOException: ${e.message}")
+                        ctx.debugLog("LoginFragment: updateAvatarActivity IOException: ${e.message}")
+                    }
+                }
+                val task2 = async {
+                    try {
+                        activity.updateUserActivity()
+                    } catch (e: IOException) {
+                        Log.e(LOG_TAG, "updateUserActivity IOException: ${e.message}")
+                        ctx.debugLog("LoginFragment: updateUserActivity IOException: ${e.message}")
+                    }
+                }
                 task1.await()
                 task2.await()
             }

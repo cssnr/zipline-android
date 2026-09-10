@@ -98,7 +98,7 @@ jobs:
       - name: "Write Keystore File"
         run: |
           echo "${{ secrets.ANDROID_KEYSTORE }}" | base64 --decode > ${{ env.key_file }}
-          echo ${{ secrets.ANDROID_KEYSTORE_PASS }} | keytool -list -keystore ${{ env.key_file }}
+          echo "${{ secrets.ANDROID_KEYSTORE_PASS }}" | keytool -list -keystore ${{ env.key_file }}
 
       - name: "Setup Node 24"
         uses: actions/setup-node@v7
@@ -153,6 +153,12 @@ jobs:
             "${{ env.apk_path }}/${{ env.apk_file }}"
           apksigner verify --verbose "${{ env.apk_path }}/${{ env.apk_file }}"
           mv "${{ env.apk_path }}/${{ env.apk_file }}" "${{ env.apk_path }}/${{ env.signed_apk }}"
+
+      - name: "Upload Mapping to Artifacts"
+        uses: actions/upload-artifact@v7
+        with:
+          name: mapping
+          path: ${{ env.mapping_file }}
 
       - name: "Upload APK to Artifacts"
         uses: actions/upload-artifact@v7

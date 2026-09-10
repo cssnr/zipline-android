@@ -20,7 +20,9 @@ import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
+import org.cssnr.zipline.log.debugLog
 import org.cssnr.zipline.ui.user.updateStats
+import java.io.IOException
 
 class WidgetProvider : AppWidgetProvider() {
 
@@ -38,7 +40,12 @@ class WidgetProvider : AppWidgetProvider() {
             }
             Log.i("Widget[onReceive]", "CoroutineScope.launch: START")
             CoroutineScope(Dispatchers.IO).launch {
-                context.updateStats()
+                try {
+                    context.updateStats()
+                } catch (e: IOException) {
+                    Log.e("Widget[onReceive]", "updateStats IOException: ${e.message}")
+                    context.debugLog("WidgetProvider: updateStats IOException: ${e.message}")
+                }
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))
                 Log.i("Widget[onReceive]", "CoroutineScope.launch: DONE")
