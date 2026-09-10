@@ -367,7 +367,11 @@ class UserFragment : Fragment() {
                 Log.d(LOG_TAG, "binding.updateStats - serverEntity: $serverEntity")
                 viewModel.server.value = serverEntity
                 _binding?.updateStats?.isEnabled = true
-                ctx.showSnackbar("Stats Refreshed from Server.")
+                if (serverEntity != null) {
+                    ctx.showSnackbar("Stats Refreshed from Server.")
+                } else {
+                    ctx.showSnackbar("Error Refreshing Stats!", true)
+                }
             }
         }
 

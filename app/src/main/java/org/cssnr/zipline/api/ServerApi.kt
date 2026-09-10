@@ -132,6 +132,13 @@ class ServerApi(private val context: Context, url: String? = null) {
         return withAuthRetry { api.postShort(ShortRequest(url, vanity, true)) }
     }
 
+    suspend fun validateAuth(): Boolean {
+        Log.d("Api[validateAuth]", "validateAuth")
+        val response = withAuthRetry { api.getUser() }
+        Log.d("Api[validateAuth]", "response.isSuccessful: ${response.isSuccessful}")
+        return response.isSuccessful
+    }
+
     suspend fun upload(
         fileName: String,
         inputStream: InputStream,
@@ -150,18 +157,16 @@ class ServerApi(private val context: Context, url: String? = null) {
             URLConnection.guessContentTypeFromName(fileName) ?: "application/octet-stream"
         val requestBody = InputStreamRequestBody(contentType.toMediaType(), inputStream)
         val part = MultipartBody.Part.createFormData("file", fileName, requestBody)
-        return withAuthRetry {
-            api.postUpload(
-                part,
-                format,
-                originalName,
-                uploadOptions.compression?.takeIf { it != 0 },
-                uploadOptions.deletesAt,
-                uploadOptions.folderId,
-                uploadOptions.password,
-                uploadOptions.maxViews,
-            )
-        }
+        return api.postUpload(
+            part,
+            format,
+            originalName,
+            uploadOptions.compression?.takeIf { it != 0 },
+            uploadOptions.deletesAt,
+            uploadOptions.folderId,
+            uploadOptions.password,
+            uploadOptions.maxViews,
+        )
     }
 
     suspend fun stats(): Response<StatsResponse> {
