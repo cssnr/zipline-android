@@ -23,7 +23,7 @@
             android:layout_marginBottom="16dp"
             android:gravity="center_vertical"
             android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:drawableStart="@mipmap/ic_launcher_round"
+            android:drawableStart="@mipmap/ic_launcher"
             android:drawablePadding="16dp"
             android:text="Widget Options"
             tools:ignore="UseCompatTextViewDrawableXml" />
