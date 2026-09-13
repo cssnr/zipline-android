@@ -1,0 +1,16 @@
+<svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="zGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#FF00FF"/>
+      <stop offset="100%" stop-color="#00FFFF"/>
+    </linearGradient>
+  </defs>
+  <path
+    d="M255,165 L765,165 L255,860 L765,860"
+    fill="none"
+    stroke="url(#zGrad)"
+    stroke-width="185"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>

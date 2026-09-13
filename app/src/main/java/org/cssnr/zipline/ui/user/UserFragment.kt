@@ -398,7 +398,7 @@ class UserFragment : Fragment() {
                         }
 
                         file != null -> {
-                            Glide.with(it.appIcon).load(R.mipmap.ic_launcher_round).into(it.appIcon)
+                            Glide.with(it.appIcon).load(R.mipmap.ic_launcher).into(it.appIcon)
                             ctx.showSnackbar("No Avatar on Server.")
                         }
 
@@ -469,11 +469,11 @@ class UserFragment : Fragment() {
                         Log.d(LOG_TAG, "newUser: $newUser")
                         if (newUser != null) {
                             _binding?.appIcon?.let {
-                                Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                                Glide.with(it).load(R.mipmap.ic_launcher).into(it)
                             }
                             activity?.let { act ->
                                 act.findViewById<ImageView>(R.id.header_image)?.let {
-                                    Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                                    Glide.with(it).load(R.mipmap.ic_launcher).into(it)
                                 }
                             }
                             if (avatarFile.exists()) {
@@ -1058,7 +1058,7 @@ suspend fun Activity.updateAvatarActivity(): File {
                 Glide.with(it).load(file).signature(ObjectKey(file.lastModified())).into(it)
             } else {
                 Log.d("updateAvatarActivity", "Set Header Image: Default Drawable")
-                Glide.with(it).load(R.mipmap.ic_launcher_round).into(it)
+                Glide.with(it).load(R.mipmap.ic_launcher).into(it)
             }
         }
     }
