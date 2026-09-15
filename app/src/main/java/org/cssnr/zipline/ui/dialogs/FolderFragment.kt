@@ -16,6 +16,7 @@ class FolderFragment : DialogFragment() {
     private var folders: List<ServerApi.FolderResponse> = emptyList()
     private var selectedId: String? = null
     private var selectedName: String? = null
+    private var errorMessage: String? = null
 
     suspend fun setFolderData(context: Context, folderId: String? = null): String? {
         Log.d("FolderFragment", "setFolderData - folderId: $folderId")
@@ -30,7 +31,14 @@ class FolderFragment : DialogFragment() {
 
         val savedUrl = preferences?.getString("ziplineUrl", null)
         val api = ServerApi(context, savedUrl)
-        folders = api.folders().orEmpty()
+        // NOTE: This try/catch and errorMessage is just a temporary Band-Aid to a bigger problem...
+        folders = try {
+            api.folders().orEmpty()
+        } catch (e: Exception) {
+            errorMessage = "Error Loading Folders: ${e.message}"
+            Log.e("FolderFragment", "errorMessage: $errorMessage")
+            emptyList()
+        }
         Log.d("FolderFragment", "folders: $folders")
         if (selectedId != null) {
             val current = folders.firstOrNull { it.id == selectedId }
@@ -89,7 +97,7 @@ class FolderFragment : DialogFragment() {
                 dismiss()
             }
         } else {
-            dialog.setMessage("No Folders Found.")
+            dialog.setMessage(errorMessage ?: "No Folders Found.")
         }
 
         return dialog.create()
