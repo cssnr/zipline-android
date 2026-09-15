@@ -228,11 +228,11 @@ class TextFragment : Fragment() {
         Log.d("processUpload", "api: $api")
         showSnackbar(getString(R.string.tst_uploading_file))
         lifecycleScope.launch {
-            if (!api.validateAuth()) {
-                showSnackbar("Authentication failed!", true)
-                return@launch
-            }
             try {
+                if (!api.validateAuth()) {
+                    showSnackbar("Authentication failed!", true)
+                    return@launch
+                }
                 // TODO: Implement editRequest
                 val response = api.upload(fileName, inputStream, viewModel.uploadOptions.value!!)
                 Log.d("processUpload", "response: $response")

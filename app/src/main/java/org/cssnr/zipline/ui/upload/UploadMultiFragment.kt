@@ -276,8 +276,17 @@ class UploadMultiFragment : Fragment() {
         Log.d("processMultiUpload", "api: $api")
         val results: MutableList<UploadedFiles> = mutableListOf()
         lifecycleScope.launch {
-            if (!api.validateAuth()) {
-                showSnackbar("Authentication failed!", true)
+            try {
+                if (!api.validateAuth()) {
+                    showSnackbar("Authentication failed!", true)
+                    return@launch
+                }
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                val msg = e.message ?: "Unknown Error"
+                Log.i("processMultiUpload", "msg: $msg")
+                logFileUpload(false, "Exception: $msg", true)
+                showSnackbar(msg, true)
                 return@launch
             }
             for (fileUri in fileUris) {

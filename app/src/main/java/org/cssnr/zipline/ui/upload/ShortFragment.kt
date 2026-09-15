@@ -151,7 +151,18 @@ class ShortFragment : Fragment() {
 
         val api = ServerApi(this)
         lifecycleScope.launch {
-            val response = api.shorten(longUrl, vanityName)
+            // NOTE: This try/catch is just a temporary Band-Aid to a bigger problem...
+            val response = try {
+                api.shorten(longUrl, vanityName)
+            } catch (e: Throwable) {
+                e.printStackTrace()
+                val msg = e.message ?: "Unknown Error"
+                Log.i("processShort", "msg: $msg")
+                withContext(Dispatchers.Main) {
+                    this@processShort.showSnackbar(msg, true)
+                }
+                return@launch
+            }
             Log.d("processShort", "response: $response")
             if (response.isSuccessful) {
                 val shortResponse = response.body()
