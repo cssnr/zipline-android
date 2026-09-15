@@ -249,7 +249,10 @@ jobs:
         uses: smashedr/update-release-notes-action@master
         continue-on-error: true
         with:
-          type: generic
+          android: |
+            version_name: ${{ github.ref_name }}
+            version_code: ${{ github.run_number }}
+            package_id: ${{ env.package_name }}
 
       - name: "Write Job Summary"
         if: ${{ !github.event.act }}

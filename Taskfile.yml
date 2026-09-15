@@ -4,8 +4,23 @@ version: "3"
 vars:
   GRADLEW: 'gradlew{{if eq OS "windows"}}.bat{{end}}'
   PACKAGE: org.cssnr.zipline.dev
+  ACTIVITY: org.cssnr.zipline.MainActivity
 
 tasks:
+  gradle-status:
+    desc: Gradle daemon status
+    cmd: "{{.GRADLEW}} --status"
+
+  gradle-stop:
+    desc: Stop Gradle daemons
+    cmd: "{{.GRADLEW}} --stop"
+
+  docs:
+    desc: Zensical Docs
+    cmds:
+      - rm -rf .cache
+      - zensical serve --open
+
   check:
     desc: Check Non-Kotlin Files
     aliases: [prettier:check]
@@ -13,7 +28,6 @@ tasks:
       - prettier --check .
       - yamllint -c .github/yamllint.yaml .
       - actionlint -shellcheck="-e SC2129"
-      - shellcheck .github/scripts/prepare.sh
 
   format:
     desc: Format Non-Kotlin Files
@@ -41,17 +55,19 @@ tasks:
     desc: Build Android App Bundle
     cmd: "{{.GRADLEW}} bundleRelease {{.CLI_ARGS}}"
 
-  gradle-status:
-    desc: Gradle daemon status
-    cmd: "{{.GRADLEW}} --status"
-
-  gradle-stop:
-    desc: Stop Gradle daemons
-    cmd: "{{.GRADLEW}} --stop"
+  play:
+    desc: Assemble, Install and Launch
+    cmds:
+      - "{{.GRADLEW}} :app:installDebug {{.CLI_ARGS}}"
+      - "adb shell am start -n {{.PACKAGE}}/{{.ACTIVITY}}"
 
   clear:
     desc: Clear Data
     cmd: "adb {{.CLI_ARGS}} shell pm clear {{.PACKAGE}}"
+
+  install:
+    desc: Install Debug APK
+    cmd: "adb {{.CLI_ARGS}} install -r app/build/outputs/apk/debug/app-debug.apk"
 
   uninstall:
     desc: Uninstall App
