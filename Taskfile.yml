@@ -15,12 +15,6 @@ tasks:
     desc: Stop Gradle daemons
     cmd: "{{.GRADLEW}} --stop"
 
-  docs:
-    desc: Zensical Docs
-    cmds:
-      - rm -rf .cache
-      - zensical serve --open
-
   check:
     desc: Check Non-Kotlin Files
     aliases: [prettier:check]
@@ -28,6 +22,7 @@ tasks:
       - prettier --check .
       - yamllint -c .github/yamllint.yaml .
       - actionlint -shellcheck="-e SC2129"
+      - shellcheck .github/scripts/prepare.sh
 
   format:
     desc: Format Non-Kotlin Files
