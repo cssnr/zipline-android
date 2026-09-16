@@ -43,7 +43,7 @@ import org.cssnr.zipline.R
 import org.cssnr.zipline.api.ServerApi
 import org.cssnr.zipline.api.ServerApi.LoginData
 import org.cssnr.zipline.databinding.FragmentLoginBinding
-import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.log.AppLogs
 import org.cssnr.zipline.ui.files.FilesViewModel
 import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateStats
@@ -127,7 +127,7 @@ class LoginFragment : Fragment() {
             startActivity(Intent(Intent.ACTION_VIEW, v.tag.toString().toUri()))
         }
 
-        val enableDebugLogs = preferences.getBoolean("enable_debug_logs", false)
+        val enableDebugLogs = preferences.getBoolean("enable_debug_logs", true)
         Log.d(LOG_TAG, "enableDebugLogs: $enableDebugLogs")
         binding.debugLogging.visibility = if (enableDebugLogs) View.VISIBLE else View.GONE
         binding.toggleDebugLogs.isChecked = enableDebugLogs
@@ -160,8 +160,8 @@ class LoginFragment : Fragment() {
             binding.debugLogging.visibility = if (result) View.VISIBLE else View.GONE
         }
         binding.debugLogging.setOnClickListener {
-            Log.d("debugLogging", "setOnClickListener: navigate(R.id.nav_item_settings_debug)")
-            navController.navigate(R.id.nav_item_settings_debug)
+            Log.d("debugLogging", "setOnClickListener: navigate(R.id.nav_item_logs)")
+            navController.navigate(R.id.nav_item_logs)
         }
 
         binding.loginCode.addTextChangedListener(object : TextWatcher {
@@ -264,7 +264,7 @@ class LoginFragment : Fragment() {
                     ctx.updateStats()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateStats IOException: ${e.message}")
-                    ctx.debugLog("LoginFragment: updateStats IOException: ${e.message}")
+                    AppLogs.d(ctx, "LoginFragment: updateStats IOException: ${e.message}")
                 }
             }
 
@@ -275,7 +275,7 @@ class LoginFragment : Fragment() {
                         activity.updateAvatarActivity()
                     } catch (e: IOException) {
                         Log.e(LOG_TAG, "updateAvatarActivity IOException: ${e.message}")
-                        ctx.debugLog("LoginFragment: updateAvatarActivity IOException: ${e.message}")
+                        AppLogs.d(ctx, "LoginFragment: updateAvatarActivity IOException: ${e.message}")
                     }
                 }
                 val task2 = async {
@@ -283,7 +283,7 @@ class LoginFragment : Fragment() {
                         activity.updateUserActivity()
                     } catch (e: IOException) {
                         Log.e(LOG_TAG, "updateUserActivity IOException: ${e.message}")
-                        ctx.debugLog("LoginFragment: updateUserActivity IOException: ${e.message}")
+                        AppLogs.d(ctx, "LoginFragment: updateUserActivity IOException: ${e.message}")
                     }
                 }
                 task1.await()

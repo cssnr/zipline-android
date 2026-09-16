@@ -20,7 +20,7 @@ import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.db.ServerDao
 import org.cssnr.zipline.db.ServerDatabase
-import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.log.AppLogs
 import org.cssnr.zipline.ui.user.updateStats
 import java.io.IOException
 
@@ -44,7 +44,7 @@ class WidgetProvider : AppWidgetProvider() {
                     context.updateStats()
                 } catch (e: IOException) {
                     Log.e("Widget[onReceive]", "updateStats IOException: ${e.message}")
-                    context.debugLog("WidgetProvider: updateStats IOException: ${e.message}")
+                    AppLogs.d(context, "WidgetProvider: updateStats IOException: ${e.message}")
                 }
                 val appWidgetManager = AppWidgetManager.getInstance(context)
                 onUpdate(context, appWidgetManager, intArrayOf(appWidgetId))

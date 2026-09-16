@@ -53,7 +53,7 @@ import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
 import org.cssnr.zipline.db.UserEntity
 import org.cssnr.zipline.db.UserRepository
-import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.log.AppLogs
 import org.cssnr.zipline.ui.dialogs.showKeyboard
 import org.cssnr.zipline.ui.showSnackbar
 import java.io.File
@@ -246,7 +246,7 @@ class UserFragment : Fragment() {
                     api.editUser(PatchUser(avatar = avatar))
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "editUser IOException: ${e.message}")
-                    ctx.debugLog("UserFragment: editUser IOException: ${e.message}")
+                    AppLogs.d(ctx, "UserFragment: editUser IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "user: $user")
@@ -289,7 +289,7 @@ class UserFragment : Fragment() {
                     mainActivity.updateUserActivity()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateUserActivity IOException: ${e.message}")
-                    ctx.debugLog("UserFragment: updateUserActivity IOException: ${e.message}")
+                    AppLogs.d(ctx, "UserFragment: updateUserActivity IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "binding.updateProfile - user: $user")
@@ -334,7 +334,7 @@ class UserFragment : Fragment() {
                         api.getTotpSecret()
                     } catch (e: IOException) {
                         Log.e(LOG_TAG, "getTotpSecret IOException: ${e.message}")
-                        ctx.debugLog("UserFragment: getTotpSecret IOException: ${e.message}")
+                        AppLogs.d(ctx, "UserFragment: getTotpSecret IOException: ${e.message}")
                         null
                     }
                     Log.d(LOG_TAG, "totpResponse: $totpResponse")
@@ -361,7 +361,7 @@ class UserFragment : Fragment() {
                     ctx.updateStats()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateStats IOException: ${e.message}")
-                    ctx.debugLog("UserFragment: updateStats IOException: ${e.message}")
+                    AppLogs.d(ctx, "UserFragment: updateStats IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "binding.updateStats - serverEntity: $serverEntity")
@@ -383,7 +383,7 @@ class UserFragment : Fragment() {
                     mainActivity.updateAvatarActivity()
                 } catch (e: IOException) {
                     Log.e(LOG_TAG, "updateAvatarActivity IOException: ${e.message}")
-                    ctx.debugLog("UserFragment: updateAvatarActivity IOException: ${e.message}")
+                    AppLogs.d(ctx, "UserFragment: updateAvatarActivity IOException: ${e.message}")
                     null
                 }
                 Log.d(LOG_TAG, "binding.updateAvatarActivity: file: $file")
@@ -463,7 +463,7 @@ class UserFragment : Fragment() {
                             api.editUser(PatchUser(avatar = ""))
                         } catch (e: IOException) {
                             Log.e(LOG_TAG, "editUser IOException: ${e.message}")
-                            ctx.debugLog("UserFragment: editUser IOException: ${e.message}")
+                            AppLogs.d(ctx, "UserFragment: editUser IOException: ${e.message}")
                             null
                         }
                         Log.d(LOG_TAG, "newUser: $newUser")
@@ -657,7 +657,7 @@ class UserFragment : Fragment() {
                             api.editUser(patchUser)
                         } catch (e: IOException) {
                             Log.e("changeUsernameDialog", "editUser IOException: ${e.message}")
-                            this@changeUsernameDialog.debugLog("changeUsernameDialog: editUser IOException: ${e.message}")
+                            AppLogs.d(this@changeUsernameDialog, "changeUsernameDialog: editUser IOException: ${e.message}")
                             null
                         }
                         Log.d("changeUsernameDialog", "newUser: $newUser")
@@ -729,7 +729,7 @@ class UserFragment : Fragment() {
                             api.editUser(patchUser)
                         } catch (e: IOException) {
                             Log.e("changePasswordDialog", "editUser IOException: ${e.message}")
-                            this@changePasswordDialog.debugLog("changePasswordDialog: editUser IOException: ${e.message}")
+                            AppLogs.d(this@changePasswordDialog, "changePasswordDialog: editUser IOException: ${e.message}")
                             null
                         }
                         Log.d("changePasswordDialog", "newUser: $newUser")
@@ -790,7 +790,7 @@ class UserFragment : Fragment() {
                             api.disableTotp(totpCode)
                         } catch (e: IOException) {
                             Log.e("disableTotpDialog", "disableTotp IOException: ${e.message}")
-                            this@disableTotpDialog.debugLog("disableTotpDialog: disableTotp IOException: ${e.message}")
+                            AppLogs.d(this@disableTotpDialog, "disableTotpDialog: disableTotp IOException: ${e.message}")
                             null
                         }
                         Log.d("disableTotpDialog", "userResponse: $userResponse")
@@ -897,7 +897,7 @@ class UserFragment : Fragment() {
                             api.enableTotp(totpSecret, totpCode)
                         } catch (e: IOException) {
                             Log.e("enableTotpDialog", "enableTotp IOException: ${e.message}")
-                            this@enableTotpDialog.debugLog("enableTotpDialog: enableTotp IOException: ${e.message}")
+                            AppLogs.d(this@enableTotpDialog, "enableTotpDialog: enableTotp IOException: ${e.message}")
                             null
                         }
                         Log.d("enableTotpDialog", "userResponse: $userResponse")
@@ -959,7 +959,7 @@ suspend fun Context.updateStats(): ServerEntity? {
     val api = ServerApi(this, savedUrl)
     val statsResponse = api.stats()
     Log.d("updateStats", "statsResponse: $statsResponse")
-    debugLog("updateStats: response: ${statsResponse.code()}")
+    AppLogs.d(this, "updateStats: response: ${statsResponse.code()}")
     if (statsResponse.isSuccessful) {
         val stats = statsResponse.body()
         Log.d("updateStats", "stats: $stats")
@@ -998,7 +998,7 @@ suspend fun Context.updateUser(): UserEntity? {
     // TODO: Update user response to return Response<User> to check and log status
     val user = api.user() ?: return null
     Log.d("updateUser", "user: $user")
-    debugLog("updateUser: user: $user")
+    AppLogs.d(this, "updateUser: id=${user.id} username=${user.username}")
     val repo = UserRepository(UserDatabase.getInstance(this).userDao())
     val userEntity: UserEntity = repo.updateUser(savedUrl, user)
     Log.d("updateUser", "repo.updateUser: DONE")
@@ -1031,7 +1031,7 @@ suspend fun Context.updateAvatar(): File {
     val file = File(filesDir, "avatar.png")
     val avatar = api.avatar()
     Log.d("updateAvatar", "avatar: ${avatar?.take(100)}")
-    debugLog("updateAvatar: avatar: ${avatar?.take(20)}...")
+    AppLogs.d(this, "updateAvatar: avatar: ${avatar?.take(20)}...")
 
     if (avatar == null) {
         Log.d("updateAvatar", "No Avatar Returned! Deleting File: $file")
