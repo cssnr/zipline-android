@@ -742,7 +742,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 data class ErrorResponse(val error: String)
 
 
-suspend fun Response<*>.parseErrorBody(context: Context): String? {
+fun Response<*>.parseErrorBody(context: Context): String? {
     val errorBody = errorBody() ?: return null
     val moshi = Moshi.Builder()
         .add(SkipNullsAdapterFactory()) // NOTE: Added for nullable adapter

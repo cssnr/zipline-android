@@ -119,12 +119,7 @@ class LogsFragment : Fragment() {
                 .show()
         }
 
-        binding.swiperefresh.setOnRefreshListener {
-            Log.d("LogsFragment", "onRefresh")
-            binding.swiperefresh.isRefreshing = false
-        }
-
-        lifecycleScope.launch {
+        viewLifecycleOwner.lifecycleScope.launch {
             AppLogs.getLogs(ctx).collectLatest { logs ->
                 Log.d("LogsFragment", "collectLatest: ${logs.size}")
                 adapter.updateData(logs)

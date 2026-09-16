@@ -1,6 +1,7 @@
 package org.cssnr.zipline.log
 
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.room.Dao
@@ -12,8 +13,11 @@ import androidx.room.Query
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.Instant
 import java.time.ZoneId
@@ -25,19 +29,19 @@ enum class LogLevel { DEBUG, INFO, WARNING, ERROR }
 @Entity
 data class LogEntry(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val level: Int,
+    val level: String,
     val message: String,
     val timestamp: Long = System.currentTimeMillis(),
 ) {
-    val levelEnum: LogLevel get() = LogLevel.entries[level]
+    val levelEnum: LogLevel get() = LogLevel.valueOf(level)
 }
 
 @Dao
 interface LogDao {
-    @Query("SELECT * FROM logentry ORDER BY timestamp DESC")
+    @Query("SELECT * FROM logentry ORDER BY id DESC")
     fun getAll(): Flow<List<LogEntry>>
 
-    @Query("SELECT * FROM logentry ORDER BY timestamp DESC")
+    @Query("SELECT * FROM logentry ORDER BY id DESC")
     suspend fun getAllNow(): List<LogEntry>
 
     @Insert
@@ -84,41 +88,58 @@ object AppLogs {
     @Volatile
     private var purged = false
 
+    private fun database(context: Context): LogDatabase = LogDatabase.getInstance(context)
+
     @Volatile
-    private var instance: LogDatabase? = null
+    private var enabled = true
 
-    private fun database(context: Context): LogDatabase =
-        instance ?: synchronized(this) {
-            instance ?: LogDatabase.getInstance(context).also { instance = it }
-        }
+    @Volatile
+    private var prefsInitialized = false
 
-    private fun isEnabled(context: Context): Boolean =
-        PreferenceManager.getDefaultSharedPreferences(context)
-            .getBoolean(ENABLED_KEY, true)
+    private lateinit var preferences: SharedPreferences
 
-    suspend fun log(context: Context, level: LogLevel, message: String) {
-        if (!isEnabled(context)) return
-        try {
-            purgeIfNeeded(context)
-            withContext(Dispatchers.IO) {
-                database(context).logDao().insert(
-                    LogEntry(level = level.ordinal, message = message)
-                )
+    private fun isEnabled(context: Context): Boolean {
+        if (!prefsInitialized) {
+            synchronized(this) {
+                if (!prefsInitialized) {
+                    preferences = PreferenceManager.getDefaultSharedPreferences(context)
+                    enabled = preferences.getBoolean(ENABLED_KEY, true)
+                    preferences.registerOnSharedPreferenceChangeListener { prefs, key ->
+                        if (key == ENABLED_KEY) {
+                            enabled = prefs.getBoolean(ENABLED_KEY, true)
+                        }
+                    }
+                    prefsInitialized = true
+                }
             }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (e: Exception) {
-            Log.e(LOG_TAG, "Failed to write log entry", e)
+        }
+        return enabled
+    }
+
+    private val fireForgetScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    fun log(context: Context, level: LogLevel, message: String) {
+        if (!isEnabled(context)) return
+        val appContext = context.applicationContext
+        fireForgetScope.launch {
+            try {
+                purgeIfNeeded(appContext)
+                database(appContext).logDao().insert(
+                    LogEntry(level = level.name, message = message)
+                )
+            } catch (e: Exception) {
+                Log.e(LOG_TAG, "Failed to write log entry", e)
+            }
         }
     }
 
-    suspend fun d(context: Context, message: String) = log(context, LogLevel.DEBUG, message)
+    fun d(context: Context, message: String) = log(context, LogLevel.DEBUG, message)
 
-    suspend fun i(context: Context, message: String) = log(context, LogLevel.INFO, message)
+    fun i(context: Context, message: String) = log(context, LogLevel.INFO, message)
 
-    suspend fun w(context: Context, message: String) = log(context, LogLevel.WARNING, message)
+    fun w(context: Context, message: String) = log(context, LogLevel.WARNING, message)
 
-    suspend fun e(context: Context, message: String) = log(context, LogLevel.ERROR, message)
+    fun e(context: Context, message: String) = log(context, LogLevel.ERROR, message)
 
     fun getLogs(context: Context): Flow<List<LogEntry>> =
         database(context).logDao().getAll()
