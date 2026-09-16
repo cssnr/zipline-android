@@ -49,6 +49,7 @@ import org.cssnr.zipline.ui.user.updateAvatarActivity
 import org.cssnr.zipline.ui.user.updateStats
 import org.cssnr.zipline.ui.user.updateUserActivity
 import java.io.IOException
+import kotlin.time.Duration.Companion.milliseconds
 
 class LoginFragment : Fragment() {
 
@@ -378,7 +379,7 @@ class LoginFragment : Fragment() {
         val original = ContextCompat.getColor(requireContext(), R.color.button_color)
         buttonView?.setBackgroundColor(red)
         lifecycleScope.launch {
-            delay(700)
+            delay(700.milliseconds)
             if (lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
                 buttonView?.setBackgroundColor(original)
             }
