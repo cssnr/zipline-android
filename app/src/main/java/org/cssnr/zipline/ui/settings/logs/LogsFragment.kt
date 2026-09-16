@@ -10,8 +10,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
@@ -50,7 +54,18 @@ class LogsFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         Log.d("LogsFragment", "onViewCreated")
 
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.updatePadding(top = bars.top)
+            insets
+        }
+
         val ctx = requireContext()
+
+        binding.goBack.setOnClickListener {
+            Log.d("LogsFragment", "goBack: navigateUp()")
+            findNavController().navigateUp()
+        }
 
         adapter = LogsAdapter(emptyList())
         binding.logsList.layoutManager = LinearLayoutManager(ctx)

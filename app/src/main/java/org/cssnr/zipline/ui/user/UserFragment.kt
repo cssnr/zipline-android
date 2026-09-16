@@ -998,7 +998,7 @@ suspend fun Context.updateUser(): UserEntity? {
     // TODO: Update user response to return Response<User> to check and log status
     val user = api.user() ?: return null
     Log.d("updateUser", "user: $user")
-    AppLogs.d(this, "updateUser: user: $user")
+    AppLogs.d(this, "updateUser: id=${user.id} username=${user.username}")
     val repo = UserRepository(UserDatabase.getInstance(this).userDao())
     val userEntity: UserEntity = repo.updateUser(savedUrl, user)
     Log.d("updateUser", "repo.updateUser: DONE")

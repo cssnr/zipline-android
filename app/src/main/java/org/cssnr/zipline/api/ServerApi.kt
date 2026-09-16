@@ -82,7 +82,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                 val rawJson = loginResponse.body()?.string()
                     ?: return LoginData(error = "Login Response Malformed")
                 Log.i("Api[login]", "loginResponse: ${loginResponse.code()}: ${rawJson.take(2048)}")
-                AppLogs.d(context, "API: login: ${loginResponse.code()}: ${rawJson.take(2048)}")
+                AppLogs.d(context, "API: login: ${loginResponse.code()}: ${rawJson.take(256)}")
 
                 val loginData = try {
                     val moshi = Moshi.Builder().build()
