@@ -172,7 +172,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingStart="6dp"
-            android:text="Debug Logging"
+            android:text="Application Logging"
             app:thumbIcon="@drawable/md_bug_report_24px"
             tools:checked="true"
             tools:ignore="RtlSymmetry" />
@@ -181,7 +181,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:text="Debug Logs"
+            android:text="App Logs"
             android:visibility="gone"
             app:icon="@drawable/md_manage_search_24px"
             app:iconGravity="end"

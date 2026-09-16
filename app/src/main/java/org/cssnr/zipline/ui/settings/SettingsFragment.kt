@@ -262,10 +262,10 @@ class SettingsFragment : PreferenceFragmentCompat() {
         }
 
         // Debugging
-        val viewDebugLogs = findPreference<Preference>("view_debug_logs")
-        viewDebugLogs?.setOnPreferenceClickListener {
-            Log.d("viewDebugLogs", "setOnPreferenceClickListener")
-            navController.navigate(R.id.nav_item_settings_debug)
+        val viewLogs = findPreference<Preference>("view_logs")
+        viewLogs?.setOnPreferenceClickListener {
+            Log.d("viewLogs", "setOnPreferenceClickListener")
+            navController.navigate(R.id.nav_item_logs)
             false
         }
     }

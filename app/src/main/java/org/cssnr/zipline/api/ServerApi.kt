@@ -26,7 +26,7 @@ import okhttp3.RequestBody
 import okhttp3.ResponseBody
 import okio.source
 import org.cssnr.zipline.R
-import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.log.AppLogs
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -82,7 +82,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                 val rawJson = loginResponse.body()?.string()
                     ?: return LoginData(error = "Login Response Malformed")
                 Log.i("Api[login]", "loginResponse: ${loginResponse.code()}: ${rawJson.take(2048)}")
-                context.debugLog("API: login: ${loginResponse.code()}: ${rawJson.take(2048)}")
+                AppLogs.d(context, "API: login: ${loginResponse.code()}: ${rawJson.take(2048)}")
 
                 val loginData = try {
                     val moshi = Moshi.Builder().build()
@@ -90,7 +90,7 @@ class ServerApi(private val context: Context, url: String? = null) {
                     adapter.fromJson(rawJson)
                 } catch (e: Exception) {
                     Log.i("Api[login]", "Parsing exception: $e")
-                    context.debugLog("API: login: Exception: $e")
+                    AppLogs.d(context, "API: login: Exception: $e")
                     null
                 } ?: return LoginData(error = "Error Parsing Response Body")
 
@@ -116,12 +116,12 @@ class ServerApi(private val context: Context, url: String? = null) {
                 val errorResponse =
                     loginResponse.parseErrorBody(context) ?: "HTTP Error ${loginResponse.code()}"
                 Log.d("Api[login]", "errorResponse: $errorResponse")
-                context.debugLog("API: login: ${loginResponse.code()}: $errorResponse")
+                AppLogs.d(context, "API: login: ${loginResponse.code()}: $errorResponse")
                 LoginData(error = errorResponse)
             }
         } catch (e: Exception) {
             Log.e("Api[login]", "Exception: ${e.message}")
-            context.debugLog("API: login: Exception: ${e.message}")
+            AppLogs.d(context, "API: login: Exception: ${e.message}")
             LoginData(error = e.message)
         }
     }
@@ -742,7 +742,7 @@ class ServerApi(private val context: Context, url: String? = null) {
 data class ErrorResponse(val error: String)
 
 
-fun Response<*>.parseErrorBody(context: Context): String? {
+suspend fun Response<*>.parseErrorBody(context: Context): String? {
     val errorBody = errorBody() ?: return null
     val moshi = Moshi.Builder()
         .add(SkipNullsAdapterFactory()) // NOTE: Added for nullable adapter
@@ -752,7 +752,7 @@ fun Response<*>.parseErrorBody(context: Context): String? {
         try {
             adapter.fromJson(source)?.error
         } catch (e: Exception) {
-            context.debugLog("API: parseErrorBody: ${e.message}")
+            AppLogs.d(context, "API: parseErrorBody: ${e.message}")
             Log.e("ResponseExt", "Failed to parse error body", e)
             null
         }

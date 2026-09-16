@@ -8,7 +8,7 @@ import android.util.Log
 import androidx.preference.PreferenceManager
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.log.AppLogs
 import org.cssnr.zipline.ui.user.updateAvatar
 import org.cssnr.zipline.ui.user.updateStats
 import org.cssnr.zipline.ui.user.updateUser
@@ -24,7 +24,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
         if (authToken == null) {
             // TODO: Look into cancelling work here and rescheduling it on next login...
             Log.w("DailyWorker", "Missing authToken - skipping work...")
-            applicationContext.debugLog("DailyWorker: No authToken, skipping...")
+            AppLogs.d(applicationContext, "DailyWorker: No authToken, skipping...")
             return Result.success()
         }
         val savedUrl = preferences.getString("ziplineUrl", null).toString()
@@ -35,7 +35,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
         Log.d("DailyWorker", "workUpdateUser: $workUpdateUser")
         val workUpdateAvatar = preferences.getBoolean("work_update_avatar", false)
         Log.d("DailyWorker", "workUpdateAvatar: $workUpdateAvatar")
-        applicationContext.debugLog("DailyWorker: Running for: $savedUrl - workUpdateStats: $workUpdateStats - workUpdateUser: $workUpdateUser - workUpdateAvatar: $workUpdateAvatar")
+        AppLogs.d(applicationContext, "DailyWorker: Running for: $savedUrl - workUpdateStats: $workUpdateStats - workUpdateUser: $workUpdateUser - workUpdateAvatar: $workUpdateAvatar")
 
         if (workUpdateStats) {
             Log.d("DailyWorker", "--- Update Stats")
@@ -43,7 +43,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
                 applicationContext.updateStats()
             } catch (e: Throwable) {
                 Log.e("DailyWorker", "updateStats: Exception: $e")
-                applicationContext.debugLog("updateStats: Exception: $e")
+                AppLogs.d(applicationContext, "updateStats: Exception: $e")
             }
         }
 
@@ -53,7 +53,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
                 applicationContext.updateUser()
             } catch (e: Throwable) {
                 Log.e("DailyWorker", "updateUser: Exception: $e")
-                applicationContext.debugLog("updateUser: Exception: $e")
+                AppLogs.d(applicationContext, "updateUser: Exception: $e")
             }
         }
 
@@ -64,7 +64,7 @@ class AppWorker(appContext: Context, workerParams: WorkerParameters) :
                 applicationContext.updateAvatar()
             } catch (e: Throwable) {
                 Log.e("DailyWorker", "updateAvatar: Exception: $e")
-                applicationContext.debugLog("updateAvatar: Exception: $e")
+                AppLogs.d(applicationContext, "updateAvatar: Exception: $e")
             }
         }
 

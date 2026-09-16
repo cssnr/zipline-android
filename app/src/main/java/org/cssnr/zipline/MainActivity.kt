@@ -46,13 +46,14 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.signature.ObjectKey
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.shape.CornerFamily
-import kotlinx.coroutines.async
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.HttpUrl.Companion.toHttpUrlOrNull
 import org.cssnr.zipline.databinding.ActivityMainBinding
 import org.cssnr.zipline.db.UserDao
 import org.cssnr.zipline.db.UserDatabase
-import org.cssnr.zipline.log.debugLog
+import org.cssnr.zipline.log.AppLogs
 import org.cssnr.zipline.ui.home.HomeViewModel
 import org.cssnr.zipline.ui.showSnackbar
 import org.cssnr.zipline.ui.user.updateAvatarActivity
@@ -118,7 +119,7 @@ class MainActivity : AppCompatActivity() {
         val destinationToBottomNavItem = mapOf(
             R.id.nav_item_file_preview to R.id.nav_item_files,
             R.id.nav_item_settings_widget to R.id.nav_item_settings,
-            R.id.nav_item_settings_debug to R.id.nav_item_settings,
+            R.id.nav_item_logs to R.id.nav_item_settings,
         )
         // Destination w/ No Parent
         val hiddenDestinations = setOf(
@@ -193,17 +194,18 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        // Set Debug Preferences
-        Log.d(LOG_TAG, "Set Debug Preferences")
-        if (BuildConfig.DEBUG) {
-            Log.i(LOG_TAG, "DEBUG BUILD DETECTED!")
-            if (!preferences.contains("enable_debug_logs")) {
-                Log.i(LOG_TAG, "ENABLING DEBUG LOGGING...")
-                preferences.edit {
-                    putBoolean("enable_debug_logs", true)
-                }
-            }
-        }
+        //// NOTE: This is only needed for default: false
+        //// Set Debug Preferences
+        //Log.d(LOG_TAG, "Set Debug Preferences")
+        //if (BuildConfig.DEBUG) {
+        //    Log.i(LOG_TAG, "DEBUG BUILD DETECTED!")
+        //    if (!preferences.contains("enable_debug_logs")) {
+        //        Log.i(LOG_TAG, "ENABLING DEBUG LOGGING...")
+        //        preferences.edit {
+        //            putBoolean("enable_debug_logs", true)
+        //        }
+        //    }
+        //}
 
         // Set Default Preferences
         PreferenceManager.setDefaultValues(this, R.xml.preferences, false)
@@ -295,40 +297,72 @@ class MainActivity : AppCompatActivity() {
 
         MediaCache.initialize(this)
 
-        // Check Update Version
+        // Version Tracking
         @Suppress("DEPRECATION")
-        lifecycleScope.launch {
-            val previousVersion = preferences.getInt("previousVersion", 0)
-            Log.d(LOG_TAG, "previousVersion $previousVersion")
-            val packageInfo = packageManager.getPackageInfo(packageName, 0)
-            Log.d(LOG_TAG, "packageInfo.versionCode ${packageInfo.versionCode}")
-            if (previousVersion != packageInfo.versionCode) {
-                Log.i(LOG_TAG, "SET - previousVersion: ${packageInfo.versionCode}")
-                preferences.edit { putInt("previousVersion", packageInfo.versionCode) }
+        val packageInfo = packageManager.getPackageInfo(packageName, 0)
+
+        val currentVersionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            packageInfo.longVersionCode
+        } else {
+            @Suppress("DEPRECATION")
+            packageInfo.versionCode.toLong()
+        }
+        Log.d(LOG_TAG, "currentVersionCode: $currentVersionCode")
+
+        val isFirstRun = !preferences.contains("first_run_shown")
+        Log.d(LOG_TAG, "isFirstRun: $isFirstRun")
+
+        val previousVersionCode = preferences.getLong("previous_version_code", -1L)
+        Log.d(LOG_TAG, "previousVersion: $previousVersionCode")
+
+        when {
+            isFirstRun -> {
+                Log.i(LOG_TAG, "FIRST RUN DETECTED")
+                // NOTE: First-run is handled by the Login/Setup flow in this app.
             }
-            if (!authToken.isNullOrEmpty() && previousVersion == 0) {
-                // NOTE: previousVersion is new in this version. Therefore, users with both an
-                //  authToken and default previousVersion are being upgrading to the new version.
-                Log.i(LOG_TAG, "Performing Upgrading to versionCode: ${packageInfo.versionCode}")
-                val task1 = async {
-                    try {
-                        updateAvatarActivity()
-                    } catch (e: IOException) {
-                        Log.e(LOG_TAG, "updateAvatarActivity IOException: ${e.message}")
-                        debugLog("MainActivity: updateAvatarActivity IOException: ${e.message}")
+
+            currentVersionCode > previousVersionCode -> {
+                Log.i(LOG_TAG, "APP UPGRADE: $previousVersionCode -> $currentVersionCode")
+
+                // Old Migration - before the current Version Tracking logic was added
+                val previousVersion = preferences.getInt("previousVersion", 0)
+                Log.d(LOG_TAG, "previousVersion: $previousVersion")
+                if (previousVersion == 0 && !authToken.isNullOrEmpty()) {
+                    Log.i(LOG_TAG, "LEGACY UPGRADE DETECTED - Updating User and Avatar")
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.IO) {
+                            try {
+                                updateAvatarActivity()
+                            } catch (e: IOException) {
+                                Log.e(LOG_TAG, "onCreate Avatar User IOException: ${e.message}")
+                                AppLogs.d(this@MainActivity, "updateAvatarActivity: ${e.message}")
+                            }
+                            try {
+                                updateUserActivity()
+                            } catch (e: IOException) {
+                                Log.e(LOG_TAG, "onCreate Update User IOException: ${e.message}")
+                                AppLogs.d(this@MainActivity, "updateUserActivity: ${e.message}")
+                            }
+                        }
                     }
                 }
-                val task2 = async {
-                    try {
-                        updateUserActivity()
-                    } catch (e: IOException) {
-                        Log.e(LOG_TAG, "updateUserActivity IOException: ${e.message}")
-                        debugLog("MainActivity: updateUserActivity IOException: ${e.message}")
-                    }
+
+                // Delete Old Text Log
+                if (111L in (previousVersionCode + 1)..currentVersionCode) {
+                    Log.i(LOG_TAG, "DELETING OLD LOG FILE - debug_log.txt")
+                    File(filesDir, "debug_log.txt").delete()
                 }
-                task1.await()
-                task2.await()
             }
+
+            currentVersionCode < previousVersionCode -> {
+                Log.w(LOG_TAG, "APP DOWNGRADE: $previousVersionCode -> $currentVersionCode")
+                // TODO: Downgrade - this will never actually happen and should probably be removed
+            }
+        }
+
+        if (previousVersionCode != currentVersionCode) {
+            Log.d(LOG_TAG, "preferences.edit - previous_version_code: $currentVersionCode")
+            preferences.edit { putLong("previous_version_code", currentVersionCode) }
         }
 
         // Only Handel Intent Once Here after App Start
