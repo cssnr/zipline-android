@@ -74,6 +74,10 @@ class WidgetProvider : AppWidgetProvider() {
         Log.d("Widget[onUpdate]", "workInterval: $workInterval")
         val showUpdateTime = preferences.getBoolean("widget_show_update_time", true)
         Log.d("Widget[onUpdate]", "showUpdateTime: $showUpdateTime")
+        val showRefresh = preferences.getBoolean("widget_show_refresh", true)
+        Log.d("Widget[onUpdate]", "showRefresh: $showRefresh")
+        val showUpload = preferences.getBoolean("widget_show_upload", true)
+        Log.d("Widget[onUpdate]", "showUpload: $showUpload")
 
         val colorMap = mapOf(
             "white" to Color.WHITE,
@@ -116,6 +120,15 @@ class WidgetProvider : AppWidgetProvider() {
             views.setInt(R.id.widget_refresh_button, "setColorFilter", selectedTextColor)
             views.setInt(R.id.widget_upload_button, "setColorFilter", selectedTextColor)
             //views.setInt(R.id.widget_recent_button, "setColorFilter", selectedTextColor)
+
+            views.setViewVisibility(
+                R.id.widget_refresh_button,
+                if (showRefresh) View.VISIBLE else View.GONE
+            )
+            views.setViewVisibility(
+                R.id.widget_upload_button,
+                if (showUpload) View.VISIBLE else View.GONE
+            )
 
             // Refresh
             val intent1 = Intent(context, WidgetProvider::class.java).apply {

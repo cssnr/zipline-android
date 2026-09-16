@@ -142,6 +142,20 @@
                     android:layout_marginBottom="16dp"
                     android:text="Show Last Updated Time" />
 
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/show_refresh_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Show Refresh Button" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/show_upload_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Show Upload Button" />
+
             </LinearLayout>
         </ScrollView>
 
