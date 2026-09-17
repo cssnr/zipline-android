@@ -10,13 +10,16 @@
         android:id="@+id/config_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="300dp"
         android:padding="24dp"
         android:background="@drawable/bg_widget_config">
 
         <ScrollView
             android:id="@+id/config_scroll"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:paddingHorizontal="12dp"
+            android:scrollbarStyle="outsideOverlay"
             app:layout_constraintHeight_max="400dp"
             app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toTopOf="@+id/confirm_button"
@@ -25,7 +28,7 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:gravity="center_horizontal">
@@ -43,18 +46,26 @@
                     tools:ignore="UseCompatTextViewDrawableXml" />
 
                 <!-- Left/Right Column Wrapper -->
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal">
+                    android:layout_marginBottom="16dp">
+
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/columns_guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
 
                     <!-- Left Column -->
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toStartOf="@id/columns_guideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
 
                         <TextView
                             android:layout_width="wrap_content"
@@ -88,8 +99,10 @@
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/columns_guideline"
+                        app:layout_constraintTop_toTopOf="parent">
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -117,7 +130,7 @@
                         </RadioGroup>
                     </LinearLayout><!-- Right Column -->
 
-                </LinearLayout><!-- Left/Right Column Wrapper -->
+                </androidx.constraintlayout.widget.ConstraintLayout><!-- Left/Right Column Wrapper -->
 
                 <TextView
                     android:id="@+id/bg_opacity_percent"
@@ -139,14 +152,12 @@
                     android:id="@+id/show_update_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:text="Last Updated Time" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
                     android:id="@+id/show_refresh_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:text="Refresh Button" />
 
                 <com.google.android.material.switchmaterial.SwitchMaterial
