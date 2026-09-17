@@ -11,6 +11,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.core.content.edit
 import androidx.preference.PreferenceManager
+import com.google.android.material.switchmaterial.SwitchMaterial
 import org.cssnr.zipline.R
 
 class WidgetConfiguration : Activity() {
@@ -40,6 +41,12 @@ class WidgetConfiguration : Activity() {
         Log.i("WidgetConfiguration", "textColor: $textColor")
         val bgOpacity = preferences.getInt("widget_bg_opacity", 35)
         Log.i("WidgetConfiguration", "bgOpacity: $bgOpacity")
+        val showUpdateTime = preferences.getBoolean("widget_show_update_time", true)
+        Log.i("WidgetConfiguration", "showUpdateTime: $showUpdateTime")
+        val showRefresh = preferences.getBoolean("widget_show_refresh", true)
+        Log.i("WidgetConfiguration", "showRefresh: $showRefresh")
+        val showUpload = preferences.getBoolean("widget_show_upload", true)
+        Log.i("WidgetConfiguration", "showUpload: $showUpload")
 
         val bgOpacityText = findViewById<TextView>(R.id.bg_opacity_percent)
         bgOpacityText.text = getString(R.string.background_opacity, bgOpacity)
@@ -83,6 +90,13 @@ class WidgetConfiguration : Activity() {
             }
         })
 
+        val showUpdateTimeSwitch = findViewById<SwitchMaterial>(R.id.show_update_time)
+        showUpdateTimeSwitch.isChecked = showUpdateTime
+        val showRefreshSwitch = findViewById<SwitchMaterial>(R.id.show_refresh_button)
+        showRefreshSwitch.isChecked = showRefresh
+        val showUploadSwitch = findViewById<SwitchMaterial>(R.id.show_upload_button)
+        showUploadSwitch.isChecked = showUpload
+
         val confirmButton = findViewById<Button>(R.id.confirm_button)
         confirmButton.setOnClickListener {
             val selectedBgColor = when (backgroundOptions.checkedRadioButtonId) {
@@ -102,11 +116,17 @@ class WidgetConfiguration : Activity() {
             Log.i("WidgetConfiguration", "selectedTextColor: $selectedTextColor")
 
             Log.i("WidgetConfiguration", "seekBar.progress: ${seekBar.progress}")
+            Log.i("WidgetConfiguration", "showUpdateTimeSwitch.isChecked: ${showUpdateTimeSwitch.isChecked}")
+            Log.i("WidgetConfiguration", "showRefreshSwitch.isChecked: ${showRefreshSwitch.isChecked}")
+            Log.i("WidgetConfiguration", "showUploadSwitch.isChecked: ${showUploadSwitch.isChecked}")
 
             preferences.edit {
                 putString("widget_bg_color", selectedBgColor)
                 putString("widget_text_color", selectedTextColor)
                 putInt("widget_bg_opacity", seekBar.progress)
+                putBoolean("widget_show_update_time", showUpdateTimeSwitch.isChecked)
+                putBoolean("widget_show_refresh", showRefreshSwitch.isChecked)
+                putBoolean("widget_show_upload", showUploadSwitch.isChecked)
             }
 
             val updateIntent = Intent(

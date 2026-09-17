@@ -6,127 +6,181 @@
     android:layout_height="match_parent"
     android:gravity="center">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/config_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal"
+        android:minWidth="300dp"
         android:padding="24dp"
-        android:orientation="vertical"
-        android:background="@drawable/bg_widget_config"
-        tools:ignore="UselessParent">
+        android:background="@drawable/bg_widget_config">
 
-        <!-- Icon/Title -->
-        <TextView
-            android:layout_width="wrap_content"
+        <ScrollView
+            android:id="@+id/config_scroll"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:gravity="center_vertical"
-            android:textAppearance="@style/TextAppearance.AppCompat.Large"
-            android:drawableStart="@mipmap/ic_launcher"
-            android:drawablePadding="16dp"
-            android:text="Widget Options"
-            tools:ignore="UseCompatTextViewDrawableXml" />
+            android:paddingHorizontal="12dp"
+            android:scrollbarStyle="outsideOverlay"
+            app:layout_constraintHeight_max="400dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toTopOf="@+id/confirm_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
 
-        <!-- Left/Right Column Wrapper -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <!-- Left Column -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
 
+                <!-- Icon/Title -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Background Color" />
+                    android:layout_marginBottom="16dp"
+                    android:gravity="center_vertical"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                    android:drawableStart="@mipmap/ic_launcher"
+                    android:drawablePadding="16dp"
+                    android:text="Widget Options"
+                    tools:ignore="UseCompatTextViewDrawableXml" />
 
-                <RadioGroup
-                    android:id="@+id/background_options"
+                <!-- Left/Right Column Wrapper -->
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <RadioButton
-                        android:id="@+id/option_white"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="White" />
-                    <RadioButton
-                        android:id="@+id/option_black"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Black" />
-                    <RadioButton
-                        android:id="@+id/option_liberty"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Liberty" />
-                </RadioGroup>
-            </LinearLayout><!-- Left Column -->
+                    android:layout_marginBottom="16dp">
 
-            <!-- Right Column -->
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                    <androidx.constraintlayout.widget.Guideline
+                        android:id="@+id/columns_guideline"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintGuide_percent="0.5" />
+
+                    <!-- Left Column -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toStartOf="@id/columns_guideline"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Background" />
+
+                        <RadioGroup
+                            android:id="@+id/background_options"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <RadioButton
+                                android:id="@+id/option_white"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="White" />
+                            <RadioButton
+                                android:id="@+id/option_black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Black" />
+                            <RadioButton
+                                android:id="@+id/option_liberty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Liberty" />
+                        </RadioGroup>
+                    </LinearLayout><!-- Left Column -->
+
+                    <!-- Right Column -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/columns_guideline"
+                        app:layout_constraintTop_toTopOf="parent">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Text" />
+                        <RadioGroup
+                            android:id="@+id/text_options"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+                            <RadioButton
+                                android:id="@+id/text_white"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="White" />
+                            <RadioButton
+                                android:id="@+id/text_black"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Black" />
+                            <RadioButton
+                                android:id="@+id/text_liberty"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:text="Liberty" />
+                        </RadioGroup>
+                    </LinearLayout><!-- Right Column -->
+
+                </androidx.constraintlayout.widget.ConstraintLayout><!-- Left/Right Column Wrapper -->
+
                 <TextView
+                    android:id="@+id/bg_opacity_percent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Text Color" />
-                <RadioGroup
-                    android:id="@+id/text_options"
+                    android:layout_marginBottom="8dp"
+                    android:labelFor="@id/opacity_percent"
+                    android:text="@string/background_opacity" />
+                <SeekBar
+                    android:id="@+id/opacity_percent"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <RadioButton
-                        android:id="@+id/text_white"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="White" />
-                    <RadioButton
-                        android:id="@+id/text_black"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Black" />
-                    <RadioButton
-                        android:id="@+id/text_liberty"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Liberty" />
-                </RadioGroup>
-            </LinearLayout><!-- Right Column -->
+                    android:layout_marginBottom="16dp"
+                    android:min="0"
+                    android:max="100"
+                    app:showSeekBarValue="true" />
 
-        </LinearLayout><!-- Left/Right Column Wrapper -->
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/show_update_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Last Updated Time" />
 
-        <TextView
-            android:id="@+id/bg_opacity_percent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:labelFor="@id/opacity_percent"
-            android:text="@string/background_opacity" />
-        <SeekBar
-            android:id="@+id/opacity_percent"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:min="0"
-            android:max="100"
-            app:showSeekBarValue="true" />
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/show_refresh_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Refresh Button" />
+
+                <com.google.android.material.switchmaterial.SwitchMaterial
+                    android:id="@+id/show_upload_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:text="Upload Button" />
+
+            </LinearLayout>
+        </ScrollView>
 
         <!-- Save Widget Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/confirm_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/config_scroll"
             android:text="Save Widget Settings" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

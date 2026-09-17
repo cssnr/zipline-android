@@ -32,5 +32,24 @@
             android:max="100"
             app:min="0"
             app:showSeekBarValue="true" />
+
+        <SwitchPreferenceCompat
+            android:key="widget_show_update_time"
+            android:title="Last Updated Time"
+            android:summary="Show Updated Time on Widget"
+            android:icon="@drawable/md_nest_clock_farsight_digital_24px"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:key="widget_show_refresh"
+            android:title="Show Refresh Button"
+            android:icon="@drawable/md_refresh_24px"
+            android:defaultValue="true" />
+
+        <SwitchPreferenceCompat
+            android:key="widget_show_upload"
+            android:title="Show Upload Button"
+            android:icon="@drawable/md_upload_24px"
+            android:defaultValue="true" />
     </PreferenceCategory>
 </PreferenceScreen>

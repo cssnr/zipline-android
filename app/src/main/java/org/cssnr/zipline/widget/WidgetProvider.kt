@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.text.format.DateFormat
 import android.text.format.Formatter
 import android.util.Log
+import android.view.View
 import android.widget.RemoteViews
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.toColorInt
@@ -58,7 +59,7 @@ class WidgetProvider : AppWidgetProvider() {
         appWidgetManager: AppWidgetManager,
         appWidgetIds: IntArray
     ) {
-        Log.i("Widget[onUpdate]", "BEGIN - appWidgetIds: $appWidgetIds")
+        Log.i("Widget[onUpdate]", "BEGIN - appWidgetIds: ${appWidgetIds.contentToString()}")
 
         val preferences = PreferenceManager.getDefaultSharedPreferences(context)
         val savedUrl = preferences.getString("ziplineUrl", null).toString()
@@ -71,6 +72,12 @@ class WidgetProvider : AppWidgetProvider() {
         Log.d("Widget[onUpdate]", "bgOpacity: $bgOpacity")
         val workInterval = preferences.getString("work_interval", null) ?: "0"
         Log.d("Widget[onUpdate]", "workInterval: $workInterval")
+        val showUpdateTime = preferences.getBoolean("widget_show_update_time", true)
+        Log.d("Widget[onUpdate]", "showUpdateTime: $showUpdateTime")
+        val showRefresh = preferences.getBoolean("widget_show_refresh", true)
+        Log.d("Widget[onUpdate]", "showRefresh: $showRefresh")
+        val showUpload = preferences.getBoolean("widget_show_upload", true)
+        Log.d("Widget[onUpdate]", "showUpload: $showUpload")
 
         val colorMap = mapOf(
             "white" to Color.WHITE,
@@ -113,6 +120,15 @@ class WidgetProvider : AppWidgetProvider() {
             views.setInt(R.id.widget_refresh_button, "setColorFilter", selectedTextColor)
             views.setInt(R.id.widget_upload_button, "setColorFilter", selectedTextColor)
             //views.setInt(R.id.widget_recent_button, "setColorFilter", selectedTextColor)
+
+            views.setViewVisibility(
+                R.id.widget_refresh_button,
+                if (showRefresh) View.VISIBLE else View.GONE
+            )
+            views.setViewVisibility(
+                R.id.widget_upload_button,
+                if (showUpload) View.VISIBLE else View.GONE
+            )
 
             // Refresh
             val intent1 = Intent(context, WidgetProvider::class.java).apply {
@@ -170,13 +186,18 @@ class WidgetProvider : AppWidgetProvider() {
                 }
 
                 if (workInterval == "0") {
+                    views.setViewVisibility(R.id.update_time, View.VISIBLE)
                     views.setTextViewText(R.id.update_time, "Disabled")
                 } else if (server == null) {
+                    views.setViewVisibility(R.id.update_time, View.VISIBLE)
                     views.setTextViewText(R.id.update_time, "Refresh Data")
-                } else {
+                } else if (showUpdateTime) {
+                    views.setViewVisibility(R.id.update_time, View.VISIBLE)
                     val time = DateFormat.getTimeFormat(context).format(server.updatedAt)
                     Log.d("Widget[onUpdate]", "time: $time")
                     views.setTextViewText(R.id.update_time, time)
+                } else {
+                    views.setViewVisibility(R.id.update_time, View.GONE)
                 }
                 Log.d("Widget[onUpdate]", "appWidgetManager.updateAppWidget: $appWidgetId")
                 appWidgetManager.updateAppWidget(appWidgetId, views)
