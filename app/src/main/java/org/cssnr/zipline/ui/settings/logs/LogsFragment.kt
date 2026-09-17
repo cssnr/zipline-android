@@ -17,11 +17,13 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.cssnr.zipline.MainActivity
 import org.cssnr.zipline.R
 import org.cssnr.zipline.databinding.FragmentLogsBinding
 import org.cssnr.zipline.log.AppLogs
@@ -49,6 +51,21 @@ class LogsFragment : Fragment() {
         _binding = null
     }
 
+    override fun onStart() {
+        super.onStart()
+        Log.d("LogsFragment", "onStart - Hide UI and Lock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility = View.GONE
+        (activity as? MainActivity)?.setDrawerLockMode(false)
+    }
+
+    override fun onStop() {
+        Log.d("LogsFragment", "onStop - Show UI and Unlock Drawer")
+        requireActivity().findViewById<BottomNavigationView>(R.id.bottom_nav).visibility =
+            View.VISIBLE
+        (activity as? MainActivity)?.setDrawerLockMode(true)
+        super.onStop()
+    }
+
     @SuppressLint("NotifyDataSetChanged")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -56,7 +73,7 @@ class LogsFragment : Fragment() {
 
         ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
             val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.updatePadding(top = bars.top)
+            v.updatePadding(top = bars.top, bottom = bars.bottom)
             insets
         }
 

@@ -61,6 +61,7 @@ class ServerApi(private val context: Context, url: String? = null) {
     init {
         ziplineUrl = url ?: preferences.getString("ziplineUrl", null) ?: ""
         authToken = preferences.getString("ziplineToken", null) ?: ""
+        require(ziplineUrl.isNotBlank()) { "No Zipline URL configured" }
         Log.d("ServerApi[init]", "ziplineUrl: $ziplineUrl")
         Log.d("ServerApi[init]", "authToken: ${authToken.take(24)}...")
         val headerPreferences =
