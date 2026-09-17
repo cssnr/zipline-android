@@ -30,6 +30,10 @@ class FolderFragment : DialogFragment() {
         Log.d("FolderFragment", "selectedId: $selectedId")
 
         val savedUrl = preferences?.getString("ziplineUrl", null)
+        if (savedUrl.isNullOrBlank()) {
+            errorMessage = "No Zipline URL configured"
+            return null
+        }
         val api = ServerApi(context, savedUrl)
         // NOTE: This try/catch and errorMessage is just a temporary Band-Aid to a bigger problem...
         folders = try {
