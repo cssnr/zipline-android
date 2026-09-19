@@ -29,12 +29,10 @@ enum class LogLevel { DEBUG, INFO, WARNING, ERROR }
 @Entity
 data class LogEntry(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
-    val level: String,
+    val level: LogLevel,
     val message: String,
     val timestamp: Long = System.currentTimeMillis(),
-) {
-    val levelEnum: LogLevel get() = LogLevel.valueOf(level)
-}
+)
 
 @Dao
 interface LogDao {
@@ -96,19 +94,18 @@ object AppLogs {
     @Volatile
     private var prefsInitialized = false
 
-    private lateinit var preferences: SharedPreferences
+    private val preferenceListener =
+        SharedPreferences.OnSharedPreferenceChangeListener { prefs, key ->
+            if (key == ENABLED_KEY) enabled = prefs.getBoolean(ENABLED_KEY, true)
+        }
 
     private fun isEnabled(context: Context): Boolean {
         if (!prefsInitialized) {
             synchronized(this) {
                 if (!prefsInitialized) {
-                    preferences = PreferenceManager.getDefaultSharedPreferences(context)
+                    val preferences = PreferenceManager.getDefaultSharedPreferences(context)
                     enabled = preferences.getBoolean(ENABLED_KEY, true)
-                    preferences.registerOnSharedPreferenceChangeListener { prefs, key ->
-                        if (key == ENABLED_KEY) {
-                            enabled = prefs.getBoolean(ENABLED_KEY, true)
-                        }
-                    }
+                    preferences.registerOnSharedPreferenceChangeListener(preferenceListener)
                     prefsInitialized = true
                 }
             }
@@ -125,7 +122,7 @@ object AppLogs {
             try {
                 purgeIfNeeded(appContext)
                 database(appContext).logDao().insert(
-                    LogEntry(level = level.name, message = message)
+                    LogEntry(level = level, message = message)
                 )
             } catch (e: Exception) {
                 Log.e(LOG_TAG, "Failed to write log entry", e)
@@ -167,7 +164,7 @@ object AppLogs {
                             val time = Instant.ofEpochMilli(entry.timestamp)
                                 .atZone(ZoneId.systemDefault())
                                 .format(formatter)
-                            "$time ${entry.levelEnum.name}: ${entry.message}"
+                            "$time ${entry.level.name}: ${entry.message}"
                         }
                     )
                 }
