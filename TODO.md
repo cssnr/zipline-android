@@ -33,3 +33,20 @@ But this statement is false and only works for videos.
 If this ever gets implemented, the following PR should be added to this codebase:
 
 - <https://github.com/django-files/android-client/pull/89>
+
+## Fire-and-Forget Application Logging
+
+Zipline's `AppLogs.log()` is fire-and-forget and non-suspend, launching each
+write on `CoroutineScope(SupervisorJob() + Dispatchers.IO)`. This differs from
+RemoteWallpaper and NOAAWeather, whose `log()` is `suspend` and awaited by the
+caller.
+
+Caveat: the Room insert is asynchronous, so an entry can be lost if the process
+dies between the `log()` call and the insert committing — worst case being a
+fatal-crash `catch` block where the final entry never lands in View Logs.
+Actual crashes are reported by Crashlytics regardless.
+
+See [AppLogs.kt](app/src/main/java/org/cssnr/zipline/log/AppLogs.kt).
+
+FIX: make `log()` `suspend` (like RemoteWallpaper/NOAAWeather) so writes are
+awaited by the caller, or rework the caller-side logging to await completion.
