@@ -143,13 +143,6 @@
     </PreferenceCategory>
 
     <PreferenceCategory android:title="Application Information">
-        <SwitchPreferenceCompat
-            android:key="analytics_enabled"
-            android:title="Enable Analytics"
-            android:icon="@drawable/md_monitoring_24px"
-            android:summary="Help Fix Bugs"
-            android:defaultValue="true" />
-
         <Preference
             android:key="send_feedback"
             android:title="Send Feedback"
@@ -172,6 +165,13 @@
     <PreferenceCategory
         android:key="debug_settings"
         android:title="Debugging">
+        <SwitchPreferenceCompat
+            android:key="analytics_enabled"
+            android:title="Enable Analytics"
+            android:icon="@drawable/md_monitoring_24px"
+            android:summary="Help Fix Bugs"
+            android:defaultValue="true" />
+
         <SwitchPreferenceCompat
             android:defaultValue="true"
             android:key="enable_debug_logs"
