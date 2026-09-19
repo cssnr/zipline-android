@@ -39,7 +39,7 @@ class LogsAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val data = items[position]
-        val level = data.levelEnum
+        val level = data.level
 
         holder.logLevel.text = level.name
         holder.logLevel.setTextColor(MaterialColors.getColor(context, levelAttr(level), 0))

@@ -27,7 +27,8 @@ ALWAYS use the `task *` commands
 | `task check`   | Prettier check (check non-kotlin files)  |
 | `task format`  | Prettier write (format non-kotlin files) |
 
-Do NOT run task lint/compile/debug/release/bundle every turn unless it is REQUIRED!!!
+- Do NOT run task compile/debug/release/bundle every turn unless it is REQUIRED!!!
+- Prettier does not format XML files
 
 ## Testing
 
