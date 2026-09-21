@@ -23,6 +23,10 @@
             android:title="@string/settings"
             android:checkable="true" />
         <item
+            android:id="@+id/nav_item_text"
+            android:icon="@drawable/md_text_snippet_24px"
+            android:title="Text" />
+        <item
             android:id="@+id/nav_item_upload"
             android:icon="@drawable/md_upload_24px"
             android:title="@string/upload" />

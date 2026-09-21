@@ -63,12 +63,18 @@
             android:id="@+id/widget_refresh_button"
             android:layout_width="48dp"
             android:layout_height="match_parent"
-            android:paddingStart="24dp"
             android:paddingBottom="20dp"
             android:contentDescription="Refresh"
             android:background="?android:selectableItemBackgroundBorderless"
-            android:src="@drawable/md_refresh_24px"
-            tools:ignore="RtlSymmetry" />
+            android:src="@drawable/md_refresh_24px" />
+        <ImageButton
+            android:id="@+id/widget_text_button"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:paddingBottom="20dp"
+            android:contentDescription="Text"
+            android:background="?android:selectableItemBackgroundBorderless"
+            android:src="@drawable/md_text_snippet_24px" />
         <ImageButton
             android:id="@+id/widget_upload_button"
             android:layout_width="48dp"

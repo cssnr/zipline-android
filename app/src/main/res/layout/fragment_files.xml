@@ -57,6 +57,15 @@
         app:layout_goneMarginTop="0dp"
         tools:visibility="visible">
         <ImageView
+            android:id="@+id/text_files"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:gravity="center"
+            android:background="?attr/selectableItemBackground"
+            android:contentDescription="Text"
+            android:src="@drawable/md_text_snippet_24px" />
+        <ImageView
             android:id="@+id/upload_files"
             android:layout_width="48dp"
             android:layout_height="match_parent"

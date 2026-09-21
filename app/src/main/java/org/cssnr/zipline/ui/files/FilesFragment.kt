@@ -552,6 +552,11 @@ class FilesFragment : Fragment() {
             //NavigationUI.onNavDestinationSelected(menuItem, findNavController())
         }
 
+        binding.textFiles.setOnClickListener {
+            Log.d("textFiles", "setOnClickListener")
+            findNavController().navigate(R.id.nav_item_text)
+        }
+
         binding.downloadManager.setOnClickListener {
             Log.d("downloadManager", "setOnClickListener")
             try {
