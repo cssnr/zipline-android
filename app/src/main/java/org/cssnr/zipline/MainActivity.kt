@@ -72,6 +72,12 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
 
+    // Whether the file picker result that is currently pending should open its workflow
+    // as an external entry (home screen widget tap -> back exits to the launcher).
+    // Recorded when the picker is launched, since the result comes back later through
+    // the activity result API and the originating intent is no longer around.
+    private var filePickerExternal = false
+
     // Workflow destinations are mutually-exclusive singletons: only one may be on the
     // back stack at a time. Opening one replaces any existing workflow, and a stale
     // workflow hidden under non-workflow pages (e.g. Settings opened from the text
@@ -83,18 +89,20 @@ class MainActivity : AppCompatActivity() {
         R.id.nav_item_text,
     )
 
-    // True while the current workflow was opened from an external deep link
-    // (share/open intent). Back then exits the activity back to the previous app
-    // instead of walking the app's internal back stack. Set by navigateWorkflow and
-    // cleared by the destination listener when leaving a workflow (or by any in-app
-    // navigateWorkflow entry, since interacting in-app makes the workflow in-app).
-    private var deepLinkWorkflow = false
+    // True while the current workflow was opened from outside the app (share/open deep
+    // link, or a home screen widget button). Back then exits the activity back to
+    // whatever launched it (sharing app / launcher) instead of walking the app's
+    // internal back stack. Set by navigateWorkflow and cleared by the destination
+    // listener when leaving a workflow (or by any in-app navigateWorkflow entry, since
+    // interacting in-app makes the workflow in-app).
+    private var externalWorkflow = false
 
-    // Captures back while an externally-opened workflow is showing, so back exits
-    // to the app that shared/opened the content rather than popping the app stack.
-    // Enabled-state is refreshed by the destination listener and by navigateWorkflow's
-    // no-op path (the listener only runs when navigation actually happens).
-    private val deepLinkBackExit by lazy {
+    // Captures back while an externally-opened workflow is showing, so back exits to
+    // the app that shared/opened the content (or the launcher for a widget tap) rather
+    // than popping the app stack. Enabled-state is refreshed by the destination listener
+    // and by navigateWorkflow's no-op path (the listener only runs when navigation
+    // actually happens).
+    private val externalBackExit by lazy {
         object : OnBackPressedCallback(false) {
             override fun handleOnBackPressed() {
                 Log.i(LOG_TAG, "Back on external workflow - exiting to previous app")
@@ -161,13 +169,13 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_item_text,
         )
         // Implement Navigation Hacks Because.......Android?
-        onBackPressedDispatcher.addCallback(this, deepLinkBackExit)
+        onBackPressedDispatcher.addCallback(this, externalBackExit)
         navController.addOnDestinationChangedListener { _, destination, _ ->
             // Enable back-to-previous-app only while an externally-opened workflow shows
-            deepLinkBackExit.isEnabled = deepLinkWorkflow && destination.id in workflowDestinations
+            externalBackExit.isEnabled = externalWorkflow && destination.id in workflowDestinations
             // Leaving the workflow resets the external flag so an in-app page never exits the app
             if (destination.id !in workflowDestinations) {
-                deepLinkWorkflow = false
+                externalWorkflow = false
             }
             Log.d("addOnDestinationChangedListener", "destination: ${destination.label}")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
@@ -224,7 +232,7 @@ class MainActivity : AppCompatActivity() {
                 true
             } else if (menuItem.itemId == R.id.nav_item_upload) {
                 Log.d("Drawer", "nav_item_upload")
-                filePickerLauncher.launch(arrayOf("*/*"))
+                launchFilePicker()
                 true
             } else if (menuItem.itemId == R.id.nav_item_text) {
                 Log.d("Drawer", "nav_item_text")
@@ -326,15 +334,27 @@ class MainActivity : AppCompatActivity() {
         // File Picker for UPLOAD_FILE Intent and Shortcut
         filePickerLauncher =
             registerForActivityResult(ActivityResultContracts.OpenMultipleDocuments()) { uris ->
-                Log.d("filePickerLauncher", "uris: $uris")
+                val external = filePickerExternal
+                filePickerExternal = false
+                Log.d("filePickerLauncher", "uris: $uris - external: $external")
                 if (uris.size > 1) {
                     Log.i("filePickerLauncher", "MULTI!")
-                    showMultiPreview(uris as ArrayList<Uri>)
+                    showMultiPreview(uris as ArrayList<Uri>, external)
                 } else if (uris.size == 1) {
                     Log.i("filePickerLauncher", "SINGLE!")
-                    showPreview(uris[0])
+                    showPreview(uris[0], external)
                 } else {
                     Log.w("filePickerLauncher", "No Files Selected!")
+                    // Cancelling the picker (back) is the only way to get an empty result.
+                    // On an external entry the app is only a pass-through to the picker,
+                    // so cancelling must leave the app entirely - otherwise back reveals
+                    // MainActivity on the start destination instead of the launcher the
+                    // widget lives on. externalBackExit only covers a showing workflow,
+                    // and there is none here.
+                    if (external) {
+                        Log.i(LOG_TAG, "Picker cancelled on external entry - exiting to previous app")
+                        finish()
+                    }
                     //Toast.makeText(this, "No Files Selected!", Toast.LENGTH_SHORT).show()
                 }
             }
@@ -466,7 +486,7 @@ class MainActivity : AppCompatActivity() {
 
             if (fromShortcut == "upload") {
                 Log.d("onNewIntent", "filePickerLauncher.launch")
-                filePickerLauncher.launch(arrayOf("*/*"))
+                launchFilePicker()
             } else if (fromShortcut == "text") {
                 Log.d("onNewIntent", "navigateWorkflow: nav_item_text")
                 navigateWorkflow(R.id.nav_item_text)
@@ -529,12 +549,14 @@ class MainActivity : AppCompatActivity() {
         } else if (action == "UPLOAD_FILE") {
             Log.d("onNewIntent", "UPLOAD_FILE")
 
-            filePickerLauncher.launch(arrayOf("*/*"))
+            // Widget tap: the launcher screen is what back should return to
+            launchFilePicker(external = true)
 
         } else if (action == "UPLOAD_TEXT") {
             Log.d("onNewIntent", "UPLOAD_TEXT")
 
-            navigateWorkflow(R.id.nav_item_text)
+            // Widget tap: the launcher screen is what back should return to
+            navigateWorkflow(R.id.nav_item_text, external = true)
 
         } else {
             showSnackbar("Unknown Link!", true)
@@ -547,11 +569,11 @@ class MainActivity : AppCompatActivity() {
     // Workflows are mutually-exclusive singletons: only one may exist on the back
     // stack, and it is either placed above the current page (in-app push) or replaces
     // an existing / stale workflow so back never walks through leftover workflow
-    // screens. Workflows opened from an external deep link (external = true) track
-    // deepLinkWorkflow so the back callback exits to the previous app instead of
-    // walking the back stack. replaceCurrent forces a fresh instance (e.g. a new file
-    // picker result); opening the same workflow without replaceCurrent keeps the
-    // current instance.
+    // screens. Workflows opened from outside the app (external = true: share/open deep
+    // link, or a home screen widget button) track externalWorkflow so the back callback
+    // exits to the previous app instead of walking the back stack. replaceCurrent
+    // forces a fresh instance (e.g. a new file picker result); opening the same workflow
+    // without replaceCurrent keeps the current instance.
     private fun navigateWorkflow(
         destinationId: Int,
         args: Bundle? = null,
@@ -566,14 +588,14 @@ class MainActivity : AppCompatActivity() {
         // An in-app entry still clears the external flag, and the destination listener
         // won't fire because no navigation happens, so refresh the callback here too.
         if (currentDestinationId == destinationId && !replaceCurrent) {
-            deepLinkWorkflow = external
-            deepLinkBackExit.isEnabled =
-                deepLinkWorkflow && currentDestinationId in workflowDestinations
+            externalWorkflow = external
+            externalBackExit.isEnabled =
+                externalWorkflow && currentDestinationId in workflowDestinations
             Log.d("navigateWorkflow", "Already on destination $destinationId - no-op")
             return
         }
 
-        deepLinkWorkflow = external
+        externalWorkflow = external
 
         // Any workflow currently on the back stack (the current one, or a stale one
         // buried under non-workflow pages like Settings opened from the text page) is
@@ -651,7 +673,12 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun launchFilePicker() {
+    // Single entry point for the file picker so every caller records whether the
+    // resulting workflow is external (home screen widget tap) before the picker
+    // activity takes over - the result arrives long after the originating intent.
+    fun launchFilePicker(external: Boolean = false) {
+        filePickerExternal = external
+        Log.d(LOG_TAG, "launchFilePicker - external: $external")
         filePickerLauncher.launch(arrayOf("*/*"))
     }
 
