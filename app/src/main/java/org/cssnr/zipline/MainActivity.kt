@@ -485,11 +485,13 @@ class MainActivity : AppCompatActivity() {
             Log.d("onNewIntent", "fromShortcut: $fromShortcut")
 
             if (fromShortcut == "upload") {
-                Log.d("onNewIntent", "filePickerLauncher.launch")
-                launchFilePicker()
+                Log.d("onNewIntent", "launchFilePicker")
+                // Launcher shortcut: same as a widget tap, back returns to the launcher
+                launchFilePicker(external = true)
             } else if (fromShortcut == "text") {
                 Log.d("onNewIntent", "navigateWorkflow: nav_item_text")
-                navigateWorkflow(R.id.nav_item_text)
+                // Launcher shortcut: same as a widget tap, back returns to the launcher
+                navigateWorkflow(R.id.nav_item_text, external = true)
             }
 
         } else if (action == Intent.ACTION_SEND) {
