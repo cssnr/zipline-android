@@ -235,7 +235,7 @@ jobs:
           mappingFile: ${{ env.mapping_file }}
           whatsNewDirectory: whatsNew
           releaseName: "${{ github.run_number }} (${{ github.ref_name }})"
-          track: internal
+          tracks: internal
 
       - name: "Update Release Notes Action"
         if: ${{ github.event_name == 'release' }}
