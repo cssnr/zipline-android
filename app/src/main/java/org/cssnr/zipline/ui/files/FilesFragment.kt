@@ -554,7 +554,7 @@ class FilesFragment : Fragment() {
 
         binding.textFiles.setOnClickListener {
             Log.d("textFiles", "setOnClickListener")
-            findNavController().navigate(R.id.nav_item_text)
+            (requireActivity() as MainActivity).openTextUpload()
         }
 
         binding.downloadManager.setOnClickListener {

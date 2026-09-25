@@ -11,6 +11,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.SystemBarStyle
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
@@ -71,6 +72,37 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navHostFragment: NavHostFragment
     private lateinit var filePickerLauncher: ActivityResultLauncher<Array<String>>
 
+    // Workflow destinations are mutually-exclusive singletons: only one may be on the
+    // back stack at a time. Opening one replaces any existing workflow, and a stale
+    // workflow hidden under non-workflow pages (e.g. Settings opened from the text
+    // page) is scrubbed so back never ends up walking through a leftover workflow.
+    private val workflowDestinations = setOf(
+        R.id.nav_item_upload,
+        R.id.nav_item_upload_multi,
+        R.id.nav_item_short,
+        R.id.nav_item_text,
+    )
+
+    // True while the current workflow was opened from an external deep link
+    // (share/open intent). Back then exits the activity back to the previous app
+    // instead of walking the app's internal back stack. Set by navigateWorkflow and
+    // cleared by the destination listener when leaving a workflow (or by any in-app
+    // navigateWorkflow entry, since interacting in-app makes the workflow in-app).
+    private var deepLinkWorkflow = false
+
+    // Captures back while an externally-opened workflow is showing, so back exits
+    // to the app that shared/opened the content rather than popping the app stack.
+    // Enabled-state is refreshed by the destination listener and by navigateWorkflow's
+    // no-op path (the listener only runs when navigation actually happens).
+    private val deepLinkBackExit by lazy {
+        object : OnBackPressedCallback(false) {
+            override fun handleOnBackPressed() {
+                Log.i(LOG_TAG, "Back on external workflow - exiting to previous app")
+                finish()
+            }
+        }
+    }
+
     private val preferences by lazy { PreferenceManager.getDefaultSharedPreferences(this) }
 
     companion object {
@@ -129,7 +161,14 @@ class MainActivity : AppCompatActivity() {
             R.id.nav_item_text,
         )
         // Implement Navigation Hacks Because.......Android?
+        onBackPressedDispatcher.addCallback(this, deepLinkBackExit)
         navController.addOnDestinationChangedListener { _, destination, _ ->
+            // Enable back-to-previous-app only while an externally-opened workflow shows
+            deepLinkBackExit.isEnabled = deepLinkWorkflow && destination.id in workflowDestinations
+            // Leaving the workflow resets the external flag so an in-app page never exits the app
+            if (destination.id !in workflowDestinations) {
+                deepLinkWorkflow = false
+            }
             Log.d("addOnDestinationChangedListener", "destination: ${destination.label}")
             binding.drawerLayout.closeDrawer(GravityCompat.START)
             val destinationId = destination.id
@@ -189,9 +228,7 @@ class MainActivity : AppCompatActivity() {
                 true
             } else if (menuItem.itemId == R.id.nav_item_text) {
                 Log.d("Drawer", "nav_item_text")
-                if (navController.currentDestination?.id != R.id.nav_item_text) {
-                    navController.navigate(R.id.nav_item_text)
-                }
+                navigateWorkflow(R.id.nav_item_text)
                 binding.drawerLayout.closeDrawers()
                 true
             } else {
@@ -292,10 +329,10 @@ class MainActivity : AppCompatActivity() {
                 Log.d("filePickerLauncher", "uris: $uris")
                 if (uris.size > 1) {
                     Log.i("filePickerLauncher", "MULTI!")
-                    showMultiPreview(uris as ArrayList<Uri>, false)
+                    showMultiPreview(uris as ArrayList<Uri>)
                 } else if (uris.size == 1) {
                     Log.i("filePickerLauncher", "SINGLE!")
-                    showPreview(uris[0], false)
+                    showPreview(uris[0])
                 } else {
                     Log.w("filePickerLauncher", "No Files Selected!")
                     //Toast.makeText(this, "No Files Selected!", Toast.LENGTH_SHORT).show()
@@ -427,22 +464,12 @@ class MainActivity : AppCompatActivity() {
             val fromShortcut = intent.getStringExtra("fromShortcut")
             Log.d("onNewIntent", "fromShortcut: $fromShortcut")
 
-            popPreview()
-
-            // TODO: Determine if this needs to be in the above if/else
             if (fromShortcut == "upload") {
                 Log.d("onNewIntent", "filePickerLauncher.launch")
                 filePickerLauncher.launch(arrayOf("*/*"))
             } else if (fromShortcut == "text") {
-                Log.d("onNewIntent", "navigate: nav_item_text")
-                if (navController.currentDestination?.id != R.id.nav_item_text) {
-                    navController.navigate(
-                        R.id.nav_item_text, null, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.id, true)
-                            .setLaunchSingleTop(true)
-                            .build()
-                    )
-                }
+                Log.d("onNewIntent", "navigateWorkflow: nav_item_text")
+                navigateWorkflow(R.id.nav_item_text)
             }
 
         } else if (action == Intent.ACTION_SEND) {
@@ -467,26 +494,14 @@ class MainActivity : AppCompatActivity() {
                     Log.d("onNewIntent", "URL DETECTED: $extraText")
                     binding.drawerLayout.closeDrawers()
                     val bundle = Bundle().apply { putString("url", extraText) }
-                    //navController.navigate(R.id.nav_item_short, bundle)
-                    navController.navigate(
-                        R.id.nav_item_short, bundle, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.id, true)
-                            .setLaunchSingleTop(true)
-                            .build()
-                    )
+                    navigateWorkflow(R.id.nav_item_short, bundle, replaceCurrent = true, external = true)
                 } else {
                     Log.d("onNewIntent", "PLAIN TEXT DETECTED")
                     val bundle = Bundle().apply { putString("text", extraText) }
-                    //navController.navigate(R.id.nav_item_text, bundle)
-                    navController.navigate(
-                        R.id.nav_item_text, bundle, NavOptions.Builder()
-                            .setPopUpTo(navController.graph.id, true)
-                            .setLaunchSingleTop(true)
-                            .build()
-                    )
+                    navigateWorkflow(R.id.nav_item_text, bundle, replaceCurrent = true, external = true)
                 }
             } else {
-                showPreview(fileUri)
+                showPreview(fileUri, external = true)
             }
 
         } else if (action == Intent.ACTION_SEND_MULTIPLE) {
@@ -504,30 +519,22 @@ class MainActivity : AppCompatActivity() {
                 Log.w("onNewIntent", "fileUris is null")
                 return
             }
-            showMultiPreview(fileUris)
+            showMultiPreview(fileUris, external = true)
 
         } else if (action == Intent.ACTION_VIEW) {
             Log.d("onNewIntent", "ACTION_VIEW")
 
-            showPreview(data)
+            showPreview(data, external = true)
 
         } else if (action == "UPLOAD_FILE") {
             Log.d("onNewIntent", "UPLOAD_FILE")
 
-            popPreview()
             filePickerLauncher.launch(arrayOf("*/*"))
 
         } else if (action == "UPLOAD_TEXT") {
             Log.d("onNewIntent", "UPLOAD_TEXT")
 
-            if (navController.currentDestination?.id != R.id.nav_item_text) {
-                navController.navigate(
-                    R.id.nav_item_text, null, NavOptions.Builder()
-                        .setPopUpTo(navController.graph.id, true)
-                        .setLaunchSingleTop(true)
-                        .build()
-                )
-            }
+            navigateWorkflow(R.id.nav_item_text)
 
         } else {
             showSnackbar("Unknown Link!", true)
@@ -536,19 +543,59 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun popPreview() {
+    // Unified entry point for workflow destinations (upload / multi / short / text).
+    // Workflows are mutually-exclusive singletons: only one may exist on the back
+    // stack, and it is either placed above the current page (in-app push) or replaces
+    // an existing / stale workflow so back never walks through leftover workflow
+    // screens. Workflows opened from an external deep link (external = true) track
+    // deepLinkWorkflow so the back callback exits to the previous app instead of
+    // walking the back stack. replaceCurrent forces a fresh instance (e.g. a new file
+    // picker result); opening the same workflow without replaceCurrent keeps the
+    // current instance.
+    private fun navigateWorkflow(
+        destinationId: Int,
+        args: Bundle? = null,
+        replaceCurrent: Boolean = false,
+        external: Boolean = false,
+    ) {
         val currentDestinationId = navController.currentDestination?.id
-        Log.d("popPreview", "currentDestinationId: $currentDestinationId")
-        when (currentDestinationId) {
-            R.id.nav_item_upload, R.id.nav_item_upload_multi, R.id.nav_item_short, R.id.nav_item_text -> {
-                Log.i("popPreview", "Navigating away from preview page...")
-                navController.navigate(
-                    navController.graph.startDestinationId, null, NavOptions.Builder()
-                        .setPopUpTo(navController.graph.id, true)
-                        .build()
-                )
-            }
+        Log.d("navigateWorkflow", "destinationId: $destinationId - args: $args - replaceCurrent: $replaceCurrent")
+        Log.d("navigateWorkflow", "currentDestinationId: $currentDestinationId")
+        // Already on this workflow and not refreshing it: keep the in-progress
+        // fragment untouched (launchSingleTop would recreate it and lose state).
+        // An in-app entry still clears the external flag, and the destination listener
+        // won't fire because no navigation happens, so refresh the callback here too.
+        if (currentDestinationId == destinationId && !replaceCurrent) {
+            deepLinkWorkflow = external
+            deepLinkBackExit.isEnabled =
+                deepLinkWorkflow && currentDestinationId in workflowDestinations
+            Log.d("navigateWorkflow", "Already on destination $destinationId - no-op")
+            return
         }
+
+        deepLinkWorkflow = external
+
+        // Any workflow currently on the back stack (the current one, or a stale one
+        // buried under non-workflow pages like Settings opened from the text page) is
+        // replaced so the workflows stay mutually-exclusive singletons.
+        val hasWorkflow = workflowDestinations.any { id ->
+            runCatching { navController.getBackStackEntry(id) }.isSuccess
+        }
+        val navOptions = when {
+            // Pop anything above the root (including any current/stale workflow), then
+            // open the workflow fresh directly above the root.
+            hasWorkflow ->
+                NavOptions.Builder()
+                    .setPopUpTo(navController.graph.startDestinationId, false)
+                    .setLaunchSingleTop(true)
+                    .build()
+            // Open the workflow above the current destination.
+            else ->
+                NavOptions.Builder()
+                    .setLaunchSingleTop(true)
+                    .build()
+        }
+        navController.navigate(destinationId, args, navOptions)
     }
 
     override fun onStop() {
@@ -561,37 +608,29 @@ class MainActivity : AppCompatActivity() {
         super.onStop()
     }
 
-    private fun showPreview(uri: Uri?, popTop: Boolean = true) {
+    private fun showPreview(uri: Uri?, external: Boolean = false) {
         Log.d("Main[showPreview]", "uri: $uri")
         binding.drawerLayout.closeDrawers()
-        val bundle = Bundle().apply { putString("uri", uri.toString()) }
-        if (popTop) {
-            navController.navigate(
-                R.id.nav_item_upload, bundle, NavOptions.Builder()
-                    .setPopUpTo(navController.graph.id, true)
-                    .setLaunchSingleTop(true)
-                    .build()
-            )
-        } else {
-            navController.navigate(R.id.nav_item_upload, bundle)
+        if (uri == null) {
+            Log.w("Main[showPreview]", "uri is null - nothing to preview")
+            showSnackbar("Nothing to Process!", true)
+            return
         }
+        val bundle = Bundle().apply { putString("uri", uri.toString()) }
+        navigateWorkflow(R.id.nav_item_upload, bundle, replaceCurrent = true, external = external)
     }
 
-    private fun showMultiPreview(fileUris: ArrayList<Uri>, popTop: Boolean = true) {
+    private fun showMultiPreview(fileUris: ArrayList<Uri>, external: Boolean = false) {
         Log.d("Main[showMultiPreview]", "fileUris: $fileUris")
         //fileUris.sort()
         binding.drawerLayout.closeDrawers()
-        val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
-        if (popTop) {
-            navController.navigate(
-                R.id.nav_item_upload_multi, bundle, NavOptions.Builder()
-                    .setPopUpTo(navController.graph.id, true)
-                    .setLaunchSingleTop(true)
-                    .build()
-            )
-        } else {
-            navController.navigate(R.id.nav_item_upload_multi, bundle)
+        if (fileUris.isEmpty()) {
+            Log.w("Main[showMultiPreview]", "fileUris is empty - nothing to preview")
+            showSnackbar("Nothing to Process!", true)
+            return
         }
+        val bundle = Bundle().apply { putParcelableArrayList("fileUris", fileUris) }
+        navigateWorkflow(R.id.nav_item_upload_multi, bundle, replaceCurrent = true, external = external)
     }
 
     private fun isTextUrl(input: String): Boolean {
@@ -614,6 +653,10 @@ class MainActivity : AppCompatActivity() {
 
     fun launchFilePicker() {
         filePickerLauncher.launch(arrayOf("*/*"))
+    }
+
+    fun openTextUpload() {
+        navigateWorkflow(R.id.nav_item_text)
     }
 
     fun setDrawerLockMode(enabled: Boolean) {
