@@ -1,7 +1,7 @@
 [![GitHub Downloads](https://img.shields.io/github/downloads/cssnr/zipline-android/total?logo=android)](https://github.com/cssnr/zipline-android/releases)
 [![GitHub Release Version](https://img.shields.io/github/v/release/cssnr/zipline-android?logo=github)](https://github.com/cssnr/zipline-android/releases/latest)
 [![APK Size](https://badges.cssnr.com/gh/release/cssnr/zipline-android/latest/asset/app-release.apk/size?label=apk&color=darkgreen)](https://github.com/cssnr/zipline-android/releases/latest/download/app-release.apk)
-[![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=gradle&label=agp)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
+[![AGP Version](https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Frefs%2Fheads%2Fmaster%2Fgradle%2Flibs.versions.toml&query=%24.versions.agp&logo=androidstudio&logoColor=white&label=agp)](https://github.com/cssnr/zipline-android/blob/master/gradle/libs.versions.toml#L2)
 [![Gradle Version](https://img.shields.io/badge/dynamic/regex?url=https%3A%2F%2Fraw.githubusercontent.com%2Fcssnr%2Fzipline-android%2Fmaster%2Fgradle%2Fwrapper%2Fgradle-wrapper.properties&search=gradle-%28.%2B%3F%29-%28%3F%3Abin%7Call%29%5C.zip&replace=%241&logo=gradle&label=gradle)](https://github.com/cssnr/zipline-android/blob/master/gradle/wrapper/gradle-wrapper.properties#L4)
 [![Workflow Lint](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/lint.yaml?logo=norton&logoColor=white&label=lint)](https://github.com/cssnr/zipline-android/actions/workflows/lint.yaml)
 [![Workflow Release](https://img.shields.io/github/actions/workflow/status/cssnr/zipline-android/release.yaml?logo=norton&logoColor=white&label=release)](https://github.com/cssnr/zipline-android/actions/workflows/release.yaml)
@@ -364,6 +364,8 @@ Additional Android projects:
 
 - [NOAA Weather Android](https://github.com/cssnr/noaa-weather-android?tab=readme-ov-file#readme)
 - [Remote Wallpaper Android](https://github.com/cssnr/remote-wallpaper-android?tab=readme-ov-file#readme)
+- [ParKing Android](https://github.com/cssnr/parking-android?tab=readme-ov-file#readme)
+- [Todo List Android](https://github.com/cssnr/todolist-android?tab=readme-ov-file#readme)
 - [Tibs3DPrints Android](https://github.com/cssnr/tibs3dprints-android?tab=readme-ov-file#readme)
 
 Please consider making a donation to support the development of this project
