@@ -47,6 +47,8 @@ class WidgetConfiguration : Activity() {
         Log.i("WidgetConfiguration", "showRefresh: $showRefresh")
         val showUpload = preferences.getBoolean("widget_show_upload", true)
         Log.i("WidgetConfiguration", "showUpload: $showUpload")
+        val showText = preferences.getBoolean("widget_show_text", false)
+        Log.i("WidgetConfiguration", "showText: $showText")
 
         val bgOpacityText = findViewById<TextView>(R.id.bg_opacity_percent)
         bgOpacityText.text = getString(R.string.background_opacity, bgOpacity)
@@ -94,6 +96,8 @@ class WidgetConfiguration : Activity() {
         showUpdateTimeSwitch.isChecked = showUpdateTime
         val showRefreshSwitch = findViewById<SwitchMaterial>(R.id.show_refresh_button)
         showRefreshSwitch.isChecked = showRefresh
+        val showTextSwitch = findViewById<SwitchMaterial>(R.id.show_text_button)
+        showTextSwitch.isChecked = showText
         val showUploadSwitch = findViewById<SwitchMaterial>(R.id.show_upload_button)
         showUploadSwitch.isChecked = showUpload
 
@@ -118,6 +122,7 @@ class WidgetConfiguration : Activity() {
             Log.i("WidgetConfiguration", "seekBar.progress: ${seekBar.progress}")
             Log.i("WidgetConfiguration", "showUpdateTimeSwitch.isChecked: ${showUpdateTimeSwitch.isChecked}")
             Log.i("WidgetConfiguration", "showRefreshSwitch.isChecked: ${showRefreshSwitch.isChecked}")
+            Log.i("WidgetConfiguration", "showTextSwitch.isChecked: ${showTextSwitch.isChecked}")
             Log.i("WidgetConfiguration", "showUploadSwitch.isChecked: ${showUploadSwitch.isChecked}")
 
             preferences.edit {
@@ -126,6 +131,7 @@ class WidgetConfiguration : Activity() {
                 putInt("widget_bg_opacity", seekBar.progress)
                 putBoolean("widget_show_update_time", showUpdateTimeSwitch.isChecked)
                 putBoolean("widget_show_refresh", showRefreshSwitch.isChecked)
+                putBoolean("widget_show_text", showTextSwitch.isChecked)
                 putBoolean("widget_show_upload", showUploadSwitch.isChecked)
             }
 

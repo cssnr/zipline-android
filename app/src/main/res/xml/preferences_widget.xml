@@ -47,6 +47,12 @@
             android:defaultValue="true" />
 
         <SwitchPreferenceCompat
+            android:key="widget_show_text"
+            android:title="Show Text Button"
+            android:icon="@drawable/md_text_snippet_24px"
+            android:defaultValue="false" />
+
+        <SwitchPreferenceCompat
             android:key="widget_show_upload"
             android:title="Show Upload Button"
             android:icon="@drawable/md_upload_24px"

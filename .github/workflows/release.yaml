@@ -235,14 +235,7 @@ jobs:
           mappingFile: ${{ env.mapping_file }}
           whatsNewDirectory: whatsNew
           releaseName: "${{ github.run_number }} (${{ github.ref_name }})"
-          track: internal
-
-      - name: "VirusTotal"
-        if: ${{ github.event_name == 'release' }}
-        uses: cssnr/virustotal-action@v2
-        continue-on-error: true
-        with:
-          vt_api_key: ${{ secrets.VT_API_KEY }}
+          tracks: internal
 
       - name: "Update Release Notes Action"
         if: ${{ github.event_name == 'release' }}
@@ -279,4 +272,32 @@ jobs:
         uses: sarisia/actions-status-discord@v1
         with:
           webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  virustotal:
+    name: "VirusTotal"
+    if: ${{ github.event_name == 'release' }}
+    needs: release
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+
+    steps:
+      - name: "VirusTotal Action"
+        id: virustotal
+        uses: cssnr/virustotal-action@v2
+        continue-on-error: true
+        with:
+          vt_api_key: ${{ secrets.VT_API_KEY }}
+          collapsed: true
+
+      - name: "VirusTotal Check"
+        if: ${{ steps.virustotal.outcome == 'failure' }}
+        uses: sarisia/actions-status-discord@v1
+        continue-on-error: true
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK }}
+          status: failure
+          title: VirusTotal Failed
           description: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
